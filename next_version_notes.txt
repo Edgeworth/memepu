@@ -1,0 +1,22 @@
+General:
+More LEDs - but option to turn them all off. Common LED ground plane.
+bypass cap for each ic
+mounting holes
+
+Control logic:
+Interrupts - maybe like 8 lines that go with the bus? or 16, but 4 interrupt values per device? i.e. each attached thing owns 2 lines
+timer interrupt - so binary counter incrementing, wire top output into interrupt register
+interrupt mask register?
+
+Registers:
+stack pointer? - adding to stack pointer requires 16 bit arithmetic so just make the whole thing 16 bit?
+more registers?
+
+Clock:
+Option for crystal oscillator module
+
+Operations:
+LU ops - AND etc
+
+Display module:
+LCD, its own SRAM, its on CLK, its on processor
