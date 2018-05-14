@@ -1,0 +1,13 @@
+PCB version improvements:
+
+Slots for both 28 and 32 PIN eeproms.
+
+Leds
+
+To buy:
+28, 32 PIN sockets
+2*15 2.54 pitch pin sockets
+
+
+To remember:
+Mounting holes in PCB

@@ -1,0 +1,136 @@
+# Electronics
+TODO:
+ - Put MLU below regs, then ALU below MLU
+
+Interrupts:
+- Set interrupt control bit? synchronisation on this
+
+Registers:
+A 8
+B 8
+SYS0 (instruction 1)
+SYS1 (instruction 2)
+SUM 8 - read only
+STATUS/CONTROL 8?
+INTERRUPT?
+
+INSTRUCTIONS
+0 - LOAD from bootloader?
+LDA, LDB, LDC, LDD, OUT - immediate, memory addr, indirect memory addr
+ADD, SUB, MUL, DIV, MOD - A, B
+HLT, RST
+JNZ, JZ, JMP
+JLES, JLTS, JGES, JGTS
+JLE, JLT, JGE, JGT
+AND, OR, NOT, XOR - A, B
+bitwise ops (and, or, not, xor, nand?)
+
+Layout:
+
+                         | leds| control signal leds + CLK ANDing
+Clock - Manual bus input | bus |  Control signal decoding
+Regs     A,B,SYS0,SYS1 | bus |  - Opcode reg - Control logic
+  | A, B
+MLU                      | bus | Mem reg - Memory
+  | A, B
+ALU                      | bus | Display
+                         | bus | Program counter
+
+Already has ANDs: PC LOW, PC HIGH
+
+Modules:
+Clock:
+Signal: CLK
+
+Display:
+Control: DISP in
+
+General purpose reg:
+Control: A in, B in, SYS0 in, SYS1 in, A out, B out, SYS0 out, SYS1 out
+ - A, B, C, SYS0, SYS1
+
+ALU:
+Control: SUB, SUM out
+
+PC:
+Control: PC INC, PC LOW out, PC HIGH out, PC LOW in, PC HIGH in
+
+Memory reg:
+Control: MEM LOW in, MEM HIGH in
+
+Memory:
+Control: MEM out
+
+Test:
+
+Multi logic unit
+Control: MLU out, MLU OP in (3)
+ - Use big EEPROM? 19 bits, gives 8 diff ops
+ - Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD
+
+Opcode Reg:
+ - 8 bits is counter (OPCODE inc)
+
+Control logic:
+
+Control + status word decoder:
+
+Control + status word display:
+
+Bootloader module (loads initial program into ram)?
+
+DMA module?:
+- DMA command reg
+
+Opcode reg:
+8 bits of counter
+
+Control / status bits:
+Control (written by control logic):
+OUT plane 0 - 4:
+A out, B out, SYS0 out, SYS1 out
+PC LOW out
+PC HIGH out
+SUM out
+MEM out
+MLU out
+
+IN plane 0 - 4:
+A in, B in, SYS0 in, SYS1 in
+PC LOW in
+PC HIGH in
+MEM LOW in
+MEM HIGH in
+OPCODE in
+DISPLAY in
+
+Control plane - 3:
+SUB
+RESET (?)
+HLT
+RESET uop counter (not CLK'd, just by itself?, or !CLK)
+INC PC (CLK'd)
+INC OPCODE (CLK'd)
+
+Select plane - 3
+PAGE SELECT (1 bit); LU op select (3 bits)
+
+Page select - memory source select?
+
+Status (read by control logic) - 5:
+Doesn't need a register
+INTERRUPT
+OVERFLOW
+CARRY
+ZERO
+NEG
+
+Signals:
+CLOCK, ~CLOCK
+BUS USED (?) (for DMA / cycle stealing)
+
+Instruction bits - 17 (19):
+Pull out pc Inc, interrupt check, then jmp or opcode load to 0 opcode, instructions can then reset opcode reg and the end of their microcode. Status bits then may become unnecessary. Would have to use data selectors though.
+5 status bits (see above)
+8 opcode bits
+4 micro-op counter bits
