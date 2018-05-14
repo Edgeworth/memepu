@@ -1,0 +1,27 @@
+Buy: 2x74HC574 (reg) and 2x74HC595 (shift reg)
+Connection from last hole to bus: 4, 5, 8, 9, 12, 13, 16, 17
+Connection from 8 to bus:
+- 11, 11, 13, 13, 15, 15, 17, 17
+- 39.4, 44.48, 49.56, 54.64
+---------- BOUGHT ------------
+In order:
+74HC00 - NAND gate
+74HC02 - NOR gate
+74HC04 - NOT gate
+74HC08 - AND gate
+74HC32 - OR gate
+74HC74 - D flipflop
+74HC86 - XOR gate
+74HC107 - Dual JK flipflop with reset
+74HC138 - 3 to 8 decoder, inverted outputs
+74HC139 - 2 to 4 decoder
+74HC157 - 4	quad 2-line to 1-line data selector
+74HC161 - 4 bit binary counter, synchronous
+74HC245 - Octal bidirectional bus transceiver
+74HC273 - 8 bit register with unfortunate pinout
+74HC283 - 4 bit binary full adder
+74HC574 - 8 bit register
+74HC595 - 8 bit shift register
+shift register
+８ビットシフトレジスタ　ＳＮ７４ＨＣ５９５Ｎ
+http://akizukidenshi.com/catalog/g/gI-08605/
