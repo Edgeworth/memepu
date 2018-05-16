@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 49)
+    (drawings 50)
     (tracks 0)
     (zones 0)
     (modules 86)
@@ -4074,7 +4074,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCD447)
-    (at 145 60 270)
+    (at 138 43 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFDC184/5AFDC202)
@@ -4158,7 +4158,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCD3BA)
-    (at 145 48 270)
+    (at 138 31 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFDC184/5AFDC21E)
@@ -4242,7 +4242,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCD32D)
-    (at 173 60 270)
+    (at 138 67 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFDFFA6/5AFDC202)
@@ -4326,7 +4326,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCD2A0)
-    (at 173 48 270)
+    (at 138 55 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFDFFA6/5AFDC21E)
@@ -4410,7 +4410,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC095)
-    (at 201 60 270)
+    (at 165 43 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB536/5AFDC202)
@@ -4494,7 +4494,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC0C5)
-    (at 201 48 270)
+    (at 165 31 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB536/5AFDC21E)
@@ -4578,7 +4578,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC0F5)
-    (at 229 60 270)
+    (at 193 43 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB55D/5AFDC202)
@@ -4662,7 +4662,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC125)
-    (at 229 48 270)
+    (at 193 31 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB55D/5AFDC21E)
@@ -4746,7 +4746,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC155)
-    (at 201 84 270)
+    (at 165 67 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB584/5AFDC202)
@@ -4830,7 +4830,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC185)
-    (at 201 72 270)
+    (at 165 55 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB584/5AFDC21E)
@@ -4985,7 +4985,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B086CCD)
-    (at 228.760873 71.939342 270)
+    (at 192.760873 54.939342 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFD86BE/5AFDC202)
@@ -5069,7 +5069,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B086CFD)
-    (at 228.760873 84 270)
+    (at 192.760873 67 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFD86BE/5AFDC21E)
@@ -5152,7 +5152,10 @@
     )
   )
 
-  (gr_text "M3 Register" (at 190 95) (layer F.SilkS)
+  (gr_text "Task Register" (at 181 78) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text "M3 Register" (at 154 78) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text PWR (at 188 23) (layer F.SilkS)
@@ -5161,17 +5164,17 @@
   (gr_text LEDs (at 178 26) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text "M1 Register" (at 217 45) (layer F.SilkS)
+  (gr_text "M1 Register" (at 181 28) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text "M0 Register\n" (at 189 45) (layer F.SilkS)
+  (gr_text "M0 Register\n" (at 153 28) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text "B Register" (at 161 45) (layer F.SilkS) (tstamp 5AFCDB33)
+  (gr_text "B Register" (at 127 78) (layer F.SilkS) (tstamp 5AFCDB33)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_line (start 113 28) (end 112 28) (layer F.SilkS) (width 0.2) (tstamp 5AFCD269))
-  (gr_text "A Register" (at 133 45) (layer F.SilkS) (tstamp 5AFCD185)
+  (gr_text "A Register" (at 126 28) (layer F.SilkS) (tstamp 5AFCD185)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "Data Bus" (at 143 8) (layer F.SilkS)
