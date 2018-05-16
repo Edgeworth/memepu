@@ -1,6 +1,8 @@
 #### TODO / Parts to get
 - 1 M potentiometer - check footprint when get
 - DPST switch - make footprint
+- micro usb connection - check footprint
+
 
 #### Features / Things to remember
 - More LEDs - but option to turn them all off.
@@ -10,6 +12,7 @@
 - peripheral interconnect bus connector
 - LU ops - AND etc
 - VGA.
+- RESET button
 
 Stack pointer:
 24 bit, needs set, increment, decrement. - use 74hc193
