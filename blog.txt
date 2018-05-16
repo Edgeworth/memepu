@@ -1,0 +1,5 @@
+- trying to decide on LED brightness - use 10k or 1k resistors. If use 1k, then drawing 5mA from ICs, which could be a lot, e.g. clock source can only source 25mA. Went with 5mA for now.
+
+- Considering up to 8 clock sources... would be good for experimentation. Or variable frequency multiplier if that exists?
+
+- Bit 0 of the bus is LSB.
