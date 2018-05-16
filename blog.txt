@@ -1,5 +1,50 @@
-- trying to decide on LED brightness - use 10k or 1k resistors. If use 1k, then drawing 5mA from ICs, which could be a lot, e.g. clock source can only source 25mA. Went with 5mA for now.
+#### TODO / Parts to get
+- 1 M potentiometer - check footprint when get
+- DPST switch - make footprint
 
-- Considering up to 8 clock sources... would be good for experimentation. Or variable frequency multiplier if that exists?
+#### Features / Things to remember
+- More LEDs - but option to turn them all off.
+- bypass cap for each ic
+- mounting holes
+- timer interrupt
+- peripheral interconnect bus connector
+- LU ops - AND etc
+- VGA.
 
-- Bit 0 of the bus is LSB.
+Stack pointer:
+24 bit, needs set, increment, decrement. - use 74hc193
+
+####Protection (currently thinking)
+Task register
+Kernel
+4KB pages
+Upon access memory, checks - if check fails, what do? I guess have to abort immediately, could do by resetting the micro-op counter and the opcode ? Alternately, have a page fault control signal.
+
+Lookup: task id register (8 bit) + 12 bit page id
+
+Privileged instructions?
+
+#### Boot sequence
+Have EEPROM mapped into some high bits in memory (e.g. bit 23 of address space goes to eeprom). Need to make sure PC is set to something initially good...
+
+#### Peripheral interface design
+How to talk with peripherals? Need some kind of polling along bus - e.g. control signals for each peripheral - in, out. On in, peripheral reads data from bus. On out, peripheral may assert bus.
+
+#### Random thoughts
+Trying to decide on LED brightness - use 10k or 1k resistors. If use 1k, then drawing 5mA from ICs, which could be a lot, e.g. clock source can only source 25mA. Went with 5mA for now.
+
+Considering up to 8 clock sources... would be good for experimentation. Or variable frequency multiplier if that exists?
+
+Bit 0 of the bus is LSB.
+
+#### Interrupt design decisions
+Edge triggered - needs D flip-flop for each IRQ line. :
+
+- Need some way to clock it on the peripheral's demand, otherwise potentially complicated to make peripheral assert the data line long enough. Can miss interrupts if the peripheral asserts the IRQ during the interrupt handler (even though interrupts are disabled, we still need to record them), then the interrupt handler marks the interrupt as handled. Even if the interrupt handler marks the interrupt bit as what the device is currently asserting, timing issues can still happen i.e.: peripheral asserts, ISR started, peripheral asserts again, ISR marks interrupt bit as what the peripheral is currently asserting the line as, which has already gone back to 0, so the second interrupt is missed. Need a counter system to fix this.
+
+Level triggered with ACKs:
+
+- Each device will assert its interrupt line until it gets an ACK from the CPU via IN/OUT lines to peripherals. The cpu will potentially then read out data (e.g. from keyboard). If there is data remaining, the peripheral can keep its interrupt line asserted. In the case of timer like interrupts, the timer device could keep a count of ack'd timer interrupts and assert the IRQ while the count is positive, or it could just not care, and two timer interrupts very close together could be missed.
+- This also allows some sharing of interrupt lines, then the CPU can poll each device on the same line.
+
+Go with level triggered.

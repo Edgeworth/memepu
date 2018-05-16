@@ -1,20 +1,113 @@
-# Electronics
-TODO:
- - Put MLU below regs, then ALU below MLU
+### Registers
+####General purpose: 
+C?
+- A, B
 
-Interrupts:
-- Set interrupt control bit? synchronisation on this
+####Memory address:
+May be clobbered by the system for e.g. loads
 
-Registers:
-A 8
-B 8
-SYS0 (instruction 1)
-SYS1 (instruction 2)
-SUM 8 - read only
-STATUS/CONTROL 8?
-INTERRUPT?
+- M0, M1, M2 
 
-INSTRUCTIONS
+#### Stack pointer (SYSTEM) - Read only (except via increment, decrement)
+Need two stack pointers - during ISR, don't want to use stack of existing process. Suppose we change the stack pointer, we'd need to save it, which would take stack memory. K for kernel. I guess we don't need IN/OUT for these. OUT may be useful for debugging.
+
+Made out of 4 bit up/down binary counters.
+
+- K0, K1, K2 
+
+####Stack pointer (USER): 
+Actually made out of 4 bit up/down binary counters. Need IN to set it for context switch. Out to save for context switch.
+
+- S0, S1, S2
+
+#### Status/Control SCI register
+
+Need to be able to set individiual bits somehow.
+- Interrupt enable (initial 0) 
+- Carry (initial 0) - set from ALU
+- Zero
+
+#### Interrupt register - 
+Level triggered, each device will assert until ack comes and it decides to stop asserting. 
+- Timer
+- Software (e.g. syscall)
+- Keyboard
+- Mouse
+- Network
+- Storage?
+
+#### Program counter
+Actually made out of 4 bit binary counters.
+- PC0, PC1, PC2
+
+#### SUM - read only 
+Output from ALU
+
+#### DISP - Display output - write only
+- DISP
+
+#### Internal MMU registers for loading - read only
+
+- MMU0, MMU1, MMU2
+
+#### Task register - rw
+Stores id of current task
+
+- TASK
+
+#### Opcode register - write only
+
+### Not registers, but need control signals
+#### MMU
+
+- MMU_IN - write into memory, checks permissions unless task id is 0?
+- MMU_CONTROL_IN - write into memory protection memory
+- MMU_OUT - get data from memory / eeprom / whatever
+
+#### MLU
+Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD - lshift and rshift implemented as MUL and DIV.
+
+- MLU out
+- 3 bits for operation select
+
+### Control signals
+5 + 5 + 4 + 3 = 17 bits hrmmm
+
+#### Bus related
+INs: A, B, M0, M1, M2, S0, S1, S2, PC0, PC1, PC2, MMU0, MMU1, MMU2, MMU, MMU_CONTROL, DISP, TASK, OPCODE, + peripherals - need 5 bit decoder
+
+OUTs: A, B, M0, M1, M2, S0, S1, S2, K0, K1, K2, INTERRUPT, SUM, MMU, TASK, MLU + peripherals - need 5 bit decoder
+INTERRUPT register needs to be read for ISR to know which devices to talk to.
+
+#### Output
+16 line decoder may be sufficient
+
+- SUB
+- PC increment
+- OPCODE increment
+- Reset uop counter (need to be careful with clocks here?)
+- RESET - also wired to reset uop counter signal 
+- SP increment
+- SP decrement
+- KSP increment
+- KSP decrement
+- Set carry flag from ALU
+- Set interrupt enable
+- Unset interrupt enable
+
+Also MLU operation select:
+
+- MLU - 3 bit operation select
+
+#### Input
+19 bits available, 14 bits used
+
+- Carry
+- Zero
+- 4 micro-op counter bits
+- 8 opcode bits
+
+### Instructions
 0 - LOAD from bootloader?
 LDA, LDB, LDC, LDD, OUT - immediate, memory addr, indirect memory addr
 ADD, SUB, MUL, DIV, MOD - A, B
@@ -23,114 +116,34 @@ JNZ, JZ, JMP
 JLES, JLTS, JGES, JGTS
 JLE, JLT, JGE, JGT
 AND, OR, NOT, XOR - A, B
+INT - software interrupt
+PUSH, POP
+RTI - return from interrupt - re-enables interrupts
 bitwise ops (and, or, not, xor, nand?)
 
-Layout:
+### Module notes:
+#### MMU
+Need to also interface into EEPROM for boot
 
-                         | leds| control signal leds + CLK ANDing
-Clock - Manual bus input | bus |  Control signal decoding
-Regs     A,B,SYS0,SYS1 | bus |  - Opcode reg - Control logic
-  | A, B
-MLU                      | bus | Mem reg - Memory
-  | A, B
-ALU                      | bus | Display
-                         | bus | Program counter
+#### Reset
+Need to make sure everything is properly reset.
 
-Already has ANDs: PC LOW, PC HIGH
+- TASK reg set to 0
+- Boot EEPROM used
 
-Modules:
-Clock:
-Signal: CLK
+#### Opcode reg
+Needs to be counter
 
-Display:
-Control: DISP in
+#### ALU
+Produces carry and zero signal.
 
-General purpose reg:
-Control: A in, B in, SYS0 in, SYS1 in, A out, B out, SYS0 out, SYS1 out
- - A, B, C, SYS0, SYS1
+### Peripherals
 
-ALU:
-Control: SUB, SUM out
-
-PC:
-Control: PC INC, PC LOW out, PC HIGH out, PC LOW in, PC HIGH in
-
-Memory reg:
-Control: MEM LOW in, MEM HIGH in
-
-Memory:
-Control: MEM out
-
-Test:
-
-Multi logic unit
-Control: MLU out, MLU OP in (3)
- - Use big EEPROM? 19 bits, gives 8 diff ops
- - Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD
-
-Opcode Reg:
- - 8 bits is counter (OPCODE inc)
-
-Control logic:
-
-Control + status word decoder:
-
-Control + status word display:
-
-Bootloader module (loads initial program into ram)?
-
-DMA module?:
-- DMA command reg
-
-Opcode reg:
-8 bits of counter
-
-Control / status bits:
-Control (written by control logic):
-OUT plane 0 - 4:
-A out, B out, SYS0 out, SYS1 out
-PC LOW out
-PC HIGH out
-SUM out
-MEM out
-MLU out
-
-IN plane 0 - 4:
-A in, B in, SYS0 in, SYS1 in
-PC LOW in
-PC HIGH in
-MEM LOW in
-MEM HIGH in
-OPCODE in
-DISPLAY in
-
-Control plane - 3:
-SUB
-RESET (?)
-HLT
-RESET uop counter (not CLK'd, just by itself?, or !CLK)
-INC PC (CLK'd)
-INC OPCODE (CLK'd)
-
-Select plane - 3
-PAGE SELECT (1 bit); LU op select (3 bits)
-
-Page select - memory source select?
-
-Status (read by control logic) - 5:
-Doesn't need a register
-INTERRUPT
-OVERFLOW
-CARRY
-ZERO
-NEG
-
-Signals:
-CLOCK, ~CLOCK
-BUS USED (?) (for DMA / cycle stealing)
+#### Keyboard (PS/2):
+- http://pcbheaven.com/wikipages/The_PS2_protocol/
+- http://retired.beyondlogic.org/keyboard/keybrd.htm
 
 Instruction bits - 17 (19):
-Pull out pc Inc, interrupt check, then jmp or opcode load to 0 opcode, instructions can then reset opcode reg and the end of their microcode. Status bits then may become unnecessary. Would have to use data selectors though.
 5 status bits (see above)
 8 opcode bits
 4 micro-op counter bits

@@ -1,0 +1,224 @@
+EESchema Schematic File Version 4
+LIBS:cpu-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 8 9
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L 74xx:74HCT574 U?
+U 1 1 5AFDC202
+P 1500 1900
+AR Path="/5AFD5CE2/5AFDC202" Ref="U?"  Part="1" 
+AR Path="/5AFD5CE2/5AFDC184/5AFDC202" Ref="U8"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC202" Ref="U10"  Part="1" 
+F 0 "U8" H 1600 2600 50  0000 C CNN
+F 1 "74HCT574" H 1500 1600 50  0000 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 1500 1900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HCT574" H 1500 1900 50  0001 C CNN
+	1    1500 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0130
+U 1 1 5AFDC209
+P 1500 2700
+AR Path="/5AFD5CE2/5AFDC184/5AFDC209" Ref="#PWR0130"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC209" Ref="#PWR0136"  Part="1" 
+F 0 "#PWR0130" H 1500 2450 50  0001 C CNN
+F 1 "GND" H 1505 2527 50  0000 C CNN
+F 2 "" H 1500 2700 50  0001 C CNN
+F 3 "" H 1500 2700 50  0001 C CNN
+	1    1500 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0131
+U 1 1 5AFDC20F
+P 1500 1100
+AR Path="/5AFD5CE2/5AFDC184/5AFDC20F" Ref="#PWR0131"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC20F" Ref="#PWR0137"  Part="1" 
+F 0 "#PWR0131" H 1500 950 50  0001 C CNN
+F 1 "VCC" H 1517 1273 50  0000 C CNN
+F 2 "" H 1500 1100 50  0001 C CNN
+F 3 "" H 1500 1100 50  0001 C CNN
+	1    1500 1100
+	1    0    0    -1  
+$EndComp
+Text HLabel 1000 2300 0    50   Input ~ 0
+REG_IN
+Text HLabel 1000 1400 0    50   Input ~ 0
+I0
+Text HLabel 1000 1500 0    50   Input ~ 0
+I1
+Text HLabel 1000 1600 0    50   Input ~ 0
+I2
+Text HLabel 1000 1700 0    50   Input ~ 0
+I3
+Text HLabel 1000 1800 0    50   Input ~ 0
+I4
+Text HLabel 1000 1900 0    50   Input ~ 0
+I5
+Text HLabel 1000 2000 0    50   Input ~ 0
+I6
+Text HLabel 1000 2100 0    50   Input ~ 0
+I7
+$Comp
+L 74xx:74HC245 U?
+U 1 1 5AFDC21E
+P 3300 1900
+AR Path="/5AFD5CE2/5AFDC21E" Ref="U?"  Part="1" 
+AR Path="/5AFD5CE2/5AFDC184/5AFDC21E" Ref="U9"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC21E" Ref="U11"  Part="1" 
+F 0 "U9" H 3400 2600 50  0000 C CNN
+F 1 "74HC245" H 3350 1600 50  0000 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 3300 1900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 3300 1900 50  0001 C CNN
+	1    3300 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0132
+U 1 1 5AFDC225
+P 1000 2400
+AR Path="/5AFD5CE2/5AFDC184/5AFDC225" Ref="#PWR0132"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC225" Ref="#PWR0138"  Part="1" 
+F 0 "#PWR0132" H 1000 2150 50  0001 C CNN
+F 1 "GND" H 1005 2227 50  0000 C CNN
+F 2 "" H 1000 2400 50  0001 C CNN
+F 3 "" H 1000 2400 50  0001 C CNN
+	1    1000 2400
+	1    0    0    -1  
+$EndComp
+$Sheet
+S 1950 750  900  550 
+U 5AFDC22F
+F0 "Reg Leds" 50
+F1 "bus_leds.sch" 50
+F2 "I0" I B 2050 1300 50 
+F3 "I1" I B 2150 1300 50 
+F4 "I2" I B 2250 1300 50 
+F5 "I3" I B 2350 1300 50 
+F6 "I4" I B 2450 1300 50 
+F7 "I5" I B 2550 1300 50 
+F8 "I6" I B 2650 1300 50 
+F9 "I7" I B 2750 1300 50 
+$EndSheet
+Wire Wire Line
+	2000 1400 2050 1400
+Wire Wire Line
+	2000 1500 2150 1500
+Wire Wire Line
+	2000 1600 2250 1600
+Wire Wire Line
+	2000 1700 2350 1700
+Wire Wire Line
+	2800 1900 2550 1900
+Wire Wire Line
+	2000 2000 2650 2000
+Wire Wire Line
+	2800 2100 2750 2100
+$Comp
+L power:GND #PWR0133
+U 1 1 5AFDC23D
+P 3300 2700
+AR Path="/5AFD5CE2/5AFDC184/5AFDC23D" Ref="#PWR0133"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC23D" Ref="#PWR0139"  Part="1" 
+F 0 "#PWR0133" H 3300 2450 50  0001 C CNN
+F 1 "GND" H 3305 2527 50  0000 C CNN
+F 2 "" H 3300 2700 50  0001 C CNN
+F 3 "" H 3300 2700 50  0001 C CNN
+	1    3300 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0134
+U 1 1 5AFDC243
+P 2800 2300
+AR Path="/5AFD5CE2/5AFDC184/5AFDC243" Ref="#PWR0134"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC243" Ref="#PWR0140"  Part="1" 
+F 0 "#PWR0134" H 2800 2150 50  0001 C CNN
+F 1 "VCC" H 2817 2473 50  0000 C CNN
+F 2 "" H 2800 2300 50  0001 C CNN
+F 3 "" H 2800 2300 50  0001 C CNN
+	1    2800 2300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:VCC #PWR0135
+U 1 1 5AFDC249
+P 3300 1100
+AR Path="/5AFD5CE2/5AFDC184/5AFDC249" Ref="#PWR0135"  Part="1" 
+AR Path="/5AFD5CE2/5AFDFFA6/5AFDC249" Ref="#PWR0141"  Part="1" 
+F 0 "#PWR0135" H 3300 950 50  0001 C CNN
+F 1 "VCC" H 3317 1273 50  0000 C CNN
+F 2 "" H 3300 1100 50  0001 C CNN
+F 3 "" H 3300 1100 50  0001 C CNN
+	1    3300 1100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2050 1300 2050 1400
+Connection ~ 2050 1400
+Wire Wire Line
+	2050 1400 2800 1400
+Wire Wire Line
+	2150 1300 2150 1500
+Connection ~ 2150 1500
+Wire Wire Line
+	2150 1500 2800 1500
+Wire Wire Line
+	2250 1600 2250 1300
+Connection ~ 2250 1600
+Wire Wire Line
+	2250 1600 2800 1600
+Wire Wire Line
+	2350 1300 2350 1700
+Connection ~ 2350 1700
+Wire Wire Line
+	2350 1700 2800 1700
+Wire Wire Line
+	2550 1300 2550 1900
+Connection ~ 2550 1900
+Wire Wire Line
+	2550 1900 2000 1900
+Wire Wire Line
+	2650 2000 2650 1300
+Connection ~ 2650 2000
+Wire Wire Line
+	2650 2000 2800 2000
+Wire Wire Line
+	2750 1300 2750 2100
+Connection ~ 2750 2100
+Wire Wire Line
+	2750 2100 2000 2100
+Wire Wire Line
+	2000 1800 2800 1800
+Text HLabel 2800 2400 0    50   Input ~ 0
+REG_OUT
+Text HLabel 3800 1400 2    50   Input ~ 0
+O0
+Text HLabel 3800 1500 2    50   Input ~ 0
+O1
+Text HLabel 3800 1600 2    50   Input ~ 0
+O2
+Text HLabel 3800 1700 2    50   Input ~ 0
+O3
+Text HLabel 3800 1800 2    50   Input ~ 0
+O4
+Text HLabel 3800 1900 2    50   Input ~ 0
+O5
+Text HLabel 3800 2000 2    50   Input ~ 0
+O6
+Text HLabel 3800 2100 2    50   Input ~ 0
+O7
+$EndSCHEMATC

@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 3
+Sheet 2 9
 Title ""
 Date ""
 Rev ""
@@ -906,8 +906,6 @@ F 3 "" H 6750 2600 50  0001 C CNN
 	1    6750 2600
 	0    1    1    0   
 $EndComp
-Text Notes 9350 3900 0    50   ~ 0
-TODO: Bypass cap for 7414 ?
 $Comp
 L power:VCC #PWR0119
 U 1 1 5B0B7B5D
