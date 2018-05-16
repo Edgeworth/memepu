@@ -15,7 +15,8 @@ In order:
 74HC107 - Dual JK flipflop with reset
 74HC138 - 3 to 8 decoder, inverted outputs
 74HC139 - 2 to 4 decoder
-74HC157 - 4	quad 2-line to 1-line data selector
+74HC151 - 8-line to 1-line data selector/multiplexer
+74HC157 - 4 quad 2-line to 1-line data selector
 74HC161 - 4 bit binary counter, synchronous
 74HC245 - Octal bidirectional bus transceiver
 74HC273 - 8 bit register with unfortunate pinout
