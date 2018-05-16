@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 3
+Sheet 1 9
 Title ""
 Date ""
 Rev ""
@@ -110,5 +110,94 @@ S 1050 1700 500  950
 U 5B2C1C6B
 F0 "Manual Bus Input" 50
 F1 "manual_bus.sch" 50
+F2 "OUT" I L 1050 1800 50 
+F3 "O0" I R 1550 1800 50 
+F4 "O1" I R 1550 1900 50 
+F5 "O2" I R 1550 2000 50 
+F6 "O3" I R 1550 2100 50 
+F7 "O4" I R 1550 2200 50 
+F8 "O5" I R 1550 2300 50 
+F9 "O6" I R 1550 2400 50 
+F10 "O7" I R 1550 2500 50 
 $EndSheet
+$Sheet
+S 2500 1700 500  950 
+U 5AFB9CBF
+F0 "Bus Leds" 50
+F1 "bus_leds.sch" 50
+F2 "I0" I L 2500 1800 50 
+F3 "I1" I L 2500 1900 50 
+F4 "I2" I L 2500 2000 50 
+F5 "I3" I L 2500 2100 50 
+F6 "I4" I L 2500 2200 50 
+F7 "I5" I L 2500 2300 50 
+F8 "I6" I L 2500 2400 50 
+F9 "I7" I L 2500 2500 50 
+$EndSheet
+Text Label 1550 1800 0    50   ~ 0
+BUS0
+Text Label 1550 1900 0    50   ~ 0
+BUS1
+Text Label 1550 2000 0    50   ~ 0
+BUS2
+Text Label 1550 2100 0    50   ~ 0
+BUS3
+Text Label 1550 2200 0    50   ~ 0
+BUS4
+Text Label 1550 2300 0    50   ~ 0
+BUS5
+Text Label 1550 2400 0    50   ~ 0
+BUS6
+Text Label 1550 2500 0    50   ~ 0
+BUS7
+Text Label 2500 1800 2    50   ~ 0
+BUS0
+Text Label 2500 1900 2    50   ~ 0
+BUS1
+Text Label 2500 2000 2    50   ~ 0
+BUS2
+Text Label 2500 2100 2    50   ~ 0
+BUS3
+Text Label 2500 2200 2    50   ~ 0
+BUS4
+Text Label 2500 2300 2    50   ~ 0
+BUS5
+Text Label 2500 2400 2    50   ~ 0
+BUS6
+Text Label 2500 2500 2    50   ~ 0
+BUS7
+$Sheet
+S 1000 3000 1100 1200
+U 5AFD5CE2
+F0 "Registers" 50
+F1 "registers.sch" 50
+F2 "BUS0" I L 1000 3100 50 
+F3 "BUS1" I L 1000 3200 50 
+F4 "BUS2" I L 1000 3300 50 
+F5 "BUS3" I L 1000 3400 50 
+F6 "BUS4" I L 1000 3500 50 
+F7 "BUS5" I L 1000 3600 50 
+F8 "BUS6" I L 1000 3700 50 
+F9 "BUS7" I L 1000 3800 50 
+F10 "REG_A_IN" I R 2100 3100 50 
+F11 "REG_A_OUT" I R 2100 3200 50 
+F12 "REG_B_IN" I R 2100 3300 50 
+F13 "REG_B_OUT" I R 2100 3400 50 
+$EndSheet
+Text Label 1000 3100 2    50   ~ 0
+BUS0
+Text Label 1000 3200 2    50   ~ 0
+BUS1
+Text Label 1000 3300 2    50   ~ 0
+BUS2
+Text Label 1000 3400 2    50   ~ 0
+BUS3
+Text Label 1000 3500 2    50   ~ 0
+BUS4
+Text Label 1000 3600 2    50   ~ 0
+BUS5
+Text Label 1000 3700 2    50   ~ 0
+BUS6
+Text Label 1000 3800 2    50   ~ 0
+BUS7
 $EndSCHEMATC

@@ -18,6 +18,7 @@ In order:
 74HC151 - 8-line to 1-line data selector/multiplexer
 74HC157 - 4 quad 2-line to 1-line data selector
 74HC161 - 4 bit binary counter, synchronous
+74HC193 - 4 bit binary counter, up/down, synchronous, reset
 74HC245 - Octal bidirectional bus transceiver
 74HC273 - 8 bit register with unfortunate pinout
 74HC283 - 4 bit binary full adder
