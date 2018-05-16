@@ -1,0 +1,296 @@
+EESchema Schematic File Version 4
+LIBS:cpu-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 3
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Switch:SW_DIP_x08 SW?
+U 1 1 5B2C1F8A
+P 3750 1700
+F 0 "SW?" V 3796 1270 50  0000 R CNN
+F 1 "SW_DIP_x08" V 3705 1270 50  0000 R CNN
+F 2 "" H 3750 1700 50  0001 C CNN
+F 3 "" H 3750 1700 50  0001 C CNN
+	1    3750 1700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5B2C21F5
+P 3350 1400
+F 0 "#PWR?" H 3350 1250 50  0001 C CNN
+F 1 "VCC" H 3367 1573 50  0000 C CNN
+F 2 "" H 3350 1400 50  0001 C CNN
+F 3 "" H 3350 1400 50  0001 C CNN
+	1    3350 1400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3350 1400 3450 1400
+Connection ~ 3350 1400
+Wire Wire Line
+	3450 1400 3550 1400
+Connection ~ 3450 1400
+Wire Wire Line
+	3550 1400 3650 1400
+Connection ~ 3550 1400
+Wire Wire Line
+	3650 1400 3750 1400
+Connection ~ 3650 1400
+Wire Wire Line
+	3750 1400 3850 1400
+Connection ~ 3750 1400
+Wire Wire Line
+	3850 1400 3950 1400
+Connection ~ 3850 1400
+Wire Wire Line
+	3950 1400 4050 1400
+Connection ~ 3950 1400
+$Comp
+L Device:R R?
+U 1 1 5B2C25DC
+P 3350 3350
+F 0 "R?" H 3250 3500 50  0000 L CNN
+F 1 "100K" V 3350 3250 50  0000 L CNN
+F 2 "" V 3280 3350 50  0001 C CNN
+F 3 "~" H 3350 3350 50  0001 C CNN
+	1    3350 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5B2C2BC6
+P 3450 3350
+F 0 "R?" H 3350 3500 50  0000 L CNN
+F 1 "100K" V 3450 3250 50  0000 L CNN
+F 2 "" V 3380 3350 50  0001 C CNN
+F 3 "~" H 3450 3350 50  0001 C CNN
+	1    3450 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5B2C2C99
+P 3550 3350
+F 0 "R?" H 3450 3500 50  0000 L CNN
+F 1 "100K" V 3550 3250 50  0000 L CNN
+F 2 "" V 3480 3350 50  0001 C CNN
+F 3 "~" H 3550 3350 50  0001 C CNN
+	1    3550 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5B2C2DA5
+P 3650 3350
+F 0 "R?" H 3550 3500 50  0000 L CNN
+F 1 "100K" V 3650 3250 50  0000 L CNN
+F 2 "" V 3580 3350 50  0001 C CNN
+F 3 "~" H 3650 3350 50  0001 C CNN
+	1    3650 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5B2C2E95
+P 3750 3350
+F 0 "R?" H 3650 3500 50  0000 L CNN
+F 1 "100K" V 3750 3250 50  0000 L CNN
+F 2 "" V 3680 3350 50  0001 C CNN
+F 3 "~" H 3750 3350 50  0001 C CNN
+	1    3750 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5B2C2FA7
+P 3850 3350
+F 0 "R?" H 3750 3500 50  0000 L CNN
+F 1 "100K" V 3850 3250 50  0000 L CNN
+F 2 "" V 3780 3350 50  0001 C CNN
+F 3 "~" H 3850 3350 50  0001 C CNN
+	1    3850 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5B2C305F
+P 3950 3350
+F 0 "R?" H 3850 3500 50  0000 L CNN
+F 1 "100K" V 3950 3250 50  0000 L CNN
+F 2 "" V 3880 3350 50  0001 C CNN
+F 3 "~" H 3950 3350 50  0001 C CNN
+	1    3950 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5B2C312F
+P 4050 3350
+F 0 "R?" H 3950 3500 50  0000 L CNN
+F 1 "100K" V 4050 3250 50  0000 L CNN
+F 2 "" V 3980 3350 50  0001 C CNN
+F 3 "~" H 4050 3350 50  0001 C CNN
+	1    4050 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC245 U?
+U 1 1 5B2C3561
+P 4700 2500
+F 0 "U?" H 4800 3150 50  0000 C CNN
+F 1 "74HC245" H 4700 2200 50  0000 C CNN
+F 2 "" H 4700 2500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 4700 2500 50  0001 C CNN
+	1    4700 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5B2C3FAF
+P 4700 1700
+F 0 "#PWR?" H 4700 1550 50  0001 C CNN
+F 1 "VCC" H 4717 1873 50  0000 C CNN
+F 2 "" H 4700 1700 50  0001 C CNN
+F 3 "" H 4700 1700 50  0001 C CNN
+	1    4700 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B2C4405
+P 4700 3300
+F 0 "#PWR?" H 4700 3050 50  0001 C CNN
+F 1 "GND" H 4705 3127 50  0000 C CNN
+F 2 "" H 4700 3300 50  0001 C CNN
+F 3 "" H 4700 3300 50  0001 C CNN
+	1    4700 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B2CAE54
+P 3350 3500
+F 0 "#PWR?" H 3350 3250 50  0001 C CNN
+F 1 "GND" H 3355 3327 50  0000 C CNN
+F 2 "" H 3350 3500 50  0001 C CNN
+F 3 "" H 3350 3500 50  0001 C CNN
+	1    3350 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4050 2000 4200 2000
+Wire Wire Line
+	3950 2000 3950 2100
+Wire Wire Line
+	3950 2100 4200 2100
+Wire Wire Line
+	4200 2200 3850 2200
+Wire Wire Line
+	3850 2200 3850 2000
+Wire Wire Line
+	3750 2000 3750 2300
+Wire Wire Line
+	3750 2300 4200 2300
+Wire Wire Line
+	4200 2400 3650 2400
+Wire Wire Line
+	3650 2400 3650 2000
+Wire Wire Line
+	3550 2000 3550 2500
+Wire Wire Line
+	3550 2500 4200 2500
+Wire Wire Line
+	4200 2600 3450 2600
+Wire Wire Line
+	3450 2600 3450 2000
+Wire Wire Line
+	3350 2000 3350 2700
+Wire Wire Line
+	3350 2700 4200 2700
+Wire Wire Line
+	3350 2700 3350 3200
+Wire Wire Line
+	3450 3200 3450 2600
+Wire Wire Line
+	3550 2500 3550 3200
+Wire Wire Line
+	3650 3200 3650 2400
+Wire Wire Line
+	3750 3200 3750 2300
+Wire Wire Line
+	3850 2200 3850 3200
+Wire Wire Line
+	3950 3200 3950 2100
+Wire Wire Line
+	4050 2000 4050 3200
+Wire Wire Line
+	3350 3500 3450 3500
+Connection ~ 3350 3500
+Wire Wire Line
+	3450 3500 3550 3500
+Connection ~ 3450 3500
+Wire Wire Line
+	3550 3500 3650 3500
+Connection ~ 3550 3500
+Wire Wire Line
+	3650 3500 3750 3500
+Connection ~ 3650 3500
+Wire Wire Line
+	3750 3500 3850 3500
+Connection ~ 3750 3500
+Wire Wire Line
+	3850 3500 3950 3500
+Connection ~ 3850 3500
+Wire Wire Line
+	3950 3500 4050 3500
+Connection ~ 3950 3500
+Connection ~ 4050 2000
+Connection ~ 3950 2100
+Connection ~ 3850 2200
+Connection ~ 3750 2300
+Connection ~ 3650 2400
+Connection ~ 3550 2500
+Connection ~ 3450 2600
+Connection ~ 3350 2700
+$Comp
+L power:VCC #PWR?
+U 1 1 5B2DCAC9
+P 4200 2900
+F 0 "#PWR?" H 4200 2750 50  0001 C CNN
+F 1 "VCC" H 4217 3073 50  0000 C CNN
+F 2 "" H 4200 2900 50  0001 C CNN
+F 3 "" H 4200 2900 50  0001 C CNN
+	1    4200 2900
+	1    0    0    -1  
+$EndComp
+Text HLabel 4200 3000 0    50   Input ~ 0
+OUT
+Text HLabel 5200 2000 2    50   Input ~ 0
+O0
+Text HLabel 5200 2100 2    50   Input ~ 0
+O1
+Text HLabel 5200 2200 2    50   Input ~ 0
+O2
+Text HLabel 5200 2300 2    50   Input ~ 0
+O3
+Text HLabel 5200 2400 2    50   Input ~ 0
+O4
+Text HLabel 5200 2500 2    50   Input ~ 0
+O5
+Text HLabel 5200 2600 2    50   Input ~ 0
+O6
+Text HLabel 5200 2700 2    50   Input ~ 0
+O7
+$EndSCHEMATC

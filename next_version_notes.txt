@@ -1,3 +1,7 @@
+Parts to get:
+1 M potentiometer - check footprint when get
+
+
 General:
 More LEDs - but option to turn them all off. Common LED ground plane.
 bypass cap for each ic
