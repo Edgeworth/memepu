@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 6 11
+Sheet 6 12
 Title ""
 Date ""
 Rev ""
@@ -25,7 +25,7 @@ AR Path="/5AFD5CE2/5AFCB536/5AFDC202" Ref="U12"  Part="1"
 AR Path="/5AFD5CE2/5AFCB55D/5AFDC202" Ref="U14"  Part="1" 
 AR Path="/5AFD5CE2/5AFCB584/5AFDC202" Ref="U16"  Part="1" 
 AR Path="/5AFD5CE2/5AFD86BE/5AFDC202" Ref="U18"  Part="1" 
-F 0 "U8" H 1600 2600 50  0000 C CNN
+F 0 "U18" H 1600 2600 50  0000 C CNN
 F 1 "74HCT574" H 1500 1600 50  0000 C CNN
 F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 1500 1900 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HCT574" H 1500 1900 50  0001 C CNN
@@ -102,4 +102,30 @@ Text HLabel 2000 2000 2    50   Input ~ 0
 O6
 Text HLabel 2000 2100 2    50   Input ~ 0
 O7
+$Comp
+L Device:C_Small C?
+U 1 1 5AFDADFB
+P 2500 1800
+AR Path="/5AFD5CE2/5AFDC184/5AFDADFB" Ref="C?"  Part="1" 
+AR Path="/5AFD5CE2/5AFCB536/5AFDADFB" Ref="C16"  Part="1" 
+AR Path="/5AFD5CE2/5AFCB55D/5AFDADFB" Ref="C17"  Part="1" 
+AR Path="/5AFD5CE2/5AFCB584/5AFDADFB" Ref="C18"  Part="1" 
+AR Path="/5AFD5CE2/5AFD86BE/5AFDADFB" Ref="C19"  Part="1" 
+F 0 "C19" H 2592 1846 50  0000 L CNN
+F 1 "C_Small" H 2592 1755 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 2500 1800 50  0001 C CNN
+F 3 "~" H 2500 1800 50  0001 C CNN
+	1    2500 1800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1500 1100 2500 1100
+Wire Wire Line
+	2500 1100 2500 1700
+Connection ~ 1500 1100
+Wire Wire Line
+	2500 1900 2500 2700
+Wire Wire Line
+	2500 2700 1500 2700
+Connection ~ 1500 2700
 $EndSCHEMATC
