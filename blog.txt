@@ -3,6 +3,17 @@
 - DPST switch - make footprint
 - micro usb connection - check footprint
 
+stack pointers
+status/control reg
+interrupt reg
+program counter
+display module
+memory module
+opcode register
+MLU
+control logic
+vga
+
 
 #### Features / Things to remember
 - More LEDs - but option to turn them all off.
