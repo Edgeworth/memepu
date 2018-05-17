@@ -14,7 +14,15 @@
 - VGA.
 - RESET button
 
-Stack pointer:
+#### ALU
+Use 4-bit binary counters for add. For subtract, using 2's complement, so:
+-b = ~b + 1
+a - b = a + ~b + 1
+Can create ~b by XORing with SUB flag. Can do +1 by putting SUB flag into carry.
+
+Needs to access A and B registers all the time, so A and B registers need transceivers.
+
+#### Stack pointer:
 24 bit, needs set, increment, decrement. - use 74hc193
 
 ####Protection (currently thinking)
@@ -23,7 +31,7 @@ Kernel
 4KB pages
 Upon access memory, checks - if check fails, what do? I guess have to abort immediately, could do by resetting the micro-op counter and the opcode ? Alternately, have a page fault control signal.
 
-Lookup: task id register (8 bit) + 12 bit page id
+Lookup: task id register (8 bit) + 9 bit page id => 8 bits (so 3 bits of addr) 
 
 Privileged instructions?
 
