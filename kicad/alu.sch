@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 12 12
+Sheet 12 14
 Title ""
 Date ""
 Rev ""
@@ -486,4 +486,85 @@ F 3 "" H 1950 5250 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Connection ~ 1950 5250
+$Comp
+L Device:C_Small C27
+U 1 1 5AFE6E12
+P 3400 700
+F 0 "C27" V 3500 700 50  0000 C CNN
+F 1 "0.1uF" V 3250 700 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 3400 700 50  0001 C CNN
+F 3 "~" H 3400 700 50  0001 C CNN
+	1    3400 700 
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C_Small C26
+U 1 1 5AFE8488
+P 3250 3000
+F 0 "C26" V 3350 3000 50  0000 C CNN
+F 1 "0.1uF" V 3100 3000 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 3250 3000 50  0001 C CNN
+F 3 "~" H 3250 3000 50  0001 C CNN
+	1    3250 3000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C_Small C28
+U 1 1 5AFE858C
+P 5300 1700
+F 0 "C28" V 5400 1700 50  0000 C CNN
+F 1 "0.1uF" V 5150 1700 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 5300 1700 50  0001 C CNN
+F 3 "~" H 5300 1700 50  0001 C CNN
+	1    5300 1700
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4950 1850 5100 1850
+Wire Wire Line
+	5100 1850 5100 1700
+Wire Wire Line
+	5100 1700 5200 1700
+Connection ~ 4950 1850
+Wire Wire Line
+	2900 750  3300 750 
+Wire Wire Line
+	3300 750  3300 700 
+Connection ~ 2900 750 
+Wire Wire Line
+	2900 3000 3150 3000
+Connection ~ 2900 3000
+$Comp
+L power:GND #PWR0134
+U 1 1 5AFEC01F
+P 3350 3000
+F 0 "#PWR0134" H 3350 2750 50  0001 C CNN
+F 1 "GND" H 3355 2827 50  0000 C CNN
+F 2 "" H 3350 3000 50  0001 C CNN
+F 3 "" H 3350 3000 50  0001 C CNN
+	1    3350 3000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0135
+U 1 1 5AFEC38A
+P 3500 700
+F 0 "#PWR0135" H 3500 450 50  0001 C CNN
+F 1 "GND" H 3505 527 50  0000 C CNN
+F 2 "" H 3500 700 50  0001 C CNN
+F 3 "" H 3500 700 50  0001 C CNN
+	1    3500 700 
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0136
+U 1 1 5AFECB6E
+P 5400 1700
+F 0 "#PWR0136" H 5400 1450 50  0001 C CNN
+F 1 "GND" H 5405 1527 50  0000 C CNN
+F 2 "" H 5400 1700 50  0001 C CNN
+F 3 "" H 5400 1700 50  0001 C CNN
+	1    5400 1700
+	0    -1   -1   0   
+$EndComp
 $EndSCHEMATC

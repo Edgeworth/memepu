@@ -137,13 +137,13 @@ Needs to be counter
 #### ALU
 Produces carry and zero signal.
 
+#### VGA
+
 ### Peripherals
 
 #### Keyboard (PS/2):
 - http://pcbheaven.com/wikipages/The_PS2_protocol/
 - http://retired.beyondlogic.org/keyboard/keybrd.htm
 
-Instruction bits - 17 (19):
-5 status bits (see above)
-8 opcode bits
-4 micro-op counter bits
+#### SDcard
+- http://users.ece.utexas.edu/~valvano/EE345M/SD_Physical_Layer_Spec.pdf

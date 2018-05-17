@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 12
+Sheet 2 14
 Title ""
 Date ""
 Rev ""
@@ -131,8 +131,6 @@ F 3 "" H 1650 1200 50  0001 C CNN
 	1    1650 1200
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3400 1600 3150 1600
 Connection ~ 3400 1400
 Wire Wire Line
 	2150 1200 1850 1200
@@ -142,17 +140,6 @@ Wire Wire Line
 	3400 1900 3400 2000
 Text Label 3400 2000 0    50   ~ 0
 AC_TR
-$Comp
-L Device:R_Variable R2
-U 1 1 5ADF287B
-P 3400 1750
-F 0 "R2" H 3528 1796 50  0000 L CNN
-F 1 "1M" H 3528 1705 50  0000 L CNN
-F 2 "Potentiometer_THT:Potentiometer_Omeg_PC16BU_Vertical" V 3330 1750 50  0001 C CNN
-F 3 "~" H 3400 1750 50  0001 C CNN
-	1    3400 1750
-	1    0    0    -1  
-$EndComp
 Connection ~ 3400 1600
 Wire Wire Line
 	3400 1400 3400 1600
@@ -171,7 +158,6 @@ Wire Wire Line
 	3400 1600 3750 1600
 Wire Wire Line
 	3750 1900 3400 1900
-Connection ~ 3400 1900
 Text Notes 3450 1550 0    20   ~ 0
 Impose a minimum value on the \nvariable resistor to keep duty \ncycle close to 50%. Current\nvalues give min 0.7 Hz, max 70 Hz.
 $Comp
@@ -1332,4 +1318,20 @@ F 3 "" H 3300 6750 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Connection ~ 3300 6750
+Connection ~ 3400 1900
+$Comp
+L Device:R_Variable R2
+U 1 1 5ADF287B
+P 3400 1750
+F 0 "R2" H 3528 1796 50  0000 L CNN
+F 1 "1M" H 3528 1705 50  0000 L CNN
+F 2 "Potentiometer_THT:Potentiometer_Omeg_PC16BU_Vertical" V 3330 1750 50  0001 C CNN
+F 3 "~" H 3400 1750 50  0001 C CNN
+	1    3400 1750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3150 1600 3150 1900
+Wire Wire Line
+	3150 1900 3400 1900
 $EndSCHEMATC

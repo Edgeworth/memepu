@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 12
+Sheet 1 14
 Title ""
 Date ""
 Rev ""
@@ -373,4 +373,19 @@ Text Label 3350 3850 0    50   ~ 0
 BUS6
 Text Label 3350 3950 0    50   ~ 0
 BUS7
+$Sheet
+S 4250 2200 550  1000
+U 5AFEE19A
+F0 "Display" 50
+F1 "display_module.sch" 50
+F2 "BUS0" I L 4250 2300 50 
+F3 "BUS1" I L 4250 2400 50 
+F4 "BUS2" I L 4250 2500 50 
+F5 "BUS3" I L 4250 2600 50 
+F6 "BUS4" I L 4250 2700 50 
+F7 "BUS5" I L 4250 2800 50 
+F8 "BUS6" I L 4250 2900 50 
+F9 "BUS7" I L 4250 3000 50 
+F10 "DISP_IN" I L 4250 3100 50 
+$EndSheet
 $EndSCHEMATC
