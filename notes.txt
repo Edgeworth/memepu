@@ -14,7 +14,7 @@ Chips:
 LM555:
 Pins: Trigger, Threshold, Output, Reset, Discharge, Control voltage
 Trigger: On below 1/3 * Vcc - sets SR latch and turns output on
-Threshold: Off below 2/3 * Vcc - resets SR latch and turns output off. Additionally connects discharge pin to ground to discharge capacitor
+Threshold: Once reach 2/3 * Vcc or more - resets SR latch and turns output off. Additionally connects discharge pin to ground to discharge capacitor
 Reset: Disable/resets the timer. Active low. Should be set high.
 Discharge: Capacitor discharges through this
 Control voltage: Can modify the 2/3 * Vcc threshold value. Usually connected to ground via a bypass cap.

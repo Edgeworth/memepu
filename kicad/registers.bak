@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 12
+Sheet 5 14
 Title ""
 Date ""
 Rev ""
@@ -361,7 +361,7 @@ BUS7
 $Sheet
 S 2600 800  750  1750
 U 5AFD336A
-F0 "sheet5AFD333C" 50
+F0 "Register B" 50
 F1 "register_with_bus_transceiver.sch" 50
 F2 "REG_IN" I L 2600 2450 50 
 F3 "I0" I L 2600 900 50 
