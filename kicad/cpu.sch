@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 11
+Sheet 1 12
 Title ""
 Date ""
 Rev ""
@@ -167,7 +167,7 @@ BUS6
 Text Label 2500 2500 2    50   ~ 0
 BUS7
 $Sheet
-S 1000 3000 900  1850
+S 1000 3000 900  2050
 U 5AFD5CE2
 F0 "Registers" 50
 F1 "registers.sch" 50
@@ -191,6 +191,22 @@ F18 "REG_M2_IN" I R 1900 3900 50
 F19 "REG_M2_OUT" I R 1900 4000 50 
 F20 "REG_T_IN" I R 1900 4100 50 
 F21 "REG_T_OUT" I R 1900 4200 50 
+F22 "A0" I L 1000 3950 50 
+F23 "A1" I L 1000 4050 50 
+F24 "A2" I L 1000 4150 50 
+F25 "A3" I L 1000 4250 50 
+F26 "A4" I L 1000 4350 50 
+F27 "A5" I L 1000 4450 50 
+F28 "A6" I L 1000 4550 50 
+F29 "A7" I L 1000 4650 50 
+F30 "B0" I R 1900 4300 50 
+F31 "B1" I R 1900 4400 50 
+F32 "B2" I R 1900 4500 50 
+F33 "B3" I R 1900 4600 50 
+F34 "B4" I R 1900 4700 50 
+F35 "B5" I R 1900 4800 50 
+F36 "B6" I R 1900 4900 50 
+F37 "B7" I R 1900 5000 50 
 $EndSheet
 Text Label 1000 3100 2    50   ~ 0
 BUS0
@@ -236,7 +252,7 @@ U 1 1 5AFD7056
 P 5100 1150
 F 0 "J1" H 5180 1192 50  0000 L CNN
 F 1 "Conn_01x05" H 5180 1101 50  0000 L CNN
-F 2 "" H 5100 1150 50  0001 C CNN
+F 2 "Connector_USB:USB_Micro-B_Wuerth_629105150521" H 5100 1150 50  0001 C CNN
 F 3 "~" H 5100 1150 50  0001 C CNN
 	1    5100 1150
 	1    0    0    -1  
@@ -244,4 +260,117 @@ $EndComp
 NoConn ~ 4900 1050
 NoConn ~ 4900 1150
 NoConn ~ 4900 1250
+$Sheet
+S 2800 3150 550  1950
+U 5AFDA122
+F0 "ALU" 50
+F1 "alu.sch" 50
+F2 "SUB" I L 2800 3250 50 
+F3 "A0" I L 2800 3350 50 
+F4 "A1" I L 2800 3450 50 
+F5 "A2" I L 2800 3550 50 
+F6 "A3" I L 2800 3650 50 
+F7 "O0" I R 3350 3250 50 
+F8 "O1" I R 3350 3350 50 
+F9 "O2" I R 3350 3450 50 
+F10 "O3" I R 3350 3550 50 
+F11 "B0" I L 2800 4150 50 
+F12 "B1" I L 2800 4250 50 
+F13 "B2" I L 2800 4350 50 
+F14 "B3" I L 2800 4450 50 
+F15 "A4" I L 2800 3750 50 
+F16 "A5" I L 2800 3850 50 
+F17 "A6" I L 2800 3950 50 
+F18 "A7" I L 2800 4050 50 
+F19 "O4" I R 3350 3650 50 
+F20 "O5" I R 3350 3750 50 
+F21 "O6" I R 3350 3850 50 
+F22 "O7" I R 3350 3950 50 
+F23 "CARRY" I R 3350 4050 50 
+F24 "SUM_OUT" I L 2800 4950 50 
+F25 "B4" I L 2800 4550 50 
+F26 "B5" I L 2800 4650 50 
+F27 "B6" I L 2800 4750 50 
+F28 "B7" I L 2800 4850 50 
+$EndSheet
+Text Label 1000 3950 2    50   ~ 0
+A0
+Text Label 1000 4050 2    50   ~ 0
+A1
+Text Label 1000 4150 2    50   ~ 0
+A2
+Text Label 1000 4250 2    50   ~ 0
+A3
+Text Label 1000 4350 2    50   ~ 0
+A4
+Text Label 1000 4450 2    50   ~ 0
+A5
+Text Label 1000 4550 2    50   ~ 0
+A6
+Text Label 1000 4650 2    50   ~ 0
+A7
+Text Label 1900 4300 0    50   ~ 0
+B0
+Text Label 1900 4400 0    50   ~ 0
+B1
+Text Label 1900 4500 0    50   ~ 0
+B2
+Text Label 1900 4600 0    50   ~ 0
+B3
+Text Label 1900 4700 0    50   ~ 0
+B4
+Text Label 1900 4800 0    50   ~ 0
+B5
+Text Label 1900 4900 0    50   ~ 0
+B6
+Text Label 1900 5000 0    50   ~ 0
+B7
+Text Label 2800 3350 2    50   ~ 0
+A0
+Text Label 2800 3450 2    50   ~ 0
+A1
+Text Label 2800 3550 2    50   ~ 0
+A2
+Text Label 2800 3650 2    50   ~ 0
+A3
+Text Label 2800 3750 2    50   ~ 0
+A4
+Text Label 2800 3850 2    50   ~ 0
+A5
+Text Label 2800 3950 2    50   ~ 0
+A6
+Text Label 2800 4050 2    50   ~ 0
+A7
+Text Label 2800 4150 2    50   ~ 0
+B0
+Text Label 2800 4250 2    50   ~ 0
+B1
+Text Label 2800 4350 2    50   ~ 0
+B2
+Text Label 2800 4450 2    50   ~ 0
+B3
+Text Label 2800 4550 2    50   ~ 0
+B4
+Text Label 2800 4650 2    50   ~ 0
+B5
+Text Label 2800 4750 2    50   ~ 0
+B6
+Text Label 2800 4850 2    50   ~ 0
+B7
+Text Label 3350 3250 0    50   ~ 0
+BUS0
+Text Label 3350 3350 0    50   ~ 0
+BUS1
+Text Label 3350 3450 0    50   ~ 0
+BUS2
+Text Label 3350 3550 0    50   ~ 0
+BUS3
+Text Label 3350 3650 0    50   ~ 0
+BUS4
+Text Label 3350 3750 0    50   ~ 0
+BUS5
+Text Label 3350 3850 0    50   ~ 0
+BUS6
+Text Label 3350 3950 0    50   ~ 0
+BUS7
 $EndSCHEMATC
