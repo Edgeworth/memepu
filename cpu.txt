@@ -21,6 +21,7 @@ Actually made out of 4 bit up/down binary counters. Need IN to set it for contex
 - S0, S1, S2
 
 #### Status/Control SCI register
+Is it really necessary to store carry bit? Can just read from ALU. Means that ADD can't modify the registers because we want to jump based on carry of some operation.
 
 Need to be able to set individiual bits somehow.
 - Interrupt enable (initial 0) 
@@ -54,6 +55,11 @@ Output from ALU
 Stores id of current task
 
 - TASK
+
+#### Control register - write only
+Stores 8 bits of input into EEPROM
+
+- CTRL
 
 #### Opcode register - write only
 
@@ -100,15 +106,18 @@ Also MLU operation select:
 - MLU - 3 bit operation select
 
 #### Input
-19 bits available, 14 bits used
+What if input bus via a register into EEPROM? Then can have potential variable length instructions if run out of opcodes, by making an opcode into an opcode page, and loading next byte into the control register.
 
-- Carry
-- Zero
+If have stuff that can change on rising edge fed back into EEPROM, control signal output could change multiple times during HIGH clock? e.g. reset micro-up counter on CLK will change output of EEPROM. Reading in new data bus bits to control register may change EEPROM output. Need to latch EEPROM output on rising edge? Or just before?
+
+If add latching to eeprom output, can do control logic stuff on rising edge as well, then can increase frequency? EEPROM would have all the time until the next rising edge to stabilise. Assume 100ns total, gives 10MHz
+
+- 8 data bus bits into a register then fed into EEPROM
 - 4 micro-op counter bits
-- 8 opcode bits
+- 7 opcode bits
 
 ### Instructions
-0 - LOAD from bootloader?
+0 - LOAD from bootloader? / Page fault?
 LDA, LDB, LDC, LDD, OUT - immediate, memory addr, indirect memory addr
 ADD, SUB, MUL, DIV, MOD - A, B
 HLT, RST
@@ -138,6 +147,9 @@ Needs to be counter
 Produces carry and zero signal.
 
 #### VGA
+
+#### Clock
+Pierce oscillator. Add frequency dividers using JK flipflops. 16 MHz, 8MHz, 4MHz, 2 MHz, 1 MHz, 500 KHz, 250 KHz
 
 ### Peripherals
 
