@@ -2,6 +2,18 @@
 - 1 M potentiometer - check footprint when get
 - DPST switch - make footprint
 - micro usb connection - check footprint
+- if can route with current spacing, make everything closer to gether and try again
+- increase track width ?
+- More LEDs - but option to turn them all off.
+- bypass cap for each ic
+- mounting holes
+- timer interrupt
+- peripheral interconnect bus connector
+- LU ops - AND etc
+- VGA.
+- RESET button
+- AUDIO
+- higher clock?
 
 stack pointers
 status/control reg
@@ -13,17 +25,7 @@ opcode register
 MLU
 control logic
 vga
-
-
-#### Features / Things to remember
-- More LEDs - but option to turn them all off.
-- bypass cap for each ic
-- mounting holes
-- timer interrupt
-- peripheral interconnect bus connector
-- LU ops - AND etc
-- VGA.
-- RESET button
+audio
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
@@ -70,3 +72,7 @@ Level triggered with ACKs:
 - This also allows some sharing of interrupt lines, then the CPU can poll each device on the same line.
 
 Go with level triggered.
+
+#### Maximum safe frequency:
+EEPROM delay: 70ns
+SRAM delay: 70ns

@@ -343,12 +343,12 @@ CARRY
 $Comp
 L 74xx:74LS139 U23
 U 1 1 5B016052
-P 7200 1650
-F 0 "U23" H 7200 2017 50  0000 C CNN
-F 1 "74LS139" H 7200 1926 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 7200 1650 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS139" H 7200 1650 50  0001 C CNN
-	1    7200 1650
+P 6900 1650
+F 0 "U23" H 6900 2017 50  0000 C CNN
+F 1 "74LS139" H 6900 1926 50  0000 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 6900 1650 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS139" H 6900 1650 50  0001 C CNN
+	1    6900 1650
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -408,12 +408,12 @@ Connection ~ 7650 750
 $Comp
 L power:GND #PWR0155
 U 1 1 5B019BEB
-P 6700 1850
-F 0 "#PWR0155" H 6700 1600 50  0001 C CNN
-F 1 "GND" V 6705 1722 50  0000 R CNN
-F 2 "" H 6700 1850 50  0001 C CNN
-F 3 "" H 6700 1850 50  0001 C CNN
-	1    6700 1850
+P 6400 1850
+F 0 "#PWR0155" H 6400 1600 50  0001 C CNN
+F 1 "GND" V 6405 1722 50  0000 R CNN
+F 2 "" H 6400 1850 50  0001 C CNN
+F 3 "" H 6400 1850 50  0001 C CNN
+	1    6400 1850
 	0    1    1    0   
 $EndComp
 NoConn ~ 6100 2400
@@ -422,13 +422,13 @@ Text Notes 5250 2950 0    50   ~ 0
 Two JK flipflops form a 2 bit binary counter
 Text Label 6100 1400 0    50   ~ 0
 C0
-Text Label 6700 1650 2    50   ~ 0
+Text Label 6400 1650 2    50   ~ 0
 C0
 Text Label 5500 2200 2    50   ~ 0
 C0
 Text Label 6100 2200 0    50   ~ 0
 C1
-Text Label 6700 1550 2    50   ~ 0
+Text Label 6400 1550 2    50   ~ 0
 C1
 $Comp
 L Display_Character:HDSP-7803 U25
@@ -749,8 +749,6 @@ Wire Wire Line
 	6700 3850 7050 3850
 Text HLabel 6150 4050 0    50   Input ~ 0
 DISP_IN
-Text Notes 9400 2500 0    50   ~ 0
-TODO need resistors on leds ?
 Text Label 7050 3950 2    50   ~ 0
 C0
 Text Label 7050 4050 2    50   ~ 0
@@ -857,4 +855,48 @@ Connection ~ 6050 4750
 Wire Wire Line
 	6250 4750 6450 4750
 Connection ~ 6250 4750
+$Comp
+L Device:R R36
+U 1 1 5B091D6D
+P 7550 1550
+F 0 "R36" V 7500 1400 50  0000 C CNN
+F 1 "100" V 7550 1550 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7480 1550 50  0001 C CNN
+F 3 "~" H 7550 1550 50  0001 C CNN
+	1    7550 1550
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R37
+U 1 1 5B092FA5
+P 7550 1650
+F 0 "R37" V 7500 1500 50  0000 C CNN
+F 1 "100" V 7550 1650 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7480 1650 50  0001 C CNN
+F 3 "~" H 7550 1650 50  0001 C CNN
+	1    7550 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R38
+U 1 1 5B0930D3
+P 7550 1750
+F 0 "R38" V 7500 1600 50  0000 C CNN
+F 1 "100" V 7550 1750 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7480 1750 50  0001 C CNN
+F 3 "~" H 7550 1750 50  0001 C CNN
+	1    7550 1750
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R39
+U 1 1 5B093278
+P 7550 1850
+F 0 "R39" V 7500 1700 50  0000 C CNN
+F 1 "100" V 7550 1850 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7480 1850 50  0001 C CNN
+F 3 "~" H 7550 1850 50  0001 C CNN
+	1    7550 1850
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
