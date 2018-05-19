@@ -20,7 +20,7 @@ U 5ADF0E03
 F0 "Clock" 50
 F1 "clock.sch" 50
 F2 "CLK" I R 1650 1050 50 
-F3 "~CLK" I R 1650 1250 50 
+F3 "~RESET" I L 1000 1050 50 
 $EndSheet
 $Comp
 L power:PWR_FLAG #FLG01
@@ -67,7 +67,6 @@ F 3 "" H 2850 950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 1650 1050
-NoConn ~ 1650 1250
 Text GLabel 3700 1050 0    50   Input ~ 0
 LED_GND
 Text GLabel 3700 1250 0    50   Input ~ 0

@@ -374,12 +374,12 @@ $EndComp
 $Comp
 L 74xx_IEEE:74151 U3
 U 1 1 5AE2A47F
-P 4450 4950
-F 0 "U3" H 4450 5816 50  0000 C CNN
-F 1 "74151" H 4450 5725 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 4450 4950 50  0001 C CNN
-F 3 "" H 4450 4950 50  0001 C CNN
-	1    4450 4950
+P 4600 4950
+F 0 "U3" H 4600 5816 50  0000 C CNN
+F 1 "74151" H 4600 5725 50  0000 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 4600 4950 50  0001 C CNN
+F 3 "" H 4600 4950 50  0001 C CNN
+	1    4600 4950
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -418,17 +418,17 @@ $EndComp
 $Comp
 L power:GND #PWR010
 U 1 1 5AE353DF
-P 3900 4400
-F 0 "#PWR010" H 3900 4150 50  0001 C CNN
-F 1 "GND" H 3905 4227 50  0000 C CNN
-F 2 "" H 3900 4400 50  0001 C CNN
-F 3 "" H 3900 4400 50  0001 C CNN
-	1    3900 4400
+P 3750 4400
+F 0 "#PWR010" H 3750 4150 50  0001 C CNN
+F 1 "GND" H 3755 4227 50  0000 C CNN
+F 2 "" H 3750 4400 50  0001 C CNN
+F 3 "" H 3750 4400 50  0001 C CNN
+	1    3750 4400
 	0    1    1    0   
 $EndComp
-Text Label 3900 4950 2    50   ~ 0
+Text Label 4050 4950 2    50   ~ 0
 ADJ_CLK
-Text Label 3900 4850 2    50   ~ 0
+Text Label 4050 4850 2    50   ~ 0
 BTN_CLK
 $Comp
 L Device:C_Small C7
@@ -446,7 +446,7 @@ L Device:Crystal Y1
 U 1 1 5AE6D74C
 P 9050 2200
 F 0 "Y1" H 9050 2468 50  0000 C CNN
-F 1 "3.56MHz" H 9050 2377 50  0000 C CNN
+F 1 "12MHz" H 9050 2377 50  0000 C CNN
 F 2 "Crystal:Crystal_HC49-U_Vertical" H 9050 2200 50  0001 C CNN
 F 3 "~" H 9050 2200 50  0001 C CNN
 	1    9050 2200
@@ -457,7 +457,7 @@ L Device:C_Small C12
 U 1 1 5AE6D889
 P 8600 2650
 F 0 "C12" H 8692 2696 50  0000 L CNN
-F 1 "32pF" H 8692 2605 50  0000 L CNN
+F 1 "27pF" H 8692 2605 50  0000 L CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 8600 2650 50  0001 C CNN
 F 3 "~" H 8600 2650 50  0001 C CNN
 	1    8600 2650
@@ -468,7 +468,7 @@ L Device:C_Small C13
 U 1 1 5AE6D8E9
 P 9450 2650
 F 0 "C13" H 9542 2696 50  0000 L CNN
-F 1 "32pF" H 9542 2605 50  0000 L CNN
+F 1 "27pF" H 9542 2605 50  0000 L CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 9450 2650 50  0001 C CNN
 F 3 "~" H 9450 2650 50  0001 C CNN
 	1    9450 2650
@@ -490,7 +490,7 @@ L Device:R R12
 U 1 1 5AE6E9D6
 P 9050 1750
 F 0 "R12" V 8843 1750 50  0000 C CNN
-F 1 "5M" V 8934 1750 50  0000 C CNN
+F 1 "1M" V 8934 1750 50  0000 C CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 8980 1750 50  0001 C CNN
 F 3 "~" H 9050 1750 50  0001 C CNN
 	1    9050 1750
@@ -542,8 +542,8 @@ Wire Wire Line
 	9200 2200 9450 2200
 Wire Wire Line
 	9450 2200 9450 2550
-Text Label 3900 5050 2    50   ~ 0
-3.56_CLK
+Text Label 4050 5050 2    50   ~ 0
+375KHZ_CLK
 Wire Wire Line
 	1600 6600 1700 6600
 Wire Wire Line
@@ -681,7 +681,7 @@ L Device:R R13
 U 1 1 5AFB2532
 P 9450 1950
 F 0 "R13" H 9520 1996 50  0000 L CNN
-F 1 "2K" H 9520 1905 50  0000 L CNN
+F 1 "1K" H 9520 1905 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 9380 1950 50  0001 C CNN
 F 3 "~" H 9450 1950 50  0001 C CNN
 	1    9450 1950
@@ -706,7 +706,7 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 9750 1350 50  000
 $EndComp
 Connection ~ 9450 1350
 Text Label 10050 1350 0    50   ~ 0
-3.56_CLK
+12MHZ_CLK
 Wire Notes Line
 	8250 800  8250 3350
 Wire Notes Line
@@ -716,24 +716,15 @@ Wire Notes Line
 Wire Notes Line
 	10700 800  8250 800 
 Text Notes 9150 750  0    50   ~ 0
-3.56 MHz Clock
+12 MHz Clock
 Text Notes 8650 1700 0    20   ~ 0
 Resistor puts inverter\ninto linear region for\namplification.
 Text Notes 2750 3450 0    50   ~ 0
 Clock Selector
-Text HLabel 5000 4600 2    50   Input ~ 0
-CLK
-Text HLabel 5000 5300 2    50   Input ~ 0
-~CLK
 Wire Notes Line
 	1200 3500 5600 3500
 Wire Notes Line
 	1200 7500 5600 7500
-NoConn ~ 3900 5150
-NoConn ~ 3900 5250
-NoConn ~ 3900 5350
-NoConn ~ 3900 5450
-NoConn ~ 3900 5550
 $Comp
 L power:GND #PWR0103
 U 1 1 5ADF1D70
@@ -958,9 +949,7 @@ F 3 "" H 3650 1100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4100 4150 3900 4150
-Wire Wire Line
-	3900 4150 3900 4400
+	4100 4150 4050 4150
 $Comp
 L power:VCC #PWR0122
 U 1 1 5B0D7A44
@@ -982,17 +971,6 @@ F 2 "" H 2150 1600 50  0001 C CNN
 F 3 "" H 2150 1600 50  0001 C CNN
 	1    2150 1600
 	0    -1   -1   0   
-$EndComp
-$Comp
-L 74xx:74HC14 U2
-U 1 1 5B0FA031
-P 3050 4700
-F 0 "U2" H 3050 5017 50  0000 C CNN
-F 1 "74HC14" H 3050 4926 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 3050 4700 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 3050 4700 50  0001 C CNN
-	1    3050 4700
-	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC14 U2
@@ -1033,22 +1011,6 @@ Wire Wire Line
 	2450 5250 2750 5250
 Wire Wire Line
 	2450 4700 2750 4700
-Wire Wire Line
-	3900 4500 3400 4500
-Wire Wire Line
-	3350 4500 3350 4700
-Wire Wire Line
-	3350 5250 3450 5250
-Wire Wire Line
-	3450 5250 3450 4600
-Wire Wire Line
-	3450 4600 3900 4600
-Wire Wire Line
-	3900 4700 3550 4700
-Wire Wire Line
-	3550 4700 3550 5800
-Wire Wire Line
-	3550 5800 3350 5800
 $Comp
 L Device:C_Small C15
 U 1 1 5B132134
@@ -1103,24 +1065,6 @@ F 3 "" H 4300 5900 50  0001 C CNN
 	1    4300 5900
 	1    0    0    -1  
 $EndComp
-Connection ~ 3900 4400
-Wire Wire Line
-	3450 5250 3450 6300
-Wire Wire Line
-	3450 6300 3800 6300
-Connection ~ 3450 5250
-Wire Wire Line
-	3400 4500 3400 6200
-Wire Wire Line
-	3400 6200 3800 6200
-Connection ~ 3400 4500
-Wire Wire Line
-	3400 4500 3350 4500
-Wire Wire Line
-	3550 5800 3550 6400
-Wire Wire Line
-	3550 6400 3800 6400
-Connection ~ 3550 5800
 $Comp
 L Device:LED D1
 U 1 1 5B217E4B
@@ -1334,4 +1278,672 @@ Wire Wire Line
 	3150 1600 3150 1900
 Wire Wire Line
 	3150 1900 3400 1900
+Text Label 4050 5150 2    50   ~ 0
+750KHZ_CLK
+Text Label 4050 5250 2    50   ~ 0
+1.5MHZ_CLK
+Text Label 4050 5350 2    50   ~ 0
+3MHZ_CLK
+$Comp
+L 74xx:74HC86 U30
+U 1 1 5B0DDF74
+P 6900 4850
+F 0 "U30" H 6900 5175 50  0000 C CNN
+F 1 "74HC86" H 6900 5084 50  0000 C CNN
+F 2 "" H 6900 4850 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 6900 4850 50  0001 C CNN
+	1    6900 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC86 U30
+U 2 1 5B0DE833
+P 7500 4950
+F 0 "U30" H 7500 5275 50  0000 C CNN
+F 1 "74HC86" H 7500 5184 50  0000 C CNN
+F 2 "" H 7500 4950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 7500 4950 50  0001 C CNN
+	2    7500 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC86 U30
+U 3 1 5B0DFB0E
+P 6850 5300
+F 0 "U30" H 6850 5300 50  0000 C CNN
+F 1 "74HC86" H 6850 5100 50  0000 C CNN
+F 2 "" H 6850 5300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 6850 5300 50  0001 C CNN
+	3    6850 5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC86 U30
+U 5 1 5B0E1732
+P 8450 3900
+F 0 "U30" V 8083 3900 50  0000 C CNN
+F 1 "74HC86" V 8174 3900 50  0000 C CNN
+F 2 "" H 8450 3900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 8450 3900 50  0001 C CNN
+	5    8450 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C_Small C37
+U 1 1 5B0E8BCD
+P 8450 4250
+F 0 "C37" H 8542 4296 50  0000 L CNN
+F 1 "0.1uF" H 8542 4205 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 8450 4250 50  0001 C CNN
+F 3 "~" H 8450 4250 50  0001 C CNN
+	1    8450 4250
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	7950 4250 8350 4250
+Wire Wire Line
+	8550 4250 8950 4250
+Wire Wire Line
+	8950 4250 8950 3900
+$Comp
+L power:GND #PWR047
+U 1 1 5B0F1419
+P 7950 3900
+F 0 "#PWR047" H 7950 3650 50  0001 C CNN
+F 1 "GND" H 7955 3727 50  0000 C CNN
+F 2 "" H 7950 3900 50  0001 C CNN
+F 3 "" H 7950 3900 50  0001 C CNN
+	1    7950 3900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7950 3900 7950 4250
+Connection ~ 7950 3900
+$Comp
+L power:VCC #PWR048
+U 1 1 5B0F5515
+P 8950 3900
+F 0 "#PWR048" H 8950 3750 50  0001 C CNN
+F 1 "VCC" H 8967 4073 50  0000 C CNN
+F 2 "" H 8950 3900 50  0001 C CNN
+F 3 "" H 8950 3900 50  0001 C CNN
+	1    8950 3900
+	0    1    1    0   
+$EndComp
+Connection ~ 8950 3900
+Wire Wire Line
+	7150 5300 7150 5050
+Wire Wire Line
+	7150 5050 7200 5050
+$Comp
+L 74xx:74LS107 U31
+U 1 1 5B105D3C
+P 9050 5050
+F 0 "U31" H 9050 5417 50  0000 C CNN
+F 1 "74LS107" H 9050 5326 50  0000 C CNN
+F 2 "" H 9050 5050 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS107" H 9050 5050 50  0001 C CNN
+	1    9050 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS107 U31
+U 2 1 5B1065E7
+P 8350 6150
+F 0 "U31" H 8350 6424 50  0000 C CNN
+F 1 "74LS107" H 8350 6515 50  0000 C CNN
+F 2 "" H 8350 6150 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS107" H 8350 6150 50  0001 C CNN
+	2    8350 6150
+	-1   0    0    1   
+$EndComp
+$Comp
+L 74xx:74LS107 U31
+U 3 1 5B106EEE
+P 9950 3900
+F 0 "U31" V 9583 3900 50  0000 C CNN
+F 1 "74LS107" V 9674 3900 50  0000 C CNN
+F 2 "" H 9950 3900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS107" H 9950 3900 50  0001 C CNN
+	3    9950 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L power:VCC #PWR050
+U 1 1 5B107B5C
+P 10350 3900
+F 0 "#PWR050" H 10350 3750 50  0001 C CNN
+F 1 "VCC" H 10367 4073 50  0000 C CNN
+F 2 "" H 10350 3900 50  0001 C CNN
+F 3 "" H 10350 3900 50  0001 C CNN
+	1    10350 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR049
+U 1 1 5B108D30
+P 9550 3900
+F 0 "#PWR049" H 9550 3650 50  0001 C CNN
+F 1 "GND" H 9555 3727 50  0000 C CNN
+F 2 "" H 9550 3900 50  0001 C CNN
+F 3 "" H 9550 3900 50  0001 C CNN
+	1    9550 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C_Small C38
+U 1 1 5B10CF1D
+P 9950 4300
+F 0 "C38" H 10042 4346 50  0000 L CNN
+F 1 "0.1uF" H 10042 4255 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 9950 4300 50  0001 C CNN
+F 3 "~" H 9950 4300 50  0001 C CNN
+	1    9950 4300
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	10350 3900 10350 4300
+Wire Wire Line
+	10350 4300 10050 4300
+Wire Wire Line
+	9850 4300 9550 4300
+Wire Wire Line
+	9550 4300 9550 3900
+Connection ~ 9550 3900
+Connection ~ 10350 3900
+NoConn ~ 5150 5300
+Text Notes 2550 4300 0    39   ~ 0
+Debounce button changes with an\nRC network and a schmitt trigger.
+$Comp
+L 74xx:74HC14 U2
+U 1 1 5B0FA031
+P 3050 4700
+F 0 "U2" H 3050 5017 50  0000 C CNN
+F 1 "74HC14" H 3050 4926 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 3050 4700 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 3050 4700 50  0001 C CNN
+	1    3050 4700
+	1    0    0    -1  
+$EndComp
+Text Label 3350 4700 0    50   ~ 0
+SEL0
+Text Label 3350 5250 0    50   ~ 0
+SEL1
+Text Label 3350 5800 0    50   ~ 0
+SEL2
+Text Label 4050 4500 2    50   ~ 0
+SEL0
+Wire Wire Line
+	3750 4400 4050 4400
+Wire Wire Line
+	4050 4400 4050 4150
+Connection ~ 4050 4400
+Text Label 4050 4600 2    50   ~ 0
+SEL1
+Text Label 4050 4700 2    50   ~ 0
+SEL2
+Text Label 3800 6200 2    50   ~ 0
+SEL0
+Text Label 3800 6300 2    50   ~ 0
+SEL1
+Text Label 3800 6400 2    50   ~ 0
+SEL2
+Text Label 6600 4750 2    50   ~ 0
+SEL0
+Text Label 6600 4950 2    50   ~ 0
+SEL1
+Text Label 6550 5200 2    50   ~ 0
+SEL2
+$Comp
+L 74xx:74HC14 U2
+U 4 1 5B15778B
+P 8150 5200
+F 0 "U2" H 8100 5200 50  0000 C CNN
+F 1 "74HC14" H 8150 5000 50  0000 C CNN
+F 2 "" H 8150 5200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 8150 5200 50  0001 C CNN
+	4    8150 5200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7800 4950 7850 4950
+Wire Wire Line
+	7850 4950 7850 5200
+Wire Wire Line
+	8450 5200 8750 5200
+Wire Wire Line
+	8750 5200 8750 5150
+Wire Wire Line
+	7850 4950 8750 4950
+Connection ~ 7850 4950
+Text HLabel 9050 5350 3    50   Input ~ 0
+~RESET
+Text Label 9350 4950 0    50   ~ 0
+CLK_ENABLE
+Text Notes 6150 4500 0    50   ~ 0
+The output of the XOR gate will\nchange if any of the inputs flip.\nThis lets us know when the clock source\nhas changed.
+Text Notes 7450 5650 0    50   ~ 0
+First JK flipflop latches CLK_ENABLE\n with the falling edge of PRE_CLK.
+$Comp
+L power:VCC #PWR053
+U 1 1 5B18B9F6
+P 9600 5800
+F 0 "#PWR053" H 9600 5650 50  0001 C CNN
+F 1 "VCC" H 9617 5973 50  0000 C CNN
+F 2 "" H 9600 5800 50  0001 C CNN
+F 3 "" H 9600 5800 50  0001 C CNN
+	1    9600 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C39
+U 1 1 5B18DBE9
+P 9600 5900
+F 0 "C39" H 9692 5946 50  0000 L CNN
+F 1 "1nF" H 9692 5855 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 9600 5900 50  0001 C CNN
+F 3 "~" H 9600 5900 50  0001 C CNN
+	1    9600 5900
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:R R40
+U 1 1 5B1904B9
+P 9350 5450
+F 0 "R40" H 9420 5496 50  0000 L CNN
+F 1 "1M" H 9420 5405 50  0000 L CNN
+F 2 "" V 9280 5450 50  0001 C CNN
+F 3 "~" H 9350 5450 50  0001 C CNN
+	1    9350 5450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9350 5600 9350 6000
+Wire Wire Line
+	9350 6000 9600 6000
+Wire Wire Line
+	9350 5300 9350 5150
+Wire Wire Line
+	8050 6050 6550 6050
+Wire Wire Line
+	6550 6050 6550 5400
+NoConn ~ 8050 6250
+Wire Wire Line
+	9350 6150 8650 6150
+Wire Wire Line
+	9350 6000 9350 6150
+Connection ~ 9350 6000
+Text Notes 9750 5800 0    50   ~ 0
+If CLK_ENABLE is set low, it is latched\non the falling edge of PRE_CLK. CLK\nis then disabled until the the other JK\nflipflop can feed back into the XOR\ngates and set CLK_ENABLE high\nagain. This takes until the RC delay\nlets the other JK flipflop toggle.\n74107 has schmitt trigger clock.
+$Comp
+L power:VCC #PWR051
+U 1 1 5B22403B
+P 8650 6050
+F 0 "#PWR051" H 8650 5900 50  0001 C CNN
+F 1 "VCC" H 8667 6223 50  0000 C CNN
+F 2 "" H 8650 6050 50  0001 C CNN
+F 3 "" H 8650 6050 50  0001 C CNN
+	1    8650 6050
+	0    1    1    0   
+$EndComp
+$Comp
+L power:VCC #PWR052
+U 1 1 5B224436
+P 8650 6250
+F 0 "#PWR052" H 8650 6100 50  0001 C CNN
+F 1 "VCC" H 8667 6423 50  0000 C CNN
+F 2 "" H 8650 6250 50  0001 C CNN
+F 3 "" H 8650 6250 50  0001 C CNN
+	1    8650 6250
+	0    1    1    0   
+$EndComp
+Text HLabel 8350 5850 0    50   Input ~ 0
+~RESET
+Text Label 4050 5550 2    50   ~ 0
+12MHZ_CLK
+Text Label 4050 5450 2    50   ~ 0
+6MHZ_CLK
+$Comp
+L 74xx:74LS08 U33
+U 1 1 5B23B9F8
+P 11000 4850
+F 0 "U33" H 11000 5175 50  0000 C CNN
+F 1 "74LS08" H 11000 5084 50  0000 C CNN
+F 2 "" H 11000 4850 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 11000 4850 50  0001 C CNN
+	1    11000 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U33
+U 5 1 5B23CCF9
+P 11350 3900
+F 0 "U33" V 10983 3900 50  0000 C CNN
+F 1 "74LS08" V 11074 3900 50  0000 C CNN
+F 2 "" H 11350 3900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 11350 3900 50  0001 C CNN
+	5    11350 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C_Small C40
+U 1 1 5B23EA46
+P 11300 4300
+F 0 "C40" H 11392 4346 50  0000 L CNN
+F 1 "0.1uF" H 11392 4255 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 11300 4300 50  0001 C CNN
+F 3 "~" H 11300 4300 50  0001 C CNN
+	1    11300 4300
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	10850 3900 10850 4300
+Wire Wire Line
+	10850 4300 11200 4300
+Wire Wire Line
+	11400 4300 11850 4300
+Wire Wire Line
+	11850 4300 11850 3900
+$Comp
+L power:GND #PWR054
+U 1 1 5B246975
+P 10850 3900
+F 0 "#PWR054" H 10850 3650 50  0001 C CNN
+F 1 "GND" H 10855 3727 50  0000 C CNN
+F 2 "" H 10850 3900 50  0001 C CNN
+F 3 "" H 10850 3900 50  0001 C CNN
+	1    10850 3900
+	0    1    1    0   
+$EndComp
+Connection ~ 10850 3900
+$Comp
+L power:VCC #PWR055
+U 1 1 5B248282
+P 11850 3900
+F 0 "#PWR055" H 11850 3750 50  0001 C CNN
+F 1 "VCC" H 11867 4073 50  0000 C CNN
+F 2 "" H 11850 3900 50  0001 C CNN
+F 3 "" H 11850 3900 50  0001 C CNN
+	1    11850 3900
+	0    1    1    0   
+$EndComp
+Connection ~ 11850 3900
+$Comp
+L 74xx:74LS08 U33
+U 2 1 5B25C03B
+P 13250 5200
+AR Path="/5ADF0E03/5B25C03B" Ref="U33"  Part="2" 
+AR Path="/5B25C03B" Ref="U?"  Part="2" 
+F 0 "U33" H 13250 5525 50  0000 C CNN
+F 1 "74LS08" H 13250 5434 50  0000 C CNN
+F 2 "" H 13250 5200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 13250 5200 50  0001 C CNN
+	2    13250 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U33
+U 3 1 5B25C042
+P 14150 5200
+AR Path="/5ADF0E03/5B25C042" Ref="U33"  Part="3" 
+AR Path="/5B25C042" Ref="U?"  Part="3" 
+F 0 "U33" H 14150 5525 50  0000 C CNN
+F 1 "74LS08" H 14150 5434 50  0000 C CNN
+F 2 "" H 14150 5200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 14150 5200 50  0001 C CNN
+	3    14150 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U33
+U 4 1 5B25C049
+P 13250 5800
+AR Path="/5ADF0E03/5B25C049" Ref="U33"  Part="4" 
+AR Path="/5B25C049" Ref="U?"  Part="4" 
+F 0 "U33" H 13250 6125 50  0000 C CNN
+F 1 "74LS08" H 13250 6034 50  0000 C CNN
+F 2 "" H 13250 5800 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 13250 5800 50  0001 C CNN
+	4    13250 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC14 U2
+U 5 1 5B25C050
+P 14150 5750
+AR Path="/5ADF0E03/5B25C050" Ref="U2"  Part="5" 
+AR Path="/5B25C050" Ref="U?"  Part="5" 
+F 0 "U2" H 14150 6067 50  0000 C CNN
+F 1 "74HC14" H 14150 5976 50  0000 C CNN
+F 2 "" H 14150 5750 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 14150 5750 50  0001 C CNN
+	5    14150 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC14 U2
+U 6 1 5B25C057
+P 13250 6400
+AR Path="/5ADF0E03/5B25C057" Ref="U2"  Part="6" 
+AR Path="/5B25C057" Ref="U?"  Part="6" 
+F 0 "U2" H 13250 6717 50  0000 C CNN
+F 1 "74HC14" H 13250 6626 50  0000 C CNN
+F 2 "" H 13250 6400 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 13250 6400 50  0001 C CNN
+	6    13250 6400
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U5
+U 3 1 5B25C05E
+P 14150 6400
+AR Path="/5ADF0E03/5B25C05E" Ref="U5"  Part="3" 
+AR Path="/5B25C05E" Ref="U?"  Part="3" 
+F 0 "U5" H 14150 6717 50  0000 C CNN
+F 1 "74HC04" H 14150 6626 50  0000 C CNN
+F 2 "" H 14150 6400 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14150 6400 50  0001 C CNN
+	3    14150 6400
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U5
+U 4 1 5B25C065
+P 15050 5200
+AR Path="/5ADF0E03/5B25C065" Ref="U5"  Part="4" 
+AR Path="/5B25C065" Ref="U?"  Part="4" 
+F 0 "U5" H 15050 5517 50  0000 C CNN
+F 1 "74HC04" H 15050 5426 50  0000 C CNN
+F 2 "" H 15050 5200 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15050 5200 50  0001 C CNN
+	4    15050 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U5
+U 5 1 5B25C06C
+P 15050 5750
+AR Path="/5ADF0E03/5B25C06C" Ref="U5"  Part="5" 
+AR Path="/5B25C06C" Ref="U?"  Part="5" 
+F 0 "U5" H 15050 6067 50  0000 C CNN
+F 1 "74HC04" H 15050 5976 50  0000 C CNN
+F 2 "" H 15050 5750 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15050 5750 50  0001 C CNN
+	5    15050 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U5
+U 6 1 5B25C07A
+P 15000 6350
+AR Path="/5ADF0E03/5B25C07A" Ref="U5"  Part="6" 
+AR Path="/5B25C07A" Ref="U?"  Part="6" 
+F 0 "U5" H 15000 6667 50  0000 C CNN
+F 1 "74HC04" H 15000 6576 50  0000 C CNN
+F 2 "" H 15000 6350 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15000 6350 50  0001 C CNN
+	6    15000 6350
+	1    0    0    -1  
+$EndComp
+Wire Notes Line
+	12250 4800 12250 6700
+Wire Notes Line
+	12250 6700 15600 6700
+Wire Notes Line
+	15600 6700 15600 4800
+Wire Notes Line
+	15600 4800 12250 4800
+Text Notes 13700 4750 0    50   ~ 0
+Spares
+NoConn ~ 15350 5200
+NoConn ~ 15350 5750
+NoConn ~ 15300 6350
+NoConn ~ 14450 6400
+NoConn ~ 13550 6400
+NoConn ~ 14450 5750
+NoConn ~ 14450 5200
+NoConn ~ 13550 5200
+NoConn ~ 13550 5800
+Wire Wire Line
+	9350 4950 10700 4950
+Text HLabel 11300 4850 2    50   Input ~ 0
+CLK
+Text Label 5150 4600 0    50   ~ 0
+PRE_CLK
+Text Label 8750 5050 2    50   ~ 0
+PRE_CLK
+Text Label 10700 4750 2    50   ~ 0
+PRE_CLK
+$Comp
+L power:GND #PWR?
+U 1 1 5B29DAB6
+P 12950 5100
+F 0 "#PWR?" H 12950 4850 50  0001 C CNN
+F 1 "GND" H 12955 4927 50  0000 C CNN
+F 2 "" H 12950 5100 50  0001 C CNN
+F 3 "" H 12950 5100 50  0001 C CNN
+	1    12950 5100
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B29E052
+P 12950 5300
+F 0 "#PWR?" H 12950 5050 50  0001 C CNN
+F 1 "GND" H 12955 5127 50  0000 C CNN
+F 2 "" H 12950 5300 50  0001 C CNN
+F 3 "" H 12950 5300 50  0001 C CNN
+	1    12950 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B29E4C2
+P 12950 5700
+F 0 "#PWR?" H 12950 5450 50  0001 C CNN
+F 1 "GND" H 12955 5527 50  0000 C CNN
+F 2 "" H 12950 5700 50  0001 C CNN
+F 3 "" H 12950 5700 50  0001 C CNN
+	1    12950 5700
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B29E851
+P 12950 5900
+F 0 "#PWR?" H 12950 5650 50  0001 C CNN
+F 1 "GND" H 12955 5727 50  0000 C CNN
+F 2 "" H 12950 5900 50  0001 C CNN
+F 3 "" H 12950 5900 50  0001 C CNN
+	1    12950 5900
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B29EAB4
+P 12950 6400
+F 0 "#PWR?" H 12950 6150 50  0001 C CNN
+F 1 "GND" H 12955 6227 50  0000 C CNN
+F 2 "" H 12950 6400 50  0001 C CNN
+F 3 "" H 12950 6400 50  0001 C CNN
+	1    12950 6400
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B29F050
+P 13850 6400
+F 0 "#PWR?" H 13850 6150 50  0001 C CNN
+F 1 "GND" H 13855 6227 50  0000 C CNN
+F 2 "" H 13850 6400 50  0001 C CNN
+F 3 "" H 13850 6400 50  0001 C CNN
+	1    13850 6400
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B29F349
+P 13850 5750
+F 0 "#PWR?" H 13850 5500 50  0001 C CNN
+F 1 "GND" H 13855 5577 50  0000 C CNN
+F 2 "" H 13850 5750 50  0001 C CNN
+F 3 "" H 13850 5750 50  0001 C CNN
+	1    13850 5750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B29FB88
+P 13850 5300
+F 0 "#PWR?" H 13850 5050 50  0001 C CNN
+F 1 "GND" H 13855 5127 50  0000 C CNN
+F 2 "" H 13850 5300 50  0001 C CNN
+F 3 "" H 13850 5300 50  0001 C CNN
+	1    13850 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B2A01BA
+P 13850 5100
+F 0 "#PWR?" H 13850 4850 50  0001 C CNN
+F 1 "GND" H 13855 4927 50  0000 C CNN
+F 2 "" H 13850 5100 50  0001 C CNN
+F 3 "" H 13850 5100 50  0001 C CNN
+	1    13850 5100
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B2A03D2
+P 14750 5200
+F 0 "#PWR?" H 14750 4950 50  0001 C CNN
+F 1 "GND" H 14755 5027 50  0000 C CNN
+F 2 "" H 14750 5200 50  0001 C CNN
+F 3 "" H 14750 5200 50  0001 C CNN
+	1    14750 5200
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B2A0A04
+P 14750 5750
+F 0 "#PWR?" H 14750 5500 50  0001 C CNN
+F 1 "GND" H 14755 5577 50  0000 C CNN
+F 2 "" H 14750 5750 50  0001 C CNN
+F 3 "" H 14750 5750 50  0001 C CNN
+	1    14750 5750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B2A1324
+P 14700 6350
+F 0 "#PWR?" H 14700 6100 50  0001 C CNN
+F 1 "GND" H 14705 6177 50  0000 C CNN
+F 2 "" H 14700 6350 50  0001 C CNN
+F 3 "" H 14700 6350 50  0001 C CNN
+	1    14700 6350
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC

@@ -76,3 +76,6 @@ Go with level triggered.
 #### Maximum safe frequency:
 EEPROM delay: 70ns
 SRAM delay: 70ns
+
+#### Clock switching
+Need to make sure CLK line is held low during clock change, otherwise if the clock we are changing to is high when the current clock is low, the new rising edge could come too quickly. E.g., current clock goes low after 40 ns, then we switch a new clock which is already high. Then the frequency for that one cycle would be 25MHz which may be too high for us.
