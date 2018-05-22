@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 53)
+    (drawings 55)
     (tracks 0)
     (zones 0)
     (modules 127)
@@ -7321,6 +7321,9 @@
     )
   )
 
+  (gr_line (start 84 114) (end 84 91) (layer F.SilkS) (width 0.2))
+  (gr_line (start 10 114) (end 84 114) (layer F.SilkS) (width 0.2))
+  (gr_line (start 10 95) (end 10 114) (layer F.SilkS) (width 0.2))
   (gr_line (start 51 94) (end 51 47) (layer F.SilkS) (width 0.2))
   (gr_line (start 98 34) (end 71 34) (layer F.SilkS) (width 0.2))
   (gr_line (start 98 40) (end 98 34) (layer F.SilkS) (width 0.2))
@@ -7409,8 +7412,5 @@
   (gr_line (start 40 45) (end 40 10) (layer F.SilkS) (width 0.2))
   (gr_line (start 10 45) (end 40 45) (layer F.SilkS) (width 0.2))
   (gr_line (start 10 10) (end 10 45) (layer F.SilkS) (width 0.2))
-  (gr_text "TODO: Make footprint for LED switch" (at -14 97) (layer F.Cu)
-    (effects (font (size 1.5 1.5) (thickness 0.3)))
-  )
 
 )

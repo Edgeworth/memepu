@@ -62,9 +62,11 @@ Stores 8 bits of input into EEPROM
 - CTRL
 
 #### Opcode register - write only
+Needs to be counter
 
 ### Not registers, but need control signals
 #### MMU
+Need boot eeprom mapped into memory.
 
 - MMU_IN - write into memory, checks permissions unless task id is 0?
 - MMU_CONTROL_IN - write into memory protection memory
@@ -75,6 +77,7 @@ Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD - lshift and rshift implemented 
 
 - MLU out
 - 3 bits for operation select
+- Wired to A, B
 
 ### Control signals
 5 + 5 + 4 + 3 = 17 bits hrmmm
@@ -102,7 +105,6 @@ INTERRUPT register needs to be read for ISR to know which devices to talk to.
 - Unset interrupt enable
 
 Also MLU operation select:
-
 - MLU - 3 bit operation select
 
 #### Input
@@ -140,22 +142,17 @@ Need to make sure everything is properly reset.
 - TASK reg set to 0
 - Boot EEPROM used
 
-#### Opcode reg
-Needs to be counter
-
 #### ALU
 Produces carry and zero signal.
 
 #### VGA
 
 #### Clock
-Pierce oscillator. Add frequency dividers using JK flipflops. 16 MHz, 8MHz, 4MHz, 2 MHz, 1 MHz, 500 KHz, 250 KHz
+Pierce oscillator. Add frequency dividers using JK flipflops. 12 MHz with frequency dividers
 
 ### Peripherals
 
-#### Keyboard (PS/2):
-- http://pcbheaven.com/wikipages/The_PS2_protocol/
-- http://retired.beyondlogic.org/keyboard/keybrd.htm
+#### Keyboard
+#### Mouse
 
-#### SDcard
-- http://users.ece.utexas.edu/~valvano/EE345M/SD_Physical_Layer_Spec.pdf
+#### USB mass storage?
