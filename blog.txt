@@ -10,10 +10,13 @@
 - timer interrupt
 - peripheral interconnect bus connector
 - LU ops - AND etc
-- VGA.
 - RESET button
+- add bulk decoupling on power supply
+
+#### 2nd Board - ideas
+- VGA
 - AUDIO
-- higher clock?
+- USB - keyboard, mouse
 
 stack pointers
 status/control reg
