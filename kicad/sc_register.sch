@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 16 17
+Sheet 16 19
 Title ""
 Date ""
 Rev ""
@@ -167,9 +167,9 @@ F 3 "" H 2450 1300 50  0001 C CNN
 $EndComp
 Connection ~ 2450 1300
 Text HLabel 4400 2100 2    50   Input ~ 0
-INTERRUPT_ENABLE_OUT
+INTERRUPT_ENABLE_FLAG
 Text HLabel 1900 2100 2    50   Input ~ 0
-CARRY_FLAG_OUT
+CARRY_FLAG
 NoConn ~ 1900 2300
 NoConn ~ 4400 2300
 NoConn ~ 1850 4400
@@ -225,7 +225,7 @@ ZERO_FLAG_CLK
 Text HLabel 1250 3150 0    50   Input ~ 0
 ZERO_FLAG_IN
 Text HLabel 1850 3150 2    50   Input ~ 0
-ZERO_FLAG_OUT
+ZERO_FLAG
 NoConn ~ 1850 3350
 Text HLabel 3800 2200 0    50   Input ~ 0
 INTERRUPT_ENABLE_CLK

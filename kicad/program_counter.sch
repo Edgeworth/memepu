@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 17 17
+Sheet 17 19
 Title ""
 Date ""
 Rev ""
@@ -247,7 +247,7 @@ Wire Wire Line
 	4100 3600 3900 3600
 Connection ~ 3900 3600
 Text HLabel 5650 2350 0    50   Input ~ 0
-PC0_OUT
+~PC0_OUT
 $Comp
 L 74xx:74HC245 U?
 U 1 1 5B09711A
@@ -333,7 +333,7 @@ F 3 "" H 5650 2250 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Text HLabel 7800 2350 0    50   Input ~ 0
-PC1_OUT
+~PC1_OUT
 $Comp
 L 74xx:74HC245 U?
 U 1 1 5B097257
@@ -419,7 +419,7 @@ F 3 "" H 7800 2250 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Text HLabel 9850 2350 0    50   Input ~ 0
-PC2_OUT
+~PC2_OUT
 $Comp
 L 74xx:74HC245 U?
 U 1 1 5B09735A
@@ -717,17 +717,17 @@ PC22
 Text Label 9850 2050 2    50   ~ 0
 PC23
 Text HLabel 1550 1900 0    50   Input ~ 0
-PC0_IN
+~PC0_IN
 Text HLabel 3400 1900 0    50   Input ~ 0
-PC0_IN
+~PC0_IN
 Text HLabel 1550 4400 0    50   Input ~ 0
-PC1_IN
+~PC1_IN
 Text HLabel 3400 4400 0    50   Input ~ 0
-PC1_IN
+~PC1_IN
 Text HLabel 1500 6700 0    50   Input ~ 0
-PC2_IN
+~PC2_IN
 Text HLabel 3450 6700 0    50   Input ~ 0
-PC2_IN
+~PC2_IN
 Text Label 2550 1400 0    50   ~ 0
 PC0
 Text Label 2550 1500 0    50   ~ 0
@@ -736,13 +736,13 @@ Text Label 2550 1600 0    50   ~ 0
 PC2
 Text Label 2550 1700 0    50   ~ 0
 PC3
-Text Label 4400 1450 0    50   ~ 0
+Text Label 4400 1400 0    50   ~ 0
 PC4
-Text Label 4400 1550 0    50   ~ 0
+Text Label 4400 1500 0    50   ~ 0
 PC5
-Text Label 4400 1650 0    50   ~ 0
+Text Label 4400 1600 0    50   ~ 0
 PC6
-Text Label 4400 1750 0    50   ~ 0
+Text Label 4400 1700 0    50   ~ 0
 PC7
 Text Label 2550 3900 0    50   ~ 0
 PC8

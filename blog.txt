@@ -18,6 +18,9 @@
 - AUDIO
 - USB - keyboard, mouse
 
+#### Tests to run:
+- Stack pointer up/down counting.
+
 stack pointers
 status/control reg
 interrupt reg
@@ -39,7 +42,9 @@ Can create ~b by XORing with SUB flag. Can do +1 by putting SUB flag into carry.
 Needs to access A and B registers all the time, so A and B registers need transceivers.
 
 #### Stack pointer:
-24 bit, needs set, increment, decrement. - use 74hc193
+24 bit, needs set, increment, decrement.
+
+Switched from 74hc193 to 74hc191 since 74hc193 requires ripple carry/borrow which is slow. 125 ns latency for 6 chips (5 ripples). 74hc191 can be set up to use some flag. But, need to AND all previous flags together. It doesn't have the nice property the 74161 has where the carry output is only high if the previous carry output is also high.
 
 ####Protection (currently thinking)
 Task register

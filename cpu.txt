@@ -13,13 +13,11 @@ Initial: random
 Need two stack pointers - during ISR, don't want to use stack of existing process. Suppose we change the stack pointer, we'd need to save it, which would take stack memory. K for kernel. I guess we don't need IN/OUT for these. OUT may be useful for debugging.
 
 Made out of 4 bit up/down binary counters.
-
-- K0, K1, K2 
-
+- K0, K1, K2 - initial random
 ####Stack pointer (USER): 
 Actually made out of 4 bit up/down binary counters. Need IN to set it for context switch. Out to save for context switch.
 
-- S0, S1, S2
+- S0, S1, S2 - initial random
 
 #### Status/Control SC register
 
