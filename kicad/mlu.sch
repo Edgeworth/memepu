@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 15 17
+Sheet 15 19
 Title ""
 Date ""
 Rev ""
@@ -80,7 +80,7 @@ B6
 Text HLabel 1350 2900 0    50   Input ~ 0
 B7
 Text HLabel 1350 3700 0    50   Input ~ 0
-OUT
+~OUT
 $Comp
 L power:GND #PWR0172
 U 1 1 5B042674
