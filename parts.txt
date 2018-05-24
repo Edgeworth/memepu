@@ -45,7 +45,7 @@ Control voltage: Can modify the 2/3 * Vcc threshold value. Usually connected to 
 74HC161 - 4 bit synchronous counter
 CEP: count enable - both CEP and CET need to be true to count
 CET: input for chaining, TC => CET 
-TC: output for chaining
+TC: output for chaining. True if at highest count and about to roll-over, AND CET is high.
 ~PE: parallel enable input - for pre-setting values
 ~MR: resets all to 0, asynchronous
 

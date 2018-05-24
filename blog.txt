@@ -71,7 +71,14 @@ How to talk with peripherals? Need some kind of polling along bus - e.g. control
 #### Random thoughts
 Trying to decide on LED brightness - use 10k or 1k resistors. If use 1k, then drawing 5mA from ICs, which could be a lot, e.g. clock source can only source 25mA. Went with 5mA for now.
 
+#### Clock source notes
+Pierce oscillator: needs a filter for frequency ( high q value means graph of attenuation is not spread out?) and an amplifier. any noise will start the circuit. can make amplifier by biasing (connect output to input with a 1M resistor) an inverter. inverter provides 180 degree rotation. use capacitors to provide extra 180 degree rotation, so it can constructively interfere.
+
 Considering up to 8 clock sources... would be good for experimentation. Or variable frequency multiplier if that exists?
+
+frequency divider using binary counter or jk flipflops
+
+switching between clock sources can cause glitches. fundamentally this is an issue of the asynchronous input, that isn't synced with the clock. if the clock is low, then the source is switched, the new clock could be high, which would give a short cycle, breaking hold time, setup time constraints. also, during clock setup, maybe the clock takes a while to get running properly. so, xor all clock select inputs. if any of them change, the output of the final xor gate will change. latch this on the falling edge into a flip flop. connect output (A) of flipflop into a xor gate, and rc circuit into a schmitt triggered inverter. if the clock select changes, then until  the RC circuit charges, the output of the inverter will be the same as A. xoring those two will give a low signal while rc is charging, i.e. for a delay after the clock source has changed, then will go high. can AND this with the clock to disable the clock for a timeout on changes. during reset, if we feed the reset signal into the clock select xor gates, we will also disable the clock for a bit on reset, while the state in the computer is reset.
 
 Bit 0 of the bus is LSB.
 
@@ -90,6 +97,3 @@ Go with level triggered.
 #### Maximum safe frequency:
 EEPROM delay: 70ns
 SRAM delay: 70ns
-
-#### Clock switching
-Need to make sure CLK line is held low during clock change, otherwise if the clock we are changing to is high when the current clock is low, the new rising edge could come too quickly. E.g., current clock goes low after 40 ns, then we switch a new clock which is already high. Then the frequency for that one cycle would be 25MHz which may be too high for us.
