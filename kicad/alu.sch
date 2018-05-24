@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 12 17
+Sheet 12 19
 Title ""
 Date ""
 Rev ""
@@ -372,7 +372,7 @@ F 3 "" H 4950 3450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text HLabel 4450 3150 0    50   Input ~ 0
-SUM_OUT
+~SUM_OUT
 $Comp
 L power:VCC #PWR044
 U 1 1 5AFEF7A6

@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 17
+Sheet 3 19
 Title ""
 Date ""
 Rev ""
@@ -276,7 +276,7 @@ F 3 "" H 1700 2250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text HLabel 1700 2350 0    50   Input ~ 0
-OUT
+~OUT
 Text HLabel 2700 1350 2    50   Input ~ 0
 O0
 Text HLabel 2700 1450 2    50   Input ~ 0
