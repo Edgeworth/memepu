@@ -1,6 +1,4 @@
 #### TODO
-MLU
-Status/Control SCI register
 - PC0, PC1, PC2
 - MMU0, MMU1, MMU2
 MMU
@@ -26,3 +24,5 @@ USB mass storage
 ALU
 Display module
 - TASK
+MLU
+Status/Control SCI register

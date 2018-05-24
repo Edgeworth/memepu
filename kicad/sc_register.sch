@@ -1,0 +1,276 @@
+EESchema Schematic File Version 4
+LIBS:cpu-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 16 17
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L 74xx:74HC74 U?
+U 1 1 5B094EC2
+P 1600 2200
+F 0 "U?" H 1600 2200 50  0000 C CNN
+F 1 "74HC74" H 1800 1950 50  0000 C CNN
+F 2 "" H 1600 2200 50  0001 C CNN
+F 3 "74xx/74hc_hct74.pdf" H 1600 2200 50  0001 C CNN
+	1    1600 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC74 U?
+U 2 1 5B094F1D
+P 1550 3250
+F 0 "U?" H 1550 3250 50  0000 C CNN
+F 1 "74HC74" H 1700 2950 50  0000 C CNN
+F 2 "" H 1550 3250 50  0001 C CNN
+F 3 "74xx/74hc_hct74.pdf" H 1550 3250 50  0001 C CNN
+	2    1550 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC74 U?
+U 3 1 5B094F94
+P 1150 950
+F 0 "U?" H 1380 996 50  0000 L CNN
+F 1 "74HC74" H 1380 905 50  0000 L CNN
+F 2 "" H 1150 950 50  0001 C CNN
+F 3 "74xx/74hc_hct74.pdf" H 1150 950 50  0001 C CNN
+	3    1150 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS107 U?
+U 1 1 5B095181
+P 4100 2200
+F 0 "U?" H 4100 2567 50  0000 C CNN
+F 1 "74LS107" H 4100 2476 50  0000 C CNN
+F 2 "" H 4100 2200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS107" H 4100 2200 50  0001 C CNN
+	1    4100 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS107 U?
+U 2 1 5B0951EA
+P 1550 4500
+F 0 "U?" H 1550 4867 50  0000 C CNN
+F 1 "74LS107" H 1550 4776 50  0000 C CNN
+F 2 "" H 1550 4500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS107" H 1550 4500 50  0001 C CNN
+	2    1550 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS107 U?
+U 3 1 5B095261
+P 2450 900
+F 0 "U?" H 2680 946 50  0000 L CNN
+F 1 "74LS107" H 2680 855 50  0000 L CNN
+F 2 "" H 2450 900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS107" H 2450 900 50  0001 C CNN
+	3    2450 900 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C?
+U 1 1 5B09533A
+P 1800 900
+F 0 "C?" H 1708 854 50  0000 R CNN
+F 1 "0.1uF" H 1708 945 50  0000 R CNN
+F 2 "" H 1800 900 50  0001 C CNN
+F 3 "~" H 1800 900 50  0001 C CNN
+	1    1800 900 
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1800 800  1800 500 
+Wire Wire Line
+	1800 500  2450 500 
+Wire Wire Line
+	1800 1000 1800 1300
+Wire Wire Line
+	1800 1300 2450 1300
+$Comp
+L Device:C_Small C?
+U 1 1 5B09548E
+P 550 950
+F 0 "C?" H 458 904 50  0000 R CNN
+F 1 "0.1uF" H 458 995 50  0000 R CNN
+F 2 "" H 550 950 50  0001 C CNN
+F 3 "~" H 550 950 50  0001 C CNN
+	1    550  950 
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	550  850  550  550 
+Wire Wire Line
+	550  550  1150 550 
+Wire Wire Line
+	1150 1350 550  1350
+Wire Wire Line
+	550  1350 550  1050
+$Comp
+L power:VCC #PWR?
+U 1 1 5B0955CD
+P 2450 500
+F 0 "#PWR?" H 2450 350 50  0001 C CNN
+F 1 "VCC" H 2467 673 50  0000 C CNN
+F 2 "" H 2450 500 50  0001 C CNN
+F 3 "" H 2450 500 50  0001 C CNN
+	1    2450 500 
+	1    0    0    -1  
+$EndComp
+Connection ~ 2450 500 
+$Comp
+L power:VCC #PWR?
+U 1 1 5B0955EF
+P 1150 550
+F 0 "#PWR?" H 1150 400 50  0001 C CNN
+F 1 "VCC" H 1167 723 50  0000 C CNN
+F 2 "" H 1150 550 50  0001 C CNN
+F 3 "" H 1150 550 50  0001 C CNN
+	1    1150 550 
+	1    0    0    -1  
+$EndComp
+Connection ~ 1150 550 
+$Comp
+L power:GND #PWR?
+U 1 1 5B09563D
+P 1150 1350
+F 0 "#PWR?" H 1150 1100 50  0001 C CNN
+F 1 "GND" H 1155 1177 50  0000 C CNN
+F 2 "" H 1150 1350 50  0001 C CNN
+F 3 "" H 1150 1350 50  0001 C CNN
+	1    1150 1350
+	1    0    0    -1  
+$EndComp
+Connection ~ 1150 1350
+$Comp
+L power:GND #PWR?
+U 1 1 5B09565F
+P 2450 1300
+F 0 "#PWR?" H 2450 1050 50  0001 C CNN
+F 1 "GND" H 2455 1127 50  0000 C CNN
+F 2 "" H 2450 1300 50  0001 C CNN
+F 3 "" H 2450 1300 50  0001 C CNN
+	1    2450 1300
+	1    0    0    -1  
+$EndComp
+Connection ~ 2450 1300
+Text HLabel 4400 2100 2    50   Input ~ 0
+INTERRUPT_ENABLE_OUT
+Text HLabel 1900 2100 2    50   Input ~ 0
+CARRY_FLAG_OUT
+NoConn ~ 1900 2300
+NoConn ~ 4400 2300
+NoConn ~ 1850 4400
+NoConn ~ 1850 4600
+$Comp
+L power:GND #PWR?
+U 1 1 5B0958F0
+P 1250 4500
+F 0 "#PWR?" H 1250 4250 50  0001 C CNN
+F 1 "GND" V 1255 4372 50  0000 R CNN
+F 2 "" H 1250 4500 50  0001 C CNN
+F 3 "" H 1250 4500 50  0001 C CNN
+	1    1250 4500
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B095913
+P 1250 4400
+F 0 "#PWR?" H 1250 4150 50  0001 C CNN
+F 1 "GND" V 1255 4272 50  0000 R CNN
+F 2 "" H 1250 4400 50  0001 C CNN
+F 3 "" H 1250 4400 50  0001 C CNN
+	1    1250 4400
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B09592E
+P 1250 4600
+F 0 "#PWR?" H 1250 4350 50  0001 C CNN
+F 1 "GND" V 1255 4472 50  0000 R CNN
+F 2 "" H 1250 4600 50  0001 C CNN
+F 3 "" H 1250 4600 50  0001 C CNN
+	1    1250 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5B095949
+P 1550 4800
+F 0 "#PWR?" H 1550 4650 50  0001 C CNN
+F 1 "VCC" H 1568 4973 50  0000 C CNN
+F 2 "" H 1550 4800 50  0001 C CNN
+F 3 "" H 1550 4800 50  0001 C CNN
+	1    1550 4800
+	-1   0    0    1   
+$EndComp
+Text HLabel 1300 2200 0    50   Input ~ 0
+CARRY_FLAG_CLK
+Text HLabel 1250 3250 0    50   Input ~ 0
+ZERO_FLAG_CLK
+Text HLabel 1250 3150 0    50   Input ~ 0
+ZERO_FLAG_IN
+Text HLabel 1850 3150 2    50   Input ~ 0
+ZERO_FLAG_OUT
+NoConn ~ 1850 3350
+Text HLabel 3800 2200 0    50   Input ~ 0
+INTERRUPT_ENABLE_CLK
+Text HLabel 3800 2100 0    50   Input ~ 0
+SET_INTERRUPT_ENABLE
+Text HLabel 3800 2300 0    50   Input ~ 0
+UNSET_INTERRUPT_ENABLE
+Text HLabel 1300 2100 0    50   Input ~ 0
+CARRY_FLAG_IN
+Text HLabel 1600 2500 0    50   Input ~ 0
+~RESET
+Text HLabel 1550 3550 0    50   Input ~ 0
+~RESET
+Text HLabel 4100 2500 0    50   Input ~ 0
+~RESET
+$Comp
+L power:VCC #PWR?
+U 1 1 5B095C6B
+P 1600 1900
+F 0 "#PWR?" H 1600 1750 50  0001 C CNN
+F 1 "VCC" H 1617 2073 50  0000 C CNN
+F 2 "" H 1600 1900 50  0001 C CNN
+F 3 "" H 1600 1900 50  0001 C CNN
+	1    1600 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5B095C86
+P 1550 2950
+F 0 "#PWR?" H 1550 2800 50  0001 C CNN
+F 1 "VCC" H 1567 3123 50  0000 C CNN
+F 2 "" H 1550 2950 50  0001 C CNN
+F 3 "" H 1550 2950 50  0001 C CNN
+	1    1550 2950
+	1    0    0    -1  
+$EndComp
+Wire Notes Line
+	850  3900 850  5050
+Wire Notes Line
+	850  5050 2200 5050
+Wire Notes Line
+	2200 5050 2200 3900
+Wire Notes Line
+	2200 3900 850  3900
+Text Notes 950  4050 0    50   ~ 0
+Spares
+$EndSCHEMATC
