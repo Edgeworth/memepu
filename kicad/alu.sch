@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 12 14
+Sheet 12 17
 Title ""
 Date ""
 Rev ""
@@ -567,4 +567,202 @@ F 3 "" H 5400 1700 50  0001 C CNN
 	1    5400 1700
 	0    -1   -1   0   
 $EndComp
+$Comp
+L 74xx:74HC00 U?
+U 1 1 5B047088
+P 7550 1450
+F 0 "U?" H 7550 1450 50  0000 C CNN
+F 1 "74HC00" H 7550 1684 50  0000 C CNN
+F 2 "" H 7550 1450 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hc00" H 7550 1450 50  0001 C CNN
+	1    7550 1450
+	1    0    0    -1  
+$EndComp
+Wire Notes Line
+	550  500  550  6000
+Wire Notes Line
+	550  6000 6100 6000
+Wire Notes Line
+	6100 6000 6100 500 
+Wire Notes Line
+	6100 500  550  500 
+Text Notes 4700 700  0    100  ~ 0
+Adder
+$Comp
+L 74xx:74HC00 U?
+U 2 1 5B048AC7
+P 7550 1900
+F 0 "U?" H 7550 1900 50  0000 C CNN
+F 1 "74HC00" H 7550 2134 50  0000 C CNN
+F 2 "" H 7550 1900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hc00" H 7550 1900 50  0001 C CNN
+	2    7550 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC00 U?
+U 3 1 5B048B7E
+P 7550 2350
+F 0 "U?" H 7550 2350 50  0000 C CNN
+F 1 "74HC00" H 7550 2584 50  0000 C CNN
+F 2 "" H 7550 2350 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hc00" H 7550 2350 50  0001 C CNN
+	3    7550 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC00 U?
+U 4 1 5B048C41
+P 7550 2800
+F 0 "U?" H 7550 2800 50  0000 C CNN
+F 1 "74HC00" H 7550 3034 50  0000 C CNN
+F 2 "" H 7550 2800 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hc00" H 7550 2800 50  0001 C CNN
+	4    7550 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC00 U?
+U 5 1 5B048CF0
+P 7500 4150
+F 0 "U?" V 7133 4150 50  0000 C CNN
+F 1 "74HC00" V 7224 4150 50  0000 C CNN
+F 2 "" H 7500 4150 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74hc00" H 7500 4150 50  0001 C CNN
+	5    7500 4150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B048F20
+P 7000 4150
+F 0 "#PWR?" H 7000 3900 50  0001 C CNN
+F 1 "GND" H 7005 3977 50  0000 C CNN
+F 2 "" H 7000 4150 50  0001 C CNN
+F 3 "" H 7000 4150 50  0001 C CNN
+	1    7000 4150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5B048F70
+P 8000 4150
+F 0 "#PWR?" H 8000 4000 50  0001 C CNN
+F 1 "VCC" H 8017 4323 50  0000 C CNN
+F 2 "" H 8000 4150 50  0001 C CNN
+F 3 "" H 8000 4150 50  0001 C CNN
+	1    8000 4150
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C_Small C?
+U 1 1 5B048FC0
+P 8000 4450
+F 0 "C?" V 8100 4450 50  0000 C CNN
+F 1 "0.1uF" V 7850 4450 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 8000 4450 50  0001 C CNN
+F 3 "~" H 8000 4450 50  0001 C CNN
+	1    8000 4450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8000 4350 8000 4150
+Connection ~ 8000 4150
+$Comp
+L power:GND #PWR?
+U 1 1 5B04AC9F
+P 8000 4550
+F 0 "#PWR?" H 8000 4300 50  0001 C CNN
+F 1 "GND" H 8005 4377 50  0000 C CNN
+F 2 "" H 8000 4550 50  0001 C CNN
+F 3 "" H 8000 4550 50  0001 C CNN
+	1    8000 4550
+	1    0    0    -1  
+$EndComp
+Text HLabel 7250 1350 0    50   Input ~ 0
+A0
+Text HLabel 7250 1550 0    50   Input ~ 0
+A1
+Text HLabel 7250 1800 0    50   Input ~ 0
+A2
+Text HLabel 7250 2000 0    50   Input ~ 0
+A3
+Text HLabel 7250 2250 0    50   Input ~ 0
+A4
+Text HLabel 7250 2450 0    50   Input ~ 0
+A5
+Text HLabel 7250 2700 0    50   Input ~ 0
+A6
+Text HLabel 7250 2900 0    50   Input ~ 0
+A7
+$Comp
+L 74xx:74LS08 U?
+U 2 1 5B078AB5
+P 8400 1950
+AR Path="/5ADF0E03/5B078AB5" Ref="U?"  Part="2" 
+AR Path="/5B078AB5" Ref="U?"  Part="2" 
+AR Path="/5AFDA122/5B078AB5" Ref="U33"  Part="2" 
+F 0 "U33" H 8400 1950 50  0000 C CNN
+F 1 "74LS08" H 8400 2184 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8400 1950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8400 1950 50  0001 C CNN
+	2    8400 1950
+	1    0    0    -1  
+$EndComp
+Text Notes 8150 1450 0    50   ~ 0
+Note: AND gates from CLK spare parts
+Wire Wire Line
+	7850 1450 8100 1450
+Wire Wire Line
+	8100 1450 8100 1850
+Wire Wire Line
+	7850 1900 7850 2050
+Wire Wire Line
+	7850 2050 8100 2050
+Wire Wire Line
+	7850 2350 8100 2350
+Wire Wire Line
+	8100 2350 8100 2300
+Wire Wire Line
+	7850 2800 8100 2800
+Wire Wire Line
+	8100 2800 8100 2500
+$Comp
+L 74xx:74LS08 U?
+U 4 1 5B08DA36
+P 9150 2150
+AR Path="/5ADF0E03/5B08DA36" Ref="U?"  Part="4" 
+AR Path="/5B08DA36" Ref="U?"  Part="4" 
+AR Path="/5AFDA122/5B08DA36" Ref="U33"  Part="4" 
+F 0 "U33" H 9150 2150 50  0000 C CNN
+F 1 "74LS08" H 9150 2384 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 9150 2150 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9150 2150 50  0001 C CNN
+	4    9150 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U?
+U 3 1 5B078AD6
+P 8400 2400
+AR Path="/5ADF0E03/5B078AD6" Ref="U?"  Part="3" 
+AR Path="/5B078AD6" Ref="U?"  Part="3" 
+AR Path="/5AFDA122/5B078AD6" Ref="U33"  Part="3" 
+F 0 "U33" H 8400 2400 50  0000 C CNN
+F 1 "74LS08" H 8400 2634 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8400 2400 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8400 2400 50  0001 C CNN
+	3    8400 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8700 1950 8850 1950
+Wire Wire Line
+	8850 1950 8850 2050
+Wire Wire Line
+	8700 2400 8700 2250
+Wire Wire Line
+	8700 2250 8850 2250
+Text HLabel 9450 2150 2    50   Input ~ 0
+ZERO
 $EndSCHEMATC

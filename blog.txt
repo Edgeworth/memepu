@@ -51,6 +51,17 @@ Lookup: task id register (8 bit) + 9 bit page id => 8 bits (so 3 bits of addr)
 
 Privileged instructions?
 
+#### Control logic
+What if input bus via a register into EEPROM? Then can have potential variable length instructions if run out of opcodes, by making an opcode into an opcode page, and loading next byte into the control register. Can also load Status/Control register into this reg, and do conditional jumps etc.
+
+If have stuff that can change on rising edge fed back into EEPROM, control signal output could change multiple times during HIGH clock? e.g. reset micro-up counter on CLK will change output of EEPROM. Reading in new data bus bits to control register may change EEPROM output. Need to latch control logic output.
+
+If add latching to eeprom output, can do control logic stuff on rising edge as well, then can increase frequency? EEPROM would have all the time until the next rising edge to stabilise. Assume 100ns total, gives 10MHz. HOWEVER, need time to output registers onto bus etc, so need to do on falling edge? Options:
+1. Slower clock, latch control on falling edge, AND IN signals on rising edge.
+2. Broken: Latch control on rising edge - need to AND IN signals (if IN signal continuously high need to AND to make sure it pulses), so IN signals need to be asserted earlier + HOLD time etc. Same issue for PRE edge and POST edge action idea
+3. Best soln: Latch on falling edge. AND IN's on rising. May require hold constraints for slower stuff like memory. Can do IN and OUT on same cycle for fast things.
+
+
 #### Boot sequence
 Have EEPROM mapped into some high bits in memory (e.g. bit 23 of address space goes to eeprom). Need to make sure PC is set to something initially good...
 
