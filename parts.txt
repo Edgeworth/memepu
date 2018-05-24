@@ -9,6 +9,7 @@
 74HC138 - 3 to 8 decoder, inverted outputs
 74HC139 - 2 to 4 decoder, inverted outputs
 74HC151 - 8-line to 1-line data selector/multiplexer
+74HC154 - 4 to 16 decoder, inverted outputs
 74HC157 - 4 quad 2-line to 1-line data selector
 74HC161 - 4 bit binary counter, synchronous
 74HC193 - 4 bit binary counter, up/down, synchronous, reset

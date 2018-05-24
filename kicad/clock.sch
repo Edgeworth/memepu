@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 14
+Sheet 2 17
 Title ""
 Date ""
 Rev ""
@@ -1282,45 +1282,6 @@ F 3 "" H 8500 4000 50  0001 C CNN
 $EndComp
 Connection ~ 8500 4000
 $Comp
-L 74xx:74LS08 U33
-U 2 1 5B25C03B
-P 13150 5400
-AR Path="/5ADF0E03/5B25C03B" Ref="U33"  Part="2" 
-AR Path="/5B25C03B" Ref="U?"  Part="2" 
-F 0 "U33" H 13150 5725 50  0000 C CNN
-F 1 "74LS08" H 13150 5634 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 13150 5400 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 13150 5400 50  0001 C CNN
-	2    13150 5400
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74LS08 U33
-U 3 1 5B25C042
-P 13200 4250
-AR Path="/5ADF0E03/5B25C042" Ref="U33"  Part="3" 
-AR Path="/5B25C042" Ref="U?"  Part="3" 
-F 0 "U33" H 13200 4575 50  0000 C CNN
-F 1 "74LS08" H 13200 4484 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 13200 4250 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 13200 4250 50  0001 C CNN
-	3    13200 4250
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74LS08 U33
-U 4 1 5B25C049
-P 13200 4850
-AR Path="/5ADF0E03/5B25C049" Ref="U33"  Part="4" 
-AR Path="/5B25C049" Ref="U?"  Part="4" 
-F 0 "U33" H 13200 5175 50  0000 C CNN
-F 1 "74LS08" H 13200 5084 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 13200 4850 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 13200 4850 50  0001 C CNN
-	4    13200 4850
-	1    0    0    -1  
-$EndComp
-$Comp
 L 74xx:74HC14 U2
 U 5 1 5B25C050
 P 9200 5200
@@ -1405,8 +1366,6 @@ Spares
 NoConn ~ 15300 4250
 NoConn ~ 15300 4800
 NoConn ~ 15250 5400
-NoConn ~ 13500 4250
-NoConn ~ 13500 4850
 Text HLabel 10700 5000 2    50   Input ~ 0
 CLK
 Text Label 5150 4600 0    50   ~ 0
@@ -1415,50 +1374,6 @@ Text Label 7950 5300 2    50   ~ 0
 PRE_CLK
 Text Label 10100 4900 2    50   ~ 0
 PRE_CLK
-$Comp
-L power:GND #PWR058
-U 1 1 5B29E4C2
-P 12900 4750
-F 0 "#PWR058" H 12900 4500 50  0001 C CNN
-F 1 "GND" H 12905 4577 50  0000 C CNN
-F 2 "" H 12900 4750 50  0001 C CNN
-F 3 "" H 12900 4750 50  0001 C CNN
-	1    12900 4750
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR059
-U 1 1 5B29E851
-P 12900 4950
-F 0 "#PWR059" H 12900 4700 50  0001 C CNN
-F 1 "GND" H 12905 4777 50  0000 C CNN
-F 2 "" H 12900 4950 50  0001 C CNN
-F 3 "" H 12900 4950 50  0001 C CNN
-	1    12900 4950
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR062
-U 1 1 5B29FB88
-P 12900 4350
-F 0 "#PWR062" H 12900 4100 50  0001 C CNN
-F 1 "GND" H 12905 4177 50  0000 C CNN
-F 2 "" H 12900 4350 50  0001 C CNN
-F 3 "" H 12900 4350 50  0001 C CNN
-	1    12900 4350
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR061
-U 1 1 5B2A01BA
-P 12900 4150
-F 0 "#PWR061" H 12900 3900 50  0001 C CNN
-F 1 "GND" H 12905 3977 50  0000 C CNN
-F 2 "" H 12900 4150 50  0001 C CNN
-F 3 "" H 12900 4150 50  0001 C CNN
-	1    12900 4150
-	0    1    1    0   
-$EndComp
 $Comp
 L power:GND #PWR066
 U 1 1 5B2A03D2
@@ -2211,29 +2126,6 @@ F 3 "" H 13750 4950 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 NoConn ~ 14350 4950
-$Comp
-L power:GND #PWR0168
-U 1 1 5B0CC8F2
-P 12850 5300
-F 0 "#PWR0168" H 12850 5050 50  0001 C CNN
-F 1 "GND" H 12855 5127 50  0000 C CNN
-F 2 "" H 12850 5300 50  0001 C CNN
-F 3 "" H 12850 5300 50  0001 C CNN
-	1    12850 5300
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0169
-U 1 1 5B0CC9A5
-P 12850 5500
-F 0 "#PWR0169" H 12850 5250 50  0001 C CNN
-F 1 "GND" H 12855 5327 50  0000 C CNN
-F 2 "" H 12850 5500 50  0001 C CNN
-F 3 "" H 12850 5500 50  0001 C CNN
-	1    12850 5500
-	0    1    1    0   
-$EndComp
-NoConn ~ 13450 5400
 Text Notes 5900 5900 0    50   ~ 0
 Simulate a clock source change on\nreset to pull CLK low for a bit while\nmachine state is reset.
 $EndSCHEMATC
