@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 19
+Sheet 1 23
 Title ""
 Date ""
 Rev ""
@@ -627,4 +627,10 @@ Text Label 5300 6200 0    50   ~ 0
 BUS6
 Text Label 5300 6300 0    50   ~ 0
 BUS7
+$Sheet
+S 6650 2050 1200 1300
+U 5B09632F
+F0 "MMU" 50
+F1 "mmu.sch" 50
+$EndSheet
 $EndSCHEMATC
