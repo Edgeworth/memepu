@@ -46,15 +46,15 @@ Needs to access A and B registers all the time, so A and B registers need transc
 
 Switched from 74hc193 to 74hc191 since 74hc193 requires ripple carry/borrow which is slow. 125 ns latency for 6 chips (5 ripples). 74hc191 can be set up to use some flag. But, need to AND all previous flags together. It doesn't have the nice property the 74161 has where the carry output is only high if the previous carry output is also high.
 
-####Protection (currently thinking)
+#### MMU
+3 MMU internal registers for memory. Support mapping an EEPROM in for boot or something.
+
+Protection (currently thinking)
 Task register
 Kernel
 4KB pages
 Upon access memory, checks - if check fails, what do? I guess have to abort immediately, could do by resetting the micro-op counter and the opcode ? Alternately, have a page fault control signal.
-
 Lookup: task id register (8 bit) + 9 bit page id => 8 bits (so 3 bits of addr) 
-
-Privileged instructions?
 
 #### Control logic
 What if input bus via a register into EEPROM? Then can have potential variable length instructions if run out of opcodes, by making an opcode into an opcode page, and loading next byte into the control register. Can also load Status/Control register into this reg, and do conditional jumps etc.
