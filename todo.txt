@@ -1,16 +1,10 @@
 #### TODO
-- MMU0, MMU1, MMU2
-MMU
-- K0, K1, K2 
-- S0, S1, S2
 Interrupt register
-- CTRL
 - Opcode reg
 Control logic
 Reset - reset when turn on, reset button
 timer interrupt
 software interrupt
-Overvoltage zener, polyfuse, big bypass cap
 
 #### Board 2
 VGA
@@ -28,3 +22,8 @@ Display module
 MLU
 Status/Control SCI register
 - PC0, PC1, PC2
+- MMU0, MMU1, MMU2
+MMU
+- K0, K1, K2 
+- S0, S1, S2
+Overvoltage zener, polyfuse, big bypass cap

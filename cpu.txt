@@ -10,7 +10,7 @@ May be clobbered by the system for e.g. loads
 Initial: random
 
 #### Stack pointer (SYSTEM) - Read only (except via increment, decrement)
-Need two stack pointers - during ISR, don't want to use stack of existing process. Suppose we change the stack pointer, we'd need to save it, which would take stack memory. K for kernel. I guess we don't need IN/OUT for these. OUT may be useful for debugging.
+Need two stack pointers - during ISR, don't want to use stack of existing process. Suppose we change the stack pointer, we'd need to save it, which would take stack memory. K for kernel. Need IN to set initial values - kernel should decide.
 
 Made out of 4 bit up/down binary counters.
 - K0, K1, K2 - initial random
@@ -27,8 +27,8 @@ Need to be able to set individiual bits somehow.
 - Zero (initial 0) - set from ALU - d flipflop
 
 #### Interrupt register - 
-Level triggered, but latched on each clock, each device will assert until ack comes and it decides to stop asserting.
-Note this means devices need to assert the line until they get serviced (level triggered).
+Level triggered, but latched on each falling clock, each device will assert until ack comes and it decides to stop asserting.
+Note this means devices need to assert the line until they get serviced (level triggered). Latch on the falling clock so that the control logic can start reacting to interrupt changes as soon as possible.
 - Timer
 - Software (e.g. syscall)
 - Keyboard
@@ -68,6 +68,7 @@ Need boot eeprom mapped into memory. Memory protection. Both read and write perm
 - MMU_IN - write into memory, checks permissions unless task id is 0?
 - MMU_CONTROL_IN - write into memory protection memory
 - MMU_OUT - get data from memory / eeprom / whatever
+- MMU_CONTROL_OUT
 
 #### MLU
 Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD - lshift and rshift implemented as MUL and DIV.
@@ -80,26 +81,26 @@ Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD - lshift and rshift implemented 
 5 + 5 + 4 + 2 = 16 bits
 
 #### Bus related
-IN plane: A, B, M0, M1, M2, S0, S1, S2, PC0, PC1, PC2, MMU0, MMU1, MMU2, MMU, MMU_CONTROL, DISP, TASK, OPCODE, + peripherals
+IN plane: A, B, M0, M1, M2, S0, S1, S2, K0, K1, K2, PC0, PC1, PC2, MMU0, MMU1, MMU2, MMU, MMU_CONTROL, DISP, TASK, OPCODE, + peripherals
 
-OUT plane: A, B, M0, M1, M2, S0, S1, S2, K0, K1, K2, INTERRUPT, SUM, MMU, MMU_CONTROL, TASK, MLU + peripherals
+OUT plane: A, B, M0, M1, M2, S0, S1, S2, K0, K1, K2, STATUS, INTERRUPT, SUM, MMU, MMU_CONTROL, TASK, MLU + peripherals
 INTERRUPT register needs to be read for ISR to know which devices to talk to.
 
 #### Control plane
 16 line decoder may be sufficient - 4 bits:
-- SUB
-- PC increment
-- OPCODE increment
-- AUX increment
-- Reset uop counter (need to be careful with clocks here?)
-- RESET - also wired to reset uop counter signal 
-- SP increment
-- SP decrement
-- KSP increment
-- KSP decrement
-- Set flags from ALU (zero and carry)
-- Set interrupt enable
-- Unset interrupt enable
+- SUB: NCLK
+- RESET: NCLK
+- Reset uop counter: NCLK
+- Set interrupt enable synchronos: NCLK
+- Unset interrupt enable synchronos: NCLK
+- PC increment: CLK
+- OPCODE increment: CLK
+- AUX increment: CLK
+- SP increment: CLK
+- SP decrement: CLK
+- KSP increment: CLK
+- KSP decrement: CLK
+- Set flags from ALU (zero and carry): CLK
 
 Also MLU operation select:
 - MLU - 3 bit operation select
