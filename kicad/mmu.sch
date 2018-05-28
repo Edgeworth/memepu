@@ -1477,4 +1477,52 @@ Text HLabel -750 3900 2    50   Input ~ 0
 MMU_READ_FAULT
 Text HLabel -750 4600 2    50   Input ~ 0
 MMU_WRITE_FAULT
+Text HLabel 900  1050 0    50   Input ~ 0
+BUS0
+Text HLabel 900  1150 0    50   Input ~ 0
+BUS1
+Text HLabel 900  1250 0    50   Input ~ 0
+BUS2
+Text HLabel 900  1350 0    50   Input ~ 0
+BUS3
+Text HLabel 900  1450 0    50   Input ~ 0
+BUS4
+Text HLabel 900  1550 0    50   Input ~ 0
+BUS5
+Text HLabel 900  1650 0    50   Input ~ 0
+BUS6
+Text HLabel 900  1750 0    50   Input ~ 0
+BUS7
+Text HLabel 2050 1050 0    50   Input ~ 0
+BUS0
+Text HLabel 2050 1150 0    50   Input ~ 0
+BUS1
+Text HLabel 2050 1250 0    50   Input ~ 0
+BUS2
+Text HLabel 2050 1350 0    50   Input ~ 0
+BUS3
+Text HLabel 2050 1450 0    50   Input ~ 0
+BUS4
+Text HLabel 2050 1550 0    50   Input ~ 0
+BUS5
+Text HLabel 2050 1650 0    50   Input ~ 0
+BUS6
+Text HLabel 2050 1750 0    50   Input ~ 0
+BUS7
+Text HLabel 3300 1050 0    50   Input ~ 0
+BUS0
+Text HLabel 3300 1150 0    50   Input ~ 0
+BUS1
+Text HLabel 3300 1250 0    50   Input ~ 0
+BUS2
+Text HLabel 3300 1350 0    50   Input ~ 0
+BUS3
+Text HLabel 3300 1450 0    50   Input ~ 0
+BUS4
+Text HLabel 3300 1550 0    50   Input ~ 0
+BUS5
+Text HLabel 3300 1650 0    50   Input ~ 0
+BUS6
+Text HLabel 3300 1750 0    50   Input ~ 0
+BUS7
 $EndSCHEMATC

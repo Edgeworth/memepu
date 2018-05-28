@@ -12,6 +12,7 @@
 - LU ops - AND etc
 - RESET button
 - add bulk decoupling on power supply
+- Check footprints for bulk decoupling caps
 
 #### 2nd Board - ideas
 - VGA
