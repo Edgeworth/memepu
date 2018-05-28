@@ -7,7 +7,10 @@ Interrupt register
 - CTRL
 - Opcode reg
 Control logic
-Reset
+Reset - reset when turn on, reset button
+timer interrupt
+software interrupt
+Overvoltage zener, polyfuse, big bypass cap
 
 #### Board 2
 VGA
@@ -15,7 +18,6 @@ Keyboard
 Mouse
 Ethernet
 USB mass storage
-
 
 #### Done
 - A, B
