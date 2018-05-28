@@ -1323,21 +1323,20 @@ $EndComp
 $Comp
 L 74xx:74HC04 U5
 U 6 1 5B25C07A
-P 14950 5400
+P 11050 5350
 AR Path="/5ADF0E03/5B25C07A" Ref="U5"  Part="6" 
 AR Path="/5B25C07A" Ref="U?"  Part="6" 
-F 0 "U5" H 14950 5717 50  0000 C CNN
-F 1 "74HC04" H 14950 5626 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 14950 5400 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14950 5400 50  0001 C CNN
-	6    14950 5400
+F 0 "U5" H 11050 5667 50  0000 C CNN
+F 1 "74HC04" H 11050 5576 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 11050 5350 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 11050 5350 50  0001 C CNN
+	6    11050 5350
 	1    0    0    -1  
 $EndComp
 Wire Notes Line
 	15550 5750 15550 3850
 Text Notes 13650 3800 0    50   ~ 0
 Spares
-NoConn ~ 15250 5400
 Text HLabel 10700 5000 2    50   Input ~ 0
 CLK
 Text Label 5150 4600 0    50   ~ 0
@@ -1346,17 +1345,6 @@ Text Label 7950 5300 2    50   ~ 0
 PRE_CLK
 Text Label 10100 4900 2    50   ~ 0
 PRE_CLK
-$Comp
-L power:GND #PWR065
-U 1 1 5B2A1324
-P 14650 5400
-F 0 "#PWR065" H 14650 5150 50  0001 C CNN
-F 1 "GND" H 14655 5227 50  0000 C CNN
-F 2 "" H 14650 5400 50  0001 C CNN
-F 3 "" H 14650 5400 50  0001 C CNN
-	1    14650 5400
-	0    1    1    0   
-$EndComp
 $Comp
 L 74xx:74LS107 U32
 U 3 1 5B2BA3F9
@@ -2078,4 +2066,10 @@ $EndComp
 NoConn ~ 14350 4950
 Text Notes 5900 5900 0    50   ~ 0
 Simulate a clock source change on\nreset to pull CLK low for a bit while\nmachine state is reset.
+Wire Wire Line
+	10700 5000 10700 5350
+Wire Wire Line
+	10700 5350 10750 5350
+Text HLabel 11350 5350 2    50   Input ~ 0
+~CLK
 $EndSCHEMATC
