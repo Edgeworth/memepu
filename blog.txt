@@ -14,6 +14,7 @@
 - add bulk decoupling on power supply
 - Check footprints for bulk decoupling caps
 
+
 #### 2nd Board - ideas
 - VGA
 - AUDIO
@@ -68,7 +69,7 @@ Decision: Use page fault control flag.
 
 Lookup: task id register (8 bit) + 9 bit page id => 8 bits, rw for each one (so 2 bits of addr) 
 
-What happens on interrupt / page fault? Need to set task register to 0 to read kernel memory, but need to know the previous task. Save currently running task in ram? If so, how transfer control back to task. Need specific instruction to set task register then jump?
+What happens on interrupt / page fault? Need to set task register to 0 to read kernel memory, but need to know the previous task. Save currently running task in ram? If so, how transfer control back to task. Need specific instruction to set task register then jump? Decision: Store in memory. Then, use specific instruction to set task register and jump at the same time.
 
 #### Control logic
 What if input bus via a register into EEPROM? Then can have potential variable length instructions if run out of opcodes, by making an opcode into an opcode page, and loading next byte into the control register. Can also load Status/Control register into this reg, and do conditional jumps etc. Decision: 4 bit binary counter reading from bus fed into EEPROM (lack of eeprom inputs).
@@ -88,6 +89,11 @@ Make control logic like a finite state machine. Opcodes:
 Reset:
 Needs to reset when turn on
 
+Control planes:
+IN plane ANDed with the clock.
+OUT plane not anded.
+CONTROL plane varies.
+
 #### Boot sequence
 Have EEPROM mapped into some high bits in memory (e.g. bit 23 of address space goes to eeprom). Need to make sure PC is set to something initially good - use boot sequence opcode 0.
 
@@ -96,6 +102,8 @@ How to talk with peripherals? Need some kind of polling along bus - e.g. control
 
 #### Random thoughts
 Trying to decide on LED brightness - use 10k or 1k resistors. If use 1k, then drawing 5mA from ICs, which could be a lot, e.g. clock source can only source 25mA. Went with 5mA for now.
+
+Instead of using falling edge, delay clock slightly for control logic latch? Gives more time (enough time for memory to react in one cycle). Decision: Can't do this, since we need time to write into memory on rising edge. (see maximum safe frequency calculation)
 
 #### Clock source notes
 Pierce oscillator: needs a filter for frequency ( high q value means graph of attenuation is not spread out?) and an amplifier. any noise will start the circuit. can make amplifier by biasing (connect output to input with a 1M resistor) an inverter. inverter provides 180 degree rotation. use capacitors to provide extra 180 degree rotation, so it can constructively interfere.
@@ -110,16 +118,17 @@ Bit 0 of the bus is LSB.
 
 #### Interrupt design decisions
 Edge triggered - needs D flip-flop for each IRQ line. :
-
 - Need some way to clock it on the peripheral's demand, otherwise potentially complicated to make peripheral assert the data line long enough. Can miss interrupts if the peripheral asserts the IRQ during the interrupt handler (even though interrupts are disabled, we still need to record them), then the interrupt handler marks the interrupt as handled. Even if the interrupt handler marks the interrupt bit as what the device is currently asserting, timing issues can still happen i.e.: peripheral asserts, ISR started, peripheral asserts again, ISR marks interrupt bit as what the peripheral is currently asserting the line as, which has already gone back to 0, so the second interrupt is missed. Need a counter system to fix this.
 
 Level triggered with ACKs:
-
 - Each device will assert its interrupt line until it gets an ACK from the CPU via IN/OUT lines to peripherals. The cpu will potentially then read out data (e.g. from keyboard). If there is data remaining, the peripheral can keep its interrupt line asserted. In the case of timer like interrupts, the timer device could keep a count of ack'd timer interrupts and assert the IRQ while the count is positive, or it could just not care, and two timer interrupts very close together could be missed.
 - This also allows some sharing of interrupt lines, then the CPU can poll each device on the same line.
 
-Go with level triggered.
+Decision: Go with level triggered.
 
 #### Maximum safe frequency:
 EEPROM delay: 70ns
 SRAM delay: 70ns
+SRAM write pulse min width: 50ns, so CLK needs to be 50ns HIGH => 100ns period
+
+100ns => 10 MHz

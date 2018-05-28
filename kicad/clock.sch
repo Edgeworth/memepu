@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 23
+Sheet 2 34
 Title ""
 Date ""
 Rev ""
@@ -1322,32 +1322,6 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 7600 5550 50  000
 $EndComp
 $Comp
 L 74xx:74HC04 U5
-U 4 1 5B25C065
-P 15000 4250
-AR Path="/5ADF0E03/5B25C065" Ref="U5"  Part="4" 
-AR Path="/5B25C065" Ref="U?"  Part="4" 
-F 0 "U5" H 15000 4567 50  0000 C CNN
-F 1 "74HC04" H 15000 4476 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 15000 4250 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15000 4250 50  0001 C CNN
-	4    15000 4250
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74HC04 U5
-U 5 1 5B25C06C
-P 15000 4800
-AR Path="/5ADF0E03/5B25C06C" Ref="U5"  Part="5" 
-AR Path="/5B25C06C" Ref="U?"  Part="5" 
-F 0 "U5" H 15000 5117 50  0000 C CNN
-F 1 "74HC04" H 15000 5026 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 15000 4800 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15000 4800 50  0001 C CNN
-	5    15000 4800
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74HC04 U5
 U 6 1 5B25C07A
 P 14950 5400
 AR Path="/5ADF0E03/5B25C07A" Ref="U5"  Part="6" 
@@ -1363,8 +1337,6 @@ Wire Notes Line
 	15550 5750 15550 3850
 Text Notes 13650 3800 0    50   ~ 0
 Spares
-NoConn ~ 15300 4250
-NoConn ~ 15300 4800
 NoConn ~ 15250 5400
 Text HLabel 10700 5000 2    50   Input ~ 0
 CLK
@@ -1374,28 +1346,6 @@ Text Label 7950 5300 2    50   ~ 0
 PRE_CLK
 Text Label 10100 4900 2    50   ~ 0
 PRE_CLK
-$Comp
-L power:GND #PWR066
-U 1 1 5B2A03D2
-P 14700 4250
-F 0 "#PWR066" H 14700 4000 50  0001 C CNN
-F 1 "GND" H 14705 4077 50  0000 C CNN
-F 2 "" H 14700 4250 50  0001 C CNN
-F 3 "" H 14700 4250 50  0001 C CNN
-	1    14700 4250
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR067
-U 1 1 5B2A0A04
-P 14700 4800
-F 0 "#PWR067" H 14700 4550 50  0001 C CNN
-F 1 "GND" H 14705 4627 50  0000 C CNN
-F 2 "" H 14700 4800 50  0001 C CNN
-F 3 "" H 14700 4800 50  0001 C CNN
-	1    14700 4800
-	0    1    1    0   
-$EndComp
 $Comp
 L power:GND #PWR065
 U 1 1 5B2A1324
