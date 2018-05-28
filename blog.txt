@@ -52,12 +52,25 @@ Switched from 74hc193 to 74hc191 since 74hc193 requires ripple carry/borrow whic
 Protection (currently thinking)
 Task register
 Kernel
-4KB pages
+2 MB address space, 1024 byte pages, read write for each one.
 Upon access memory, checks - if check fails, what do? I guess have to abort immediately, could do by resetting the micro-op counter and the opcode ? Alternately, have a page fault control signal.
-Lookup: task id register (8 bit) + 9 bit page id => 8 bits (so 3 bits of addr) 
+
+If reset micro-op counter and opcode, then:
+1. no opportunity for potential cleanup of instruction
+2. Questions about what initial state should do.
+3. Have multiple things asserting control signals. The control logic is latched. Potentially gets complicated to have multiple controllers.
+
+Page fault control flag:
+Can be on any time the MMU has an address the task can't access loaded.
+
+Decision: Use page fault control flag.
+
+Lookup: task id register (8 bit) + 9 bit page id => 8 bits, rw for each one (so 2 bits of addr) 
+
+What happens on interrupt / page fault? Need to set task register to 0 to read kernel memory, but need to know the previous task. Save currently running task in ram? If so, how transfer control back to task. Need specific instruction to set task register then jump?
 
 #### Control logic
-What if input bus via a register into EEPROM? Then can have potential variable length instructions if run out of opcodes, by making an opcode into an opcode page, and loading next byte into the control register. Can also load Status/Control register into this reg, and do conditional jumps etc.
+What if input bus via a register into EEPROM? Then can have potential variable length instructions if run out of opcodes, by making an opcode into an opcode page, and loading next byte into the control register. Can also load Status/Control register into this reg, and do conditional jumps etc. Decision: 4 bit binary counter reading from bus fed into EEPROM (lack of eeprom inputs).
 
 If have stuff that can change on rising edge fed back into EEPROM, control signal output could change multiple times during HIGH clock? e.g. reset micro-up counter on CLK will change output of EEPROM. Reading in new data bus bits to control register may change EEPROM output. Need to latch control logic output.
 
@@ -66,9 +79,16 @@ If add latching to eeprom output, can do control logic stuff on rising edge as w
 2. Broken: Latch control on rising edge - need to AND IN signals (if IN signal continuously high need to AND to make sure it pulses), so IN signals need to be asserted earlier + HOLD time etc. Same issue for PRE edge and POST edge action idea
 3. Best soln: Latch on falling edge. AND IN's on rising. May require hold constraints for slower stuff like memory. Can do IN and OUT on same cycle for fast things.
 
+Make control logic like a finite state machine. Opcodes:
+0: Boot sequence
+1: Fetch opcode
+2: Page fault
+
+Reset:
+Needs to reset when turn on
 
 #### Boot sequence
-Have EEPROM mapped into some high bits in memory (e.g. bit 23 of address space goes to eeprom). Need to make sure PC is set to something initially good...
+Have EEPROM mapped into some high bits in memory (e.g. bit 23 of address space goes to eeprom). Need to make sure PC is set to something initially good - use boot sequence opcode 0.
 
 #### Peripheral interface design
 How to talk with peripherals? Need some kind of polling along bus - e.g. control signals for each peripheral - in, out. On in, peripheral reads data from bus. On out, peripheral may assert bus.
