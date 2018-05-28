@@ -5,6 +5,7 @@ Control logic
 Reset - reset when turn on, reset button
 timer interrupt
 software interrupt
+check blog.txt for TODO
 
 #### Board 2
 VGA

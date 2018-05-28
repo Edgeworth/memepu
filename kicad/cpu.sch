@@ -21,6 +21,7 @@ F0 "Clock" 50
 F1 "clock.sch" 50
 F2 "CLK" I R 1650 1050 50 
 F3 "~RESET" I L 1000 1050 50 
+F4 "~CLK" I R 1650 1200 50 
 $EndSheet
 $Comp
 L power:PWR_FLAG #FLG01
@@ -818,4 +819,6 @@ U 5B0C6DCD
 F0 "Control Logic" 50
 F1 "control_logic.sch" 50
 $EndSheet
+Text Label 1650 1200 0    50   ~ 0
+~CLK
 $EndSCHEMATC

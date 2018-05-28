@@ -1039,4 +1039,8 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 5000 3800 50  000
 $EndComp
 Text Notes 4300 650  0    50   ~ 0
 Note: Not gates on decoders\ntaken from CLK sheet.
+Text Notes 3650 250  0    50   ~ 0
+TODO: if add more nots, replace these nots with closer ones.
+Text Notes 5100 6100 0    197  ~ 0
+TODO: Opcode reg, Aux reg, Interrupt logic\n
 $EndSCHEMATC
