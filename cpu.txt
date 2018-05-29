@@ -54,12 +54,9 @@ Output from ALU
 Stores id of current task
 - TASK
 
-#### Auxiliary register - write only
-Stores 4 bits of input into EEPROM
-- AUX
-
 #### Opcode register - write only
 Needs to be counter
+- OPCODE0, OPCODE1 (4 bit), optional
 
 ### Not registers, but need control signals
 #### MMU
@@ -81,7 +78,7 @@ Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD - lshift and rshift implemented 
 5 + 5 + 4 + 2 = 16 bits
 
 #### Bus related
-IN plane: A, B, M0, M1, M2, S0, S1, S2, K0, K1, K2, PC0, PC1, PC2, MMU0, MMU1, MMU2, MMU, MMU_CONTROL, DISP, TASK, OPCODE, + peripherals
+IN plane: A, B, M0, M1, M2, S0, S1, S2, K0, K1, K2, PC0, PC1, PC2, MMU0, MMU1, MMU2, MMU, MMU_CONTROL, DISP, TASK, OPCODE0, OPCODE1, + peripherals
 
 OUT plane: A, B, M0, M1, M2, S0, S1, S2, K0, K1, K2, STATUS, INTERRUPT, SUM, MMU, MMU_CONTROL, TASK, MLU + peripherals
 INTERRUPT register needs to be read for ISR to know which devices to talk to.
@@ -94,8 +91,8 @@ INTERRUPT register needs to be read for ISR to know which devices to talk to.
 - Set interrupt enable synchronos: NCLK
 - Unset interrupt enable synchronos: NCLK
 - PC increment: CLK
-- OPCODE increment: CLK
-- AUX increment: CLK
+- OPCODE0 increment: CLK
+- OPCODE1 increment: CLK
 - SP increment: CLK
 - SP decrement: CLK
 - KSP increment: CLK
