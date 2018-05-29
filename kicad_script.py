@@ -21,7 +21,8 @@ in_labels = ['~A_IN_NCLK',
 '~MMU_CONTROL_IN_NCLK',
 '~DISP_IN_NCLK',
 '~TASK_IN_NCLK',
-'~OPCODE_IN_NCLK']
+'~OPCODE0_IN_NCLK',
+'~OPCODE1_IN_NCLK']
 
 out_labels = ['~A_OUT_NCLK',
 '~B_OUT_NCLK',
@@ -50,8 +51,8 @@ ctrl_labels_nclk = ["~SUB_NCLK",
 
 ctrl_labels_clk = [
 "~PC_INC_NCLK",
-"~OPCODE_INC_NCLK",
-"~AUX_INC_NCLK",
+"~OPCODE0_INC_NCLK",
+"~OPCODE1_INC_NCLK",
 "~SP_INC_NCLK",
 "~SP_DEC_NCLK",
 "~KSP_INC_NCLK",
@@ -112,4 +113,4 @@ def generate_clk_anders(left_labels, right_labels):
 
 # generate_labels(ctrl_labels_nclk, 'h', 2)
 # generate_labels(ctrl_labels_clk)
-generate_clk_anders(ctrl_labels_clk, [i.replace('NCLK', 'CLK') for i in in_labels])
+generate_clk_anders(ctrl_labels_clk, [i.replace('NCLK', 'CLK') for i in ctrl_labels_clk])

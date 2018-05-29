@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 24 34
+Sheet 24 36
 Title ""
 Date ""
 Rev ""
@@ -687,7 +687,7 @@ Text Label 6000 2700 0    50   ~ 0
 Text Label 6000 2800 0    50   ~ 0
 ~TASK_IN_NCLK
 Text Label 5450 1900 2    50   ~ 0
-~OPCODE_IN_NCLK
+~OPCODE0_IN_NCLK
 $Sheet
 S 7500 550  550  550 
 U 5B0C40C8
@@ -875,9 +875,9 @@ Text Label 9550 2100 2    50   ~ 0
 Text HLabel 10100 2000 2    50   Input ~ 0
 ~TASK_IN_CLK
 Text Label 9550 2200 2    50   ~ 0
-~OPCODE_IN_NCLK
+~OPCODE0_IN_NCLK
 Text HLabel 10100 2100 2    50   Input ~ 0
-~OPCODE_IN_CLK
+~OPCODE0_IN_CLK
 Text HLabel 6050 3400 2    50   Input ~ 0
 ~A_OUT_NCLK
 Text HLabel 6050 3500 2    50   Input ~ 0
@@ -960,9 +960,9 @@ $EndSheet
 Text Label 8100 4050 0    50   ~ 0
 ~PC_INC_NCLK
 Text Label 8100 4150 0    50   ~ 0
-~OPCODE_INC_NCLK
+~OPCODE0_INC_NCLK
 Text Label 8100 4250 0    50   ~ 0
-~AUX_INC_NCLK
+~OPCODE1_INC_NCLK
 Text Label 8100 4350 0    50   ~ 0
 ~SP_INC_NCLK
 Text Label 8100 4450 0    50   ~ 0
@@ -973,42 +973,6 @@ Text Label 8100 4650 0    50   ~ 0
 ~KSP_DEC_NCLK
 Text Label 8100 4750 0    50   ~ 0
 ~ALU_FLAG_SET_NCLK
-Text Label 9800 3350 2    50   ~ 0
-CLK
-Text Label 9800 3450 2    50   ~ 0
-~PC_INC_NCLK
-Text HLabel 10350 3350 2    50   Input ~ 0
-~A_IN_CLK
-Text Label 9800 3550 2    50   ~ 0
-~OPCODE_INC_NCLK
-Text HLabel 10350 3450 2    50   Input ~ 0
-~B_IN_CLK
-Text Label 9800 3650 2    50   ~ 0
-~AUX_INC_NCLK
-Text HLabel 10350 3550 2    50   Input ~ 0
-~M0_IN_CLK
-Text Label 9800 3750 2    50   ~ 0
-~SP_INC_NCLK
-Text HLabel 10350 3650 2    50   Input ~ 0
-~M1_IN_CLK
-Text Label 9800 4050 2    50   ~ 0
-CLK
-Text Label 9800 4150 2    50   ~ 0
-~SP_DEC_NCLK
-Text HLabel 10350 4050 2    50   Input ~ 0
-~M2_IN_CLK
-Text Label 9800 4250 2    50   ~ 0
-~KSP_INC_NCLK
-Text HLabel 10350 4150 2    50   Input ~ 0
-~S0_IN_CLK
-Text Label 9800 4350 2    50   ~ 0
-~KSP_DEC_NCLK
-Text HLabel 10350 4250 2    50   Input ~ 0
-~S1_IN_CLK
-Text Label 9800 4450 2    50   ~ 0
-~ALU_FLAG_SET_NCLK
-Text HLabel 10350 4350 2    50   Input ~ 0
-~S2_IN_CLK
 $Comp
 L 74xx:74HC04 U?
 U 4 1 5B0E60C2
@@ -1041,6 +1005,204 @@ Text Notes 4300 650  0    50   ~ 0
 Note: Not gates on decoders\ntaken from CLK sheet.
 Text Notes 3650 250  0    50   ~ 0
 TODO: if add more nots, replace these nots with closer ones.
-Text Notes 5100 6100 0    197  ~ 0
-TODO: Opcode reg, Aux reg, Interrupt logic\n
+Text Notes -1000 9200 0    197  ~ 0
+TODO: Interrupt logic\nPage fault logic\nSelect MULTI based on MULTI_SEL\nMicro-op counter
+Text Label 5450 2000 2    50   ~ 0
+~OPCODE1_IN_NCLK
+Text Label 9550 2300 2    50   ~ 0
+~OPCODE1_IN_NCLK
+Text HLabel 10100 2200 2    50   Input ~ 0
+~OPCODE1_IN_CLK
+Text Label 9800 3350 2    50   ~ 0
+CLK
+Text Label 9800 3450 2    50   ~ 0
+~PC_INC_NCLK
+Text HLabel 10350 3350 2    50   Input ~ 0
+~PC_INC_CLK
+Text Label 9800 3550 2    50   ~ 0
+~OPCODE0_INC_NCLK
+Text HLabel 10350 3450 2    50   Input ~ 0
+~OPCODE0_INC_CLK
+Text Label 9800 3650 2    50   ~ 0
+~OPCODE1_INC_NCLK
+Text HLabel 10350 3550 2    50   Input ~ 0
+~OPCODE1_INC_CLK
+Text Label 9800 3750 2    50   ~ 0
+~SP_INC_NCLK
+Text HLabel 10350 3650 2    50   Input ~ 0
+~SP_INC_CLK
+Text Label 9800 4050 2    50   ~ 0
+CLK
+Text Label 9800 4150 2    50   ~ 0
+~SP_DEC_NCLK
+Text HLabel 10350 4050 2    50   Input ~ 0
+~SP_DEC_CLK
+Text Label 9800 4250 2    50   ~ 0
+~KSP_INC_NCLK
+Text HLabel 10350 4150 2    50   Input ~ 0
+~KSP_INC_CLK
+Text Label 9800 4350 2    50   ~ 0
+~KSP_DEC_NCLK
+Text HLabel 10350 4250 2    50   Input ~ 0
+~KSP_DEC_CLK
+Text Label 9800 4450 2    50   ~ 0
+~ALU_FLAG_SET_NCLK
+Text HLabel 10350 4350 2    50   Input ~ 0
+~ALU_FLAG_SET_CLK
+$Sheet
+S 5400 5850 900  1500
+U 5B0D66CF
+F0 "Opcode Register" 50
+F1 "opcode_register.sch" 50
+F2 "BUS0" I L 5400 5950 50 
+F3 "BUS1" I L 5400 6050 50 
+F4 "BUS2" I L 5400 6150 50 
+F5 "BUS3" I L 5400 6250 50 
+F6 "BUS4" I L 5400 6350 50 
+F7 "BUS5" I L 5400 6450 50 
+F8 "BUS6" I L 5400 6550 50 
+F9 "BUS7" I L 5400 6650 50 
+F10 "~OPCODE0_IN" I L 5400 6750 50 
+F11 "~RESET" I L 5400 6850 50 
+F12 "CLK" I L 5400 6950 50 
+F13 "OPCODE0_INC" I L 5400 7050 50 
+F14 "~OPCODE1_IN" I L 5400 7150 50 
+F15 "OPCODE1_INC" I L 5400 7250 50 
+F16 "O0" I R 6300 5950 50 
+F17 "O1" I R 6300 6050 50 
+F18 "O2" I R 6300 6150 50 
+F19 "O3" I R 6300 6250 50 
+F20 "O4" I R 6300 6350 50 
+F21 "O5" I R 6300 6450 50 
+F22 "O6" I R 6300 6550 50 
+F23 "O7" I R 6300 6650 50 
+F24 "O8" I R 6300 6750 50 
+F25 "O9" I R 6300 6850 50 
+F26 "O10" I R 6300 6950 50 
+F27 "O11" I R 6300 7050 50 
+$EndSheet
+Text HLabel 5400 5950 0    50   Input ~ 0
+BUS0
+Text HLabel 5400 6050 0    50   Input ~ 0
+BUS1
+Text HLabel 5400 6150 0    50   Input ~ 0
+BUS2
+Text HLabel 5400 6250 0    50   Input ~ 0
+BUS3
+Text HLabel 5400 6350 0    50   Input ~ 0
+BUS4
+Text HLabel 5400 6450 0    50   Input ~ 0
+BUS5
+Text HLabel 5400 6550 0    50   Input ~ 0
+BUS6
+Text HLabel 5400 6650 0    50   Input ~ 0
+BUS7
+Text Label 6300 5950 0    50   ~ 0
+OP0
+Text Label 6300 6050 0    50   ~ 0
+OP1
+Text Label 6300 6150 0    50   ~ 0
+OP2
+Text Label 6300 6250 0    50   ~ 0
+OP3
+Text Label 6300 6350 0    50   ~ 0
+OP4
+Text Label 6300 6450 0    50   ~ 0
+OP5
+Text Label 6300 6550 0    50   ~ 0
+OP6
+Text Label 6300 6650 0    50   ~ 0
+OP7
+Text Label 6300 6750 0    50   ~ 0
+OP8
+Text Label 6300 6850 0    50   ~ 0
+OP9
+Text Label 6300 6950 0    50   ~ 0
+OP10
+Text Label 6300 7050 0    50   ~ 0
+OP11
+Text Label 1000 3600 2    50   ~ 0
+OP0
+Text Label 1000 3700 2    50   ~ 0
+OP1
+Text Label 1000 3800 2    50   ~ 0
+OP2
+Text Label 1000 3900 2    50   ~ 0
+OP3
+Text Label 1000 4000 2    50   ~ 0
+OP4
+Text Label 1000 4100 2    50   ~ 0
+OP5
+Text Label 1000 4200 2    50   ~ 0
+OP6
+Text Label 1000 4300 2    50   ~ 0
+OP7
+Text Label 1000 4400 2    50   ~ 0
+OP8
+Text Label 1000 4500 2    50   ~ 0
+OP9
+Text Label 1000 4600 2    50   ~ 0
+OP10
+Text Label 1000 4700 2    50   ~ 0
+OP11
+Text Label 2800 3600 2    50   ~ 0
+OP0
+Text Label 2800 3700 2    50   ~ 0
+OP1
+Text Label 2800 3800 2    50   ~ 0
+OP2
+Text Label 2800 3900 2    50   ~ 0
+OP3
+Text Label 2800 4000 2    50   ~ 0
+OP4
+Text Label 2800 4100 2    50   ~ 0
+OP5
+Text Label 2800 4200 2    50   ~ 0
+OP6
+Text Label 2800 4300 2    50   ~ 0
+OP7
+Text Label 2800 4400 2    50   ~ 0
+OP8
+Text Label 2800 4500 2    50   ~ 0
+OP9
+Text Label 2800 4600 2    50   ~ 0
+OP10
+Text Label 2800 4700 2    50   ~ 0
+OP11
+$Sheet
+S 6950 5800 550  500 
+U 5B0D9D66
+F0 "Micro Op Counter" 50
+F1 "microop_counter.sch" 50
+F2 "~RESET" I L 6950 5900 50 
+F3 "~CLK" I L 6950 6000 50 
+F4 "O0" I R 7500 5900 50 
+F5 "O1" I R 7500 6000 50 
+F6 "O2" I R 7500 6100 50 
+F7 "O3" I R 7500 6200 50 
+$EndSheet
+Text Label 7500 5900 0    50   ~ 0
+MICROOP0
+Text Label 7500 6000 0    50   ~ 0
+MICROOP1
+Text Label 7500 6100 0    50   ~ 0
+MICROOP2
+Text Label 7500 6200 0    50   ~ 0
+MICROOP3
+Text Label 1000 4800 2    50   ~ 0
+MICROOP0
+Text Label 1000 4900 2    50   ~ 0
+MICROOP1
+Text Label 1000 5000 2    50   ~ 0
+MICROOP2
+Text Label 1000 5100 2    50   ~ 0
+MICROOP3
+Text Label 2800 4800 2    50   ~ 0
+MICROOP0
+Text Label 2800 4900 2    50   ~ 0
+MICROOP1
+Text Label 2800 5000 2    50   ~ 0
+MICROOP2
+Text Label 2800 5100 2    50   ~ 0
+MICROOP3
 $EndSCHEMATC

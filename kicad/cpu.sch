@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 34
+Sheet 1 36
 Title ""
 Date ""
 Rev ""
@@ -821,4 +821,8 @@ F1 "control_logic.sch" 50
 $EndSheet
 Text Label 1650 1200 0    50   ~ 0
 ~CLK
+Text Label 7900 2800 0    50   ~ 0
+MMU_READ_FAULT
+Text Label 7900 2900 0    50   ~ 0
+MMU_WRITE_FAULT
 $EndSCHEMATC
