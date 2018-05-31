@@ -130,6 +130,6 @@ Decision: Go with level triggered.
 #### Maximum safe frequency:
 EEPROM delay: 70ns
 SRAM delay: 70ns
-SRAM write pulse min width: 50ns, so CLK needs to be 50ns HIGH => 100ns period
+SRAM write pulse min width: 50ns, so CLK needs to be 50ns HIGH => 100ns period.
 
 100ns => 10 MHz
