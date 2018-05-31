@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 36
+Sheet 2 40
 Title ""
 Date ""
 Rev ""
@@ -2072,4 +2072,32 @@ Wire Wire Line
 	10700 5350 10750 5350
 Text HLabel 11350 5350 2    50   Input ~ 0
 ~CLK
+$Comp
+L 74xx:74HC04 U5
+U 4 1 5B19871A
+P 14950 5400
+AR Path="/5ADF0E03/5B19871A" Ref="U5"  Part="4" 
+AR Path="/5B19871A" Ref="U?"  Part="4" 
+AR Path="/5B0C6DCD/5B19871A" Ref="U?"  Part="4" 
+F 0 "U5" H 14950 5717 50  0000 C CNN
+F 1 "74HC04" H 14950 5626 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 14950 5400 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14950 5400 50  0001 C CNN
+	4    14950 5400
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U5
+U 5 1 5B198721
+P 15000 4800
+AR Path="/5ADF0E03/5B198721" Ref="U5"  Part="5" 
+AR Path="/5B198721" Ref="U?"  Part="5" 
+AR Path="/5B0C6DCD/5B198721" Ref="U?"  Part="5" 
+F 0 "U5" H 15000 5117 50  0000 C CNN
+F 1 "74HC04" H 15000 5026 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 15000 4800 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15000 4800 50  0001 C CNN
+	5    15000 4800
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
