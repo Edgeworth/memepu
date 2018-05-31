@@ -130,9 +130,19 @@ Decision: Go with level triggered.
 Software interrupt:
 Can wire interrupt 0's OUT line to INT0 line, for software interrupt.
 
+Interrupt enable/disable:
+Can either AND interrupt flag (OR of all interrupts) with enable/disable flag, or check during interrupt handler.
+Checking during the interrupt handler doesn't work, since then the processor would be interrupted on every instruction, as the interrupts would never go away, since they would never be handled, because interrupts are disabled.
+
+Set the interrupt enable/disable flag synchronously, not with the clock, since the control logic eeprom needs time to respond to the update of the interrupt flag, and there is the propogation delay of the OR gates.
+
 #### Maximum safe frequency:
 EEPROM delay: 70ns
 SRAM delay: 70ns
 SRAM write pulse min width: 50ns, so CLK needs to be 50ns HIGH => 100ns period.
+Interrupt flag OR gates propogation delay: 
+ - Max 18ns per, 3 levels of gates => 54 ns. (typical 6ns)
+ - Then need 70ns for EEPROM to update.
+ - Period must be >= 154 ns (typical 88 ns however).
 
-100ns => 10 MHz
+154ns => 6.5 MHz
