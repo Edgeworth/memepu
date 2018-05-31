@@ -1,6 +1,5 @@
 #### TODO
 Interrupt register
-- Opcode reg
 Control logic
 Reset - reset when turn on, reset button
 timer interrupt
@@ -28,3 +27,4 @@ MMU
 - K0, K1, K2 
 - S0, S1, S2
 Overvoltage zener, polyfuse, big bypass cap
+- Opcode reg
