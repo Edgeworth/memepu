@@ -88,7 +88,7 @@ Make control logic like a finite state machine. Opcodes:
 2: Page fault
 
 Reset:
-Needs to reset when turn on
+Needs to reset when turn on. Boot sequence: Needs to set PC to a particular value to run bootloader etc. Useful for control logic to output directly onto the bus for this?
 
 Control planes:
 IN plane ANDed with the clock.

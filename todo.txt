@@ -1,6 +1,6 @@
 #### TODO
-Interrupt register
 Control logic
+Control logic debug leds.
 Reset - reset when turn on, reset button
 timer interrupt
 software interrupt
@@ -28,3 +28,4 @@ MMU
 - S0, S1, S2
 Overvoltage zener, polyfuse, big bypass cap
 - Opcode reg
+Interrupt register

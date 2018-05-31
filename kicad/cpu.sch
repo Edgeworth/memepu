@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 36
+Sheet 1 40
 Title ""
 Date ""
 Rev ""
@@ -825,4 +825,88 @@ Text Label 7900 2800 0    50   ~ 0
 MMU_READ_FAULT
 Text Label 7900 2900 0    50   ~ 0
 MMU_WRITE_FAULT
+$Sheet
+S 9200 3900 750  1750
+U 5B0FEA60
+F0 "Interrupt Register" 50
+F1 "register_with_bus_transceiver.sch" 50
+F2 "REG_IN" I L 9200 5550 50 
+F3 "I0" I L 9200 4000 50 
+F4 "I1" I L 9200 4100 50 
+F5 "I2" I L 9200 4200 50 
+F6 "I3" I L 9200 4300 50 
+F7 "I4" I L 9200 4400 50 
+F8 "I5" I L 9200 4500 50 
+F9 "I6" I L 9200 4600 50 
+F10 "I7" I L 9200 4700 50 
+F11 "~REG_OUT" I L 9200 5450 50 
+F12 "O0" I R 9950 4000 50 
+F13 "O1" I R 9950 4100 50 
+F14 "O2" I R 9950 4200 50 
+F15 "O3" I R 9950 4300 50 
+F16 "O4" I R 9950 4400 50 
+F17 "O5" I R 9950 4500 50 
+F18 "O6" I R 9950 4600 50 
+F19 "O7" I R 9950 4700 50 
+F20 "BUS0" I R 9950 4800 50 
+F21 "BUS1" I R 9950 4900 50 
+F22 "BUS2" I R 9950 5000 50 
+F23 "BUS3" I R 9950 5100 50 
+F24 "BUS4" I R 9950 5200 50 
+F25 "BUS5" I R 9950 5300 50 
+F26 "BUS6" I R 9950 5400 50 
+F27 "BUS7" I R 9950 5500 50 
+$EndSheet
+Text Label 9200 4000 2    50   ~ 0
+BUS0
+Text Label 9200 4100 2    50   ~ 0
+BUS1
+Text Label 9200 4200 2    50   ~ 0
+BUS2
+Text Label 9200 4300 2    50   ~ 0
+BUS3
+Text Label 9200 4400 2    50   ~ 0
+BUS4
+Text Label 9200 4500 2    50   ~ 0
+BUS5
+Text Label 9200 4600 2    50   ~ 0
+BUS6
+Text Label 9200 4700 2    50   ~ 0
+BUS7
+Text Label 9200 5450 2    50   ~ 0
+~INT_OUT
+Text Label 9200 5550 2    50   ~ 0
+INT_IN_CLK
+Text Label 9950 4000 0    50   ~ 0
+INT0
+Text Label 9950 4100 0    50   ~ 0
+INT1
+Text Label 9950 4200 0    50   ~ 0
+INT2
+Text Label 9950 4300 0    50   ~ 0
+INT3
+Text Label 9950 4400 0    50   ~ 0
+INT4
+Text Label 9950 4500 0    50   ~ 0
+INT5
+Text Label 9950 4600 0    50   ~ 0
+INT6
+Text Label 9950 4700 0    50   ~ 0
+INT7
+Text Label 9950 4800 0    50   ~ 0
+BUS0
+Text Label 9950 4900 0    50   ~ 0
+BUS1
+Text Label 9950 5000 0    50   ~ 0
+BUS2
+Text Label 9950 5100 0    50   ~ 0
+BUS3
+Text Label 9950 5200 0    50   ~ 0
+BUS4
+Text Label 9950 5300 0    50   ~ 0
+BUS5
+Text Label 9950 5400 0    50   ~ 0
+BUS6
+Text Label 9950 5500 0    50   ~ 0
+BUS7
 $EndSCHEMATC
