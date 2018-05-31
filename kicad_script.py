@@ -146,6 +146,10 @@ def generate_nclk_notters(labels):
 			run_xdotool_key('l', *tr(label.replace('~', '')), *nav('EE6DCL2L'))
 		run_xdotool_key(*nav('6U4CR3CU'))
 
+def import_hierarchical_labels(num):
+	for i in range(num):
+		run_xdotool_key(*nav('2E2D'))
+
 # generate_labels(ctrl_labels_nclk, 'h', 2)
 # generate_labels(ctrl_labels_clk)
 # generate_nclk_notters(in_labels)
@@ -153,6 +157,7 @@ def generate_nclk_notters(labels):
 # in_labels_pos = replace(in_labels, '~', '')
 # generate_clk_anders(in_labels_pos, replace(in_labels_pos, 'NCLK', 'CLK'), in_local_labels)
 
+# ctrl_labels_clk_pos = replace(ctrl_labels_clk, '~', '')
+# generate_clk_anders(ctrl_labels_clk_pos, replace(ctrl_labels_clk_pos, 'NCLK', 'CLK'), ctrl_local_lables)
 
-ctrl_labels_clk_pos = replace(ctrl_labels_clk, '~', '')
-generate_clk_anders(ctrl_labels_clk_pos, replace(ctrl_labels_clk_pos, 'NCLK', 'CLK'), ctrl_local_lables)
+import_hierarchical_labels(8)
