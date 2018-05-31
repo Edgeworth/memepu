@@ -1205,4 +1205,6 @@ Text Label 2800 5000 2    50   ~ 0
 MICROOP2
 Text Label 2800 5100 2    50   ~ 0
 MICROOP3
+NoConn ~ 8100 4850
+NoConn ~ 8100 4950
 $EndSCHEMATC

@@ -1005,8 +1005,8 @@ Text Notes 4300 650  0    50   ~ 0
 Note: Not gates on decoders\ntaken from CLK sheet.
 Text Notes 3650 250  0    50   ~ 0
 TODO: if add more nots, replace these nots with closer ones.
-Text Notes -150 8200 0    197  ~ 0
-TODO: Interrupt logic\nSelect MULTI based on MULTI_SEL\nMicro-op counter
+Text Notes -1000 9200 0    197  ~ 0
+TODO: Interrupt logic\nPage fault logic\nSelect MULTI based on MULTI_SEL\nMicro-op counter
 Text Label 5450 2000 2    50   ~ 0
 ~OPCODE1_IN_NCLK
 Text Label 9550 2300 2    50   ~ 0
