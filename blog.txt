@@ -127,6 +127,9 @@ Level triggered with ACKs:
 
 Decision: Go with level triggered.
 
+Software interrupt:
+Can wire interrupt 0's OUT line to INT0 line, for software interrupt.
+
 #### Maximum safe frequency:
 EEPROM delay: 70ns
 SRAM delay: 70ns

@@ -734,8 +734,6 @@ Text Label 8450 5850 0    50   ~ 0
 ~KSP_DEC_NCLK
 Text Label 8450 5950 0    50   ~ 0
 ~ALU_FLAG_SET_NCLK
-Text Notes 650  7600 0    50   ~ 0
-Note: Not gates on decoders\ntaken from CLK sheet.
 Text Label 1800 9150 2    50   ~ 0
 ~OPCODE1_IN_NCLK
 $Sheet
@@ -914,22 +912,6 @@ F11 "MMU_READ_FAULT" I L 12450 2950 50
 F12 "MMU_WRITE_FAULT" I L 12450 3050 50 
 F13 "MMU_FAULT_FLAG" I R 13500 2250 50 
 $EndSheet
-Text HLabel 12450 2150 0    50   Input ~ 0
-INT0
-Text HLabel 12450 2250 0    50   Input ~ 0
-INT1
-Text HLabel 12450 2350 0    50   Input ~ 0
-INT2
-Text HLabel 12450 2450 0    50   Input ~ 0
-INT3
-Text HLabel 12450 2550 0    50   Input ~ 0
-INT4
-Text HLabel 12450 2650 0    50   Input ~ 0
-INT5
-Text HLabel 12450 2750 0    50   Input ~ 0
-INT6
-Text HLabel 12450 2850 0    50   Input ~ 0
-INT7
 Text Label 13500 2150 0    50   ~ 0
 INT_FLAG
 Text Label 1400 5900 2    50   ~ 0
@@ -1468,8 +1450,6 @@ Wire Notes Line
 	650  1250 6700 1250
 Wire Notes Line
 	650  3500 6700 3500
-Text Label 10400 2250 2    50   ~ 0
-~OPCODE0_IN_CLK
 $Sheet
 S 7850 10500 550  550 
 U 5B0C52C7
@@ -1485,8 +1465,6 @@ F8 "O1" I R 8400 10650 50
 F9 "O2" I R 8400 10750 50 
 F10 "O3" I R 8400 10850 50 
 $EndSheet
-Text Label 10400 2650 2    50   ~ 0
-~OPCODE1_IN_CLK
 Text Notes 13900 5750 0    50   ~ 0
 Delay on opcode INC to move it a bit \naway from control word latch timing.
 $Comp
@@ -2767,4 +2745,44 @@ Text Label 12550 6650 2    50   ~ 0
 ALU_FLAG_SET_NCLK
 Text HLabel 13100 6550 2    50   Input ~ 0
 ALU_FLAG_SET_CLK
+$Comp
+L 74xx:74HC04 U?
+U 5 1 5B1B275A
+P 10900 3750
+AR Path="/5ADF0E03/5B1B275A" Ref="U?"  Part="5" 
+AR Path="/5B1B275A" Ref="U?"  Part="5" 
+AR Path="/5B0C6DCD/5B1B275A" Ref="U5"  Part="5" 
+F 0 "U5" H 10900 4067 50  0000 C CNN
+F 1 "74HC04" H 10900 3976 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10900 3750 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10900 3750 50  0001 C CNN
+	5    10900 3750
+	1    0    0    -1  
+$EndComp
+Text Notes 10450 3350 0    50   ~ 0
+Taken from spares \nfrom clock
+Text Notes 10350 4000 0    50   ~ 0
+Software interrupt line - INT0
+Text Label 10600 3750 2    50   ~ 0
+~INT0_OUT_NCLK
+Text HLabel 11200 3750 2    50   Input ~ 0
+INT0
+Text Notes 15350 4400 0    197  ~ 0
+TODO: INT0_IN_CLK should be unconnected - should get a warning about it.
+Text HLabel 12450 2150 0    50   Input ~ 0
+INT0_LATCH
+Text HLabel 12450 2250 0    50   Input ~ 0
+INT1_LATCH
+Text HLabel 12450 2350 0    50   Input ~ 0
+INT2_LATCH
+Text HLabel 12450 2450 0    50   Input ~ 0
+INT3_LATCH
+Text HLabel 12450 2550 0    50   Input ~ 0
+INT4_LATCH
+Text HLabel 12450 2650 0    50   Input ~ 0
+INT5_LATCH
+Text HLabel 12450 2750 0    50   Input ~ 0
+INT6_LATCH
+Text HLabel 12450 2850 0    50   Input ~ 0
+INT7_LATCH
 $EndSCHEMATC
