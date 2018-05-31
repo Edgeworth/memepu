@@ -1,4 +1,5 @@
 #### TODO
+- do interrupt ins need to be CLKd? yes.
 Control logic
 Control logic debug leds.
 Reset - reset when turn on, reset button

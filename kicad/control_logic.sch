@@ -899,7 +899,7 @@ S 12450 2050 1050 1100
 U 5B101C06
 F0 "Flag Logic" 50
 F1 "flag_logic.sch" 50
-F2 "INT_FLAG" I R 13500 2150 50 
+F2 "INT_FLAG" I R 13500 2650 50 
 F3 "INT0" I L 12450 2150 50 
 F4 "INT1" I L 12450 2250 50 
 F5 "INT2" I L 12450 2350 50 
@@ -912,17 +912,17 @@ F11 "MMU_READ_FAULT" I L 12450 2950 50
 F12 "MMU_WRITE_FAULT" I L 12450 3050 50 
 F13 "MMU_FAULT_FLAG" I R 13500 2250 50 
 $EndSheet
-Text Label 13500 2150 0    50   ~ 0
+Text Label 14300 3250 0    50   ~ 0
 INT_FLAG
 Text Label 1400 5900 2    50   ~ 0
 INT_FLAG
 Text Label 3200 5900 2    50   ~ 0
 INT_FLAG
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0369
 U 1 1 5B1046F6
 P 3200 6100
-F 0 "#PWR?" H 3200 5850 50  0001 C CNN
+F 0 "#PWR0369" H 3200 5850 50  0001 C CNN
 F 1 "GND" V 3205 5972 50  0000 R CNN
 F 2 "" H 3200 6100 50  0001 C CNN
 F 3 "" H 3200 6100 50  0001 C CNN
@@ -930,10 +930,10 @@ F 3 "" H 3200 6100 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0370
 U 1 1 5B104719
 P 1400 6100
-F 0 "#PWR?" H 1400 5850 50  0001 C CNN
+F 0 "#PWR0370" H 1400 5850 50  0001 C CNN
 F 1 "GND" V 1405 5972 50  0000 R CNN
 F 2 "" H 1400 6100 50  0001 C CNN
 F 3 "" H 1400 6100 50  0001 C CNN
@@ -987,10 +987,10 @@ NoConn ~ 8000 2600
 NoConn ~ 8550 3400
 NoConn ~ 8550 3500
 $Comp
-L Memory_Flash:SST39SF040 U?
+L Memory_Flash:SST39SF040 U113
 U 1 1 5B10FF1D
 P 5750 5450
-F 0 "U?" H 5800 5250 50  0000 C CNN
+F 0 "U113" H 5800 5250 50  0000 C CNN
 F 1 "SST39SF040" H 5850 5050 50  0000 C CNN
 F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 5750 5750 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 5750 5750 50  0001 C CNN
@@ -998,10 +998,10 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 5750 5750 50 
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0371
 U 1 1 5B10FF24
 P 5750 4150
-F 0 "#PWR?" H 5750 4000 50  0001 C CNN
+F 0 "#PWR0371" H 5750 4000 50  0001 C CNN
 F 1 "VCC" H 5767 4323 50  0000 C CNN
 F 2 "" H 5750 4150 50  0001 C CNN
 F 3 "" H 5750 4150 50  0001 C CNN
@@ -1009,10 +1009,10 @@ F 3 "" H 5750 4150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C124
 U 1 1 5B10FF2A
 P 6050 3950
-F 0 "C?" V 5821 3950 50  0000 C CNN
+F 0 "C124" V 5821 3950 50  0000 C CNN
 F 1 "0.1uF" V 5912 3950 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 6050 3950 50  0001 C CNN
 F 3 "~" H 6050 3950 50  0001 C CNN
@@ -1020,10 +1020,10 @@ F 3 "~" H 6050 3950 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0417
 U 1 1 5B10FF31
 P 6150 3950
-F 0 "#PWR?" H 6150 3700 50  0001 C CNN
+F 0 "#PWR0417" H 6150 3700 50  0001 C CNN
 F 1 "GND" V 6155 3822 50  0000 R CNN
 F 2 "" H 6150 3950 50  0001 C CNN
 F 3 "" H 6150 3950 50  0001 C CNN
@@ -1036,10 +1036,10 @@ Wire Wire Line
 	5950 4150 5950 3950
 Connection ~ 5750 4150
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0418
 U 1 1 5B10FF3A
 P 5750 6650
-F 0 "#PWR?" H 5750 6400 50  0001 C CNN
+F 0 "#PWR0418" H 5750 6400 50  0001 C CNN
 F 1 "GND" H 5755 6477 50  0000 C CNN
 F 2 "" H 5750 6650 50  0001 C CNN
 F 3 "" H 5750 6650 50  0001 C CNN
@@ -1047,10 +1047,10 @@ F 3 "" H 5750 6650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0419
 U 1 1 5B10FF40
 P 5150 6250
-F 0 "#PWR?" H 5150 6100 50  0001 C CNN
+F 0 "#PWR0419" H 5150 6100 50  0001 C CNN
 F 1 "VCC" V 5168 6377 50  0000 L CNN
 F 2 "" H 5150 6250 50  0001 C CNN
 F 3 "" H 5150 6250 50  0001 C CNN
@@ -1058,10 +1058,10 @@ F 3 "" H 5150 6250 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0420
 U 1 1 5B10FF46
 P 5150 6450
-F 0 "#PWR?" H 5150 6200 50  0001 C CNN
+F 0 "#PWR0420" H 5150 6200 50  0001 C CNN
 F 1 "GND" V 5155 6322 50  0000 R CNN
 F 2 "" H 5150 6450 50  0001 C CNN
 F 3 "" H 5150 6450 50  0001 C CNN
@@ -1069,10 +1069,10 @@ F 3 "" H 5150 6450 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0421
 U 1 1 5B10FF4C
 P 5150 6550
-F 0 "#PWR?" H 5150 6300 50  0001 C CNN
+F 0 "#PWR0421" H 5150 6300 50  0001 C CNN
 F 1 "GND" V 5155 6422 50  0000 R CNN
 F 2 "" H 5150 6550 50  0001 C CNN
 F 3 "" H 5150 6550 50  0001 C CNN
@@ -1114,10 +1114,10 @@ MICROOP3
 Text Label 5150 5850 2    50   ~ 0
 INT_FLAG
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0422
 U 1 1 5B10FF6B
 P 5150 6050
-F 0 "#PWR?" H 5150 5800 50  0001 C CNN
+F 0 "#PWR0422" H 5150 5800 50  0001 C CNN
 F 1 "GND" V 5155 5922 50  0000 R CNN
 F 2 "" H 5150 6050 50  0001 C CNN
 F 3 "" H 5150 6050 50  0001 C CNN
@@ -1143,10 +1143,10 @@ CTRL22
 Text Label 6350 4950 0    50   ~ 0
 CTRL23
 $Comp
-L 74xx:74LS574 U?
+L 74xx:74LS574 U112
 U 1 1 5B1107FE
 P 5750 2400
-F 0 "U?" H 5750 2200 50  0000 C CNN
+F 0 "U112" H 5750 2200 50  0000 C CNN
 F 1 "74LS574" H 5800 2100 50  0000 C CNN
 F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 5750 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS574" H 5750 2400 50  0001 C CNN
@@ -1154,10 +1154,10 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS574" H 5750 2400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0423
 U 1 1 5B110805
 P 5750 1600
-F 0 "#PWR?" H 5750 1450 50  0001 C CNN
+F 0 "#PWR0423" H 5750 1450 50  0001 C CNN
 F 1 "VCC" H 5767 1773 50  0000 C CNN
 F 2 "" H 5750 1600 50  0001 C CNN
 F 3 "" H 5750 1600 50  0001 C CNN
@@ -1165,10 +1165,10 @@ F 3 "" H 5750 1600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0424
 U 1 1 5B11080B
 P 5750 3200
-F 0 "#PWR?" H 5750 2950 50  0001 C CNN
+F 0 "#PWR0424" H 5750 2950 50  0001 C CNN
 F 1 "GND" H 5755 3027 50  0000 C CNN
 F 2 "" H 5750 3200 50  0001 C CNN
 F 3 "" H 5750 3200 50  0001 C CNN
@@ -1176,10 +1176,10 @@ F 3 "" H 5750 3200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C123
 U 1 1 5B110811
 P 6000 1600
-F 0 "C?" V 5771 1600 50  0000 C CNN
+F 0 "C123" V 5771 1600 50  0000 C CNN
 F 1 "0.1uF" V 5862 1600 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 6000 1600 50  0001 C CNN
 F 3 "~" H 6000 1600 50  0001 C CNN
@@ -1190,10 +1190,10 @@ Wire Wire Line
 	5750 1600 5900 1600
 Connection ~ 5750 1600
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0425
 U 1 1 5B11081A
 P 6100 1600
-F 0 "#PWR?" H 6100 1350 50  0001 C CNN
+F 0 "#PWR0425" H 6100 1350 50  0001 C CNN
 F 1 "GND" V 6105 1472 50  0000 R CNN
 F 2 "" H 6100 1600 50  0001 C CNN
 F 3 "" H 6100 1600 50  0001 C CNN
@@ -1301,10 +1301,10 @@ Text HLabel 3200 2800 0    50   Input ~ 0
 Text HLabel 1200 2800 0    50   Input ~ 0
 ~CLK
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0426
 U 1 1 5B11424D
 P 5250 2900
-F 0 "#PWR?" H 5250 2650 50  0001 C CNN
+F 0 "#PWR0426" H 5250 2650 50  0001 C CNN
 F 1 "GND" H 5255 2727 50  0000 C CNN
 F 2 "" H 5250 2900 50  0001 C CNN
 F 3 "" H 5250 2900 50  0001 C CNN
@@ -1312,10 +1312,10 @@ F 3 "" H 5250 2900 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0427
 U 1 1 5B114288
 P 3200 2900
-F 0 "#PWR?" H 3200 2650 50  0001 C CNN
+F 0 "#PWR0427" H 3200 2650 50  0001 C CNN
 F 1 "GND" H 3205 2727 50  0000 C CNN
 F 2 "" H 3200 2900 50  0001 C CNN
 F 3 "" H 3200 2900 50  0001 C CNN
@@ -1323,10 +1323,10 @@ F 3 "" H 3200 2900 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0428
 U 1 1 5B1142B3
 P 1200 2900
-F 0 "#PWR?" H 1200 2650 50  0001 C CNN
+F 0 "#PWR0428" H 1200 2650 50  0001 C CNN
 F 1 "GND" H 1205 2727 50  0000 C CNN
 F 2 "" H 1200 2900 50  0001 C CNN
 F 3 "" H 1200 2900 50  0001 C CNN
@@ -1334,111 +1334,111 @@ F 3 "" H 1200 2900 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L 74xx:74HC245 U?
+L 74xx:74HC245 U118
 U 1 1 5B1149B5
-P 15250 2150
-F 0 "U?" H 15250 1950 50  0000 C CNN
-F 1 "74HC245" H 15250 1850 50  0000 C CNN
-F 2 "" H 15250 2150 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 15250 2150 50  0001 C CNN
-	1    15250 2150
+P 15550 2150
+F 0 "U118" H 15550 1950 50  0000 C CNN
+F 1 "74HC245" H 15550 1850 50  0000 C CNN
+F 2 "" H 15550 2150 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 15550 2150 50  0001 C CNN
+	1    15550 2150
 	1    0    0    -1  
 $EndComp
 Text Label 8550 3300 0    50   ~ 0
 ~CTRLLOGIC_OUT_NCLK
-Text Label 14750 2650 2    50   ~ 0
+Text Label 15050 2650 2    50   ~ 0
 ~CTRLLOGIC_OUT_NCLK
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0429
 U 1 1 5B1152F0
-P 15250 1350
-F 0 "#PWR?" H 15250 1200 50  0001 C CNN
-F 1 "VCC" H 15267 1523 50  0000 C CNN
-F 2 "" H 15250 1350 50  0001 C CNN
-F 3 "" H 15250 1350 50  0001 C CNN
-	1    15250 1350
+P 15550 1350
+F 0 "#PWR0429" H 15550 1200 50  0001 C CNN
+F 1 "VCC" H 15567 1523 50  0000 C CNN
+F 2 "" H 15550 1350 50  0001 C CNN
+F 3 "" H 15550 1350 50  0001 C CNN
+	1    15550 1350
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C129
 U 1 1 5B1152F6
-P 15600 1350
-F 0 "C?" V 15371 1350 50  0000 C CNN
-F 1 "0.1uF" V 15462 1350 50  0000 C CNN
-F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 15600 1350 50  0001 C CNN
-F 3 "~" H 15600 1350 50  0001 C CNN
-	1    15600 1350
+P 15900 1350
+F 0 "C129" V 15671 1350 50  0000 C CNN
+F 1 "0.1uF" V 15762 1350 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 15900 1350 50  0001 C CNN
+F 3 "~" H 15900 1350 50  0001 C CNN
+	1    15900 1350
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0430
 U 1 1 5B1152FD
-P 15700 1350
-F 0 "#PWR?" H 15700 1100 50  0001 C CNN
-F 1 "GND" V 15705 1222 50  0000 R CNN
-F 2 "" H 15700 1350 50  0001 C CNN
-F 3 "" H 15700 1350 50  0001 C CNN
-	1    15700 1350
+P 16000 1350
+F 0 "#PWR0430" H 16000 1100 50  0001 C CNN
+F 1 "GND" V 16005 1222 50  0000 R CNN
+F 2 "" H 16000 1350 50  0001 C CNN
+F 3 "" H 16000 1350 50  0001 C CNN
+	1    16000 1350
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	15250 1350 15500 1350
-Connection ~ 15250 1350
-Text Label 14750 1650 2    50   ~ 0
+	15550 1350 15800 1350
+Connection ~ 15550 1350
+Text Label 15050 1650 2    50   ~ 0
 CTRL_BUS0
-Text Label 14750 1750 2    50   ~ 0
+Text Label 15050 1750 2    50   ~ 0
 CTRL_BUS1
-Text Label 14750 1850 2    50   ~ 0
+Text Label 15050 1850 2    50   ~ 0
 CTRL_BUS2
-Text Label 14750 1950 2    50   ~ 0
+Text Label 15050 1950 2    50   ~ 0
 CTRL_BUS3
-Text Label 14750 2050 2    50   ~ 0
+Text Label 15050 2050 2    50   ~ 0
 CTRL_BUS4
-Text Label 14750 2150 2    50   ~ 0
+Text Label 15050 2150 2    50   ~ 0
 CTRL_BUS5
-Text Label 14750 2250 2    50   ~ 0
+Text Label 15050 2250 2    50   ~ 0
 CTRL_BUS6
-Text Label 14750 2350 2    50   ~ 0
+Text Label 15050 2350 2    50   ~ 0
 CTRL_BUS7
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0431
 U 1 1 5B11601B
-P 14750 2550
-F 0 "#PWR?" H 14750 2400 50  0001 C CNN
-F 1 "VCC" H 14767 2723 50  0000 C CNN
-F 2 "" H 14750 2550 50  0001 C CNN
-F 3 "" H 14750 2550 50  0001 C CNN
-	1    14750 2550
+P 15050 2550
+F 0 "#PWR0431" H 15050 2400 50  0001 C CNN
+F 1 "VCC" H 15067 2723 50  0000 C CNN
+F 2 "" H 15050 2550 50  0001 C CNN
+F 3 "" H 15050 2550 50  0001 C CNN
+	1    15050 2550
 	0    -1   -1   0   
 $EndComp
-Text HLabel 15750 1650 2    50   Input ~ 0
+Text HLabel 16050 1650 2    50   Input ~ 0
 BUS0
-Text HLabel 15750 1750 2    50   Input ~ 0
+Text HLabel 16050 1750 2    50   Input ~ 0
 BUS1
-Text HLabel 15750 1850 2    50   Input ~ 0
+Text HLabel 16050 1850 2    50   Input ~ 0
 BUS2
-Text HLabel 15750 1950 2    50   Input ~ 0
+Text HLabel 16050 1950 2    50   Input ~ 0
 BUS3
-Text HLabel 15750 2050 2    50   Input ~ 0
+Text HLabel 16050 2050 2    50   Input ~ 0
 BUS4
-Text HLabel 15750 2150 2    50   Input ~ 0
+Text HLabel 16050 2150 2    50   Input ~ 0
 BUS5
-Text HLabel 15750 2250 2    50   Input ~ 0
+Text HLabel 16050 2250 2    50   Input ~ 0
 BUS6
-Text HLabel 15750 2350 2    50   Input ~ 0
+Text HLabel 16050 2350 2    50   Input ~ 0
 BUS7
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0432
 U 1 1 5B116610
-P 15250 2950
-F 0 "#PWR?" H 15250 2700 50  0001 C CNN
-F 1 "GND" V 15255 2822 50  0000 R CNN
-F 2 "" H 15250 2950 50  0001 C CNN
-F 3 "" H 15250 2950 50  0001 C CNN
-	1    15250 2950
+P 15550 2950
+F 0 "#PWR0432" H 15550 2700 50  0001 C CNN
+F 1 "GND" V 15555 2822 50  0000 R CNN
+F 2 "" H 15550 2950 50  0001 C CNN
+F 3 "" H 15550 2950 50  0001 C CNN
+	1    15550 2950
 	1    0    0    -1  
 $EndComp
-Text Notes 15500 2900 0    50   ~ 0
+Text Notes 15800 2900 0    50   ~ 0
 Control Logic Bus Output
 Wire Notes Line
 	600  3600 600  7050
@@ -1468,10 +1468,10 @@ $EndSheet
 Text Notes 13900 5750 0    50   ~ 0
 Delay on opcode INC to move it a bit \naway from control word latch timing.
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U108
 U 1 1 5B11C575
 P 4150 7850
-F 0 "U?" H 4150 7850 50  0000 C CNN
+F 0 "U108" H 4150 7850 50  0000 C CNN
 F 1 "74HC04" H 4300 7750 50  0000 C CNN
 F 2 "" H 4150 7850 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 7850 50  0001 C CNN
@@ -1479,10 +1479,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 7850 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U108
 U 2 1 5B11C5E7
 P 4150 8150
-F 0 "U?" H 4150 8150 50  0000 C CNN
+F 0 "U108" H 4150 8150 50  0000 C CNN
 F 1 "74HC04" H 4300 8050 50  0000 C CNN
 F 2 "" H 4150 8150 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 8150 50  0001 C CNN
@@ -1490,10 +1490,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 8150 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U108
 U 3 1 5B11C654
 P 4150 8450
-F 0 "U?" H 4150 8450 50  0000 C CNN
+F 0 "U108" H 4150 8450 50  0000 C CNN
 F 1 "74HC04" H 4300 8350 50  0000 C CNN
 F 2 "" H 4150 8450 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 8450 50  0001 C CNN
@@ -1501,10 +1501,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 8450 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U109
 U 4 1 5B11C6C4
 P 4150 8750
-F 0 "U?" H 4150 8750 50  0000 C CNN
+F 0 "U109" H 4150 8750 50  0000 C CNN
 F 1 "74HC04" H 4300 8650 50  0000 C CNN
 F 2 "" H 4150 8750 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 8750 50  0001 C CNN
@@ -1512,10 +1512,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 8750 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U108
 U 5 1 5B11C737
 P 4150 9050
-F 0 "U?" H 4150 9050 50  0000 C CNN
+F 0 "U108" H 4150 9050 50  0000 C CNN
 F 1 "74HC04" H 4300 8950 50  0000 C CNN
 F 2 "" H 4150 9050 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 9050 50  0001 C CNN
@@ -1523,10 +1523,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 9050 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U108
 U 6 1 5B11C7AD
 P 4150 9350
-F 0 "U?" H 4150 9350 50  0000 C CNN
+F 0 "U108" H 4150 9350 50  0000 C CNN
 F 1 "74HC04" H 4300 9250 50  0000 C CNN
 F 2 "" H 4150 9350 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 9350 50  0001 C CNN
@@ -1534,10 +1534,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4150 9350 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U108
 U 7 1 5B11C828
 P 800 0
-F 0 "U?" H 1030 46  50  0000 L CNN
+F 0 "U108" H 1030 46  50  0000 L CNN
 F 1 "74HC04" H 1030 -45 50  0000 L CNN
 F 2 "" H 800 0   50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 800 0   50  0001 C CNN
@@ -1545,10 +1545,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 800 0   50  0001 
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0433
 U 1 1 5B11D295
 P 800 -500
-F 0 "#PWR?" H 800 -650 50  0001 C CNN
+F 0 "#PWR0433" H 800 -650 50  0001 C CNN
 F 1 "VCC" H 817 -327 50  0000 C CNN
 F 2 "" H 800 -500 50  0001 C CNN
 F 3 "" H 800 -500 50  0001 C CNN
@@ -1556,10 +1556,10 @@ F 3 "" H 800 -500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C119
 U 1 1 5B11D29B
 P 1150 -500
-F 0 "C?" V 921 -500 50  0000 C CNN
+F 0 "C119" V 921 -500 50  0000 C CNN
 F 1 "0.1uF" V 1012 -500 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 1150 -500 50  0001 C CNN
 F 3 "~" H 1150 -500 50  0001 C CNN
@@ -1567,10 +1567,10 @@ F 3 "~" H 1150 -500 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0434
 U 1 1 5B11D2A2
 P 1250 -500
-F 0 "#PWR?" H 1250 -750 50  0001 C CNN
+F 0 "#PWR0434" H 1250 -750 50  0001 C CNN
 F 1 "GND" V 1255 -628 50  0000 R CNN
 F 2 "" H 1250 -500 50  0001 C CNN
 F 3 "" H 1250 -500 50  0001 C CNN
@@ -1581,10 +1581,10 @@ Wire Wire Line
 	800  -500 1050 -500
 Connection ~ 800  -500
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0435
 U 1 1 5B11D4EE
 P 800 500
-F 0 "#PWR?" H 800 250 50  0001 C CNN
+F 0 "#PWR0435" H 800 250 50  0001 C CNN
 F 1 "GND" V 805 372 50  0000 R CNN
 F 2 "" H 800 500 50  0001 C CNN
 F 3 "" H 800 500 50  0001 C CNN
@@ -1594,10 +1594,10 @@ $EndComp
 Text Notes 2000 7500 0    50   ~ 0
 Need to invert outputs\nto put through AND with CLK.
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U109
 U 1 1 5B1314FB
 P 6150 7850
-F 0 "U?" H 6150 7850 50  0000 C CNN
+F 0 "U109" H 6150 7850 50  0000 C CNN
 F 1 "74HC04" H 6300 7750 50  0000 C CNN
 F 2 "" H 6150 7850 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 7850 50  0001 C CNN
@@ -1605,10 +1605,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 7850 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U109
 U 2 1 5B131502
 P 6150 8150
-F 0 "U?" H 6150 8150 50  0000 C CNN
+F 0 "U109" H 6150 8150 50  0000 C CNN
 F 1 "74HC04" H 6300 8050 50  0000 C CNN
 F 2 "" H 6150 8150 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 8150 50  0001 C CNN
@@ -1616,10 +1616,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 8150 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U109
 U 3 1 5B131509
 P 6150 8450
-F 0 "U?" H 6150 8450 50  0000 C CNN
+F 0 "U109" H 6150 8450 50  0000 C CNN
 F 1 "74HC04" H 6300 8350 50  0000 C CNN
 F 2 "" H 6150 8450 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 8450 50  0001 C CNN
@@ -1627,10 +1627,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 8450 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U110
 U 4 1 5B131510
 P 6150 8750
-F 0 "U?" H 6150 8750 50  0000 C CNN
+F 0 "U110" H 6150 8750 50  0000 C CNN
 F 1 "74HC04" H 6300 8650 50  0000 C CNN
 F 2 "" H 6150 8750 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 8750 50  0001 C CNN
@@ -1638,10 +1638,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 8750 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U109
 U 5 1 5B131517
 P 6150 9050
-F 0 "U?" H 6150 9050 50  0000 C CNN
+F 0 "U109" H 6150 9050 50  0000 C CNN
 F 1 "74HC04" H 6300 8950 50  0000 C CNN
 F 2 "" H 6150 9050 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 9050 50  0001 C CNN
@@ -1649,10 +1649,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 9050 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U109
 U 6 1 5B13151E
 P 6150 9350
-F 0 "U?" H 6150 9350 50  0000 C CNN
+F 0 "U109" H 6150 9350 50  0000 C CNN
 F 1 "74HC04" H 6300 9250 50  0000 C CNN
 F 2 "" H 6150 9350 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 9350 50  0001 C CNN
@@ -1660,10 +1660,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6150 9350 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U109
 U 7 1 5B131525
 P 2100 -50
-F 0 "U?" H 2330 -4  50  0000 L CNN
+F 0 "U109" H 2330 -4  50  0000 L CNN
 F 1 "74HC04" H 2330 -95 50  0000 L CNN
 F 2 "" H 2100 -50 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 2100 -50 50  0001 C CNN
@@ -1671,10 +1671,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 2100 -50 50  0001
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0436
 U 1 1 5B13152C
 P 2100 -550
-F 0 "#PWR?" H 2100 -700 50  0001 C CNN
+F 0 "#PWR0436" H 2100 -700 50  0001 C CNN
 F 1 "VCC" H 2117 -377 50  0000 C CNN
 F 2 "" H 2100 -550 50  0001 C CNN
 F 3 "" H 2100 -550 50  0001 C CNN
@@ -1682,10 +1682,10 @@ F 3 "" H 2100 -550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C120
 U 1 1 5B131532
 P 2450 -550
-F 0 "C?" V 2221 -550 50  0000 C CNN
+F 0 "C120" V 2221 -550 50  0000 C CNN
 F 1 "0.1uF" V 2312 -550 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 2450 -550 50  0001 C CNN
 F 3 "~" H 2450 -550 50  0001 C CNN
@@ -1693,10 +1693,10 @@ F 3 "~" H 2450 -550 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0437
 U 1 1 5B131539
 P 2550 -550
-F 0 "#PWR?" H 2550 -800 50  0001 C CNN
+F 0 "#PWR0437" H 2550 -800 50  0001 C CNN
 F 1 "GND" V 2555 -678 50  0000 R CNN
 F 2 "" H 2550 -550 50  0001 C CNN
 F 3 "" H 2550 -550 50  0001 C CNN
@@ -1707,10 +1707,10 @@ Wire Wire Line
 	2100 -550 2350 -550
 Connection ~ 2100 -550
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0438
 U 1 1 5B131541
 P 2100 450
-F 0 "#PWR?" H 2100 200 50  0001 C CNN
+F 0 "#PWR0438" H 2100 200 50  0001 C CNN
 F 1 "GND" V 2105 322 50  0000 R CNN
 F 2 "" H 2100 450 50  0001 C CNN
 F 3 "" H 2100 450 50  0001 C CNN
@@ -1718,10 +1718,10 @@ F 3 "" H 2100 450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U110
 U 1 1 5B13189D
 P 8150 7850
-F 0 "U?" H 8150 7850 50  0000 C CNN
+F 0 "U110" H 8150 7850 50  0000 C CNN
 F 1 "74HC04" H 8300 7750 50  0000 C CNN
 F 2 "" H 8150 7850 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 7850 50  0001 C CNN
@@ -1729,10 +1729,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 7850 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U110
 U 2 1 5B1318A4
 P 8150 8150
-F 0 "U?" H 8150 8150 50  0000 C CNN
+F 0 "U110" H 8150 8150 50  0000 C CNN
 F 1 "74HC04" H 8300 8050 50  0000 C CNN
 F 2 "" H 8150 8150 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 8150 50  0001 C CNN
@@ -1740,10 +1740,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 8150 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U111
 U 3 1 5B1318AB
 P 8150 8450
-F 0 "U?" H 8150 8450 50  0000 C CNN
+F 0 "U111" H 8150 8450 50  0000 C CNN
 F 1 "74HC04" H 8300 8350 50  0000 C CNN
 F 2 "" H 8150 8450 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 8450 50  0001 C CNN
@@ -1751,10 +1751,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 8450 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U111
 U 4 1 5B1318B2
 P 8150 8750
-F 0 "U?" H 8150 8750 50  0000 C CNN
+F 0 "U111" H 8150 8750 50  0000 C CNN
 F 1 "74HC04" H 8300 8650 50  0000 C CNN
 F 2 "" H 8150 8750 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 8750 50  0001 C CNN
@@ -1762,10 +1762,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 8750 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U110
 U 5 1 5B1318B9
 P 8150 9050
-F 0 "U?" H 8150 9050 50  0000 C CNN
+F 0 "U110" H 8150 9050 50  0000 C CNN
 F 1 "74HC04" H 8300 8950 50  0000 C CNN
 F 2 "" H 8150 9050 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 9050 50  0001 C CNN
@@ -1773,10 +1773,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 9050 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U110
 U 6 1 5B1318C0
 P 8150 9350
-F 0 "U?" H 8150 9350 50  0000 C CNN
+F 0 "U110" H 8150 9350 50  0000 C CNN
 F 1 "74HC04" H 8300 9250 50  0000 C CNN
 F 2 "" H 8150 9350 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 9350 50  0001 C CNN
@@ -1784,10 +1784,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8150 9350 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U110
 U 7 1 5B1318C7
 P 3300 -50
-F 0 "U?" H 3530 -4  50  0000 L CNN
+F 0 "U110" H 3530 -4  50  0000 L CNN
 F 1 "74HC04" H 3530 -95 50  0000 L CNN
 F 2 "" H 3300 -50 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 3300 -50 50  0001 C CNN
@@ -1795,10 +1795,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 3300 -50 50  0001
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0439
 U 1 1 5B1318CE
 P 3300 -550
-F 0 "#PWR?" H 3300 -700 50  0001 C CNN
+F 0 "#PWR0439" H 3300 -700 50  0001 C CNN
 F 1 "VCC" H 3317 -377 50  0000 C CNN
 F 2 "" H 3300 -550 50  0001 C CNN
 F 3 "" H 3300 -550 50  0001 C CNN
@@ -1806,10 +1806,10 @@ F 3 "" H 3300 -550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C121
 U 1 1 5B1318D4
 P 3650 -550
-F 0 "C?" V 3421 -550 50  0000 C CNN
+F 0 "C121" V 3421 -550 50  0000 C CNN
 F 1 "0.1uF" V 3512 -550 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 3650 -550 50  0001 C CNN
 F 3 "~" H 3650 -550 50  0001 C CNN
@@ -1817,10 +1817,10 @@ F 3 "~" H 3650 -550 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0440
 U 1 1 5B1318DB
 P 3750 -550
-F 0 "#PWR?" H 3750 -800 50  0001 C CNN
+F 0 "#PWR0440" H 3750 -800 50  0001 C CNN
 F 1 "GND" V 3755 -678 50  0000 R CNN
 F 2 "" H 3750 -550 50  0001 C CNN
 F 3 "" H 3750 -550 50  0001 C CNN
@@ -1831,10 +1831,10 @@ Wire Wire Line
 	3300 -550 3550 -550
 Connection ~ 3300 -550
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0441
 U 1 1 5B1318E3
 P 3300 450
-F 0 "#PWR?" H 3300 200 50  0001 C CNN
+F 0 "#PWR0441" H 3300 200 50  0001 C CNN
 F 1 "GND" V 3305 322 50  0000 R CNN
 F 2 "" H 3300 450 50  0001 C CNN
 F 3 "" H 3300 450 50  0001 C CNN
@@ -1842,10 +1842,10 @@ F 3 "" H 3300 450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U111
 U 1 1 5B131C6B
 P 10150 7850
-F 0 "U?" H 10150 7850 50  0000 C CNN
+F 0 "U111" H 10150 7850 50  0000 C CNN
 F 1 "74HC04" H 10300 7750 50  0000 C CNN
 F 2 "" H 10150 7850 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 7850 50  0001 C CNN
@@ -1853,10 +1853,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 7850 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U111
 U 2 1 5B131C72
 P 10150 8150
-F 0 "U?" H 10150 8150 50  0000 C CNN
+F 0 "U111" H 10150 8150 50  0000 C CNN
 F 1 "74HC04" H 10300 8050 50  0000 C CNN
 F 2 "" H 10150 8150 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 8150 50  0001 C CNN
@@ -1864,10 +1864,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 8150 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U114
 U 3 1 5B131C79
 P 10150 8450
-F 0 "U?" H 10150 8450 50  0000 C CNN
+F 0 "U114" H 10150 8450 50  0000 C CNN
 F 1 "74HC04" H 10300 8350 50  0000 C CNN
 F 2 "" H 10150 8450 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 8450 50  0001 C CNN
@@ -1875,10 +1875,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 8450 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U114
 U 4 1 5B131C80
 P 10150 8750
-F 0 "U?" H 10150 8750 50  0000 C CNN
+F 0 "U114" H 10150 8750 50  0000 C CNN
 F 1 "74HC04" H 10300 8650 50  0000 C CNN
 F 2 "" H 10150 8750 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 8750 50  0001 C CNN
@@ -1886,10 +1886,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 8750 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U111
 U 5 1 5B131C87
 P 10150 9050
-F 0 "U?" H 10150 9050 50  0000 C CNN
+F 0 "U111" H 10150 9050 50  0000 C CNN
 F 1 "74HC04" H 10300 8950 50  0000 C CNN
 F 2 "" H 10150 9050 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 9050 50  0001 C CNN
@@ -1897,10 +1897,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 9050 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U111
 U 6 1 5B131C8E
 P 10150 9350
-F 0 "U?" H 10150 9350 50  0000 C CNN
+F 0 "U111" H 10150 9350 50  0000 C CNN
 F 1 "74HC04" H 10300 9250 50  0000 C CNN
 F 2 "" H 10150 9350 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 9350 50  0001 C CNN
@@ -1908,10 +1908,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10150 9350 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U111
 U 7 1 5B131C95
 P 4550 -100
-F 0 "U?" H 4780 -54 50  0000 L CNN
+F 0 "U111" H 4780 -54 50  0000 L CNN
 F 1 "74HC04" H 4780 -145 50  0000 L CNN
 F 2 "" H 4550 -100 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4550 -100 50  0001 C CNN
@@ -1919,10 +1919,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 4550 -100 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0442
 U 1 1 5B131C9C
 P 4550 -600
-F 0 "#PWR?" H 4550 -750 50  0001 C CNN
+F 0 "#PWR0442" H 4550 -750 50  0001 C CNN
 F 1 "VCC" H 4567 -427 50  0000 C CNN
 F 2 "" H 4550 -600 50  0001 C CNN
 F 3 "" H 4550 -600 50  0001 C CNN
@@ -1930,10 +1930,10 @@ F 3 "" H 4550 -600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C122
 U 1 1 5B131CA2
 P 4900 -600
-F 0 "C?" V 4671 -600 50  0000 C CNN
+F 0 "C122" V 4671 -600 50  0000 C CNN
 F 1 "0.1uF" V 4762 -600 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 4900 -600 50  0001 C CNN
 F 3 "~" H 4900 -600 50  0001 C CNN
@@ -1941,10 +1941,10 @@ F 3 "~" H 4900 -600 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0443
 U 1 1 5B131CA9
 P 5000 -600
-F 0 "#PWR?" H 5000 -850 50  0001 C CNN
+F 0 "#PWR0443" H 5000 -850 50  0001 C CNN
 F 1 "GND" V 5005 -728 50  0000 R CNN
 F 2 "" H 5000 -600 50  0001 C CNN
 F 3 "" H 5000 -600 50  0001 C CNN
@@ -1955,10 +1955,10 @@ Wire Wire Line
 	4550 -600 4800 -600
 Connection ~ 4550 -600
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0444
 U 1 1 5B131CB1
 P 4550 400
-F 0 "#PWR?" H 4550 150 50  0001 C CNN
+F 0 "#PWR0444" H 4550 150 50  0001 C CNN
 F 1 "GND" V 4555 272 50  0000 R CNN
 F 2 "" H 4550 400 50  0001 C CNN
 F 3 "" H 4550 400 50  0001 C CNN
@@ -1966,10 +1966,10 @@ F 3 "" H 4550 400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U115
 U 1 1 5B1323D0
 P 12150 7850
-F 0 "U?" H 12150 7850 50  0000 C CNN
+F 0 "U115" H 12150 7850 50  0000 C CNN
 F 1 "74HC04" H 12300 7750 50  0000 C CNN
 F 2 "" H 12150 7850 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 7850 50  0001 C CNN
@@ -1977,10 +1977,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 7850 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U115
 U 2 1 5B1323D7
 P 12150 8150
-F 0 "U?" H 12150 8150 50  0000 C CNN
+F 0 "U115" H 12150 8150 50  0000 C CNN
 F 1 "74HC04" H 12300 8050 50  0000 C CNN
 F 2 "" H 12150 8150 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 8150 50  0001 C CNN
@@ -1988,10 +1988,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 8150 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U116
 U 3 1 5B1323DE
 P 12150 8450
-F 0 "U?" H 12150 8450 50  0000 C CNN
+F 0 "U116" H 12150 8450 50  0000 C CNN
 F 1 "74HC04" H 12300 8350 50  0000 C CNN
 F 2 "" H 12150 8450 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 8450 50  0001 C CNN
@@ -1999,10 +1999,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 8450 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U116
 U 4 1 5B1323E5
 P 12150 8750
-F 0 "U?" H 12150 8750 50  0000 C CNN
+F 0 "U116" H 12150 8750 50  0000 C CNN
 F 1 "74HC04" H 12300 8650 50  0000 C CNN
 F 2 "" H 12150 8750 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 8750 50  0001 C CNN
@@ -2010,10 +2010,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 8750 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U115
 U 5 1 5B1323EC
 P 12150 9050
-F 0 "U?" H 12150 9050 50  0000 C CNN
+F 0 "U115" H 12150 9050 50  0000 C CNN
 F 1 "74HC04" H 12300 8950 50  0000 C CNN
 F 2 "" H 12150 9050 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 9050 50  0001 C CNN
@@ -2021,10 +2021,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 9050 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U115
 U 6 1 5B1323F3
 P 12150 9350
-F 0 "U?" H 12150 9350 50  0000 C CNN
+F 0 "U115" H 12150 9350 50  0000 C CNN
 F 1 "74HC04" H 12300 9250 50  0000 C CNN
 F 2 "" H 12150 9350 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 9350 50  0001 C CNN
@@ -2032,10 +2032,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 9350 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U114
 U 7 1 5B1323FA
 P 5800 -100
-F 0 "U?" H 6030 -54 50  0000 L CNN
+F 0 "U114" H 6030 -54 50  0000 L CNN
 F 1 "74HC04" H 6030 -145 50  0000 L CNN
 F 2 "" H 5800 -100 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 5800 -100 50  0001 C CNN
@@ -2043,10 +2043,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 5800 -100 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0445
 U 1 1 5B132401
 P 5800 -600
-F 0 "#PWR?" H 5800 -750 50  0001 C CNN
+F 0 "#PWR0445" H 5800 -750 50  0001 C CNN
 F 1 "VCC" H 5817 -427 50  0000 C CNN
 F 2 "" H 5800 -600 50  0001 C CNN
 F 3 "" H 5800 -600 50  0001 C CNN
@@ -2054,10 +2054,10 @@ F 3 "" H 5800 -600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C125
 U 1 1 5B132407
 P 6150 -600
-F 0 "C?" V 5921 -600 50  0000 C CNN
+F 0 "C125" V 5921 -600 50  0000 C CNN
 F 1 "0.1uF" V 6012 -600 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 6150 -600 50  0001 C CNN
 F 3 "~" H 6150 -600 50  0001 C CNN
@@ -2065,10 +2065,10 @@ F 3 "~" H 6150 -600 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0446
 U 1 1 5B13240E
 P 6250 -600
-F 0 "#PWR?" H 6250 -850 50  0001 C CNN
+F 0 "#PWR0446" H 6250 -850 50  0001 C CNN
 F 1 "GND" V 6255 -728 50  0000 R CNN
 F 2 "" H 6250 -600 50  0001 C CNN
 F 3 "" H 6250 -600 50  0001 C CNN
@@ -2079,10 +2079,10 @@ Wire Wire Line
 	5800 -600 6050 -600
 Connection ~ 5800 -600
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0447
 U 1 1 5B132416
 P 5800 400
-F 0 "#PWR?" H 5800 150 50  0001 C CNN
+F 0 "#PWR0447" H 5800 150 50  0001 C CNN
 F 1 "GND" V 5805 272 50  0000 R CNN
 F 2 "" H 5800 400 50  0001 C CNN
 F 3 "" H 5800 400 50  0001 C CNN
@@ -2090,10 +2090,10 @@ F 3 "" H 5800 400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U116
 U 1 1 5B1327BF
 P 14150 7850
-F 0 "U?" H 14150 7850 50  0000 C CNN
+F 0 "U116" H 14150 7850 50  0000 C CNN
 F 1 "74HC04" H 14300 7750 50  0000 C CNN
 F 2 "" H 14150 7850 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14150 7850 50  0001 C CNN
@@ -2101,21 +2101,21 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14150 7850 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U116
 U 2 1 5B1327C6
-P 14150 8150
-F 0 "U?" H 14150 8150 50  0000 C CNN
-F 1 "74HC04" H 14300 8050 50  0000 C CNN
-F 2 "" H 14150 8150 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14150 8150 50  0001 C CNN
-	2    14150 8150
+P 17400 7200
+F 0 "U116" H 17400 7200 50  0000 C CNN
+F 1 "74HC04" H 17550 7100 50  0000 C CNN
+F 2 "" H 17400 7200 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 17400 7200 50  0001 C CNN
+	2    17400 7200
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U110
 U 3 1 5B1327CD
 P 7500 1900
-F 0 "U?" H 7500 1900 50  0000 C CNN
+F 0 "U110" H 7500 1900 50  0000 C CNN
 F 1 "74HC04" H 7650 1800 50  0000 C CNN
 F 2 "" H 7500 1900 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 7500 1900 50  0001 C CNN
@@ -2123,10 +2123,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 7500 1900 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U108
 U 4 1 5B1327D4
 P 1150 8350
-F 0 "U?" H 1150 8350 50  0000 C CNN
+F 0 "U108" H 1150 8350 50  0000 C CNN
 F 1 "74HC04" H 1300 8250 50  0000 C CNN
 F 2 "" H 1150 8350 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 1150 8350 50  0001 C CNN
@@ -2134,10 +2134,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 1150 8350 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U116
 U 5 1 5B1327DB
 P 12900 4700
-F 0 "U?" H 12900 4700 50  0000 C CNN
+F 0 "U116" H 12900 4700 50  0000 C CNN
 F 1 "74HC04" H 13050 4600 50  0000 C CNN
 F 2 "" H 12900 4700 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12900 4700 50  0001 C CNN
@@ -2145,10 +2145,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12900 4700 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U116
 U 6 1 5B1327E2
 P 12900 5000
-F 0 "U?" H 12900 5000 50  0000 C CNN
+F 0 "U116" H 12900 5000 50  0000 C CNN
 F 1 "74HC04" H 13050 4900 50  0000 C CNN
 F 2 "" H 12900 5000 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12900 5000 50  0001 C CNN
@@ -2156,10 +2156,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12900 5000 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U115
 U 7 1 5B1327E9
 P 7050 -100
-F 0 "U?" H 7280 -54 50  0000 L CNN
+F 0 "U115" H 7280 -54 50  0000 L CNN
 F 1 "74HC04" H 7280 -145 50  0000 L CNN
 F 2 "" H 7050 -100 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 7050 -100 50  0001 C CNN
@@ -2167,10 +2167,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 7050 -100 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0448
 U 1 1 5B1327F0
 P 7050 -600
-F 0 "#PWR?" H 7050 -750 50  0001 C CNN
+F 0 "#PWR0448" H 7050 -750 50  0001 C CNN
 F 1 "VCC" H 7067 -427 50  0000 C CNN
 F 2 "" H 7050 -600 50  0001 C CNN
 F 3 "" H 7050 -600 50  0001 C CNN
@@ -2178,10 +2178,10 @@ F 3 "" H 7050 -600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C126
 U 1 1 5B1327F6
 P 7400 -600
-F 0 "C?" V 7171 -600 50  0000 C CNN
+F 0 "C126" V 7171 -600 50  0000 C CNN
 F 1 "0.1uF" V 7262 -600 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 7400 -600 50  0001 C CNN
 F 3 "~" H 7400 -600 50  0001 C CNN
@@ -2189,10 +2189,10 @@ F 3 "~" H 7400 -600 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0449
 U 1 1 5B1327FD
 P 7500 -600
-F 0 "#PWR?" H 7500 -850 50  0001 C CNN
+F 0 "#PWR0449" H 7500 -850 50  0001 C CNN
 F 1 "GND" V 7505 -728 50  0000 R CNN
 F 2 "" H 7500 -600 50  0001 C CNN
 F 3 "" H 7500 -600 50  0001 C CNN
@@ -2203,10 +2203,10 @@ Wire Wire Line
 	7050 -600 7300 -600
 Connection ~ 7050 -600
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0450
 U 1 1 5B132805
 P 7050 400
-F 0 "#PWR?" H 7050 150 50  0001 C CNN
+F 0 "#PWR0450" H 7050 150 50  0001 C CNN
 F 1 "GND" V 7055 272 50  0000 R CNN
 F 2 "" H 7050 400 50  0001 C CNN
 F 3 "" H 7050 400 50  0001 C CNN
@@ -2214,10 +2214,10 @@ F 3 "" H 7050 400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U114
 U 1 1 5B141E1A
 P 10650 4700
-F 0 "U?" H 10650 4700 50  0000 C CNN
+F 0 "U114" H 10650 4700 50  0000 C CNN
 F 1 "74HC04" H 10800 4600 50  0000 C CNN
 F 2 "" H 10650 4700 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 4700 50  0001 C CNN
@@ -2225,10 +2225,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 4700 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U114
 U 2 1 5B141E21
 P 10650 5000
-F 0 "U?" H 10650 5000 50  0000 C CNN
+F 0 "U114" H 10650 5000 50  0000 C CNN
 F 1 "74HC04" H 10800 4900 50  0000 C CNN
 F 2 "" H 10650 5000 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5000 50  0001 C CNN
@@ -2236,10 +2236,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5000 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U115
 U 3 1 5B141E28
 P 10650 5300
-F 0 "U?" H 10650 5300 50  0000 C CNN
+F 0 "U115" H 10650 5300 50  0000 C CNN
 F 1 "74HC04" H 10800 5200 50  0000 C CNN
 F 2 "" H 10650 5300 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5300 50  0001 C CNN
@@ -2247,10 +2247,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5300 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U115
 U 4 1 5B141E2F
 P 10650 5600
-F 0 "U?" H 10650 5600 50  0000 C CNN
+F 0 "U115" H 10650 5600 50  0000 C CNN
 F 1 "74HC04" H 10800 5500 50  0000 C CNN
 F 2 "" H 10650 5600 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5600 50  0001 C CNN
@@ -2258,10 +2258,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5600 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U114
 U 5 1 5B141E36
 P 10650 5900
-F 0 "U?" H 10650 5900 50  0000 C CNN
+F 0 "U114" H 10650 5900 50  0000 C CNN
 F 1 "74HC04" H 10800 5800 50  0000 C CNN
 F 2 "" H 10650 5900 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5900 50  0001 C CNN
@@ -2269,10 +2269,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 5900 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U114
 U 6 1 5B141E3D
 P 10650 6200
-F 0 "U?" H 10650 6200 50  0000 C CNN
+F 0 "U114" H 10650 6200 50  0000 C CNN
 F 1 "74HC04" H 10800 6100 50  0000 C CNN
 F 2 "" H 10650 6200 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 6200 50  0001 C CNN
@@ -2280,10 +2280,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10650 6200 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC04 U?
+L 74xx:74HC04 U116
 U 7 1 5B141E44
 P 8050 -100
-F 0 "U?" H 8280 -54 50  0000 L CNN
+F 0 "U116" H 8280 -54 50  0000 L CNN
 F 1 "74HC04" H 8280 -145 50  0000 L CNN
 F 2 "" H 8050 -100 50  0001 C CNN
 F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8050 -100 50  0001 C CNN
@@ -2291,10 +2291,10 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8050 -100 50  000
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0451
 U 1 1 5B141E4B
 P 8050 -600
-F 0 "#PWR?" H 8050 -750 50  0001 C CNN
+F 0 "#PWR0451" H 8050 -750 50  0001 C CNN
 F 1 "VCC" H 8067 -427 50  0000 C CNN
 F 2 "" H 8050 -600 50  0001 C CNN
 F 3 "" H 8050 -600 50  0001 C CNN
@@ -2302,10 +2302,10 @@ F 3 "" H 8050 -600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C?
+L Device:C_Small C127
 U 1 1 5B141E51
 P 8400 -600
-F 0 "C?" V 8171 -600 50  0000 C CNN
+F 0 "C127" V 8171 -600 50  0000 C CNN
 F 1 "0.1uF" V 8262 -600 50  0000 C CNN
 F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 8400 -600 50  0001 C CNN
 F 3 "~" H 8400 -600 50  0001 C CNN
@@ -2313,10 +2313,10 @@ F 3 "~" H 8400 -600 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0452
 U 1 1 5B141E58
 P 8500 -600
-F 0 "#PWR?" H 8500 -850 50  0001 C CNN
+F 0 "#PWR0452" H 8500 -850 50  0001 C CNN
 F 1 "GND" V 8505 -728 50  0000 R CNN
 F 2 "" H 8500 -600 50  0001 C CNN
 F 3 "" H 8500 -600 50  0001 C CNN
@@ -2327,10 +2327,10 @@ Wire Wire Line
 	8050 -600 8300 -600
 Connection ~ 8050 -600
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0453
 U 1 1 5B141E60
 P 8050 400
-F 0 "#PWR?" H 8050 150 50  0001 C CNN
+F 0 "#PWR0453" H 8050 150 50  0001 C CNN
 F 1 "GND" V 8055 272 50  0000 R CNN
 F 2 "" H 8050 400 50  0001 C CNN
 F 3 "" H 8050 400 50  0001 C CNN
@@ -2785,4 +2785,194 @@ Text HLabel 12450 2750 0    50   Input ~ 0
 INT6_LATCH
 Text HLabel 12450 2850 0    50   Input ~ 0
 INT7_LATCH
+NoConn ~ 17700 7200
+$Comp
+L power:GND #PWR0454
+U 1 1 5B1CC743
+P 17100 7200
+F 0 "#PWR0454" H 17100 6950 50  0001 C CNN
+F 1 "GND" V 17105 7072 50  0000 R CNN
+F 2 "" H 17100 7200 50  0001 C CNN
+F 3 "" H 17100 7200 50  0001 C CNN
+	1    17100 7200
+	0    1    1    0   
+$EndComp
+Wire Notes Line
+	16650 6800 19350 6800
+Wire Notes Line
+	19350 6800 19350 8600
+Wire Notes Line
+	19350 8600 16650 8600
+Wire Notes Line
+	16650 8600 16650 6800
+$Comp
+L 74xx:74LS08 U117
+U 1 1 5B1CD68C
+P 14000 3250
+F 0 "U117" H 14000 3575 50  0000 C CNN
+F 1 "74LS08" H 14000 3484 50  0000 C CNN
+F 2 "" H 14000 3250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 14000 3250 50  0001 C CNN
+	1    14000 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U117
+U 2 1 5B1CD7DD
+P 17200 7750
+F 0 "U117" H 17200 8075 50  0000 C CNN
+F 1 "74LS08" H 17200 7984 50  0000 C CNN
+F 2 "" H 17200 7750 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 17200 7750 50  0001 C CNN
+	2    17200 7750
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U117
+U 3 1 5B1CD8EF
+P 17200 8250
+F 0 "U117" H 17200 8575 50  0000 C CNN
+F 1 "74LS08" H 17200 8484 50  0000 C CNN
+F 2 "" H 17200 8250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 17200 8250 50  0001 C CNN
+	3    17200 8250
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U117
+U 4 1 5B1CDA04
+P 18300 8250
+F 0 "U117" H 18300 8575 50  0000 C CNN
+F 1 "74LS08" H 18300 8484 50  0000 C CNN
+F 2 "" H 18300 8250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 18300 8250 50  0001 C CNN
+	4    18300 8250
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U117
+U 5 1 5B1CDB22
+P 9250 -50
+F 0 "U117" H 9480 -4  50  0000 L CNN
+F 1 "74LS08" H 9480 -95 50  0000 L CNN
+F 2 "" H 9250 -50 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9250 -50 50  0001 C CNN
+	5    9250 -50 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0455
+U 1 1 5B1CED2B
+P 9250 -550
+F 0 "#PWR0455" H 9250 -700 50  0001 C CNN
+F 1 "VCC" H 9267 -377 50  0000 C CNN
+F 2 "" H 9250 -550 50  0001 C CNN
+F 3 "" H 9250 -550 50  0001 C CNN
+	1    9250 -550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C128
+U 1 1 5B1CED31
+P 9600 -550
+F 0 "C128" V 9371 -550 50  0000 C CNN
+F 1 "0.1uF" V 9462 -550 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 9600 -550 50  0001 C CNN
+F 3 "~" H 9600 -550 50  0001 C CNN
+	1    9600 -550
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0456
+U 1 1 5B1CED38
+P 9700 -550
+F 0 "#PWR0456" H 9700 -800 50  0001 C CNN
+F 1 "GND" V 9705 -678 50  0000 R CNN
+F 2 "" H 9700 -550 50  0001 C CNN
+F 3 "" H 9700 -550 50  0001 C CNN
+	1    9700 -550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	9250 -550 9500 -550
+Connection ~ 9250 -550
+Text HLabel 13700 3350 0    50   Input ~ 0
+INTERRUPT_ENABLE_FLAG
+Wire Wire Line
+	13500 2650 13700 2650
+Wire Wire Line
+	13700 2650 13700 3150
+Text Notes 13400 3700 0    50   ~ 0
+This and isn't done inside the\nflag logic sheet since spare\nand gates get confusing.
+Text Notes 18200 7050 0    50   ~ 0
+Spares
+$Comp
+L power:GND #PWR0457
+U 1 1 5B1D9C5A
+P 16900 7650
+F 0 "#PWR0457" H 16900 7400 50  0001 C CNN
+F 1 "GND" V 16905 7522 50  0000 R CNN
+F 2 "" H 16900 7650 50  0001 C CNN
+F 3 "" H 16900 7650 50  0001 C CNN
+	1    16900 7650
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0458
+U 1 1 5B1D9D03
+P 16900 7850
+F 0 "#PWR0458" H 16900 7600 50  0001 C CNN
+F 1 "GND" V 16905 7722 50  0000 R CNN
+F 2 "" H 16900 7850 50  0001 C CNN
+F 3 "" H 16900 7850 50  0001 C CNN
+	1    16900 7850
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0459
+U 1 1 5B1D9DAC
+P 16900 8150
+F 0 "#PWR0459" H 16900 7900 50  0001 C CNN
+F 1 "GND" V 16905 8022 50  0000 R CNN
+F 2 "" H 16900 8150 50  0001 C CNN
+F 3 "" H 16900 8150 50  0001 C CNN
+	1    16900 8150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0460
+U 1 1 5B1D9E55
+P 16900 8350
+F 0 "#PWR0460" H 16900 8100 50  0001 C CNN
+F 1 "GND" V 16905 8222 50  0000 R CNN
+F 2 "" H 16900 8350 50  0001 C CNN
+F 3 "" H 16900 8350 50  0001 C CNN
+	1    16900 8350
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0461
+U 1 1 5B1D9EFE
+P 18000 8150
+F 0 "#PWR0461" H 18000 7900 50  0001 C CNN
+F 1 "GND" V 18005 8022 50  0000 R CNN
+F 2 "" H 18000 8150 50  0001 C CNN
+F 3 "" H 18000 8150 50  0001 C CNN
+	1    18000 8150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0462
+U 1 1 5B1D9FA7
+P 18000 8350
+F 0 "#PWR0462" H 18000 8100 50  0001 C CNN
+F 1 "GND" V 18005 8222 50  0000 R CNN
+F 2 "" H 18000 8350 50  0001 C CNN
+F 3 "" H 18000 8350 50  0001 C CNN
+	1    18000 8350
+	0    1    1    0   
+$EndComp
+NoConn ~ 18600 8250
+NoConn ~ 9850 10950
+NoConn ~ 10400 10850
 $EndSCHEMATC
