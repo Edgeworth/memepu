@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 19 40
+Sheet 39 37
 Title ""
 Date ""
 Rev ""
@@ -479,43 +479,30 @@ Text HLabel 3450 5850 0    50   Input ~ 0
 BUS6
 Text HLabel 3450 5950 0    50   Input ~ 0
 BUS7
-$Comp
-L power:GND #PWR0231
-U 1 1 5B0AC4F9
-P 1750 2050
-AR Path="/5B0B7FE8/5B0AC4F9" Ref="#PWR0231"  Part="1" 
-AR Path="/5B0B7FFA/5B0AC4F9" Ref="#PWR0264"  Part="1" 
-F 0 "#PWR0264" H 1750 1800 50  0001 C CNN
-F 1 "GND" V 1755 1922 50  0000 R CNN
-F 2 "" H 1750 2050 50  0001 C CNN
-F 3 "" H 1750 2050 50  0001 C CNN
-	1    1750 2050
-	0    1    1    0   
-$EndComp
 Text HLabel 1750 1850 0    50   Input ~ 0
-DOWN_OR_UP
+~UP
 Text HLabel 3450 1850 0    50   Input ~ 0
-DOWN_OR_UP
+~UP
 Text HLabel 1750 4050 0    50   Input ~ 0
-DOWN_OR_UP
+~UP
 Text HLabel 3450 4050 0    50   Input ~ 0
-DOWN_OR_UP
+~UP
 Text HLabel 1750 6250 0    50   Input ~ 0
-DOWN_OR_UP
+~UP
 Text HLabel 3450 6250 0    50   Input ~ 0
-DOWN_OR_UP
+~UP
 Text HLabel 1750 2150 0    50   Input ~ 0
-COUNT_CLK
+CLK
 Text HLabel 3450 2150 0    50   Input ~ 0
-COUNT_CLK
+CLK
 Text HLabel 3450 4350 0    50   Input ~ 0
-COUNT_CLK
+CLK
 Text HLabel 1750 4350 0    50   Input ~ 0
-COUNT_CLK
+CLK
 Text HLabel 1750 6550 0    50   Input ~ 0
-COUNT_CLK
+CLK
 Text HLabel 3450 6550 0    50   Input ~ 0
-COUNT_CLK
+CLK
 Text Label 2750 1950 0    50   ~ 0
 CARRY0
 NoConn ~ 2750 1750
@@ -1266,4 +1253,6 @@ F 3 "~" H 4200 3150 50  0001 C CNN
 	1    4200 3150
 	0    1    1    0   
 $EndComp
+Text HLabel 1750 2050 0    50   Input ~ 0
+~COUNT_ENABLE
 $EndSCHEMATC
