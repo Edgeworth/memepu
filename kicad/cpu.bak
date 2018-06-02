@@ -1097,8 +1097,6 @@ Text Label 12750 5900 2    50   ~ 0
 ~K2_OUT_NCLK
 Text Label 10100 1600 2    50   ~ 0
 DISP_IN_CLK
-Text Notes -100 10050 0    197  ~ 0
-TODO: why is PC_INC, etc clocked?
 Text Label 1850 2650 2    50   ~ 0
 BUS0
 Text Label 1850 2750 2    50   ~ 0
