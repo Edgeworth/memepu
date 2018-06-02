@@ -2083,17 +2083,6 @@ Wire Notes Line
 	11300 3350 5150 3350
 Text Notes 8950 3800 0    50   ~ 0
 Clock Frontend
-$Comp
-L Switch:SW_SPST SW4
-U 1 1 5B386AD7
-P 5600 6850
-F 0 "SW4" V 5554 6948 50  0000 L CNN
-F 1 "SW_SPST" V 5645 6948 50  0000 L CNN
-F 2 "" H 5600 6850 50  0001 C CNN
-F 3 "" H 5600 6850 50  0001 C CNN
-	1    5600 6850
-	0    1    1    0   
-$EndComp
 Connection ~ 950  4550
 $Comp
 L Device:R R15
@@ -2187,7 +2176,7 @@ AR Path="/5B0C6DCD/5B3C7132" Ref="U?"  Part="4"
 AR Path="/5ADF0E03/5B3C7132" Ref="U117"  Part="4" 
 F 0 "U117" H 8450 7575 50  0000 C CNN
 F 1 "74LS08" H 8450 7484 50  0000 C CNN
-F 2 "" H 8450 7250 50  0001 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8450 7250 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8450 7250 50  0001 C CNN
 	4    8450 7250
 	1    0    0    -1  
@@ -2210,4 +2199,15 @@ Wire Notes Line
 	9350 6350 5200 6350
 Text Notes 6700 6600 0    50   ~ 0
 Reset Button
+$Comp
+L Switch:SW_Push SW4
+U 1 1 5B1382CD
+P 5600 6850
+F 0 "SW4" H 5600 7135 50  0000 C CNN
+F 1 "SW_Push" H 5600 7044 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 5600 7050 50  0001 C CNN
+F 3 "" H 5600 7050 50  0001 C CNN
+	1    5600 6850
+	0    -1   -1   0   
+$EndComp
 $EndSCHEMATC

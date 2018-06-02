@@ -2415,8 +2415,6 @@ Text Label 10600 3750 2    50   ~ 0
 ~INT0_OUT_NCLK
 Text HLabel 11200 3750 2    50   Input ~ 0
 INT0
-Text Notes 14700 3950 0    197  ~ 0
-TODO: INT0_IN_CLK should be unconnected - should get a warning about it.
 Text HLabel 12450 2150 0    50   Input ~ 0
 INT0_LATCH
 Text HLabel 12450 2250 0    50   Input ~ 0
