@@ -2176,7 +2176,7 @@ AR Path="/5B0C6DCD/5B3C7132" Ref="U?"  Part="4"
 AR Path="/5ADF0E03/5B3C7132" Ref="U117"  Part="4" 
 F 0 "U117" H 8450 7575 50  0000 C CNN
 F 1 "74LS08" H 8450 7484 50  0000 C CNN
-F 2 "" H 8450 7250 50  0001 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8450 7250 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8450 7250 50  0001 C CNN
 	4    8450 7250
 	1    0    0    -1  
@@ -2200,10 +2200,10 @@ Wire Notes Line
 Text Notes 6700 6600 0    50   ~ 0
 Reset Button
 $Comp
-L Switch:SW_Push SW?
+L Switch:SW_Push SW4
 U 1 1 5B1382CD
 P 5600 6850
-F 0 "SW?" H 5600 7135 50  0000 C CNN
+F 0 "SW4" H 5600 7135 50  0000 C CNN
 F 1 "SW_Push" H 5600 7044 50  0000 C CNN
 F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 5600 7050 50  0001 C CNN
 F 3 "" H 5600 7050 50  0001 C CNN

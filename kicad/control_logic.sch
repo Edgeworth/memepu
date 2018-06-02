@@ -2808,4 +2808,62 @@ F 3 "" H 18150 8900 50  0001 C CNN
 $EndComp
 NoConn ~ 18750 8600
 NoConn ~ 18750 8900
+$Comp
+L 74xx:74HC04 U125
+U 7 1 5B15AA5E
+P 8100 -100
+F 0 "U125" H 8330 -54 50  0000 L CNN
+F 1 "74HC04" H 8330 -145 50  0000 L CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8100 -100 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8100 -100 50  0001 C CNN
+	7    8100 -100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR058
+U 1 1 5B15AA65
+P 8100 -600
+F 0 "#PWR058" H 8100 -750 50  0001 C CNN
+F 1 "VCC" H 8117 -427 50  0000 C CNN
+F 2 "" H 8100 -600 50  0001 C CNN
+F 3 "" H 8100 -600 50  0001 C CNN
+	1    8100 -600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C127
+U 1 1 5B15AA6B
+P 8450 -600
+F 0 "C127" V 8221 -600 50  0000 C CNN
+F 1 "0.1uF" V 8312 -600 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 8450 -600 50  0001 C CNN
+F 3 "~" H 8450 -600 50  0001 C CNN
+	1    8450 -600
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR060
+U 1 1 5B15AA72
+P 8550 -600
+F 0 "#PWR060" H 8550 -850 50  0001 C CNN
+F 1 "GND" V 8555 -728 50  0000 R CNN
+F 2 "" H 8550 -600 50  0001 C CNN
+F 3 "" H 8550 -600 50  0001 C CNN
+	1    8550 -600
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	8100 -600 8350 -600
+Connection ~ 8100 -600
+$Comp
+L power:GND #PWR059
+U 1 1 5B15AA7A
+P 8100 400
+F 0 "#PWR059" H 8100 150 50  0001 C CNN
+F 1 "GND" V 8105 272 50  0000 R CNN
+F 2 "" H 8100 400 50  0001 C CNN
+F 3 "" H 8100 400 50  0001 C CNN
+	1    8100 400 
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
