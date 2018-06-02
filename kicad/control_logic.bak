@@ -2774,4 +2774,40 @@ Text Notes 11950 1200 0    50   ~ 0
 Update the micro-op counter on the rising edge so\nwe have enough time to latch the control word on\nthe falling edge (not trying to simultaneously \nupdate the micro op counter).
 Text Label 12500 1550 2    50   ~ 0
 CLK
+$Comp
+L power:GND #PWR0454
+U 1 1 5B40242D
+P 17300 8450
+F 0 "#PWR0454" H 17300 8200 50  0001 C CNN
+F 1 "GND" V 17305 8322 50  0000 R CNN
+F 2 "" H 17300 8450 50  0001 C CNN
+F 3 "" H 17300 8450 50  0001 C CNN
+	1    17300 8450
+	0    1    1    0   
+$EndComp
+NoConn ~ 17900 8450
+$Comp
+L power:GND #PWR0457
+U 1 1 5B40299A
+P 18150 8600
+F 0 "#PWR0457" H 18150 8350 50  0001 C CNN
+F 1 "GND" V 18155 8472 50  0000 R CNN
+F 2 "" H 18150 8600 50  0001 C CNN
+F 3 "" H 18150 8600 50  0001 C CNN
+	1    18150 8600
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0458
+U 1 1 5B402A3D
+P 18150 8900
+F 0 "#PWR0458" H 18150 8650 50  0001 C CNN
+F 1 "GND" V 18155 8772 50  0000 R CNN
+F 2 "" H 18150 8900 50  0001 C CNN
+F 3 "" H 18150 8900 50  0001 C CNN
+	1    18150 8900
+	0    1    1    0   
+$EndComp
+NoConn ~ 18750 8600
+NoConn ~ 18750 8900
 $EndSCHEMATC
