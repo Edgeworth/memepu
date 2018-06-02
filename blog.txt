@@ -23,6 +23,7 @@
 
 #### Tests to run:
 - Stack pointer up/down counting.
+- Stack pointer and program counter parallel load. Program counter uses CLOCK and PL signal, stack pointer just uses the PL signal?
 
 stack pointers
 status/control reg
