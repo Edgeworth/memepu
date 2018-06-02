@@ -41,7 +41,6 @@ Use 4-bit binary counters for add. For subtract, using 2's complement, so:
 -b = ~b + 1
 a - b = a + ~b + 1
 Can create ~b by XORing with SUB flag. Can do +1 by putting SUB flag into carry.
-
 Needs to access A and B registers all the time, so A and B registers need transceivers.
 
 #### Stack pointer:
