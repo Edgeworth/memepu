@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 16 36
+Sheet 15 36
 Title ""
 Date ""
 Rev ""
@@ -293,4 +293,155 @@ F 3 "" H 3800 2100 50  0001 C CNN
 $EndComp
 Text Notes 3450 3000 0    50   ~ 0
 Set interrupt flag here synchronously.\nIf we set it with the clock, then there\nis less time for the control logic to receive\na changed interrupt signal.
+Text HLabel 3900 4950 0    50   Input ~ 0
+~REG_OUT
+$Comp
+L 74xx:74HC245 U?
+U 1 1 5B3B3A63
+P 4400 4450
+AR Path="/5AFD5CE2/5AFCCD08/5B3B3A63" Ref="U?"  Part="1" 
+AR Path="/5AFD5CE2/5AFD336A/5B3B3A63" Ref="U?"  Part="1" 
+AR Path="/5AFD5CE2/5B0AB8A7/5B3B3A63" Ref="U?"  Part="1" 
+AR Path="/5B0FE4FF/5B3B3A63" Ref="U?"  Part="1" 
+AR Path="/5B0FE82A/5B3B3A63" Ref="U?"  Part="1" 
+AR Path="/5B0FEA60/5B3B3A63" Ref="U?"  Part="1" 
+AR Path="/5B094E56/5B3B3A63" Ref="U?"  Part="1" 
+F 0 "U?" H 4500 5150 50  0000 C CNN
+F 1 "74HC245" H 4450 4150 50  0000 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 4400 4450 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 4400 4450 50  0001 C CNN
+	1    4400 4450
+	1    0    0    -1  
+$EndComp
+Text HLabel 4900 3950 2    50   Input ~ 0
+BUS0
+Text HLabel 4900 4050 2    50   Input ~ 0
+BUS1
+Text HLabel 4900 4150 2    50   Input ~ 0
+BUS2
+Text HLabel 4900 4250 2    50   Input ~ 0
+BUS3
+Text HLabel 4900 4350 2    50   Input ~ 0
+BUS4
+Text HLabel 4900 4450 2    50   Input ~ 0
+BUS5
+Text HLabel 4900 4550 2    50   Input ~ 0
+BUS6
+Text HLabel 4900 4650 2    50   Input ~ 0
+BUS7
+$Comp
+L power:GND #PWR?
+U 1 1 5B3B3A7A
+P 4400 5250
+F 0 "#PWR?" H 4400 5000 50  0001 C CNN
+F 1 "GND" H 4405 5077 50  0000 C CNN
+F 2 "" H 4400 5250 50  0001 C CNN
+F 3 "" H 4400 5250 50  0001 C CNN
+	1    4400 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C?
+U 1 1 5B3B3A80
+P 3350 4350
+F 0 "C?" H 3442 4396 50  0000 L CNN
+F 1 "0.1uF" H 3442 4305 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 3350 4350 50  0001 C CNN
+F 3 "~" H 3350 4350 50  0001 C CNN
+	1    3350 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3350 4250 3350 3650
+Wire Wire Line
+	3350 3650 4400 3650
+Wire Wire Line
+	4400 5250 3350 5250
+Wire Wire Line
+	3350 5250 3350 4450
+Connection ~ 4400 5250
+$Comp
+L power:VCC #PWR?
+U 1 1 5B3B3A8C
+P 4400 3650
+F 0 "#PWR?" H 4400 3500 50  0001 C CNN
+F 1 "VCC" H 4417 3823 50  0000 C CNN
+F 2 "" H 4400 3650 50  0001 C CNN
+F 3 "" H 4400 3650 50  0001 C CNN
+	1    4400 3650
+	1    0    0    -1  
+$EndComp
+Connection ~ 4400 3650
+$Comp
+L power:VCC #PWR?
+U 1 1 5B3B3A93
+P 3900 4850
+F 0 "#PWR?" H 3900 4700 50  0001 C CNN
+F 1 "VCC" H 3917 5023 50  0000 C CNN
+F 2 "" H 3900 4850 50  0001 C CNN
+F 3 "" H 3900 4850 50  0001 C CNN
+	1    3900 4850
+	0    -1   -1   0   
+$EndComp
+Text HLabel 3900 3950 0    50   Input ~ 0
+INTERRUPT_ENABLE_FLAG
+Text HLabel 3900 4050 0    50   Input ~ 0
+CARRY_FLAG
+Text HLabel 3900 4150 0    50   Input ~ 0
+ZERO_FLAG
+$Comp
+L power:GND #PWR?
+U 1 1 5B3B3D6D
+P 3900 4250
+F 0 "#PWR?" H 3900 4000 50  0001 C CNN
+F 1 "GND" H 3905 4077 50  0000 C CNN
+F 2 "" H 3900 4250 50  0001 C CNN
+F 3 "" H 3900 4250 50  0001 C CNN
+	1    3900 4250
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B3B3D96
+P 3900 4350
+F 0 "#PWR?" H 3900 4100 50  0001 C CNN
+F 1 "GND" H 3905 4177 50  0000 C CNN
+F 2 "" H 3900 4350 50  0001 C CNN
+F 3 "" H 3900 4350 50  0001 C CNN
+	1    3900 4350
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B3B3DB5
+P 3900 4450
+F 0 "#PWR?" H 3900 4200 50  0001 C CNN
+F 1 "GND" H 3905 4277 50  0000 C CNN
+F 2 "" H 3900 4450 50  0001 C CNN
+F 3 "" H 3900 4450 50  0001 C CNN
+	1    3900 4450
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B3B3DD4
+P 3900 4550
+F 0 "#PWR?" H 3900 4300 50  0001 C CNN
+F 1 "GND" H 3905 4377 50  0000 C CNN
+F 2 "" H 3900 4550 50  0001 C CNN
+F 3 "" H 3900 4550 50  0001 C CNN
+	1    3900 4550
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5B3B3DF3
+P 3900 4650
+F 0 "#PWR?" H 3900 4400 50  0001 C CNN
+F 1 "GND" H 3905 4477 50  0000 C CNN
+F 2 "" H 3900 4650 50  0001 C CNN
+F 3 "" H 3900 4650 50  0001 C CNN
+	1    3900 4650
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC

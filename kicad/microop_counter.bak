@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 36 36
+Sheet 30 36
 Title ""
 Date ""
 Rev ""
@@ -63,7 +63,7 @@ Wire Wire Line
 Text HLabel 1250 2300 0    50   Input ~ 0
 ~RESET
 Text HLabel 1250 2100 0    50   Input ~ 0
-~CLK
+CLK
 $Comp
 L power:VCC #PWR037
 U 1 1 5B0D9FB9

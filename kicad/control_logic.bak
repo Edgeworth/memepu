@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 24 36
+Sheet 23 36
 Title ""
 Date ""
 Rev ""
@@ -660,8 +660,6 @@ Text Notes 8550 4650 0    50   ~ 0
 (none)
 Text HLabel 8450 4850 2    50   Input ~ 0
 ~RESET_NCLK
-Text HLabel 8450 4950 2    50   Input ~ 0
-~RESET_UOP_COUNT_NCLK
 Text HLabel 8450 5050 2    50   Input ~ 0
 ~SET_INT_ENABLE_SYNC
 Text HLabel 8450 5150 2    50   Input ~ 0
@@ -806,7 +804,7 @@ U 5B0D9D66
 F0 "Micro Op Counter" 50
 F1 "microop_counter.sch" 50
 F2 "~RESET" I L 12500 1450 50 
-F3 "~CLK" I L 12500 1550 50 
+F3 "CLK" I L 12500 1550 50 
 F4 "O0" I R 13050 1450 50 
 F5 "O1" I R 13050 1550 50 
 F6 "O2" I R 13050 1650 50 
@@ -2478,17 +2476,6 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 12750 5850 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS08 U117
-U 4 1 5B1CDA04
-P 18500 9600
-F 0 "U117" H 18500 9925 50  0000 C CNN
-F 1 "74LS08" H 18500 9834 50  0000 C CNN
-F 2 "" H 18500 9600 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 18500 9600 50  0001 C CNN
-	4    18500 9600
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74LS08 U117
 U 5 1 5B1CDB22
 P 9250 -50
 F 0 "U117" H 9480 -4  50  0000 L CNN
@@ -2544,73 +2531,6 @@ Text Notes 13400 3700 0    50   ~ 0
 This and isn't done inside the\nflag logic sheet since spare\nand gates get confusing.
 Text Notes 18400 8400 0    50   ~ 0
 Spares
-$Comp
-L power:GND #PWR0457
-U 1 1 5B1D9C5A
-P 17100 9000
-F 0 "#PWR0457" H 17100 8750 50  0001 C CNN
-F 1 "GND" V 17105 8872 50  0000 R CNN
-F 2 "" H 17100 9000 50  0001 C CNN
-F 3 "" H 17100 9000 50  0001 C CNN
-	1    17100 9000
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0458
-U 1 1 5B1D9D03
-P 17100 9200
-F 0 "#PWR0458" H 17100 8950 50  0001 C CNN
-F 1 "GND" V 17105 9072 50  0000 R CNN
-F 2 "" H 17100 9200 50  0001 C CNN
-F 3 "" H 17100 9200 50  0001 C CNN
-	1    17100 9200
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0459
-U 1 1 5B1D9DAC
-P 17100 9500
-F 0 "#PWR0459" H 17100 9250 50  0001 C CNN
-F 1 "GND" V 17105 9372 50  0000 R CNN
-F 2 "" H 17100 9500 50  0001 C CNN
-F 3 "" H 17100 9500 50  0001 C CNN
-	1    17100 9500
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0460
-U 1 1 5B1D9E55
-P 17100 9700
-F 0 "#PWR0460" H 17100 9450 50  0001 C CNN
-F 1 "GND" V 17105 9572 50  0000 R CNN
-F 2 "" H 17100 9700 50  0001 C CNN
-F 3 "" H 17100 9700 50  0001 C CNN
-	1    17100 9700
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0461
-U 1 1 5B1D9EFE
-P 18200 9500
-F 0 "#PWR0461" H 18200 9250 50  0001 C CNN
-F 1 "GND" V 18205 9372 50  0000 R CNN
-F 2 "" H 18200 9500 50  0001 C CNN
-F 3 "" H 18200 9500 50  0001 C CNN
-	1    18200 9500
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0462
-U 1 1 5B1D9FA7
-P 18200 9700
-F 0 "#PWR0462" H 18200 9450 50  0001 C CNN
-F 1 "GND" V 18205 9572 50  0000 R CNN
-F 2 "" H 18200 9700 50  0001 C CNN
-F 3 "" H 18200 9700 50  0001 C CNN
-	1    18200 9700
-	0    1    1    0   
-$EndComp
-NoConn ~ 18800 9600
 Text HLabel 4200 2500 2    50   Input ~ 0
 MLU_SEL0
 Text HLabel 4200 2600 2    50   Input ~ 0
@@ -2703,67 +2623,67 @@ $EndComp
 $Comp
 L 74xx:74HC04 U125
 U 1 1 5B250A2C
-P 15850 7850
-F 0 "U125" H 15850 7850 50  0000 C CNN
-F 1 "74HC04" H 16000 7750 50  0000 C CNN
-F 2 "" H 15850 7850 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15850 7850 50  0001 C CNN
-	1    15850 7850
+P 14100 7850
+F 0 "U125" H 14100 7850 50  0000 C CNN
+F 1 "74HC04" H 14250 7750 50  0000 C CNN
+F 2 "" H 14100 7850 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14100 7850 50  0001 C CNN
+	1    14100 7850
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC04 U125
 U 2 1 5B250A33
-P 15850 8150
-F 0 "U125" H 15850 8150 50  0000 C CNN
-F 1 "74HC04" H 16000 8050 50  0000 C CNN
-F 2 "" H 15850 8150 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15850 8150 50  0001 C CNN
-	2    15850 8150
+P 14100 8150
+F 0 "U125" H 14100 8150 50  0000 C CNN
+F 1 "74HC04" H 14250 8050 50  0000 C CNN
+F 2 "" H 14100 8150 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14100 8150 50  0001 C CNN
+	2    14100 8150
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC04 U125
 U 3 1 5B250A3A
-P 15850 8450
-F 0 "U125" H 15850 8450 50  0000 C CNN
-F 1 "74HC04" H 16000 8350 50  0000 C CNN
-F 2 "" H 15850 8450 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15850 8450 50  0001 C CNN
-	3    15850 8450
+P 14100 8450
+F 0 "U125" H 14100 8450 50  0000 C CNN
+F 1 "74HC04" H 14250 8350 50  0000 C CNN
+F 2 "" H 14100 8450 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14100 8450 50  0001 C CNN
+	3    14100 8450
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC04 U125
 U 4 1 5B250A41
-P 15850 8750
-F 0 "U125" H 15850 8750 50  0000 C CNN
-F 1 "74HC04" H 16000 8650 50  0000 C CNN
-F 2 "" H 15850 8750 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15850 8750 50  0001 C CNN
-	4    15850 8750
+P 14100 8750
+F 0 "U125" H 14100 8750 50  0000 C CNN
+F 1 "74HC04" H 14250 8650 50  0000 C CNN
+F 2 "" H 14100 8750 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14100 8750 50  0001 C CNN
+	4    14100 8750
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC04 U125
 U 5 1 5B250A48
-P 15850 9050
-F 0 "U125" H 15850 9050 50  0000 C CNN
-F 1 "74HC04" H 16000 8950 50  0000 C CNN
-F 2 "" H 15850 9050 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15850 9050 50  0001 C CNN
-	5    15850 9050
+P 14100 9050
+F 0 "U125" H 14100 9050 50  0000 C CNN
+F 1 "74HC04" H 14250 8950 50  0000 C CNN
+F 2 "" H 14100 9050 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14100 9050 50  0001 C CNN
+	5    14100 9050
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC04 U125
 U 6 1 5B250A4F
-P 15850 9350
-F 0 "U125" H 15850 9350 50  0000 C CNN
-F 1 "74HC04" H 16000 9250 50  0000 C CNN
-F 2 "" H 15850 9350 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 15850 9350 50  0001 C CNN
-	6    15850 9350
+P 14100 9350
+F 0 "U125" H 14100 9350 50  0000 C CNN
+F 1 "74HC04" H 14250 9250 50  0000 C CNN
+F 2 "" H 14100 9350 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14100 9350 50  0001 C CNN
+	6    14100 9350
 	1    0    0    -1  
 $EndComp
 Text Label 4400 10650 0    50   ~ 0
@@ -2778,33 +2698,33 @@ Text Label 6400 9950 0    50   ~ 0
 K1_IN_CLK
 Text Label 6400 10050 0    50   ~ 0
 K2_IN_CLK
-Text Label 15550 7850 2    50   ~ 0
+Text Label 13800 7850 2    50   ~ 0
 S0_IN_CLK
-Text Label 15550 8150 2    50   ~ 0
+Text Label 13800 8150 2    50   ~ 0
 S1_IN_CLK
-Text Label 15550 8450 2    50   ~ 0
+Text Label 13800 8450 2    50   ~ 0
 S2_IN_CLK
 Text Notes 14400 4400 0    50   ~ 0
 SUB is active high.
-Text Notes 15100 7550 0    50   ~ 0
+Text Notes 13350 7550 0    50   ~ 0
 Stack registers are presettable.\nBut, they read asynchronously\non an active low signal. So, invert.
-Text Label 15550 8750 2    50   ~ 0
+Text Label 13800 8750 2    50   ~ 0
 K0_IN_CLK
-Text Label 15550 9050 2    50   ~ 0
+Text Label 13800 9050 2    50   ~ 0
 K1_IN_CLK
-Text Label 15550 9350 2    50   ~ 0
+Text Label 13800 9350 2    50   ~ 0
 K2_IN_CLK
-Text HLabel 16150 7850 2    50   Input ~ 0
+Text HLabel 14400 7850 2    50   Input ~ 0
 ~S0_IN_CLK
-Text HLabel 16150 8150 2    50   Input ~ 0
+Text HLabel 14400 8150 2    50   Input ~ 0
 ~S1_IN_CLK
-Text HLabel 16150 8450 2    50   Input ~ 0
+Text HLabel 14400 8450 2    50   Input ~ 0
 ~S2_IN_CLK
-Text HLabel 16150 8750 2    50   Input ~ 0
+Text HLabel 14400 8750 2    50   Input ~ 0
 ~K0_IN_CLK
-Text HLabel 16150 9050 2    50   Input ~ 0
+Text HLabel 14400 9050 2    50   Input ~ 0
 ~K1_IN_CLK
-Text HLabel 16150 9350 2    50   Input ~ 0
+Text HLabel 14400 9350 2    50   Input ~ 0
 ~K2_IN_CLK
 Text HLabel 2350 9050 2    50   Input ~ 0
 ~PC0_IN_NCLK
@@ -2818,14 +2738,12 @@ Text HLabel 6400 10750 2    50   Input ~ 0
 MMU_IN_CLK
 Text HLabel 6400 10850 2    50   Input ~ 0
 MMU_CONTROL_IN_CLK
-Text Notes 11800 9800 0    157  ~ 0
-TODO: Move spares back?
+Text Notes 16650 8000 0    157  ~ 0
+TODO: Move spares from other locations back?
 Text Label 10400 2550 2    50   ~ 0
 OPCODE0_INC_NCLK
 Text Label 10400 2750 2    50   ~ 0
 OPCODE1_INC_NCLK
-Text Notes 9550 1250 0    157  ~ 0
-TODO: CLK or ~CLK?
 Text HLabel 10950 4700 2    50   Input ~ 0
 PC_INC_NCLK
 Text Label 12450 5350 2    50   ~ 0
@@ -2844,4 +2762,16 @@ Text HLabel 12450 5750 0    50   Input ~ 0
 ~KSP_INC_NCLK
 Text HLabel 8450 5750 2    50   Input ~ 0
 ~KSP_INC_NCLK
+Text HLabel 10400 2350 0    50   Input ~ 0
+~RESET
+Text HLabel 10400 2450 0    50   Input ~ 0
+CLK
+Text Label 8450 4950 0    50   ~ 0
+~RESET_UOP_COUNT_NCLK
+Text Label 12500 1450 2    50   ~ 0
+~RESET_UOP_COUNT_NCLK
+Text Notes 11950 1200 0    50   ~ 0
+Update the micro-op counter on the rising edge so\nwe have enough time to latch the control word on\nthe falling edge (not trying to simultaneously \nupdate the micro op counter).
+Text Label 12500 1550 2    50   ~ 0
+CLK
 $EndSCHEMATC
