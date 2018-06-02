@@ -49,6 +49,9 @@ out_labels = ['~A_OUT_NCLK',
 '~K0_OUT_NCLK',
 '~K1_OUT_NCLK',
 '~K2_OUT_NCLK',
+'~PC0_OUT_NCLK',
+'~PC1_OUT_NCLK',
+'~PC2_OUT_NCLK',
 '~STATUS_OUT_NCLK',
 '~INTERRUPT_OUT_NCLK',
 '~SUM_OUT_NCLK',
@@ -83,68 +86,12 @@ ctrl_local_lables = [
 ]
 
 test = [
-# '~A_OUT_NCLK',
-# '~B_OUT_NCLK',
-# '~M0_OUT_NCLK',
-# '~M1_OUT_NCLK',
-# '~M2_OUT_NCLK',
-# '~S0_OUT_NCLK',
-# '~S1_OUT_NCLK',
-# '~S2_OUT_NCLK',
-# '~K0_OUT_NCLK',
-# '~K1_OUT_NCLK',
-# '~K2_OUT_NCLK',
-# '~STATUS_OUT_NCLK',
-# '~INTERRUPT_OUT_NCLK',
-# '~SUM_OUT_NCLK',
-# '~MMU_OUT_NCLK',
-# '~MMU_CONTROL_OUT_NCLK',
-# '~TASK_OUT_NCLK',
-# '~MLU_OUT_NCLK',
-# '~SUB_NCLK',
-# '~RESET_NCLK',
-# '~RESET_UOP_COUNT_NCLK',
-# '~SET_INT_ENABLE_SYNC',
-# '~UNSET_INT_ENABLE_SYNC',
-# 'A_IN_CLK',
-# 'B_IN_CLK',
-# 'M0_IN_CLK',
-# 'M1_IN_CLK',
-# 'M2_IN_CLK',
-# 'S0_IN_CLK',
-# 'S1_IN_CLK',
-# 'S2_IN_CLK',
-# 'K0_IN_CLK',
-# 'K1_IN_CLK',
-# 'K2_IN_CLK',
-# 'PC0_IN_CLK',
-# 'PC1_IN_CLK',
-# 'PC2_IN_CLK',
-# 'MMU0_IN_CLK',
-# 'MMU1_IN_CLK',
-# 'MMU2_IN_CLK',
-# 'MMU_IN_CLK',
-# 'MMU_CONTROL_IN_CLK',
-# 'DISP_IN_CLK',
-# 'TASK_IN_CLK',
-# 'INT0_IN_CLK',
-# 'INT1_IN_CLK',
-# 'INT2_IN_CLK',
-# 'INT3_IN_CLK',
-# 'INT4_IN_CLK',
-# 'INT5_IN_CLK',
-# 'INT6_IN_CLK',
-# 'INT7_IN_CLK',
-# 'PC_INC_CLK',
-# 'SP_INC_CLK',
-# 'SP_DEC_CLK',
-# 'KSP_INC_CLK',
-# 'KSP_DEC_CLK',
-# 'ALU_FLAG_SET_CLK',
-# 'INT0',
-'MLU_SEL0',
-'MLU_SEL1',
-'MLU_SEL2',
+'~S0_IN_CLK',
+'~S1_IN_CLK',
+'~S2_IN_CLK',
+'~K0_IN_CLK',
+'~K1_IN_CLK',
+'~K2_IN_CLK',
 ]
 
 subprocess.call(['xdotool', 'search', '--name', '/Eeschema.*/', 'windowfocus'])
@@ -163,10 +110,6 @@ def run_xdotool_key(*keys):
 	cmd = ['xdotool', 'key', '--delay', '15'] + list(keys)
 	subprocess.call(['echo'] + cmd)
 	subprocess.call(cmd)
-
-def generate_labels(labels, t='l', rot=0):
-	for l in labels:
-		run_xdotool_key(t, *tr(l), *nav('E' + str(rot) + 'r' + 'EDD'))
 
 def nav(s):
 	d = {'U': 'Up', 'D': 'Down', 'R': 'Right', 'L': 'Left', 'E': 'Return'}
@@ -223,6 +166,11 @@ def shuffle_pins_down(num_pins, num_move):
 	for i in range(num_pins):
 		run_xdotool_key(*nav('LmDEURmDE' * num_move * 2))
 		run_xdotool_key(*nav('2U' + str(num_move * 2) + 'U'))
+
+def generate_labels(labels, t='l', rot=0):
+	for l in labels:
+		run_xdotool_key(t, *tr(l), *nav('E' + str(rot) + 'r' + 'EDD'))
+
 # generate_labels(ctrl_labels_nclk, 'h', 2)
 # generate_labels(ctrl_labels_clk)
 # generate_nclk_notters(in_labels)
@@ -235,6 +183,6 @@ def shuffle_pins_down(num_pins, num_move):
 
 # import_hierarchical_labels(8)
 
-# generate_labels(test)
+generate_labels(test)
 
-shuffle_pins_down(50, 3)
+# shuffle_pins_down(9, 1)

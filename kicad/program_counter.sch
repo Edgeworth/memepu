@@ -717,17 +717,17 @@ PC22
 Text Label 9850 2050 2    50   ~ 0
 PC23
 Text HLabel 1550 1900 0    50   Input ~ 0
-~PC0_IN
+~PC0_IN_NCLK
 Text HLabel 3400 1900 0    50   Input ~ 0
-~PC0_IN
+~PC0_IN_NCLK
 Text HLabel 1550 4400 0    50   Input ~ 0
-~PC1_IN
+~PC1_IN_NCLK
 Text HLabel 3400 4400 0    50   Input ~ 0
-~PC1_IN
+~PC1_IN_NCLK
 Text HLabel 1500 6700 0    50   Input ~ 0
-~PC2_IN
+~PC2_IN_NCLK
 Text HLabel 3450 6700 0    50   Input ~ 0
-~PC2_IN
+~PC2_IN_NCLK
 Text Label 2550 1400 0    50   ~ 0
 PC0
 Text Label 2550 1500 0    50   ~ 0
