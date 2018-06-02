@@ -1279,4 +1279,20 @@ Text Notes 1450 2300 0    50   ~ 0
 TODO: Reset uop counter flag - check and remove from Control logic hierarchy.\n
 Text Label 1850 4750 2    50   ~ 0
 ~RESET
+Text Label 14150 3100 0    50   ~ 0
+BUS0
+Text Label 14150 3200 0    50   ~ 0
+BUS1
+Text Label 14150 3300 0    50   ~ 0
+BUS2
+Text Label 14150 3400 0    50   ~ 0
+BUS3
+Text Label 14150 3500 0    50   ~ 0
+BUS4
+Text Label 14150 3600 0    50   ~ 0
+BUS5
+Text Label 14150 3700 0    50   ~ 0
+BUS6
+Text Label 14150 3800 0    50   ~ 0
+BUS7
 $EndSCHEMATC
