@@ -1,6 +1,5 @@
 #### TODO
 Control logic debug leds.
-Reset - reset when turn on, reset button
 timer interrupt
 Aux board connector
 check blog.txt for TODO
@@ -30,3 +29,4 @@ Overvoltage zener, polyfuse, big bypass cap
 Interrupt register
 Control logic
 software interrupt
+Reset - reset when turn on, reset button

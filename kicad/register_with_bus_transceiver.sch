@@ -74,10 +74,6 @@ F 3 "" H 1750 1150 50  0001 C CNN
 $EndComp
 Text HLabel 1250 2350 0    50   Input ~ 0
 REG_IN
-Text HLabel 1250 1450 0    50   Input ~ 0
-I0
-Text HLabel 1250 1550 0    50   Input ~ 0
-I1
 Text HLabel 1250 1650 0    50   Input ~ 0
 I2
 Text HLabel 1250 1750 0    50   Input ~ 0
@@ -129,12 +125,10 @@ Wire Wire Line
 	700  1750 700  1150
 Wire Wire Line
 	700  1150 1750 1150
-Connection ~ 1750 1150
 Wire Wire Line
 	1750 2750 700  2750
 Wire Wire Line
 	700  2750 700  1950
-Connection ~ 1750 2750
 $Comp
 L 74xx:74HC245 U9
 U 1 1 5AFCDA3B
@@ -279,4 +273,10 @@ F 3 "" H 3350 2400 50  0001 C CNN
 	1    3350 2400
 	0    -1   -1   0   
 $EndComp
+Connection ~ 1750 2750
+Connection ~ 1750 1150
+Text HLabel 1250 1450 0    50   Input ~ 0
+I0
+Text HLabel 1250 1550 0    50   Input ~ 0
+I1
 $EndSCHEMATC
