@@ -59,51 +59,92 @@ out_labels = ['~A_OUT_NCLK',
 '~CTRLLOGIC_OUT_NCLK']
 
 ctrl_labels_nclk = [
-"~SUB_NCLK",
-"~RESET_NCLK",
-"~RESET_UOP_COUNT_NCLK",
-"~SET_INT_ENABLE_SYNC",
-"~UNSET_INT_ENABLE_SYNC"
+'~SUB_NCLK',
+'~RESET_NCLK',
+'~RESET_UOP_COUNT_NCLK',
+'~SET_INT_ENABLE_SYNC',
+'~UNSET_INT_ENABLE_SYNC'
 ]
 
 ctrl_labels_clk = [
-"~PC_INC_NCLK",
-"~OPCODE0_INC_NCLK",
-"~OPCODE1_INC_NCLK",
-"~SP_INC_NCLK",
-"~SP_DEC_NCLK",
-"~KSP_INC_NCLK",
-"~KSP_DEC_NCLK",
-"~ALU_FLAG_SET_NCLK"]
+'~PC_INC_NCLK',
+'~OPCODE0_INC_NCLK',
+'~OPCODE1_INC_NCLK',
+'~SP_INC_NCLK',
+'~SP_DEC_NCLK',
+'~KSP_INC_NCLK',
+'~KSP_DEC_NCLK',
+'~ALU_FLAG_SET_NCLK'
+]
 
 ctrl_local_lables = [
-'OPCODE0_INC_NCLK', 'OPCODE1_INC_NCLK'
+'OPCODE0_INC_NCLK', 
+'OPCODE1_INC_NCLK'
 ]
 
 test = [
-'~A_OUT_NCLK',
-'~B_OUT_NCLK',
-'~M0_OUT_NCLK',
-'~M1_OUT_NCLK',
-'~M2_OUT_NCLK',
-'~S0_OUT_NCLK',
-'~S1_OUT_NCLK',
-'~S2_OUT_NCLK',
-'~K0_OUT_NCLK',
-'~K1_OUT_NCLK',
-'~K2_OUT_NCLK',
-'~STATUS_OUT_NCLK',
-'~INTERRUPT_OUT_NCLK',
-'~SUM_OUT_NCLK',
-'~MMU_OUT_NCLK',
-'~MMU_CONTROL_OUT_NCLK',
-'~TASK_OUT_NCLK',
-'~MLU_OUT_NCLK',
-"~SUB_NCLK",
-"~RESET_NCLK",
-"~RESET_UOP_COUNT_NCLK",
-"~SET_INT_ENABLE_SYNC",
-"~UNSET_INT_ENABLE_SYNC",
+# '~A_OUT_NCLK',
+# '~B_OUT_NCLK',
+# '~M0_OUT_NCLK',
+# '~M1_OUT_NCLK',
+# '~M2_OUT_NCLK',
+# '~S0_OUT_NCLK',
+# '~S1_OUT_NCLK',
+# '~S2_OUT_NCLK',
+# '~K0_OUT_NCLK',
+# '~K1_OUT_NCLK',
+# '~K2_OUT_NCLK',
+# '~STATUS_OUT_NCLK',
+# '~INTERRUPT_OUT_NCLK',
+# '~SUM_OUT_NCLK',
+# '~MMU_OUT_NCLK',
+# '~MMU_CONTROL_OUT_NCLK',
+# '~TASK_OUT_NCLK',
+# '~MLU_OUT_NCLK',
+# '~SUB_NCLK',
+# '~RESET_NCLK',
+# '~RESET_UOP_COUNT_NCLK',
+# '~SET_INT_ENABLE_SYNC',
+# '~UNSET_INT_ENABLE_SYNC',
+# 'A_IN_CLK',
+# 'B_IN_CLK',
+# 'M0_IN_CLK',
+# 'M1_IN_CLK',
+# 'M2_IN_CLK',
+# 'S0_IN_CLK',
+# 'S1_IN_CLK',
+# 'S2_IN_CLK',
+# 'K0_IN_CLK',
+# 'K1_IN_CLK',
+# 'K2_IN_CLK',
+# 'PC0_IN_CLK',
+# 'PC1_IN_CLK',
+# 'PC2_IN_CLK',
+# 'MMU0_IN_CLK',
+# 'MMU1_IN_CLK',
+# 'MMU2_IN_CLK',
+# 'MMU_IN_CLK',
+# 'MMU_CONTROL_IN_CLK',
+# 'DISP_IN_CLK',
+# 'TASK_IN_CLK',
+# 'INT0_IN_CLK',
+# 'INT1_IN_CLK',
+# 'INT2_IN_CLK',
+# 'INT3_IN_CLK',
+# 'INT4_IN_CLK',
+# 'INT5_IN_CLK',
+# 'INT6_IN_CLK',
+# 'INT7_IN_CLK',
+# 'PC_INC_CLK',
+# 'SP_INC_CLK',
+# 'SP_DEC_CLK',
+# 'KSP_INC_CLK',
+# 'KSP_DEC_CLK',
+# 'ALU_FLAG_SET_CLK',
+# 'INT0',
+'MLU_SEL0',
+'MLU_SEL1',
+'MLU_SEL2',
 ]
 
 subprocess.call(['xdotool', 'search', '--name', '/Eeschema.*/', 'windowfocus'])
@@ -178,6 +219,10 @@ def import_hierarchical_labels(num):
 	for i in range(num):
 		run_xdotool_key(*nav('2E2D'))
 
+def shuffle_pins_down(num_pins, num_move):
+	for i in range(num_pins):
+		run_xdotool_key(*nav('LmDEURmDE' * num_move * 2))
+		run_xdotool_key(*nav('2U' + str(num_move * 2) + 'U'))
 # generate_labels(ctrl_labels_nclk, 'h', 2)
 # generate_labels(ctrl_labels_clk)
 # generate_nclk_notters(in_labels)
@@ -188,4 +233,8 @@ def import_hierarchical_labels(num):
 # ctrl_labels_clk_pos = replace(ctrl_labels_clk, '~', '')
 # generate_clk_anders(ctrl_labels_clk_pos, replace(ctrl_labels_clk_pos, 'NCLK', 'CLK'), ctrl_local_lables)
 
-import_hierarchical_labels(8)
+# import_hierarchical_labels(8)
+
+# generate_labels(test)
+
+shuffle_pins_down(50, 3)
