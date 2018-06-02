@@ -97,11 +97,11 @@ CARRY_FLAG
 NoConn ~ 1900 2300
 NoConn ~ 4400 2300
 Text HLabel 1300 2200 0    50   Input ~ 0
-CARRY_FLAG_CLK
+CARRY_CLK
 Text HLabel 1250 3250 0    50   Input ~ 0
-ZERO_FLAG_CLK
+ZERO_CLK
 Text HLabel 1250 3150 0    50   Input ~ 0
-ZERO_FLAG_IN
+ZERO
 Text HLabel 1850 3150 2    50   Input ~ 0
 ZERO_FLAG
 NoConn ~ 1850 3350
@@ -110,7 +110,7 @@ Text HLabel 4100 1900 0    50   Input ~ 0
 Text HLabel 4100 2500 0    50   Input ~ 0
 ~UNSET_INTERRUPT_ENABLE_SYNC
 Text HLabel 1300 2100 0    50   Input ~ 0
-CARRY_FLAG_IN
+CARRY
 Text HLabel 1600 2500 0    50   Input ~ 0
 ~RESET
 Text HLabel 1550 3550 0    50   Input ~ 0
