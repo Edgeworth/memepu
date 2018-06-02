@@ -76,7 +76,7 @@ Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD - lshift and rshift implemented 
 - For one byte ops (e.g. NOT, POPCOUNT) can also have B register give operation constraint? e.g. 256 functions
 
 ### Control signals
-5 + 5 + 4 + 2 spare + 8 bus = 24 bits
+5 + 5 + 4 + 2 MLU select + 8 bus (1 overloaded for MLU) = 24 bits
 
 #### Bus related
 IN plane:
@@ -97,6 +97,7 @@ OUT plane:
 	A, B, 
 	M0, M1, M2, 
 	S0, S1, S2, K0, K1, K2, 
+	PC0, PC1, PC2,
 	STATUS, 
 	INTERRUPT, - needs to be read for ISR to know which devices to talk to.
 	SUM, 
@@ -124,7 +125,7 @@ OUT plane:
 
 ### MLU operation select / BUS output
 - MLU - 3 bit operation select
-- Bus output. First three bits are also wired to MLU op select.
+- Bus output. First bit is also wired to last bit of MLU op select.
 
 #### Input
 - 4 lower data bus bits into binary counter then fed into EEPROM

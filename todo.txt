@@ -1,6 +1,4 @@
 #### TODO
-- do interrupt ins need to be CLKd? yes.
-Control logic
 Control logic debug leds.
 Reset - reset when turn on, reset button
 timer interrupt
@@ -30,3 +28,4 @@ MMU
 Overvoltage zener, polyfuse, big bypass cap
 - Opcode reg
 Interrupt register
+Control logic
