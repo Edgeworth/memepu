@@ -70,13 +70,6 @@ ctrl_labels_nclk = [
 ]
 
 ctrl_labels_clk = [
-'~PC_INC_NCLK',
-'~OPCODE0_INC_NCLK',
-'~OPCODE1_INC_NCLK',
-'~SP_INC_NCLK',
-'~SP_DEC_NCLK',
-'~KSP_INC_NCLK',
-'~KSP_DEC_NCLK',
 '~ALU_FLAG_SET_NCLK'
 ]
 
