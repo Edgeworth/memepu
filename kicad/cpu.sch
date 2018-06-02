@@ -1277,4 +1277,6 @@ Text Label 1000 1400 2    50   ~ 0
 ~RESET_NCLK
 Text Notes 1450 2300 0    50   ~ 0
 TODO: Reset uop counter flag - check and remove from Control logic hierarchy.\n
+Text Label 1850 4750 2    50   ~ 0
+~RESET
 $EndSCHEMATC
