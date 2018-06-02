@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 1 37
+Sheet 1 36
 Title ""
 Date ""
 Rev ""
@@ -105,21 +105,6 @@ F 3 "" H 4100 1050 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Sheet
-S 8950 700  500  950 
-U 5B2C1C6B
-F0 "Manual Bus Input" 50
-F1 "manual_bus.sch" 50
-F2 "O0" I R 9450 800 50 
-F3 "O1" I R 9450 900 50 
-F4 "O2" I R 9450 1000 50 
-F5 "O3" I R 9450 1100 50 
-F6 "O4" I R 9450 1200 50 
-F7 "O5" I R 9450 1300 50 
-F8 "O6" I R 9450 1400 50 
-F9 "O7" I R 9450 1500 50 
-F10 "~OUT" I L 8950 800 50 
-$EndSheet
-$Sheet
 S 11200 700  500  950 
 U 5AFB9CBF
 F0 "Bus Leds" 50
@@ -133,22 +118,6 @@ F7 "I5" I L 11200 1300 50
 F8 "I6" I L 11200 1400 50 
 F9 "I7" I L 11200 1500 50 
 $EndSheet
-Text Label 9450 800  0    50   ~ 0
-BUS0
-Text Label 9450 900  0    50   ~ 0
-BUS1
-Text Label 9450 1000 0    50   ~ 0
-BUS2
-Text Label 9450 1100 0    50   ~ 0
-BUS3
-Text Label 9450 1200 0    50   ~ 0
-BUS4
-Text Label 9450 1300 0    50   ~ 0
-BUS5
-Text Label 9450 1400 0    50   ~ 0
-BUS6
-Text Label 9450 1500 0    50   ~ 0
-BUS7
 Text Label 11200 800  2    50   ~ 0
 BUS0
 Text Label 11200 900  2    50   ~ 0
