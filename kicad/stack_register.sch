@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 39 36
+Sheet 36 36
 Title ""
 Date ""
 Rev ""
@@ -1255,4 +1255,18 @@ F 3 "~" H 4200 3150 50  0001 C CNN
 $EndComp
 Text HLabel 1750 2050 0    50   Input ~ 0
 ~COUNT_ENABLE
+$Comp
+L power:GND #PWR0127
+U 1 1 5B3604FF
+P 7200 3050
+AR Path="/5B0B7FFA/5B3604FF" Ref="#PWR0127"  Part="1" 
+AR Path="/5B0B7FE8/5B3604FF" Ref="#PWR0125"  Part="1" 
+F 0 "#PWR0127" H 7200 2800 50  0001 C CNN
+F 1 "GND" H 7205 2877 50  0000 C CNN
+F 2 "" H 7200 3050 50  0001 C CNN
+F 3 "" H 7200 3050 50  0001 C CNN
+	1    7200 3050
+	0    1    1    0   
+$EndComp
+NoConn ~ 7800 3050
 $EndSCHEMATC
