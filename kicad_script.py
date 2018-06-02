@@ -100,7 +100,7 @@ def replace(l, fr, to):
 	return [i.replace(fr, to) for i in l]
 
 def run_xdotool_key(*keys):
-	cmd = ['xdotool', 'key', '--delay', '15'] + list(keys)
+	cmd = ['xdotool', 'key', '--delay', '5'] + list(keys)
 	subprocess.call(['echo'] + cmd)
 	subprocess.call(cmd)
 
@@ -160,6 +160,11 @@ def shuffle_pins_down(num_pins, num_move):
 		run_xdotool_key(*nav('LmDEURmDE' * num_move * 2))
 		run_xdotool_key(*nav('2U' + str(num_move * 2) + 'U'))
 
+def shuffle_pins_up(num_pins, num_move):
+	for i in range(num_pins):
+		run_xdotool_key(*nav('LmUEDRmUE' * num_move * 2))
+		run_xdotool_key(*nav('2D' + str(num_move * 2) + 'D'))
+
 def generate_labels(labels, t='l', rot=0):
 	for l in labels:
 		run_xdotool_key(t, *tr(l), *nav('E' + str(rot) + 'r' + 'EDD'))
@@ -176,6 +181,6 @@ def generate_labels(labels, t='l', rot=0):
 
 # import_hierarchical_labels(8)
 
-generate_labels(test)
+# generate_labels(test)
 
-# shuffle_pins_down(9, 1)
+shuffle_pins_up(41, 1)

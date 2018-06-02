@@ -2,7 +2,7 @@
 Control logic debug leds.
 Reset - reset when turn on, reset button
 timer interrupt
-software interrupt
+Aux board connector
 check blog.txt for TODO
 
 #### Board 2
@@ -29,3 +29,4 @@ Overvoltage zener, polyfuse, big bypass cap
 - Opcode reg
 Interrupt register
 Control logic
+software interrupt
