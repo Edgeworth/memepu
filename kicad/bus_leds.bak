@@ -185,10 +185,10 @@ I7
 Wire Wire Line
 	1300 800  1800 800 
 $Comp
-L Device:R_Network09 RN?
+L Device:R_Network09 RN1
 U 1 1 5C1796C3
 P 2000 1200
-F 0 "RN?" V 1383 1200 50  0000 C CNN
+F 0 "RN1" V 1383 1200 50  0000 C CNN
 F 1 "2K" V 1474 1200 50  0000 C CNN
 F 2 "Resistor_THT:R_Array_SIP10" V 2575 1200 50  0001 C CNN
 F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 2000 1200 50  0001 C CNN
