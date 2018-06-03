@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 15 36
+Sheet 15 37
 Title ""
 Date ""
 Rev ""
@@ -106,9 +106,9 @@ Text HLabel 1850 3150 2    50   Input ~ 0
 ZERO_FLAG
 NoConn ~ 1850 3350
 Text HLabel 4100 1900 0    50   Input ~ 0
-~SET_INTERRUPT_ENABLE_SYNC
+~SET_INTERRUPT_ENABLE_ASYNC
 Text HLabel 4100 2500 0    50   Input ~ 0
-~UNSET_INTERRUPT_ENABLE_SYNC
+~UNSET_INTERRUPT_ENABLE_ASYNC
 Text HLabel 1300 2100 0    50   Input ~ 0
 CARRY
 Text HLabel 1600 2500 0    50   Input ~ 0
@@ -292,7 +292,7 @@ F 3 "" H 3800 2100 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text Notes 3450 3000 0    50   ~ 0
-Set interrupt flag here synchronously.\nIf we set it with the clock, then there\nis less time for the control logic to receive\na changed interrupt signal.
+Set interrupt flag here asynchronously.\nIf we set it with the clock, then there\nis less time for the control logic to receive\na changed interrupt signal.
 Text HLabel 3900 4950 0    50   Input ~ 0
 ~REG_OUT
 $Comp

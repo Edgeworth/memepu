@@ -1,6 +1,4 @@
 #### TODO
-Control logic debug leds.
-timer interrupt
 Aux board connector
 check blog.txt for TODO
 
@@ -10,6 +8,7 @@ Keyboard
 Mouse
 Ethernet
 USB mass storage
+timer interrupt
 
 #### Done
 - A, B
@@ -30,3 +29,4 @@ Interrupt register
 Control logic
 software interrupt
 Reset - reset when turn on, reset button
+Control logic debug leds.
