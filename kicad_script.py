@@ -117,7 +117,7 @@ def replace(l, fr, to):
 	return [i.replace(fr, to) for i in l]
 
 def run_xdotool_key(*keys):
-	cmd = ['xdotool', 'key', '--delay', '50'] + list(keys)
+	cmd = ['xdotool', 'key', '--delay', '20'] + list(keys)
 	subprocess.call(['echo'] + cmd)
 	subprocess.call(cmd)
 
@@ -194,8 +194,7 @@ def change_resistor_values(num):
 	for i in range(num):
 		run_xdotool_key(*nav('v'), *tr('2.2K'), *nav('E4D'))
 
-# generate_labels(ctrl_labels_nclk, 'h', 2)
-# generate_labels(ctrl_labels_clk)
+generate_labels(misc_labels)
 # generate_nclk_notters(in_labels)
 
 # in_labels_pos = replace(in_labels, '~', '')
@@ -204,7 +203,9 @@ def change_resistor_values(num):
 # ctrl_labels_clk_pos = replace(ctrl_labels_clk, '~', '')
 # generate_clk_anders(ctrl_labels_clk_pos, replace(ctrl_labels_clk_pos, 'NCLK', 'CLK'), ctrl_local_lables)
 
-# import_hierarchical_labels(31)
+# import_hierarchical_labels(len(misc_labels))
+
+# shuffle_pins_down(8, 1)
 
 # generate_labels(test)
 
@@ -212,6 +213,3 @@ def change_resistor_values(num):
 
 # labels = replace(ctrl_labels + misc_labels, '_NCLK', '')
 # generate_control_logic_leds(labels, replace(labels, '~', ''))
-
-for i in range(30):
-	run_xdotool_key(*nav('eT'), *tr('1.270'), *nav('E4D'))

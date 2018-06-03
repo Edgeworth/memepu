@@ -2662,4 +2662,15 @@ Text Notes 6100 1100 0    79   ~ 0
 OUT plane
 Text Notes 1650 1100 0    79   ~ 0
 IN plane
+$Comp
+L Device:R_Network09 RN?
+U 1 1 5B91DBAA
+P 3850 1750
+F 0 "RN?" V 3233 1750 50  0000 C CNN
+F 1 "R_Network09" V 3324 1750 50  0000 C CNN
+F 2 "Resistor_THT:R_Array_SIP10" V 4425 1750 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 3850 1750 50  0001 C CNN
+	1    3850 1750
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
