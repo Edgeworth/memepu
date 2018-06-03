@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 2 36
+Sheet 2 37
 Title ""
 Date ""
 Rev ""
@@ -2210,4 +2210,30 @@ F 3 "" H 5600 7050 50  0001 C CNN
 	1    5600 6850
 	0    -1   -1   0   
 $EndComp
+$Comp
+L 74xx:74HC04 U5
+U 5 1 5B6B88E1
+P 14300 5750
+AR Path="/5ADF0E03/5B6B88E1" Ref="U5"  Part="5" 
+AR Path="/5B6B88E1" Ref="U?"  Part="5" 
+AR Path="/5B0C6DCD/5B6B88E1" Ref="U?"  Part="5" 
+F 0 "U5" H 14300 6067 50  0000 C CNN
+F 1 "74HC04" H 14300 5976 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 14300 5750 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14300 5750 50  0001 C CNN
+	5    14300 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0459
+U 1 1 5B6BDB28
+P 14000 5750
+F 0 "#PWR0459" H 14000 5500 50  0001 C CNN
+F 1 "GND" H 14005 5577 50  0000 C CNN
+F 2 "" H 14000 5750 50  0001 C CNN
+F 3 "" H 14000 5750 50  0001 C CNN
+	1    14000 5750
+	0    1    1    0   
+$EndComp
+NoConn ~ 14600 5750
 $EndSCHEMATC

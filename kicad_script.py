@@ -38,7 +38,8 @@ in_labels = [
 # local rather than hierarchical labels.
 in_local_labels = ['OPCODE0_IN_NCLK', 'OPCODE1_IN_NCLK']
 
-out_labels = ['~A_OUT_NCLK',
+out_labels = [
+'~A_OUT_NCLK',
 '~B_OUT_NCLK',
 '~M0_OUT_NCLK',
 '~M1_OUT_NCLK',
@@ -59,32 +60,48 @@ out_labels = ['~A_OUT_NCLK',
 '~MMU_CONTROL_OUT_NCLK',
 '~TASK_OUT_NCLK',
 '~MLU_OUT_NCLK',
-'~CTRLLOGIC_OUT_NCLK']
+'~CTRLLOGIC_OUT_NCLK',
+'~INT0_OUT_NCLK',
+'~INT1_OUT_NCLK',
+'~INT2_OUT_NCLK',
+'~INT3_OUT_NCLK',
+'~INT4_OUT_NCLK',
+'~INT5_OUT_NCLK',
+'~INT6_OUT_NCLK',
+'~INT7_OUT_NCLK',
+]
 
-ctrl_labels_nclk = [
-'~SUB_NCLK',
+ctrl_labels = [
+'SUB_NCLK',
 '~RESET_NCLK',
 '~RESET_UOP_COUNT_NCLK',
-'~SET_INT_ENABLE_SYNC',
-'~UNSET_INT_ENABLE_SYNC'
-]
-
-ctrl_labels_clk = [
-'~ALU_FLAG_SET_NCLK'
-]
-
-ctrl_local_lables = [
+'~SET_INT_ENABLE_ASYNC',
+'~UNSET_INT_ENABLE_ASYNC',
+'PC_INC_NCLK',
 'OPCODE0_INC_NCLK', 
-'OPCODE1_INC_NCLK'
+'OPCODE1_INC_NCLK',
+'~SP_INC_NCLK',
+'~SP_DEC_NCLK',
+'~KSP_INC_NCLK',
+'~KSP_DEC_NCLK',
+'ALU_FLAG_SET_NCLK',
 ]
 
-test = [
-'~S0_IN_CLK',
-'~S1_IN_CLK',
-'~S2_IN_CLK',
-'~K0_IN_CLK',
-'~K1_IN_CLK',
-'~K2_IN_CLK',
+misc_labels = [
+'MICROOP0',
+'MICROOP1',
+'MICROOP2',
+'MICROOP3',
+'MMU_READ_FAULT',
+'MMU_WRITE_FAULT',
+'INT0_LATCH',
+'INT1_LATCH',
+'INT2_LATCH',
+'INT3_LATCH',
+'INT4_LATCH',
+'INT5_LATCH',
+'INT6_LATCH',
+'INT7_LATCH',
 ]
 
 subprocess.call(['xdotool', 'search', '--name', '/Eeschema.*/', 'windowfocus'])
@@ -93,19 +110,19 @@ def chunks(l, n):
 	return [l[i:i+n] for i in range(0, len(l), n)]
 
 def tr(s):
-	m = str.maketrans({'_': 'underscore', '~': 'asciitilde'})
+	m = str.maketrans({'_': 'underscore', '~': 'asciitilde', '.': 'period'})
 	return [c.translate(m) for c in s]
 
 def replace(l, fr, to):
 	return [i.replace(fr, to) for i in l]
 
 def run_xdotool_key(*keys):
-	cmd = ['xdotool', 'key', '--delay', '5'] + list(keys)
+	cmd = ['xdotool', 'key', '--delay', '50'] + list(keys)
 	subprocess.call(['echo'] + cmd)
 	subprocess.call(cmd)
 
 def nav(s):
-	d = {'U': 'Up', 'D': 'Down', 'R': 'Right', 'L': 'Left', 'E': 'Return'}
+	d = {'U': 'Up', 'D': 'Down', 'R': 'Right', 'L': 'Left', 'E': 'Return', 'X': 'Delete', 'T': 'Tab'}
 	cur = -1
 	mod = ''
 	res = []
@@ -169,6 +186,14 @@ def generate_labels(labels, t='l', rot=0):
 	for l in labels:
 		run_xdotool_key(t, *tr(l), *nav('E' + str(rot) + 'r' + 'EDD'))
 
+def generate_control_logic_leds(labels, diode_labels):
+	for l, d in zip(labels, diode_labels):
+		run_xdotool_key(*nav('h'), *tr(l), *nav('EECRv'), *tr(d), *nav('ECL4D'))
+
+def change_resistor_values(num):
+	for i in range(num):
+		run_xdotool_key(*nav('v'), *tr('2.2K'), *nav('E4D'))
+
 # generate_labels(ctrl_labels_nclk, 'h', 2)
 # generate_labels(ctrl_labels_clk)
 # generate_nclk_notters(in_labels)
@@ -179,8 +204,14 @@ def generate_labels(labels, t='l', rot=0):
 # ctrl_labels_clk_pos = replace(ctrl_labels_clk, '~', '')
 # generate_clk_anders(ctrl_labels_clk_pos, replace(ctrl_labels_clk_pos, 'NCLK', 'CLK'), ctrl_local_lables)
 
-# import_hierarchical_labels(8)
+# import_hierarchical_labels(31)
 
 # generate_labels(test)
 
-shuffle_pins_up(41, 1)
+# shuffle_pins_up(41, 1)
+
+# labels = replace(ctrl_labels + misc_labels, '_NCLK', '')
+# generate_control_logic_leds(labels, replace(labels, '~', ''))
+
+for i in range(30):
+	run_xdotool_key(*nav('eT'), *tr('1.270'), *nav('E4D'))
