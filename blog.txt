@@ -86,6 +86,7 @@ Make control logic like a finite state machine. Opcodes:
 0: Boot sequence
 1: Fetch opcode
 2: Page fault
+3: Handle interrupt
 
 Reset:
 Needs to reset when turn on. Boot sequence: Needs to set PC to a particular value to run bootloader etc. Useful for control logic to output directly onto the bus for this?
@@ -128,7 +129,7 @@ Level triggered with ACKs:
 Decision: Go with level triggered.
 
 Software interrupt:
-Can wire interrupt 0's OUT line to INT0 line, for software interrupt.
+Can't wire interrupt 0's OUT line to INT0 line, for software interrupt - when running interrupt handle instruction, previous instruction can no longer assert interrupt 0's OUT line, so it will be lost. Alternatively, have a instruction which sets a flag in the status register ('software break'), or jumps to a pre-defined software interrupt handler vector. Decision: Since already need to jump to a pre-defined handler vector for ISR, do the same for software interrupts.
 
 Interrupt enable/disable:
 Can either AND interrupt flag (OR of all interrupts) with enable/disable flag, or check during interrupt handler.
