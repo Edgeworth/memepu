@@ -194,7 +194,16 @@ def change_resistor_values(num):
 	for i in range(num):
 		run_xdotool_key(*nav('v'), *tr('2.2K'), *nav('E4D'))
 
-generate_labels(misc_labels)
+generate_labels([
+'~INT0_OUT_NCLK',
+'~INT1_OUT_NCLK',
+'~INT2_OUT_NCLK',
+'~INT3_OUT_NCLK',
+'~INT4_OUT_NCLK',
+'~INT5_OUT_NCLK',
+'~INT6_OUT_NCLK',
+'~INT7_OUT_NCLK',
+], t='h', rot=2)
 # generate_nclk_notters(in_labels)
 
 # in_labels_pos = replace(in_labels, '~', '')

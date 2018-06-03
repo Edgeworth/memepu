@@ -1093,7 +1093,7 @@ SUB_NCLK
 Text Label 9500 2950 2    50   ~ 0
 SUB_NCLK
 $Sheet
-S 1850 2550 2000 6500
+S 1850 2550 2000 7200
 U 5B0C6DCD
 F0 "Control Logic" 50
 F1 "control_logic.sch" 50
@@ -1182,6 +1182,14 @@ F83 "~KSP_COUNT_NCLK" I R 3850 8350 50
 F84 "~SP_INC_NCLK" I R 3850 8250 50 
 F85 "~KSP_INC_NCLK" I R 3850 8450 50 
 F86 "~RESET" I L 1850 4750 50 
+F87 "~INT0_OUT_NCLK" I R 3850 8950 50 
+F88 "~INT1_OUT_NCLK" I R 3850 9050 50 
+F89 "~INT2_OUT_NCLK" I R 3850 9150 50 
+F90 "~INT3_OUT_NCLK" I R 3850 9250 50 
+F91 "~INT4_OUT_NCLK" I R 3850 9350 50 
+F92 "~INT5_OUT_NCLK" I R 3850 9450 50 
+F93 "~INT6_OUT_NCLK" I R 3850 9550 50 
+F94 "~INT7_OUT_NCLK" I R 3850 9650 50 
 $EndSheet
 Text Label 3850 6250 0    50   ~ 0
 ~PC0_IN_NCLK
@@ -1292,4 +1300,111 @@ Text Label 14150 3700 0    50   ~ 0
 BUS6
 Text Label 14150 3800 0    50   ~ 0
 BUS7
+$Comp
+L Connector_Generic:Conn_02x20_Top_Bottom J2
+U 1 1 5C180365
+P 10650 9500
+F 0 "J2" H 10700 10617 50  0000 C CNN
+F 1 "Conn_02x20_Top_Bottom" H 10700 10526 50  0000 C CNN
+F 2 "" H 10650 9500 50  0001 C CNN
+F 3 "~" H 10650 9500 50  0001 C CNN
+	1    10650 9500
+	1    0    0    -1  
+$EndComp
+Text Label 10450 8800 2    50   ~ 0
+CLK
+Text Label 10450 8900 2    50   ~ 0
+~CLK
+Text Label 10450 9000 2    50   ~ 0
+BUS0
+Text Label 10450 9100 2    50   ~ 0
+BUS1
+Text Label 10450 9200 2    50   ~ 0
+BUS2
+Text Label 10450 9300 2    50   ~ 0
+BUS3
+Text Label 10450 9400 2    50   ~ 0
+BUS4
+Text Label 10450 9500 2    50   ~ 0
+BUS5
+Text Label 10450 9600 2    50   ~ 0
+BUS6
+Text Label 10450 9700 2    50   ~ 0
+BUS7
+Text Label 10450 9800 2    50   ~ 0
+INT0_LATCH
+Text Label 10450 9900 2    50   ~ 0
+INT1_LATCH
+Text Label 10450 10000 2    50   ~ 0
+INT2_LATCH
+Text Label 10450 10100 2    50   ~ 0
+INT3_LATCH
+Text Label 10450 10200 2    50   ~ 0
+INT4_LATCH
+Text Label 10450 10300 2    50   ~ 0
+INT5_LATCH
+Text Label 10450 10400 2    50   ~ 0
+INT6_LATCH
+Text Label 10450 10500 2    50   ~ 0
+INT7_LATCH
+Text Label 10450 8600 2    50   ~ 0
+VCC
+Text Label 10450 8700 2    50   ~ 0
+GND
+Text Label 10950 9000 0    50   ~ 0
+INT0_IN_CLK
+Text Label 10950 9100 0    50   ~ 0
+INT1_IN_CLK
+Text Label 10950 9200 0    50   ~ 0
+INT2_IN_CLK
+Text Label 10950 9300 0    50   ~ 0
+INT3_IN_CLK
+Text Label 10950 9400 0    50   ~ 0
+INT4_IN_CLK
+Text Label 10950 9500 0    50   ~ 0
+INT5_IN_CLK
+Text Label 10950 9600 0    50   ~ 0
+INT6_IN_CLK
+Text Label 10950 9700 0    50   ~ 0
+INT7_IN_CLK
+Text Label 10950 9800 0    50   ~ 0
+~INT0_OUT_NCLK
+Text Label 10950 9900 0    50   ~ 0
+~INT1_OUT_NCLK
+Text Label 10950 10000 0    50   ~ 0
+~INT2_OUT_NCLK
+Text Label 10950 10100 0    50   ~ 0
+~INT3_OUT_NCLK
+Text Label 10950 10200 0    50   ~ 0
+~INT4_OUT_NCLK
+Text Label 10950 10300 0    50   ~ 0
+~INT5_OUT_NCLK
+Text Label 10950 10400 0    50   ~ 0
+~INT6_OUT_NCLK
+Text Label 10950 10500 0    50   ~ 0
+~INT7_OUT_NCLK
+Text Label 10950 8800 0    50   ~ 0
+LED_VCC
+Text Label 10950 8900 0    50   ~ 0
+LED_GND
+Text Label 10950 8600 0    50   ~ 0
+VCC
+Text Label 10950 8700 0    50   ~ 0
+GND
+Text Label 3850 8950 0    50   ~ 0
+~INT0_OUT_NCLK
+Text Label 3850 9050 0    50   ~ 0
+~INT1_OUT_NCLK
+Text Label 3850 9150 0    50   ~ 0
+~INT2_OUT_NCLK
+Text Label 3850 9250 0    50   ~ 0
+~INT3_OUT_NCLK
+Text Label 3850 9350 0    50   ~ 0
+~INT4_OUT_NCLK
+Text Label 3850 9450 0    50   ~ 0
+~INT5_OUT_NCLK
+Text Label 3850 9550 0    50   ~ 0
+~INT6_OUT_NCLK
+Text Label 3850 9650 0    50   ~ 0
+~INT7_OUT_NCLK
 $EndSCHEMATC

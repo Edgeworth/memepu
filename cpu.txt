@@ -167,6 +167,14 @@ Pierce oscillator. Add frequency dividers using JK flipflops. 12 MHz with freque
 
 ### Peripherals
 
+#### Board-To-Board connector
+PINS:
+- CLK, ~CLK, VCC, GND, LED_VCC, LED_GND
+- BUS0, BUS1, BUS2, BUS3, BUS4, BUS5, BUS6, BUS7
+- INT0, INT1, INT2, INT3, INT4,INT5, INT6, INT7
+- ~INT0_OUT_NCLK, ~INT1_OUT_NCLK, ~INT2_OUT_NCLK, ~INT3_OUT_NCLK, ~INT4_OUT_NCLK, ~INT5_OUT_NCLK, ~INT6_OUT_NCLK, ~INT7_OUT_NCLK
+- INT0_IN_CLK, INT1_IN_CLK, INT2_IN_CLK, INT3_IN_CLK, INT4_IN ,INT5_IN_CLK, INT6_IN_CLK, INT7_IN_CLK
+
 #### Keyboard
 #### Mouse
 #### VGA
