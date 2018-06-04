@@ -338,8 +338,6 @@ F 3 "" H 5500 1600 50  0001 C CNN
 $EndComp
 Text Label 5500 2300 2    50   ~ 0
 DISP_CLK
-Text Label 5500 2400 2    50   ~ 0
-CARRY
 $Comp
 L 74xx:74LS139 U23
 U 1 1 5B016052
@@ -899,4 +897,6 @@ F 3 "" H 6700 3950 50  0001 C CNN
 	1    6700 3950
 	0    -1   -1   0   
 $EndComp
+Text Label 5500 2400 2    50   ~ 0
+C0
 $EndSCHEMATC
