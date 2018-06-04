@@ -1,5 +1,4 @@
 #### TODO
-CARRY FLAG in display module - connects to nothing?
 Go through ERC even though it's broken.
 check blog.txt for TODO
 
