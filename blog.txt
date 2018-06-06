@@ -1,19 +1,9 @@
 #### TODO / Parts to get
-- 1 M potentiometer - check footprint when get
 - DPST switch - make footprint
 - micro usb connection - check footprint
 - increase track width ?
-- More LEDs - but option to turn them all off.
- - leds for control logic?
-- bypass cap for each ic
 - mounting holes
-- timer interrupt
-- peripheral interconnect bus connector
-- LU ops - AND etc
-- RESET button
 - Check footprints for bulk decoupling caps
-- Compress space
-- Replace freq divider with two 4-bit binary counters.
 - Go through BOM and order extras
 
 #### 2nd Board - ideas
