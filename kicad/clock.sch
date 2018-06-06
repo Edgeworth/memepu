@@ -1818,7 +1818,7 @@ U 1 1 5ADF287B
 P 2750 1600
 F 0 "R2" H 2878 1646 50  0000 L CNN
 F 1 "1M" H 2878 1555 50  0000 L CNN
-F 2 "Potentiometer_THT:Potentiometer_Omeg_PC16BU_Vertical" V 2680 1600 50  0001 C CNN
+F 2 "cpu:Akizuki-Denshi Potentiometer" V 2680 1600 50  0001 C CNN
 F 3 "~" H 2750 1600 50  0001 C CNN
 	1    2750 1600
 	1    0    0    -1  
