@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/miles/Dropbox/code/cpu/kicad/cpu.sch)
-    (date "Mon 04 Jun 2018 23:39:32 JST")
+    (date "Wed 06 Jun 2018 22:10:14 JST")
     (tool "Eeschema (5.0.0-rc2-63-gd4393b281)")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -850,7 +850,7 @@
       (tstamp 5ADF2B89))
     (comp (ref R2)
       (value 1M)
-      (footprint Potentiometer_THT:Potentiometer_Omeg_PC16BU_Vertical)
+      (footprint "cpu:Akizuki-Denshi Potentiometer")
       (datasheet ~)
       (libsource (lib Device) (part R_Variable))
       (sheetpath (names /Clock/) (tstamps /5ADF0E03/))
