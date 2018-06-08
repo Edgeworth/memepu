@@ -207,7 +207,7 @@ def x_to_navstr(x):
 	if small != 0: s += str(abs(small)) + c
 	return s
 
-def pcbnew_rotate_leds(num):
+def pcbnew_rotate_strip_270(num):
 	x = 2
 	skip = 10
 	label = 0
@@ -217,7 +217,11 @@ def pcbnew_rotate_leds(num):
 		skip += 1
 		label -= 1
 
-pcbnew_rotate_leds(10)
+def pcbnew_rotate_leds_after(num):
+	for i in range(num):
+		run_xdotool_key(*nav('EmErrEm5DECR5U'))
+
+pcbnew_rotate_leds_after(8)
 # generate_nclk_notters(in_labels)
 
 # in_labels_pos = replace(in_labels, '~', '')
