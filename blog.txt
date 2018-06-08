@@ -1,5 +1,4 @@
 #### TODO / Parts to get
-- DPST switch - make footprint
 - micro usb connection - check footprint
 - increase track width ?
 - mounting holes
@@ -137,3 +136,20 @@ Interrupt flag OR gates propogation delay:
  - Period must be >= 154 ns (typical 88 ns however).
 
 154ns => 6.5 MHz
+
+#### Layout:
+Try #1
+Control logic LEDs were super compressed, and the bank of resistor networks caused so many traces there had to be a lot of vias.
+Length: 83050
+Vias: 869
+Time: 12 hours
+Try #2
+Spaced out control logic more, moved resistor networks.
+Length: 79000
+Vias: 729
+Time: 25 minutes
+Try #3:
+Moved MLU out of central routing area, to fringes.
+Length: 79680
+Vias: 716
+Time: 20 minutes
