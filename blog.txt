@@ -153,3 +153,7 @@ Moved MLU out of central routing area, to fringes.
 Length: 79680
 Vias: 716
 Time: 20 minutes
+Try #4: Made LEDs vertical to give more space between them. Spaced stuff out.
+Length: 78818
+Vias: 667
+Time: 20 min
