@@ -194,16 +194,30 @@ def change_resistor_values(num):
 	for i in range(num):
 		run_xdotool_key(*nav('v'), *tr('2.2K'), *nav('E4D'))
 
-generate_labels([
-'~INT0_OUT_NCLK',
-'~INT1_OUT_NCLK',
-'~INT2_OUT_NCLK',
-'~INT3_OUT_NCLK',
-'~INT4_OUT_NCLK',
-'~INT5_OUT_NCLK',
-'~INT6_OUT_NCLK',
-'~INT7_OUT_NCLK',
-], t='h', rot=2)
+def sgn(x):
+	return -1 if x < 0 else 1
+
+def x_to_navstr(x):
+	big, small = sgn(x) * (abs(x) // 10), sgn(x) * (abs(x) % 10)
+	c = ''
+	if x < 0: c = 'L'
+	if x > 0: c = 'R'
+	s = ''
+	if big != 0: s += str(abs(big)) + 'C' + c
+	if small != 0: s += str(abs(small)) + c
+	return s
+
+def pcbnew_rotate_leds(num):
+	x = 2
+	skip = 10
+	label = 0
+	for i in range(num):
+		run_xdotool_key(*nav('EmErrrEm2U%sECD2U%sEm%sDECUE%sE' % (x_to_navstr(x), x_to_navstr(-label), x_to_navstr(label), x_to_navstr(skip))))
+		x -= 1
+		skip += 1
+		label -= 1
+
+pcbnew_rotate_leds(10)
 # generate_nclk_notters(in_labels)
 
 # in_labels_pos = replace(in_labels, '~', '')
