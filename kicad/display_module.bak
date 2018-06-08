@@ -48,17 +48,6 @@ F 3 "" H 3350 2400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:C_Small C31
-U 1 1 5AFEE817
-P 3050 1300
-F 0 "C31" H 3142 1346 50  0000 L CNN
-F 1 "1uF" H 3142 1255 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 3050 1300 50  0001 C CNN
-F 3 "~" H 3050 1300 50  0001 C CNN
-	1    3050 1300
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:C_Small C32
 U 1 1 5AFEE8BD
 P 3550 1300
@@ -69,26 +58,11 @@ F 3 "~" H 3550 1300 50  0001 C CNN
 	1    3550 1300
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3350 1600 3050 1600
-Wire Wire Line
-	3050 1600 3050 1400
 Connection ~ 3350 1600
 Wire Wire Line
 	3350 1600 3550 1600
 Wire Wire Line
 	3550 1600 3550 1400
-$Comp
-L power:GND #PWR0139
-U 1 1 5AFEF443
-P 3050 1200
-F 0 "#PWR0139" H 3050 950 50  0001 C CNN
-F 1 "GND" V 3055 1072 50  0000 R CNN
-F 2 "" H 3050 1200 50  0001 C CNN
-F 3 "" H 3050 1200 50  0001 C CNN
-	1    3050 1200
-	0    1    1    0   
-$EndComp
 $Comp
 L power:GND #PWR0140
 U 1 1 5AFEF6CD

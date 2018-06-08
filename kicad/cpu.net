@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\Users\miles\Dropbox\code\cpu\kicad\cpu.sch)
-    (date "7/06/2018 10:04:42 PM")
+    (date "8/06/2018 11:39:45 AM")
     (tool "Eeschema (5.0.0-rc2-83-gda392728d)")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -413,7 +413,7 @@
   (components
     (comp (ref SW3)
       (value SW_DPST)
-      (footprint Button_Switch_THT:SW_DIP_SPSTx02_Piano_10.8x6.64mm_W7.62mm_P2.54mm)
+      (footprint "cpu:KCD4 Rocker Switch - DPST")
       (libsource (lib Switch) (part SW_DPST))
       (sheetpath (names /) (tstamps /))
       (tstamp 5B18E5D5))
