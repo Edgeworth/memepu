@@ -221,7 +221,8 @@ def pcbnew_rotate_leds_after(num):
 	for i in range(num):
 		run_xdotool_key(*nav('EmErrEm5DECR5U'))
 
-pcbnew_rotate_leds_after(8)
+# pcbnew_rotate_strip_270(7)
+pcbnew_rotate_leds_after(5)
 # generate_nclk_notters(in_labels)
 
 # in_labels_pos = replace(in_labels, '~', '')
