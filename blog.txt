@@ -1,6 +1,4 @@
 #### TODO / Parts to get
-- micro usb connection - check footprint
-- increase track width ?
 - mounting holes
 - Check footprints for bulk decoupling caps
 - Go through BOM and order extras
@@ -220,6 +218,6 @@ Vias: 230
 Time: 20 min
 
 Try #16: Finishing up layout. Reduced min track width, clearance, and via size.
-Length:
-Vias:
-Time: 
+Length: 57000
+Vias: 130
+Time: 1 Hour
