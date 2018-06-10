@@ -203,3 +203,18 @@ Try #12: Found a better way to lay out stack pointers.
 Length: 62000
 Vias: 217
 Time: 20 min
+
+Try #13: Swapped stack pointers and alu/mmu - stack pointers now back on the left
+Length: 59000
+Vias: 250
+Time: 20 min
+
+Try #14: Rejigged MMU layout.
+Length: 60000
+Vias: 230
+Time: 1 hour
+
+Try #15: Changed layout of program counter
+Length: 56000
+Vias: 230
+Time: 20 min
