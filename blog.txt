@@ -177,3 +177,19 @@ Try #7: Start breaking up control logic and moving it around.
 Length: 84500
 Vias: 300
 Time: 20 min
+
+Try #8: Started moving stuf back in to tidy up
+Length: 81200
+Vias: 426
+Time: 7 min
+
+Decided to remove LEDs.
+Try #9: Removed LEDs
+Length: 65000
+Vias: 250
+Time: 8 min
+
+Try #10: Spaced out IN plane logic and stack pointers
+Length:
+Vias:
+Time: 

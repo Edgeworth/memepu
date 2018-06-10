@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 2 37
+Sheet 2 35
 Title ""
 Date ""
 Rev ""
@@ -881,8 +881,6 @@ F 3 "" H 3150 6550 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4450 6750 4650 6750
-Text GLabel 4650 5500 0    50   Input ~ 0
-LED_VCC
 $Comp
 L Device:LED D2
 U 1 1 5B245823
@@ -2260,5 +2258,16 @@ F 2 "" H 3200 5550 50  0001 C CNN
 F 3 "" H 3200 5550 50  0001 C CNN
 	1    3200 5550
 	0    1    1    0   
+$EndComp
+$Comp
+L power:VCC #PWR0139
+U 1 1 5B1D0221
+P 4650 5500
+F 0 "#PWR0139" H 4650 5350 50  0001 C CNN
+F 1 "VCC" H 4667 5673 50  0000 C CNN
+F 2 "" H 4650 5500 50  0001 C CNN
+F 3 "" H 4650 5500 50  0001 C CNN
+	1    4650 5500
+	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
