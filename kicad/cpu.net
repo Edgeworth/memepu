@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\Users\miles\Dropbox\code\cpu\kicad\cpu.sch)
-    (date "10/06/2018 3:51:20 PM")
+    (date "10/06/2018 10:53:19 PM")
     (tool "Eeschema (5.0.0-rc2-83-gda392728d)")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -779,7 +779,7 @@
       (sheetpath (names /Clock/) (tstamps /5ADF0E03/))
       (tstamp 5B32D351))
     (comp (ref U1)
-      (value "LM555 - Adjustable Clock")
+      (value LM555)
       (footprint Package_DIP:DIP-8_W7.62mm_Socket)
       (datasheet http://www.ti.com/lit/ds/symlink/lm555.pdf)
       (libsource (lib Timer) (part LM555))
