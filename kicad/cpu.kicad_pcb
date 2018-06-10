@@ -1318,7 +1318,7 @@
   )
 
   (module Package_DIP:DIP-8_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0811AA)
-    (at 134.0198 39.375755 90)
+    (at 134 39 90)
     (descr "8-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFEE19A/5AFEE2F1)
@@ -1378,7 +1378,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B080FAB)
-    (at 131.0198 39.375755 90)
+    (at 131 39 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFEE19A/5AFF4FA7)
@@ -1417,7 +1417,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B081044)
-    (at 131.0198 34.375755 90)
+    (at 131 34 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFEE19A/5AFEE8BD)
@@ -3897,7 +3897,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCD447)
-    (at 142.39 166.17 270)
+    (at 142 166 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCCD08/5AFCD0D6)
@@ -3981,7 +3981,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCD32D)
-    (at 142.39 188.17 270)
+    (at 142 188 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5B0AB8A7/5AFCD0D6)
@@ -4065,7 +4065,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC095)
-    (at 172.39 155.17 270)
+    (at 171 155 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB536/5AFDC202)
@@ -4149,7 +4149,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC0F5)
-    (at 172.39 166.17 270)
+    (at 171 166 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB55D/5AFDC202)
@@ -4233,7 +4233,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5AFCC155)
-    (at 172.39 177.17 270)
+    (at 171 177 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCB584/5AFDC202)
@@ -4317,7 +4317,7 @@
   )
 
   (module Connector_USB:USB_Micro-B_Wuerth_629105150521 (layer F.Cu) (tedit 5A142044) (tstamp 5B0854C4)
-    (at 253.56491 6.065644 270)
+    (at 253.5 6 270)
     (descr "USB Micro-B receptacle, http://www.mouser.com/ds/2/445/629105150521-469306.pdf")
     (tags "usb micro receptacle")
     (path /5AFD7056)
@@ -4388,7 +4388,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B086CCD)
-    (at 172.39 188.17 270)
+    (at 171 188 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFD336A/5AFCD0D6)
@@ -4472,7 +4472,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C73A)
-    (at 175.39 163.17 90)
+    (at 174 163 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5AFCB536/5AFDADFB)
@@ -4511,7 +4511,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C74F)
-    (at 175.39 174.17 90)
+    (at 174 174 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5AFCB55D/5AFDADFB)
@@ -4550,7 +4550,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C764)
-    (at 175.39 185.17 90)
+    (at 174 185 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5AFCB584/5AFDADFB)
@@ -4589,7 +4589,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C779)
-    (at 175.39 196.17 90)
+    (at 174 196 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5AFCCD08/5AFCD0FB)
@@ -4628,7 +4628,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C78E)
-    (at 145.39 174.17 90)
+    (at 145 174 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5AFCCD08/5AFCF63F)
@@ -4667,7 +4667,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C7A3)
-    (at 145.39 185.17 90)
+    (at 145 185 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5B0AB8A7/5AFCD0FB)
@@ -4706,7 +4706,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C7B8)
-    (at 145.39 196.17 90)
+    (at 145 196 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5B0AB8A7/5AFCF63F)
@@ -4745,7 +4745,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C7CD)
-    (at 145.39 207.17 90)
+    (at 145 207 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5AFD336A/5AFCD0FB)
@@ -4784,7 +4784,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C7E2)
-    (at 114 188.61)
+    (at 113.5 188.5)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFDA122/5AFE0200)
@@ -4823,7 +4823,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07C7F7)
-    (at 102.17 154.11)
+    (at 100.5 154)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFDA122/5AFE82D1)
@@ -4862,7 +4862,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B07C827)
-    (at 142.39 177.17 270)
+    (at 142 177 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFCCD08/5AFCDA3B)
@@ -4946,7 +4946,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B07C857)
-    (at 142.39 199.17 270)
+    (at 142 199 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5B0AB8A7/5AFCDA3B)
@@ -5030,7 +5030,7 @@
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B07C881)
-    (at 108.67 191.61)
+    (at 108 191.5)
     (descr "14-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFDA122/5AFDA904)
@@ -5102,7 +5102,7 @@
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B07C8AB)
-    (at 97.67 191.61)
+    (at 97 191.5)
     (descr "14-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFDA122/5AFE829E)
@@ -5174,7 +5174,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B07C8D7)
-    (at 108.5 167)
+    (at 108 167)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFDA122/5AFDA782)
@@ -5250,7 +5250,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B07C903)
-    (at 97.5 167)
+    (at 97 167)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFDA122/5AFE82AE)
@@ -5326,7 +5326,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B07C933)
-    (at 97.17 128.11)
+    (at 95.5 128)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFDA122/5AFED6C1)
@@ -5410,7 +5410,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07E6F4)
-    (at 105.5 164 180)
+    (at 105 164 180)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFDA122/5AFE8488)
@@ -5449,7 +5449,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07E709)
-    (at 116.5 164 180)
+    (at 116 164 180)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFDA122/5AFE6E12)
@@ -5488,7 +5488,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B07E71E)
-    (at 105.67 188.5 180)
+    (at 105 188.5 180)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFDA122/5AFE858C)
@@ -5644,7 +5644,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B081098)
-    (at 250.124245 62.5198 90)
+    (at 250 62.5 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFEE19A/5B043D5C/5AFDADFB)
@@ -5683,7 +5683,7 @@
   )
 
   (module Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 5B0810AF)
-    (at 152.5198 34.875755 180)
+    (at 152.5 34.5 180)
     (descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
     (tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
     (path /5AFEE19A/5AFF27EC)
@@ -5724,7 +5724,7 @@
   )
 
   (module Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 5B0810C6)
-    (at 152.5198 38.875755 180)
+    (at 152.5 38.5 180)
     (descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
     (tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
     (path /5AFEE19A/5AFF316B)
@@ -5765,7 +5765,7 @@
   )
 
   (module Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 5B0810DD)
-    (at 172.624245 71.0198 270)
+    (at 172.5 71 270)
     (descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
     (tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
     (path /5AFEE19A/5B064869)
@@ -5806,7 +5806,7 @@
   )
 
   (module Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 5B0810F4)
-    (at 169.124245 71.0198 270)
+    (at 169 71 270)
     (descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
     (tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
     (path /5AFEE19A/5B067DBC)
@@ -5847,7 +5847,7 @@
   )
 
   (module Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 5B08110B)
-    (at 165.624245 71.0198 270)
+    (at 165.5 71 270)
     (descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
     (tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
     (path /5AFEE19A/5B068448)
@@ -5888,7 +5888,7 @@
   )
 
   (module Button_Switch_THT:SW_DIP_SPSTx03_Slide_9.78x9.8mm_W7.62mm_P2.54mm (layer F.Cu) (tedit 5A4E1404) (tstamp 5B081186)
-    (at 171.624245 60.5198 270)
+    (at 171.5 60.5 270)
     (descr "3x-dip-switch SPST , Slide, row spacing 7.62 mm (300 mils), body size 9.78x9.8mm (see e.g. https://www.ctscorp.com/wp-content/uploads/206-208.pdf)")
     (tags "DIP Switch SPST Slide 7.62mm 300mil")
     (path /5AFEE19A/5B02B242)
@@ -6035,7 +6035,7 @@
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0811D4)
-    (at 143.124245 52.0198)
+    (at 143 52)
     (descr "14-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFEE19A/5B00BCAA)
@@ -6107,7 +6107,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B081200)
-    (at 154.124245 49.5198)
+    (at 154 49.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFEE19A/5B016052)
@@ -6176,7 +6176,7 @@
   )
 
   (module Package_DIP:DIP-28_W15.24mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0864DE)
-    (at 222.124245 80.5198 90)
+    (at 222 80.5 90)
     (descr "28-lead though-hole mounted DIP package, row spacing 15.24 mm (600 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket")
     (path /5AFEE19A/5B02A612)
@@ -6276,7 +6276,7 @@
   )
 
   (module Display_7Segment:HDSP-7801 (layer F.Cu) (tedit 5A9EC78F) (tstamp 5B081256)
-    (at 170.124245 57.0198 180)
+    (at 170 57 180)
     (descr "One digit 7 segment green, https://docs.broadcom.com/docs/AV02-2553EN")
     (tags "One digit 7 segment green")
     (path /5AFEE19A/5B029BDE)
@@ -6332,7 +6332,7 @@
   )
 
   (module Display_7Segment:HDSP-7801 (layer F.Cu) (tedit 5A9EC78F) (tstamp 5B081274)
-    (at 178.624245 57.0198 180)
+    (at 178.5 57 180)
     (descr "One digit 7 segment green, https://docs.broadcom.com/docs/AV02-2553EN")
     (tags "One digit 7 segment green")
     (path /5AFEE19A/5B02CD83)
@@ -6388,7 +6388,7 @@
   )
 
   (module Display_7Segment:HDSP-7801 (layer F.Cu) (tedit 5A9EC78F) (tstamp 5B081292)
-    (at 187.124245 57.0198 180)
+    (at 187 57 180)
     (descr "One digit 7 segment green, https://docs.broadcom.com/docs/AV02-2553EN")
     (tags "One digit 7 segment green")
     (path /5AFEE19A/5B02D341)
@@ -6444,7 +6444,7 @@
   )
 
   (module Display_7Segment:HDSP-7801 (layer F.Cu) (tedit 5A9EC78F) (tstamp 5B0812B0)
-    (at 195.624245 57.0198 180)
+    (at 195.5 57 180)
     (descr "One digit 7 segment green, https://docs.broadcom.com/docs/AV02-2553EN")
     (tags "One digit 7 segment green")
     (path /5AFEE19A/5B02D694)
@@ -6500,7 +6500,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0812E0)
-    (at 246.996745 54.294801 270)
+    (at 246.5 54 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFEE19A/5B043D5C/5AFDC202)
@@ -6707,7 +6707,7 @@
   )
 
   (module Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 5B081AB8)
-    (at 183.62 61 180)
+    (at 183.5 61 180)
     (descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=7.62mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
     (tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 7.62mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
     (path /5AFEE19A/5B093278)
@@ -7383,14 +7383,14 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E342A)
-    (at 108.17 138.11 90)
+    (at 109.5 128 180)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B04243E/5B0441A8)
-    (fp_text reference C38 (at -2.89 -0.17 90) (layer F.SilkS)
+    (fp_text reference C38 (at -2.89 -0.17 180) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 0.1uF (at 1.25 2.25 90) (layer F.Fab)
+    (fp_text value 0.1uF (at 1.25 2.25 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -0.25 -1) (end -0.25 1) (layer F.Fab) (width 0.1))
@@ -7407,12 +7407,12 @@
     (fp_line (start -1.05 1.25) (end 3.55 1.25) (layer F.CrtYd) (width 0.05))
     (fp_line (start 3.55 1.25) (end 3.55 -1.25) (layer F.CrtYd) (width 0.05))
     (fp_line (start 3.55 -1.25) (end -1.05 -1.25) (layer F.CrtYd) (width 0.05))
-    (fp_text user %R (at 1.25 0 90) (layer F.Fab)
+    (fp_text user %R (at 1.25 0 180) (layer F.Fab)
       (effects (font (size 0.6 0.6) (thickness 0.09)))
     )
-    (pad 1 thru_hole circle (at 0 0 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+    (pad 1 thru_hole circle (at 0 0 180) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 2 GND))
-    (pad 2 thru_hole circle (at 2.5 0 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 1 VCC))
     (model ${KISYS3DMOD}/Capacitor_THT.3dshapes/C_Disc_D3.0mm_W2.0mm_P2.50mm.wrl
       (at (xyz 0 0 0))
@@ -7422,7 +7422,7 @@
   )
 
   (module Package_DIP:DIP-32_W15.24mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E3466)
-    (at 111.17 151.11 90)
+    (at 107 146.5 90)
     (descr "32-lead though-hole mounted DIP package, row spacing 15.24 mm (600 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket")
     (path /5B04243E/5B042459)
@@ -7686,7 +7686,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3F62)
-    (at 61.445 119.37 270)
+    (at 61 119 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B096DB4)
@@ -7725,7 +7725,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3F77)
-    (at 111.445 119.37 270)
+    (at 111 119 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B096F17)
@@ -7764,7 +7764,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3F8C)
-    (at 37.445 119.37 270)
+    (at 37 119 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B096EA2)
@@ -7803,7 +7803,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3FA1)
-    (at 87.445 119.37 270)
+    (at 87 119 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B096FA0)
@@ -7842,7 +7842,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3FB6)
-    (at 144.445 118.87 270)
+    (at 144 118.5 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B0975F3)
@@ -7881,7 +7881,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3FCB)
-    (at 42.445 109.87 90)
+    (at 42 109.5 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B097137)
@@ -7920,7 +7920,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3FE0)
-    (at 92.445 109.37 90)
+    (at 92 109 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B09726C)
@@ -7959,7 +7959,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0E3FF5)
-    (at 149.445 109.37 90)
+    (at 149 109 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B096BDD/5B09736F)
@@ -7998,7 +7998,7 @@
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E401F)
-    (at 127.11 162.33 90)
+    (at 127 162 90)
     (descr "14-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFDA122/5B047088)
@@ -8070,7 +8070,7 @@
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B1B3B6B)
-    (at 154.179241 2.471541 270)
+    (at 154 2 270)
     (descr "14-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B094E56/5B094EC2)
@@ -8142,7 +8142,7 @@
   )
 
   (module Package_DIP:DIP-14_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B1B3AF0)
-    (at 154.179241 17.471541 270)
+    (at 154 17 270)
     (descr "14-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B094E56/5B0D5613)
@@ -8214,7 +8214,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E409F)
-    (at 165.445 113.87 270)
+    (at 165 113.5 270)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B0975BE)
@@ -8290,7 +8290,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E40CB)
-    (at 58.445 114.37 270)
+    (at 58 114 270)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B096C53)
@@ -8366,7 +8366,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E40F7)
-    (at 108.445 114.37 270)
+    (at 108 114 270)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B096F04)
@@ -8442,7 +8442,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E4123)
-    (at 34.5 114.5 270)
+    (at 34 114.5 270)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B096E8F)
@@ -8518,7 +8518,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E414F)
-    (at 84.445 114.37 270)
+    (at 84 114 270)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B096F8D)
@@ -8594,7 +8594,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E417B)
-    (at 141.445 113.87 270)
+    (at 141 113.5 270)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B0975E0)
@@ -8670,7 +8670,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E41AB)
-    (at 39.338806 102.87 270)
+    (at 39 102.5 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B09711A)
@@ -8754,7 +8754,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E41DB)
-    (at 89.445 102.37 270)
+    (at 89 102 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B097257)
@@ -8838,7 +8838,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0E420B)
-    (at 146.445 102.37 270)
+    (at 146 102 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B096BDD/5B09735A)
@@ -8922,7 +8922,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB255)
-    (at 94 180 90)
+    (at 92 180 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0A5C60)
@@ -8961,7 +8961,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB26A)
-    (at 77.5 180 90)
+    (at 76 180 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0AACDD)
@@ -9000,7 +9000,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB27F)
-    (at 61 180.5 90)
+    (at 60 180.5 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0AAE2E)
@@ -9039,7 +9039,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB294)
-    (at 94 158 90)
+    (at 92 158 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0AABFE)
@@ -9078,7 +9078,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB2A9)
-    (at 61 158 90)
+    (at 60 158 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0AAE54)
@@ -9117,7 +9117,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB2BE)
-    (at 94 130.5 90)
+    (at 92 130.5 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0AAD03)
@@ -9156,7 +9156,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB2D3)
-    (at 77.5 131 90)
+    (at 76 131 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0B4998)
@@ -9195,7 +9195,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB2E8)
-    (at 68.5 204.525668 270)
+    (at 68.5 204.5 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0ADD55)
@@ -9234,7 +9234,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB2FD)
-    (at 61 131 90)
+    (at 60 131 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0B4D57)
@@ -9312,7 +9312,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB327)
-    (at 47 180 90)
+    (at 46 180 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FFA/5B0A5C60)
@@ -9351,7 +9351,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB33C)
-    (at 30 180 90)
+    (at 29.5 180 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FFA/5B0AACDD)
@@ -9429,7 +9429,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB366)
-    (at 47 158 90)
+    (at 46 158 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FFA/5B0AABFE)
@@ -9507,7 +9507,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB390)
-    (at 47 131 90)
+    (at 46 131 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FFA/5B0AAD03)
@@ -9546,7 +9546,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB3A5)
-    (at 30 131 90)
+    (at 29.5 131 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FFA/5B0B4998)
@@ -9585,7 +9585,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EB3BA)
-    (at 21.25 205 270)
+    (at 21 205 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FFA/5B0ADD55)
@@ -9702,7 +9702,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB410)
-    (at 83.5 177.5)
+    (at 81.5 177.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0AB442)
@@ -9778,7 +9778,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB43C)
-    (at 67 177.5)
+    (at 65.5 177.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0ABAA3)
@@ -9854,7 +9854,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB468)
-    (at 50.5 177.5)
+    (at 49.5 177.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0ABBA3)
@@ -9930,7 +9930,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB494)
-    (at 83.5 155.5)
+    (at 81.5 155.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0ABA15)
@@ -10006,7 +10006,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB4C0)
-    (at 67 155.5)
+    (at 65.5 155.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0ABA61)
@@ -10082,7 +10082,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB4EC)
-    (at 50.5 155.5)
+    (at 49.5 155.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0ABBFD)
@@ -10302,7 +10302,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB570)
-    (at 83.5 128)
+    (at 81.5 128)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0B3075)
@@ -10386,7 +10386,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB5A0)
-    (at 67 128.5)
+    (at 65.5 128.5)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0B49A5)
@@ -10470,7 +10470,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB5D0)
-    (at 50.5 128.5)
+    (at 49.5 128.5)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FE8/5B0B4D64)
@@ -10554,7 +10554,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB5FC)
-    (at 36.5 177.5)
+    (at 35.5 177.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FFA/5B0AB442)
@@ -10630,7 +10630,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB628)
-    (at 19.5 177.5)
+    (at 19 177.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FFA/5B0ABAA3)
@@ -10782,7 +10782,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB680)
-    (at 36.5 155.5)
+    (at 35.5 155.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FFA/5B0ABA15)
@@ -10858,7 +10858,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB6AC)
-    (at 19.5 155.5)
+    (at 19 155.5)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FFA/5B0ABA61)
@@ -11154,7 +11154,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB75C)
-    (at 36.5 128.5)
+    (at 35.5 128.5)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FFA/5B0B3075)
@@ -11238,7 +11238,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B0EB78C)
-    (at 19.5 128.5)
+    (at 19 128.5)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B0B7FFA/5B0B49A5)
@@ -11406,7 +11406,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EEE5F)
-    (at 77.5 158 90)
+    (at 76 158 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FE8/5B0B9C67)
@@ -11445,7 +11445,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B0EEE74)
-    (at 30 158 90)
+    (at 29.5 158 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B0B7FFA/5B0B9C67)
@@ -11757,7 +11757,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B15C41B)
-    (at 214.17 105.11 90)
+    (at 214 105 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B09B1C8)
@@ -11796,7 +11796,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B15C430)
-    (at 214.17 86.11 90)
+    (at 214 86 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B09B40E)
@@ -11835,7 +11835,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B15C445)
-    (at 209.31519 162.67)
+    (at 207.5 162.5)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B0966DC/5AFDADFB)
@@ -11874,7 +11874,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B15C45A)
-    (at 195 162.67)
+    (at 193.5 162.5)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B096830/5AFDADFB)
@@ -11913,7 +11913,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B15C46F)
-    (at 180.39 162.67)
+    (at 179 162.5)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B096845/5AFDADFB)
@@ -11952,7 +11952,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B15C484)
-    (at 175.382071 206.853079 90)
+    (at 174 206.5 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5AFD5CE2/5AFD336A/5AFCF63F)
@@ -11991,7 +11991,7 @@
   )
 
   (module Package_DIP:DIP-24_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B15C4B8)
-    (at 189.11 130.33 90)
+    (at 189 130 90)
     (descr "24-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B09632F/5B099625)
@@ -13047,7 +13047,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B15C704)
-    (at 216.89 159.67 180)
+    (at 215 159.5 180)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B09632F/5B0966DC/5AFDC202)
@@ -13131,7 +13131,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B15C734)
-    (at 202.89 159.67 180)
+    (at 201 159.5 180)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B09632F/5B096830/5AFDC202)
@@ -13215,7 +13215,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B15C764)
-    (at 188.39 159.67 180)
+    (at 187 159.5 180)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B09632F/5B096845/5AFDC202)
@@ -13299,7 +13299,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B15C794)
-    (at 172.39 199.17 270)
+    (at 171 199 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5AFD5CE2/5AFD336A/5AFCDA3B)
@@ -13422,14 +13422,14 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B162F3A)
-    (at 152.5 132.5 270)
+    (at 151 126.5)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B0B0540)
-    (fp_text reference C92 (at 5.27401 -0.514372 270) (layer F.SilkS)
+    (fp_text reference C92 (at 5.27401 -0.514372) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 0.1uF (at 1.25 2.25 270) (layer F.Fab)
+    (fp_text value 0.1uF (at 1.25 2.25) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -0.25 -1) (end -0.25 1) (layer F.Fab) (width 0.1))
@@ -13446,12 +13446,12 @@
     (fp_line (start -1.05 1.25) (end 3.55 1.25) (layer F.CrtYd) (width 0.05))
     (fp_line (start 3.55 1.25) (end 3.55 -1.25) (layer F.CrtYd) (width 0.05))
     (fp_line (start 3.55 -1.25) (end -1.05 -1.25) (layer F.CrtYd) (width 0.05))
-    (fp_text user %R (at 1.25 0 270) (layer F.Fab)
+    (fp_text user %R (at 1.25 0) (layer F.Fab)
       (effects (font (size 0.6 0.6) (thickness 0.09)))
     )
-    (pad 1 thru_hole circle (at 0 0 270) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 1 VCC))
-    (pad 2 thru_hole circle (at 2.5 0 270) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+    (pad 2 thru_hole circle (at 2.5 0) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
       (net 2 GND))
     (model ${KISYS3DMOD}/Capacitor_THT.3dshapes/C_Disc_D3.0mm_W2.0mm_P2.50mm.wrl
       (at (xyz 0 0 0))
@@ -13461,7 +13461,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B162F4F)
-    (at 176.5 140.5 90)
+    (at 171.5 138 90)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B0B7FD7)
@@ -13500,7 +13500,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B162F64)
-    (at 186.11 123.33 270)
+    (at 186 123 270)
     (descr "C, Disc series, Radial, pin pitch=2.50mm, , diameter*width=3*2mm^2, Capacitor")
     (tags "C Disc series Radial pin pitch 2.50mm  diameter 3mm width 2mm Capacitor")
     (path /5B09632F/5B0B9313)
@@ -13646,7 +13646,7 @@
   )
 
   (module Package_DIP:DIP-16_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B162FCC)
-    (at 155.5 140 90)
+    (at 149.5 137 90)
     (descr "16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B09632F/5B0AF55A)
@@ -13722,7 +13722,7 @@
   )
 
   (module Package_DIP:DIP-20_W7.62mm_Socket (layer F.Cu) (tedit 5A02E8C5) (tstamp 5B162FFC)
-    (at 175.83 143.39 270)
+    (at 172 141 270)
     (descr "20-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket")
     (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
     (path /5B09632F/5B0B7D74)
@@ -14256,7 +14256,7 @@
   )
 
   (module Diode_THT:D_5W_P12.70mm_Horizontal (layer F.Cu) (tedit 5B19232A) (tstamp 5B170C74)
-    (at 246.56491 3.065644 180)
+    (at 246.5 3 180)
     (descr "Diode, 5W series, Axial, Horizontal, pin pitch=12.7mm, , length*diameter=8.9*3.7mm^2, , http://www.diodes.com/_files/packages/8686949.gif")
     (tags "Diode 5W series Axial Horizontal pin pitch 12.7mm  length 8.9mm diameter 3.7mm")
     (path /5B0C4FC8)
@@ -14309,7 +14309,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D10.0mm_W2.5mm_P5.00mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5B170C87)
-    (at 245.06491 7.565644 180)
+    (at 245 7.5 180)
     (descr "C, Disc series, Radial, pin pitch=5.00mm, , diameter*width=10*2.5mm^2, Capacitor, http://cdn-reichelt.de/documents/datenblatt/B300/DS_KERKO_TC.pdf")
     (tags "C Disc series Radial pin pitch 5.00mm  diameter 10mm width 2.5mm Capacitor")
     (path /5B0C553B)
@@ -18901,7 +18901,7 @@
   (gr_text "MMU Protection" (at 190.5 188 90) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text "ALU Bus Buf" (at 101 141 90) (layer F.SilkS)
+  (gr_text "ALU Bus Buf" (at 99.5 141 90) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "In Plane Decoder" (at 109.5 35.5) (layer F.SilkS) (tstamp 5B1F85BD)
@@ -18931,7 +18931,7 @@
   (gr_text REGISTERS (at 108.5 159.5) (layer F.SilkS)
     (effects (font (size 3 3) (thickness 0.3)))
   )
-  (gr_text ALU (at 101.5 181 90) (layer F.SilkS)
+  (gr_text ALU (at 101 181 90) (layer F.SilkS)
     (effects (font (size 3 3) (thickness 0.3)))
   )
   (gr_line (start 160.124245 62.5198) (end 160.124245 63.5198) (layer F.SilkS) (width 0.2))
@@ -18974,7 +18974,7 @@
   (gr_text MMU (at 179.5 128 90) (layer F.SilkS)
     (effects (font (size 3 3) (thickness 0.3)))
   )
-  (gr_text "Kernel Stack\nPointer" (at 62.5 186 270) (layer F.SilkS)
+  (gr_text "Kernel Stack\nPointer" (at 61.5 186 270) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "User Stack \nPointer" (at 14.5 185.5 270) (layer F.SilkS)
@@ -18998,22 +18998,22 @@
   (gr_text "Program Counter" (at 76 115.5) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text MLU (at 108.17 147 270) (layer F.SilkS)
+  (gr_text MLU (at 117.5 128.5) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text Task (at 174.89 189.67 270) (layer F.SilkS)
+  (gr_text Task (at 173.89 189.67 270) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text M2 (at 174.89 177.67 270) (layer F.SilkS)
+  (gr_text M2 (at 173.89 177.67 270) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text PWR (at 252.06491 6.065644 270) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text M1 (at 174.89 166.67 270) (layer F.SilkS)
+  (gr_text M1 (at 173.89 166.67 270) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text "M0\n" (at 175 155.67 270) (layer F.SilkS)
+  (gr_text "M0\n" (at 174 155.67 270) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text B (at 144.89 191.67 270) (layer F.SilkS) (tstamp 5AFCDB33)

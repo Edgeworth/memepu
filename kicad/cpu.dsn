@@ -38,44 +38,44 @@
       (place C7 181500 -23500 front 180 (PN 0.1uF))
       (place C8 223500 -50000 front 90 (PN 10nF))
       (place C13 207000 -67500 front 0 (PN 27pF))
-      (place C16 175390 -163170 front 90 (PN C_Small))
-      (place C18 175390 -185170 front 90 (PN C_Small))
-      (place C20 145390 -174170 front 90 (PN 0.1uF))
-      (place C22 145390 -196170 front 90 (PN 0.1uF))
-      (place C24 114000 -188610 front 0 (PN 0.1uF))
-      (place C26 105500 -164000 front 180 (PN 0.1uF))
+      (place C16 174000 -163000 front 90 (PN C_Small))
+      (place C18 174000 -185000 front 90 (PN C_Small))
+      (place C20 145000 -174000 front 90 (PN 0.1uF))
+      (place C22 145000 -196000 front 90 (PN 0.1uF))
+      (place C24 113500 -188500 front 0 (PN 0.1uF))
+      (place C26 105000 -164000 front 180 (PN 0.1uF))
       (place C33 151000 -49000 front 180 (PN 0.1uF))
       (place C35 219000 -67500 front 90 (PN 0.1uF))
-      (place C36 250124 -62519.8 front 90 (PN C_Small))
+      (place C36 250000 -62500 front 90 (PN C_Small))
       (place C39 208500 -55500 front 180 (PN 1nF))
       (place C41 216500 -13500 front 0 (PN 0.1uF))
       (place C42 216500 -27500 front 0 (PN 0.1uF))
       (place C44 124000 -154500 front 270 (PN 0.1uF))
       (place C46 151500 -28000 front 0 (PN 0.1uF))
       (place C47 168500 -119000 front 270 (PN 0.1uF))
-      (place C50 37445 -119370 front 270 (PN 0.1uF))
-      (place C51 87445 -119370 front 270 (PN 0.1uF))
-      (place C54 92445 -109370 front 90 (PN 0.1uF))
-      (place C57 77500 -180000 front 90 (PN 0.1uF))
-      (place C61 94000 -130500 front 90 (PN 0.1uF))
-      (place C62 77500 -131000 front 90 (PN 0.1uF))
-      (place C63 68500 -204526 front 270 (PN 0.1uF))
-      (place C67 30000 -180000 front 90 (PN 0.1uF))
+      (place C50 37000 -119000 front 270 (PN 0.1uF))
+      (place C51 87000 -119000 front 270 (PN 0.1uF))
+      (place C54 92000 -109000 front 90 (PN 0.1uF))
+      (place C57 76000 -180000 front 90 (PN 0.1uF))
+      (place C61 92000 -130500 front 90 (PN 0.1uF))
+      (place C62 76000 -131000 front 90 (PN 0.1uF))
+      (place C63 68500 -204500 front 270 (PN 0.1uF))
+      (place C67 29500 -180000 front 90 (PN 0.1uF))
       (place C68 13000 -180000 front 90 (PN 0.1uF))
-      (place C69 47000 -158000 front 90 (PN 0.1uF))
-      (place C71 47000 -131000 front 90 (PN 0.1uF))
-      (place C73 21250 -205000 front 270 (PN 0.1uF))
+      (place C69 46000 -158000 front 90 (PN 0.1uF))
+      (place C71 46000 -131000 front 90 (PN 0.1uF))
+      (place C73 21000 -205000 front 270 (PN 0.1uF))
       (place C74 13000 -131000 front 90 (PN 0.1uF))
-      (place C76 77500 -158000 front 90 (PN 0.1uF))
-      (place C78 215390 -165670 front 0 (PN 0.1uF))
-      (place C81 170170 -105110 front 90 (PN 0.1uF))
-      (place C82 170170 -86110 front 90 (PN 0.1uF))
-      (place C85 214170 -105110 front 90 (PN 0.1uF))
-      (place C86 214170 -86110 front 90 (PN 0.1uF))
-      (place C88 197000 -162670 front 0 (PN C_Small))
-      (place C90 175382 -206853 front 90 (PN 0.1uF))
-      (place C91 192000 -165500 front 0 (PN 0.1uF))
-      (place C93 182000 -140500 front 90 (PN 0.1uF))
+      (place C76 76000 -158000 front 90 (PN 0.1uF))
+      (place C78 215500 -165500 front 0 (PN 0.1uF))
+      (place C81 170000 -105000 front 90 (PN 0.1uF))
+      (place C82 170000 -86000 front 90 (PN 0.1uF))
+      (place C85 214000 -105000 front 90 (PN 0.1uF))
+      (place C86 214000 -86000 front 90 (PN 0.1uF))
+      (place C88 193500 -162500 front 0 (PN C_Small))
+      (place C90 174000 -206500 front 90 (PN 0.1uF))
+      (place C91 196000 -165500 front 0 (PN 0.1uF))
+      (place C93 171500 -138000 front 90 (PN 0.1uF))
       (place C100 44000 -66000 front 0 (PN 0.1uF))
       (place C101 16000 -30500 front 90 (PN 0.1uF))
       (place C104 127500 -37000 front 270 (PN 0.1uF))
@@ -96,12 +96,12 @@
       (place C135 194500 -20000 front 90 (PN 0.1uF))
     )
     (component "Package_DIP:DIP-8_W7.62mm_Socket"
-      (place U21 134020 -39375.8 front 90 (PN LM555))
+      (place U21 134000 -39000 front 90 (PN LM555))
       (place U1 245000 -32000 front 180 (PN "LM555 - Adjustable Clock"))
     )
     (component Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm::1
-      (place C30 131020 -39375.8 front 90 (PN 0.1nF))
-      (place C32 131020 -34375.8 front 90 (PN 0.1uF))
+      (place C30 131000 -39000 front 90 (PN 0.1nF))
+      (place C32 131000 -34000 front 90 (PN 0.1uF))
       (place C1 237000 -35500 front 0 (PN 0.1uF))
       (place C4 242000 -35500 front 0 (PN 10nF))
       (place C5 181500 -30500 front 180 (PN 0.1uF))
@@ -111,43 +111,43 @@
       (place C12 214500 -67500 front 180 (PN 27pF))
       (place C14 186000 -71000 front 270 (PN 0.1uF))
       (place C15 199000 -36500 front 90 (PN 0.1uF))
-      (place C17 175390 -174170 front 90 (PN C_Small))
-      (place C19 175390 -196170 front 90 (PN 0.1uF))
-      (place C21 145390 -185170 front 90 (PN 0.1uF))
-      (place C23 145390 -207170 front 90 (PN 0.1uF))
-      (place C25 102170 -154110 front 0 (PN 0.1uF))
-      (place C27 116500 -164000 front 180 (PN 0.1uF))
-      (place C28 105670 -188500 front 180 (PN 0.1uF))
+      (place C17 174000 -174000 front 90 (PN C_Small))
+      (place C19 174000 -196000 front 90 (PN 0.1uF))
+      (place C21 145000 -185000 front 90 (PN 0.1uF))
+      (place C23 145000 -207000 front 90 (PN 0.1uF))
+      (place C25 100500 -154000 front 0 (PN 0.1uF))
+      (place C27 116000 -164000 front 180 (PN 0.1uF))
+      (place C28 105000 -188500 front 180 (PN 0.1uF))
       (place C34 162000 -46500 front 180 (PN 0.1uF))
       (place C37 199000 -39500 front 270 (PN 0.1uF))
       (place C40 177000 -40000 front 270 (PN 0.1uF))
       (place C43 217000 -41500 front 0 (PN 0.1uF))
-      (place C38 113670 -138110 front 90 (PN 0.1uF))
+      (place C38 109500 -128000 front 180 (PN 0.1uF))
       (place C45 151500 -13000 front 0 (PN 0.1uF))
-      (place C48 61445 -119370 front 270 (PN 0.1uF))
-      (place C49 111445 -119370 front 270 (PN 0.1uF))
-      (place C52 144445 -118870 front 270 (PN 0.1uF))
-      (place C53 42445 -109870 front 90 (PN 0.1uF))
-      (place C55 149445 -109370 front 90 (PN 0.1uF))
-      (place C56 94000 -180000 front 90 (PN 0.1uF))
-      (place C58 61000 -180500 front 90 (PN 0.1uF))
-      (place C59 94000 -158000 front 90 (PN 0.1uF))
-      (place C60 61000 -158000 front 90 (PN 0.1uF))
-      (place C64 61000 -131000 front 90 (PN 0.1uF))
+      (place C48 61000 -119000 front 270 (PN 0.1uF))
+      (place C49 111000 -119000 front 270 (PN 0.1uF))
+      (place C52 144000 -118500 front 270 (PN 0.1uF))
+      (place C53 42000 -109500 front 90 (PN 0.1uF))
+      (place C55 149000 -109000 front 90 (PN 0.1uF))
+      (place C56 92000 -180000 front 90 (PN 0.1uF))
+      (place C58 60000 -180500 front 90 (PN 0.1uF))
+      (place C59 92000 -158000 front 90 (PN 0.1uF))
+      (place C60 60000 -158000 front 90 (PN 0.1uF))
+      (place C64 60000 -131000 front 90 (PN 0.1uF))
       (place C65 91000 -204500 front 270 (PN 0.1uF))
-      (place C66 47000 -180000 front 90 (PN 0.1uF))
+      (place C66 46000 -180000 front 90 (PN 0.1uF))
       (place C70 13000 -158000 front 90 (PN 0.1uF))
-      (place C72 30000 -131000 front 90 (PN 0.1uF))
+      (place C72 29500 -131000 front 90 (PN 0.1uF))
       (place C75 44000 -204500 front 270 (PN 0.1uF))
-      (place C77 30000 -158000 front 90 (PN 0.1uF))
-      (place C79 234390 -121670 front 0 (PN 0.1uF))
-      (place C80 253390 -121670 front 0 (PN 0.1uF))
-      (place C83 234390 -165670 front 0 (PN 0.1uF))
-      (place C84 253390 -165670 front 0 (PN 0.1uF))
-      (place C87 209315 -162670 front 0 (PN C_Small))
-      (place C89 184890 -162670 front 0 (PN C_Small))
-      (place C92 158000 -132500 front 270 (PN 0.1uF))
-      (place C94 186110 -125330 front 270 (PN 0.1uF))
+      (place C77 29500 -158000 front 90 (PN 0.1uF))
+      (place C79 234500 -121500 front 0 (PN 0.1uF))
+      (place C80 253500 -121500 front 0 (PN 0.1uF))
+      (place C83 234500 -165500 front 0 (PN 0.1uF))
+      (place C84 253500 -165500 front 0 (PN 0.1uF))
+      (place C87 207500 -162500 front 0 (PN C_Small))
+      (place C89 179000 -162500 front 0 (PN C_Small))
+      (place C92 151000 -126500 front 0 (PN 0.1uF))
+      (place C94 186000 -123000 front 270 (PN 0.1uF))
       (place C98 88500 -37500 front 270 (PN 0.1uF))
       (place C99 16000 -11500 front 90 (PN 0.1uF))
       (place C102 136000 -64000 front 0 (PN 0.1uF))
@@ -175,10 +175,10 @@
       (place R9 158000 -23500 front 0 (PN 100K))
       (place R10 244500 -50000 front 180 (PN 100K))
       (place R16 232500 -21000 front 90 (PN 1M))
-      (place R31 152520 -34875.8 front 180 (PN 10K))
-      (place R34 169124 -71019.8 front 270 (PN 100K))
+      (place R31 152500 -34500 front 180 (PN 10K))
+      (place R34 169000 -71000 front 270 (PN 100K))
       (place R37 183500 -68000 front 180 (PN 100))
-      (place R39 183620 -61000 front 180 (PN 100))
+      (place R39 183500 -61000 front 180 (PN 100))
     )
     (component Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::1
       (place R3 255500 -34000 front 180 (PN 10K))
@@ -191,16 +191,16 @@
       (place R13 214000 -78500 front 90 (PN 1K))
       (place R14 169500 -20000 front 90 (PN 1K))
       (place R15 236000 -21000 front 90 (PN 100K))
-      (place R32 152520 -38875.8 front 180 (PN 1M))
-      (place R33 172624 -71019.8 front 270 (PN 100K))
-      (place R35 165624 -71019.8 front 270 (PN 100K))
+      (place R32 152500 -38500 front 180 (PN 1M))
+      (place R33 172500 -71000 front 270 (PN 100K))
+      (place R35 165500 -71000 front 270 (PN 100K))
       (place R36 162000 -71000 front 270 (PN 100))
       (place R38 183500 -64500 front 180 (PN 100))
       (place R40 211500 -55500 front 0 (PN 1M))
     )
     (component Button_Switch_THT:SW_DIP_SPSTx03_Slide_9.78x9.8mm_W7.62mm_P2.54mm
       (place SW1 159500 -20000 front 90 (PN "SW_DIP_x03 - Clock Source Select"))
-      (place SW5 171624 -60519.8 front 270 (PN SW_DIP_x03))
+      (place SW5 171500 -60500 front 270 (PN SW_DIP_x03))
     )
     (component Button_Switch_THT:SW_PUSH_6mm_H7.3mm
       (place SW2 248500 -42500 front 0 (PN SW_Push))
@@ -209,10 +209,10 @@
     (component "Package_DIP:DIP-14_W7.62mm_Socket"
       (place U2 200000 -23500 front 270 (PN 74HC14))
       (place U5 189000 -79000 front 90 (PN 74HC04))
-      (place U15 97670 -191610 front 0 (PN 74HC86))
+      (place U15 97000 -191500 front 0 (PN 74HC86))
       (place U33 174000 -34500 front 270 (PN 74LS08))
       (place U35 219000 -44500 front 270 (PN 74LS107))
-      (place U38 154179 -17471.5 front 270 (PN 74HC74))
+      (place U38 154000 -17000 front 270 (PN 74HC74))
       (place U55 88000 -199500 front 270 (PN 74HC04))
       (place U66 41000 -199500 front 270 (PN 74HC04))
       (place U97 125500 -69500 front 180 (PN 74LS08))
@@ -226,18 +226,18 @@
     )
     (component "Package_DIP:DIP-16_W7.62mm_Socket"
       (place U3 213000 -3500 front 270 (PN 74151))
-      (place U19 97500 -167000 front 0 (PN 74LS283))
-      (place U23 154124 -49519.8 front 0 (PN 74LS139))
-      (place U39 165445 -113870 front 270 (PN 74LS161))
-      (place U42 34500 -114500 front 270 (PN 74LS161))
-      (place U43 84445 -114370 front 270 (PN 74LS161))
-      (place U48 83500 -177500 front 0 (PN 74LS191))
-      (place U50 50500 -177500 front 0 (PN 74LS191))
-      (place U51 83500 -155500 front 0 (PN 74LS191))
-      (place U52 67000 -155500 front 0 (PN 74LS191))
-      (place U62 36500 -155500 front 0 (PN 74LS191))
-      (place U63 19500 -155500 front 0 (PN 74LS191))
-      (place U85 161000 -140000 front 90 (PN 74LS153))
+      (place U19 97000 -167000 front 0 (PN 74LS283))
+      (place U23 154000 -49500 front 0 (PN 74LS139))
+      (place U39 165000 -113500 front 270 (PN 74LS161))
+      (place U42 34000 -114500 front 270 (PN 74LS161))
+      (place U43 84000 -114000 front 270 (PN 74LS161))
+      (place U48 81500 -177500 front 0 (PN 74LS191))
+      (place U50 49500 -177500 front 0 (PN 74LS191))
+      (place U51 81500 -155500 front 0 (PN 74LS191))
+      (place U52 65500 -155500 front 0 (PN 74LS191))
+      (place U62 35500 -155500 front 0 (PN 74LS191))
+      (place U63 19000 -155500 front 0 (PN 74LS191))
+      (place U85 149500 -137000 front 90 (PN 74LS153))
       (place U91 13000 -20000 front 180 (PN 74LS161))
       (place U105 13000 -41500 front 180 (PN 74LS161))
     )
@@ -270,14 +270,14 @@
     )
     (component "Package_DIP:DIP-16_W7.62mm_Socket::1"
       (place U6 191500 -12500 front 270 (PN 74LS138))
-      (place U17 108500 -167000 front 0 (PN 74LS283))
-      (place U40 58445 -114370 front 270 (PN 74LS161))
-      (place U41 108445 -114370 front 270 (PN 74LS161))
-      (place U44 141445 -113870 front 270 (PN 74LS161))
-      (place U49 67000 -177500 front 0 (PN 74LS191))
-      (place U53 50500 -155500 front 0 (PN 74LS191))
-      (place U59 36500 -177500 front 0 (PN 74LS191))
-      (place U60 19500 -177500 front 0 (PN 74LS191))
+      (place U17 108000 -167000 front 0 (PN 74LS283))
+      (place U40 58000 -114000 front 270 (PN 74LS161))
+      (place U41 108000 -114000 front 270 (PN 74LS161))
+      (place U44 141000 -113500 front 270 (PN 74LS161))
+      (place U49 65500 -177500 front 0 (PN 74LS191))
+      (place U53 49500 -155500 front 0 (PN 74LS191))
+      (place U59 35500 -177500 front 0 (PN 74LS191))
+      (place U60 19000 -177500 front 0 (PN 74LS191))
       (place U61 2500 -177500 front 0 (PN 74LS191))
       (place U64 2500 -155500 front 0 (PN 74LS191))
       (place U106 13000 -63000 front 180 (PN 74LS161))
@@ -285,50 +285,50 @@
     )
     (component "Package_DIP:DIP-20_W7.62mm_Socket"
       (place U7 113000 -25000 front 180 (PN 74HC245))
-      (place U8 142390 -166170 front 270 (PN 74HCT574))
-      (place U14 172390 -166170 front 270 (PN 74HCT574))
-      (place U16 172390 -177170 front 270 (PN 74HCT574))
-      (place U18 172390 -188170 front 270 (PN 74HCT574))
-      (place U11 142390 -199170 front 270 (PN 74HC245))
-      (place U20 97170 -128110 front 0 (PN 74HC245))
-      (place U45 39338.8 -102870 front 270 (PN 74HC245))
-      (place U47 146445 -102370 front 270 (PN 74HC245))
-      (place U58 50500 -128500 front 0 (PN 74HC245))
-      (place U68 19500 -128500 front 0 (PN 74HC245))
+      (place U8 142000 -166000 front 270 (PN 74HCT574))
+      (place U14 171000 -166000 front 270 (PN 74HCT574))
+      (place U16 171000 -177000 front 270 (PN 74HCT574))
+      (place U18 171000 -188000 front 270 (PN 74HCT574))
+      (place U11 142000 -199000 front 270 (PN 74HC245))
+      (place U20 95500 -128000 front 0 (PN 74HC245))
+      (place U45 39000 -102500 front 270 (PN 74HC245))
+      (place U47 146000 -102000 front 270 (PN 74HC245))
+      (place U58 49500 -128500 front 0 (PN 74HC245))
+      (place U68 19000 -128500 front 0 (PN 74HC245))
       (place U69 2500 -128500 front 0 (PN 74HC245))
-      (place U80 216890 -159670 front 180 (PN 74HCT574))
-      (place U82 192890 -159670 front 180 (PN 74HCT574))
-      (place U86 181330 -143390 front 270 (PN 74HC245))
+      (place U80 215000 -159500 front 180 (PN 74HCT574))
+      (place U82 187000 -159500 front 180 (PN 74HCT574))
+      (place U86 172000 -141000 front 270 (PN 74HC245))
       (place U89 39000 -69000 front 0 (PN 74LS574))
       (place U112 135000 -25000 front 180 (PN 74LS574))
       (place U121 91000 -25000 front 180 (PN 74HCT574))
     )
     (component "Package_DIP:DIP-20_W7.62mm_Socket::1"
-      (place U10 142390 -188170 front 270 (PN 74HCT574))
-      (place U12 172390 -155170 front 270 (PN 74HCT574))
-      (place U9 142390 -177170 front 270 (PN 74HC245))
-      (place U29 246997 -54294.8 front 270 (PN 74HCT574))
-      (place U46 89445 -102370 front 270 (PN 74HC245))
-      (place U56 83500 -128000 front 0 (PN 74HC245))
-      (place U57 67000 -128500 front 0 (PN 74HC245))
-      (place U67 36500 -128500 front 0 (PN 74HC245))
-      (place U81 204890 -159670 front 180 (PN 74HCT574))
-      (place U83 172390 -199170 front 270 (PN 74HC245))
+      (place U10 142000 -188000 front 270 (PN 74HCT574))
+      (place U12 171000 -155000 front 270 (PN 74HCT574))
+      (place U9 142000 -177000 front 270 (PN 74HC245))
+      (place U29 246500 -54000 front 270 (PN 74HCT574))
+      (place U46 89000 -102000 front 270 (PN 74HC245))
+      (place U56 81500 -128000 front 0 (PN 74HC245))
+      (place U57 65500 -128500 front 0 (PN 74HC245))
+      (place U67 35500 -128500 front 0 (PN 74HC245))
+      (place U81 201000 -159500 front 180 (PN 74HCT574))
+      (place U83 171000 -199000 front 270 (PN 74HC245))
       (place U87 85500 -32500 front 270 (PN 74LS574))
       (place U118 124000 -25000 front 180 (PN 74HC245))
       (place U122 102000 -25000 front 180 (PN 74HC245))
     )
     (component "Connector_USB:USB_Micro-B_Wuerth_629105150521"
-      (place J1 253565 -6065.64 front 270 (PN Conn_01x05))
+      (place J1 253500 -6000 front 270 (PN Conn_01x05))
     )
     (component "Package_DIP:DIP-14_W7.62mm_Socket::1"
-      (place U13 108670 -191610 front 0 (PN 74HC86))
-      (place U22 143124 -52019.8 front 0 (PN 74LS107))
+      (place U13 108000 -191500 front 0 (PN 74HC86))
+      (place U22 143000 -52000 front 0 (PN 74LS107))
       (place U30 196000 -34500 front 270 (PN 74HC86))
       (place U32 219000 -16500 front 270 (PN 74LS107))
       (place U34 219000 -30500 front 270 (PN 74LS107))
-      (place U36 127110 -162330 front 90 (PN 74HC00))
-      (place U37 154179 -2471.54 front 270 (PN 74HC74))
+      (place U36 127000 -162000 front 90 (PN 74HC00))
+      (place U37 154000 -2000 front 270 (PN 74HC74))
       (place U54 65500 -199500 front 270 (PN 74LS08))
       (place U65 18000 -199500 front 270 (PN 74LS08))
       (place U98 114000 -69500 front 180 (PN 74LS08))
@@ -342,44 +342,44 @@
       (place U123 64000 -95000 front 90 (PN 74LS08))
     )
     (component "Package_DIP:DIP-28_W15.24mm_Socket"
-      (place U24 222124 -80519.8 front 90 (PN AT28C64B))
+      (place U24 222000 -80500 front 90 (PN AT28C64B))
     )
     (component "Display_7Segment:HDSP-7801"
-      (place U25 170124 -57019.8 front 180 (PN "HDSP-7803"))
-      (place U27 187124 -57019.8 front 180 (PN "HDSP-7803"))
+      (place U25 170000 -57000 front 180 (PN "HDSP-7803"))
+      (place U27 187000 -57000 front 180 (PN "HDSP-7803"))
     )
     (component "Display_7Segment:HDSP-7801::1"
-      (place U26 178624 -57019.8 front 180 (PN "HDSP-7803"))
-      (place U28 195624 -57019.8 front 180 (PN "HDSP-7803"))
+      (place U26 178500 -57000 front 180 (PN "HDSP-7803"))
+      (place U28 195500 -57000 front 180 (PN "HDSP-7803"))
     )
     (component "Package_DIP:DIP-32_W15.24mm_Socket"
-      (place U31 116670 -151110 front 90 (PN SST39SF040))
-      (place U72 221390 -124670 front 0 (PN 628128))
-      (place U73 240390 -124670 front 0 (PN 628128))
-      (place U76 221390 -168670 front 0 (PN 628128))
-      (place U78 217170 -118110 front 90 (PN 628128))
-      (place U84 181390 -168670 front 0 (PN 628128))
+      (place U31 107000 -146500 front 90 (PN SST39SF040))
+      (place U72 221500 -124500 front 0 (PN 628128))
+      (place U73 240500 -124500 front 0 (PN 628128))
+      (place U76 221500 -168500 front 0 (PN 628128))
+      (place U78 217500 -118000 front 90 (PN 628128))
+      (place U84 183500 -168500 front 0 (PN 628128))
       (place U90 19000 -43500 front 90 (PN SST39SF040))
       (place U113 19000 -62500 front 90 (PN SST39SF040))
     )
     (component "Package_DIP:DIP-24_W7.62mm_Socket"
-      (place U70 189110 -132330 front 90 (PN 74LS154))
+      (place U70 189000 -130000 front 90 (PN 74LS154))
       (place U93 124500 -32000 front 270 (PN 74LS154))
       (place U96 17000 -69000 front 0 (PN 74LS154))
     )
     (component "Package_DIP:DIP-32_W15.24mm_Socket::1"
-      (place U71 202390 -168670 front 0 (PN SST39SF040))
-      (place U74 173170 -118110 front 90 (PN 628128))
-      (place U75 173170 -99110 front 90 (PN 628128))
-      (place U77 240390 -168624 front 0 (PN 628128))
-      (place U79 217170 -99110 front 90 (PN 628128))
+      (place U71 202500 -168500 front 0 (PN SST39SF040))
+      (place U74 173000 -118000 front 90 (PN 628128))
+      (place U75 173000 -99000 front 90 (PN 628128))
+      (place U77 240500 -168500 front 0 (PN 628128))
+      (place U79 217500 -99000 front 90 (PN 628128))
       (place U88 19000 -24500 front 90 (PN SST39SF040))
     )
     (component Diode_THT:D_5W_P12.70mm_Horizontal
-      (place D17 246565 -3065.64 front 180 (PN 5.6V))
+      (place D17 246500 -3000 front 180 (PN 5.6V))
     )
     (component Capacitor_THT:C_Disc_D10.0mm_W2.5mm_P5.00mm
-      (place F1 245065 -7565.64 front 180 (PN 0.65A))
+      (place F1 245000 -7500 front 180 (PN 0.65A))
     )
     (component "Package_DIP:DIP-24_W7.62mm_Socket::1"
       (place U92 131000 -67000 front 0 (PN 74LS154))
@@ -3898,63 +3898,40 @@
       /~PC2_IN_NCLK /~PC2_OUT_NCLK /~RESET /~RESET_NCLK /~S0_IN_CLK /~S0_OUT_NCLK
       /~S1_IN_CLK /~S1_OUT_NCLK /~S2_IN_CLK /~S2_OUT_NCLK /~SET_INT_ENABLE_ASYNC
       /~SP_COUNT_NCLK /~SP_INC_NCLK /~STATUS_OUT_NCLK /~SUM_OUT_NCLK /~TASK_OUT_NCLK
-      /~UNSET_INT_ENABLE_ASYNC GND LED_GND LED_VCC "Net-(C11-Pad2)" "Net-(C114-Pad2)"
-      "Net-(C12-Pad1)" "Net-(C13-Pad1)" "Net-(C29-Pad1)" "Net-(C39-Pad1)"
-      "Net-(C4-Pad1)" "Net-(C5-Pad2)" "Net-(C6-Pad2)" "Net-(C7-Pad2)" "Net-(C8-Pad1)"
-      "Net-(D1-Pad1)" "Net-(D1-Pad2)" "Net-(D10-Pad1)" "Net-(D100-Pad1)" "Net-(D101-Pad1)"
-      "Net-(D102-Pad1)" "Net-(D103-Pad1)" "Net-(D104-Pad1)" "Net-(D105-Pad1)"
-      "Net-(D11-Pad1)" "Net-(D12-Pad1)" "Net-(D13-Pad1)" "Net-(D14-Pad1)"
-      "Net-(D15-Pad1)" "Net-(D16-Pad1)" "Net-(D18-Pad1)" "Net-(D19-Pad1)"
-      "Net-(D2-Pad2)" "Net-(D20-Pad1)" "Net-(D21-Pad1)" "Net-(D22-Pad1)" "Net-(D23-Pad1)"
-      "Net-(D24-Pad1)" "Net-(D25-Pad1)" "Net-(D26-Pad1)" "Net-(D27-Pad1)"
-      "Net-(D28-Pad1)" "Net-(D29-Pad2)" "Net-(D3-Pad2)" "Net-(D30-Pad2)" "Net-(D31-Pad2)"
-      "Net-(D32-Pad1)" "Net-(D33-Pad1)" "Net-(D34-Pad1)" "Net-(D35-Pad1)"
-      "Net-(D36-Pad1)" "Net-(D37-Pad1)" "Net-(D38-Pad1)" "Net-(D39-Pad2)"
-      "Net-(D4-Pad2)" "Net-(D40-Pad2)" "Net-(D41-Pad2)" "Net-(D42-Pad2)" "Net-(D43-Pad2)"
-      "Net-(D44-Pad2)" "Net-(D45-Pad2)" "Net-(D46-Pad2)" "Net-(D47-Pad2)"
-      "Net-(D48-Pad2)" "Net-(D49-Pad2)" "Net-(D5-Pad2)" "Net-(D50-Pad2)" "Net-(D51-Pad2)"
-      "Net-(D52-Pad2)" "Net-(D53-Pad2)" "Net-(D54-Pad2)" "Net-(D55-Pad2)"
-      "Net-(D56-Pad2)" "Net-(D57-Pad2)" "Net-(D58-Pad2)" "Net-(D59-Pad2)"
-      "Net-(D6-Pad2)" "Net-(D60-Pad2)" "Net-(D61-Pad2)" "Net-(D62-Pad2)" "Net-(D63-Pad1)"
-      "Net-(D64-Pad1)" "Net-(D65-Pad1)" "Net-(D66-Pad1)" "Net-(D67-Pad1)"
-      "Net-(D68-Pad1)" "Net-(D69-Pad1)" "Net-(D7-Pad2)" "Net-(D70-Pad1)" "Net-(D71-Pad2)"
-      "Net-(D72-Pad2)" "Net-(D73-Pad2)" "Net-(D74-Pad2)" "Net-(D75-Pad2)"
-      "Net-(D76-Pad2)" "Net-(D77-Pad2)" "Net-(D78-Pad2)" "Net-(D79-Pad1)"
-      "Net-(D8-Pad2)" "Net-(D80-Pad1)" "Net-(D81-Pad1)" "Net-(D82-Pad1)" "Net-(D83-Pad1)"
-      "Net-(D84-Pad1)" "Net-(D85-Pad1)" "Net-(D86-Pad1)" "Net-(D87-Pad1)"
-      "Net-(D88-Pad2)" "Net-(D89-Pad2)" "Net-(D9-Pad1)" "Net-(D90-Pad2)" "Net-(D91-Pad2)"
-      "Net-(D92-Pad1)" "Net-(D93-Pad1)" "Net-(D94-Pad1)" "Net-(D95-Pad2)"
-      "Net-(D96-Pad2)" "Net-(D97-Pad2)" "Net-(D98-Pad2)" "Net-(D99-Pad1)"
-      "Net-(F1-Pad1)" "Net-(J1-Pad2)" "Net-(J1-Pad3)" "Net-(J1-Pad4)" "Net-(J3-Pad3)"
-      "Net-(R1-Pad2)" "Net-(R10-Pad1)" "Net-(R12-Pad1)" "Net-(R15-Pad1)" "Net-(R31-Pad2)"
-      "Net-(R33-Pad1)" "Net-(R34-Pad1)" "Net-(R35-Pad1)" "Net-(R36-Pad2)"
-      "Net-(R37-Pad2)" "Net-(R38-Pad2)" "Net-(R39-Pad2)" "Net-(R4-Pad2)" "Net-(R40-Pad2)"
-      "Net-(R5-Pad2)" "Net-(R8-Pad2)" "Net-(RN1-Pad10)" "Net-(RN12-Pad10)"
-      "Net-(RN12-Pad9)" "Net-(U105-Pad15)" "Net-(U106-Pad10)" "Net-(U106-Pad15)"
-      "Net-(U107-Pad15)" "Net-(U114-Pad10)" "Net-(U114-Pad12)" "Net-(U115-Pad12)"
-      "Net-(U117-Pad12)" "Net-(U119-Pad11)" "Net-(U119-Pad3)" "Net-(U119-Pad6)"
-      "Net-(U119-Pad8)" "Net-(U120-Pad10)" "Net-(U120-Pad3)" "Net-(U13-Pad11)"
-      "Net-(U13-Pad3)" "Net-(U13-Pad6)" "Net-(U13-Pad8)" "Net-(U15-Pad11)"
-      "Net-(U15-Pad3)" "Net-(U15-Pad6)" "Net-(U15-Pad8)" "Net-(U17-Pad1)"
-      "Net-(U17-Pad10)" "Net-(U17-Pad13)" "Net-(U17-Pad4)" "Net-(U17-Pad9)"
-      "Net-(U19-Pad1)" "Net-(U19-Pad10)" "Net-(U19-Pad13)" "Net-(U19-Pad4)"
-      "Net-(U2-Pad10)" "Net-(U2-Pad8)" "Net-(U22-Pad2)" "Net-(U22-Pad6)" "Net-(U24-Pad1)"
-      "Net-(U24-Pad26)" "Net-(U3-Pad6)" "Net-(U30-Pad11)" "Net-(U30-Pad3)"
-      "Net-(U30-Pad6)" "Net-(U30-Pad8)" "Net-(U32-Pad2)" "Net-(U32-Pad6)"
-      "Net-(U33-Pad10)" "Net-(U33-Pad12)" "Net-(U33-Pad13)" "Net-(U33-Pad4)"
-      "Net-(U33-Pad5)" "Net-(U33-Pad9)" "Net-(U34-Pad2)" "Net-(U34-Pad6)"
-      "Net-(U35-Pad11)" "Net-(U35-Pad2)" "Net-(U35-Pad6)" "Net-(U37-Pad6)"
-      "Net-(U37-Pad8)" "Net-(U38-Pad6)" "Net-(U38-Pad8)" "Net-(U38-Pad9)"
-      "Net-(U44-Pad15)" "Net-(U48-Pad13)" "Net-(U49-Pad13)" "Net-(U5-Pad10)"
-      "Net-(U5-Pad8)" "Net-(U50-Pad13)" "Net-(U51-Pad13)" "Net-(U52-Pad13)"
-      "Net-(U53-Pad12)" "Net-(U53-Pad13)" "Net-(U54-Pad11)" "Net-(U54-Pad12)"
-      "Net-(U54-Pad3)" "Net-(U54-Pad6)" "Net-(U55-Pad12)" "Net-(U59-Pad13)"
-      "Net-(U60-Pad13)" "Net-(U61-Pad13)" "Net-(U62-Pad13)" "Net-(U63-Pad13)"
-      "Net-(U64-Pad12)" "Net-(U64-Pad13)" "Net-(U65-Pad11)" "Net-(U65-Pad12)"
-      "Net-(U65-Pad3)" "Net-(U65-Pad6)" "Net-(U66-Pad12)" "Net-(U70-Pad10)"
-      "Net-(U70-Pad11)" "Net-(U70-Pad13)" "Net-(U70-Pad14)" "Net-(U70-Pad15)"
-      "Net-(U70-Pad16)" "Net-(U70-Pad17)" "Net-(U70-Pad9)" "Net-(U92-Pad1)"
-      "Net-(U92-Pad16)" "Net-(U92-Pad17)" VCC
+      /~UNSET_INT_ENABLE_ASYNC GND "Net-(C11-Pad2)" "Net-(C114-Pad2)" "Net-(C12-Pad1)"
+      "Net-(C13-Pad1)" "Net-(C29-Pad1)" "Net-(C39-Pad1)" "Net-(C4-Pad1)" "Net-(C5-Pad2)"
+      "Net-(C6-Pad2)" "Net-(C7-Pad2)" "Net-(C8-Pad1)" "Net-(D1-Pad1)" "Net-(D1-Pad2)"
+      "Net-(D2-Pad2)" "Net-(D3-Pad2)" "Net-(D4-Pad2)" "Net-(D5-Pad2)" "Net-(D6-Pad2)"
+      "Net-(D7-Pad2)" "Net-(D8-Pad2)" "Net-(F1-Pad1)" "Net-(J1-Pad2)" "Net-(J1-Pad3)"
+      "Net-(J1-Pad4)" "Net-(J3-Pad3)" "Net-(R1-Pad2)" "Net-(R10-Pad1)" "Net-(R12-Pad1)"
+      "Net-(R15-Pad1)" "Net-(R31-Pad2)" "Net-(R33-Pad1)" "Net-(R34-Pad1)"
+      "Net-(R35-Pad1)" "Net-(R36-Pad2)" "Net-(R37-Pad2)" "Net-(R38-Pad2)"
+      "Net-(R39-Pad2)" "Net-(R4-Pad2)" "Net-(R40-Pad2)" "Net-(R5-Pad2)" "Net-(R8-Pad2)"
+      "Net-(U105-Pad15)" "Net-(U106-Pad10)" "Net-(U106-Pad15)" "Net-(U107-Pad15)"
+      "Net-(U114-Pad10)" "Net-(U114-Pad12)" "Net-(U115-Pad12)" "Net-(U117-Pad12)"
+      "Net-(U119-Pad11)" "Net-(U119-Pad3)" "Net-(U119-Pad6)" "Net-(U119-Pad8)"
+      "Net-(U120-Pad10)" "Net-(U120-Pad3)" "Net-(U13-Pad11)" "Net-(U13-Pad3)"
+      "Net-(U13-Pad6)" "Net-(U13-Pad8)" "Net-(U15-Pad11)" "Net-(U15-Pad3)"
+      "Net-(U15-Pad6)" "Net-(U15-Pad8)" "Net-(U17-Pad1)" "Net-(U17-Pad10)"
+      "Net-(U17-Pad13)" "Net-(U17-Pad4)" "Net-(U17-Pad9)" "Net-(U19-Pad1)"
+      "Net-(U19-Pad10)" "Net-(U19-Pad13)" "Net-(U19-Pad4)" "Net-(U2-Pad10)"
+      "Net-(U2-Pad8)" "Net-(U22-Pad2)" "Net-(U22-Pad6)" "Net-(U24-Pad1)" "Net-(U24-Pad26)"
+      "Net-(U3-Pad6)" "Net-(U30-Pad11)" "Net-(U30-Pad3)" "Net-(U30-Pad6)"
+      "Net-(U30-Pad8)" "Net-(U32-Pad2)" "Net-(U32-Pad6)" "Net-(U33-Pad10)"
+      "Net-(U33-Pad12)" "Net-(U33-Pad13)" "Net-(U33-Pad4)" "Net-(U33-Pad5)"
+      "Net-(U33-Pad9)" "Net-(U34-Pad2)" "Net-(U34-Pad6)" "Net-(U35-Pad11)"
+      "Net-(U35-Pad2)" "Net-(U35-Pad6)" "Net-(U37-Pad6)" "Net-(U37-Pad8)"
+      "Net-(U38-Pad6)" "Net-(U38-Pad8)" "Net-(U38-Pad9)" "Net-(U44-Pad15)"
+      "Net-(U48-Pad13)" "Net-(U49-Pad13)" "Net-(U5-Pad10)" "Net-(U5-Pad8)"
+      "Net-(U50-Pad13)" "Net-(U51-Pad13)" "Net-(U52-Pad13)" "Net-(U53-Pad12)"
+      "Net-(U53-Pad13)" "Net-(U54-Pad11)" "Net-(U54-Pad12)" "Net-(U54-Pad3)"
+      "Net-(U54-Pad6)" "Net-(U55-Pad12)" "Net-(U59-Pad13)" "Net-(U60-Pad13)"
+      "Net-(U61-Pad13)" "Net-(U62-Pad13)" "Net-(U63-Pad13)" "Net-(U64-Pad12)"
+      "Net-(U64-Pad13)" "Net-(U65-Pad11)" "Net-(U65-Pad12)" "Net-(U65-Pad3)"
+      "Net-(U65-Pad6)" "Net-(U66-Pad12)" "Net-(U70-Pad10)" "Net-(U70-Pad11)"
+      "Net-(U70-Pad13)" "Net-(U70-Pad14)" "Net-(U70-Pad15)" "Net-(U70-Pad16)"
+      "Net-(U70-Pad17)" "Net-(U70-Pad9)" "Net-(U92-Pad1)" "Net-(U92-Pad16)"
+      "Net-(U92-Pad17)" VCC
       (circuit
         (use_via Via[0-1]_600:300_um)
       )
