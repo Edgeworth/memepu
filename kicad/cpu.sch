@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 1 37
+Sheet 1 35
 Title ""
 Date ""
 Rev ""
@@ -68,73 +68,6 @@ F 3 "" H 2850 950 50  0001 C CNN
 	1    2850 950 
 	1    0    0    -1  
 $EndComp
-Text GLabel 3700 1050 0    50   Input ~ 0
-LED_GND
-Text GLabel 3700 1250 0    50   Input ~ 0
-LED_VCC
-$Comp
-L Switch:SW_DPST SW3
-U 1 1 5B18E5D5
-P 3900 1150
-F 0 "SW3" H 3900 1475 50  0000 C CNN
-F 1 "SW_DPST" H 3900 1384 50  0000 C CNN
-F 2 "cpu:KCD4 Rocker Switch - DPST" H 3900 1150 50  0001 C CNN
-F 3 "" H 3900 1150 50  0001 C CNN
-	1    3900 1150
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR03
-U 1 1 5B18E876
-P 4100 1250
-F 0 "#PWR03" H 4100 1100 50  0001 C CNN
-F 1 "VCC" V 4117 1378 50  0000 L CNN
-F 2 "" H 4100 1250 50  0001 C CNN
-F 3 "" H 4100 1250 50  0001 C CNN
-	1    4100 1250
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR01
-U 1 1 5B18E927
-P 4100 1050
-F 0 "#PWR01" H 4100 800 50  0001 C CNN
-F 1 "GND" H 4105 877 50  0000 C CNN
-F 2 "" H 4100 1050 50  0001 C CNN
-F 3 "" H 4100 1050 50  0001 C CNN
-	1    4100 1050
-	0    -1   -1   0   
-$EndComp
-$Sheet
-S 9650 1000 500  950 
-U 5AFB9CBF
-F0 "Bus Leds" 50
-F1 "bus_leds.sch" 50
-F2 "I0" I L 9650 1100 50 
-F3 "I1" I L 9650 1200 50 
-F4 "I2" I L 9650 1300 50 
-F5 "I3" I L 9650 1400 50 
-F6 "I4" I L 9650 1500 50 
-F7 "I5" I L 9650 1600 50 
-F8 "I6" I L 9650 1700 50 
-F9 "I7" I L 9650 1800 50 
-$EndSheet
-Text Label 9650 1100 2    50   ~ 0
-BUS0
-Text Label 9650 1200 2    50   ~ 0
-BUS1
-Text Label 9650 1300 2    50   ~ 0
-BUS2
-Text Label 9650 1400 2    50   ~ 0
-BUS3
-Text Label 9650 1500 2    50   ~ 0
-BUS4
-Text Label 9650 1600 2    50   ~ 0
-BUS5
-Text Label 9650 1700 2    50   ~ 0
-BUS6
-Text Label 9650 1800 2    50   ~ 0
-BUS7
 $Sheet
 S 6350 2500 900  2550
 U 5AFD5CE2
@@ -1300,17 +1233,6 @@ Text Label 14150 3700 0    50   ~ 0
 BUS6
 Text Label 14150 3800 0    50   ~ 0
 BUS7
-$Comp
-L Connector_Generic:Conn_02x20_Top_Bottom J2
-U 1 1 5C180365
-P 10650 9500
-F 0 "J2" H 10700 10617 50  0000 C CNN
-F 1 "Conn_02x20_Top_Bottom" H 10700 10526 50  0000 C CNN
-F 2 "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical" H 10650 9500 50  0001 C CNN
-F 3 "~" H 10650 9500 50  0001 C CNN
-	1    10650 9500
-	1    0    0    -1  
-$EndComp
 Text Label 10450 8800 2    50   ~ 0
 CLK
 Text Label 10450 8900 2    50   ~ 0
@@ -1349,7 +1271,7 @@ Text Label 10450 10500 2    50   ~ 0
 INT7_LATCH
 Text Label 10450 8600 2    50   ~ 0
 VCC
-Text Label 10450 8700 2    50   ~ 0
+Text Label 10950 8700 0    50   ~ 0
 GND
 Text Label 10950 9000 0    50   ~ 0
 INT0_IN_CLK
@@ -1383,13 +1305,9 @@ Text Label 10950 10400 0    50   ~ 0
 ~INT6_OUT_NCLK
 Text Label 10950 10500 0    50   ~ 0
 ~INT7_OUT_NCLK
-Text Label 10950 8800 0    50   ~ 0
-LED_VCC
-Text Label 10950 8900 0    50   ~ 0
-LED_GND
 Text Label 10950 8600 0    50   ~ 0
 VCC
-Text Label 10950 8700 0    50   ~ 0
+Text Label 10950 8800 0    50   ~ 0
 GND
 Text Label 3850 8950 0    50   ~ 0
 ~INT0_OUT_NCLK
@@ -1407,4 +1325,19 @@ Text Label 3850 9550 0    50   ~ 0
 ~INT6_OUT_NCLK
 Text Label 3850 9650 0    50   ~ 0
 ~INT7_OUT_NCLK
+Text Label 10450 8700 2    50   ~ 0
+VCC
+Text Label 10950 8900 0    50   ~ 0
+GND
+$Comp
+L Connector_Generic:Conn_02x20_Odd_Even J2
+U 1 1 5B1BB7C0
+P 10650 9500
+F 0 "J2" H 10700 10617 50  0000 C CNN
+F 1 "Conn_02x20_Odd_Even" H 10700 10526 50  0000 C CNN
+F 2 "" H 10650 9500 50  0001 C CNN
+F 3 "~" H 10650 9500 50  0001 C CNN
+	1    10650 9500
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
