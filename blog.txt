@@ -218,3 +218,8 @@ Try #15: Changed layout of program counter
 Length: 56000
 Vias: 230
 Time: 20 min
+
+Try #16: Finishing up layout. Reduced min track width, clearance, and via size.
+Length:
+Vias:
+Time: 
