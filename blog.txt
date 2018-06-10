@@ -190,6 +190,16 @@ Vias: 250
 Time: 8 min
 
 Try #10: Spaced out IN plane logic and stack pointers
-Length:
-Vias:
-Time: 
+Length: 64000
+Vias: 260
+Time: 20 min
+
+Try #11: Rearranged stuff
+Length: 65000
+Vias: 220
+Time: 15 min
+
+Try #12: Found a better way to lay out stack pointers.
+Length: 62000
+Vias: 217
+Time: 20 min
