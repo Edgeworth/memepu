@@ -5,7 +5,7 @@
 <!--   Version : 2                       -->
 <!--   Program : TopoR 8 Layer 6.3.18019 -->
 <!--   Date    : Sunday, June 10, 2018   -->
-<!--   Time    : 20:39                   -->
+<!--   Time    : 21:04                   -->
 <!--*************************************-->
 
 <Project>
@@ -13,14 +13,15 @@
    <GUID>{6AF4A92F-6AC6-4145-852E-04877EAFB82D}</GUID>
    <Documents>
       <Section name="PCB">
-         <File path=".\cpu.fsx" isopened="1" dateChange="2018-06-10 19:28:04"/>
+         <File path=".\cpu.fsx" isopened="1" dateChange="2018-06-10 20:53:57"/>
       </Section>
       <Section name="AutoRouting">
          <File path=".\autoroute_180610184053\cpu_56468-236sa.fsb" isopened="0" dateChange="2018-06-10 19:03:21"/>
+         <File path=".\autoroute_180610192855\cpu_57294-135sa.fsb" isopened="0" dateChange="2018-06-10 20:02:21"/>
          <File path=".\autoroute_180610160748\cpu_59169-250sa.fsb" isopened="0" dateChange="2018-06-10 16:24:54"/>
          <File path=".\autoroute_180610170934\cpu_60052-227sa.fsb" isopened="0" dateChange="2018-06-10 18:16:04"/>
          <File path=".\autoroute_180610152749\cpu_62387-217sa.fsb" isopened="0" dateChange="2018-06-10 15:48:29"/>
-         <File path=".\autoroute_180610192855\cpu_57294-135sa.fsb" isopened="0" dateChange="2018-06-10 20:02:21"/>
+         <File path=".\autoroute_180610205408\cpu_57498-139sa.fsb" isopened="0" dateChange="2018-06-10 21:04:24"/>
       </Section>
    </Documents>
    <Import>
