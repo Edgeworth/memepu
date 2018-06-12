@@ -116,7 +116,7 @@ AR Path="/5B0FE82A/5AFCD0FB" Ref="C23"  Part="1"
 AR Path="/5B0FEA60/5AFCD0FB" Ref="C132"  Part="1" 
 F 0 "C132" H 792 1896 50  0000 L CNN
 F 1 "0.1uF" H 792 1805 50  0000 L CNN
-F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 700 1850 50  0001 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 700 1850 50  0001 C CNN
 F 3 "~" H 700 1850 50  0001 C CNN
 	1    700  1850
 	1    0    0    -1  
@@ -224,7 +224,7 @@ AR Path="/5B0FE82A/5AFCF63F" Ref="C90"  Part="1"
 AR Path="/5B0FEA60/5AFCF63F" Ref="C133"  Part="1" 
 F 0 "C133" H 2892 1946 50  0000 L CNN
 F 1 "0.1uF" H 2892 1855 50  0000 L CNN
-F 2 "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm" H 2800 1900 50  0001 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 2800 1900 50  0001 C CNN
 F 3 "~" H 2800 1900 50  0001 C CNN
 	1    2800 1900
 	1    0    0    -1  

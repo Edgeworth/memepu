@@ -64,7 +64,7 @@ U 1 1 5AD2FB52
 P 5200 4300
 F 0 "U5" H 5200 5778 50  0000 C CNN
 F 1 "AT28C64B" H 5200 5687 50  0000 C CNN
-F 2 "Package_DIP:DIP-28_W15.24mm" H 5200 4600 50  0001 C CNN
+F 2 "Package_DIP:DIP-28_W15.24mm_Socket" H 5200 4600 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/doc0270.pdf" H 5200 4600 50  0001 C CNN
 	1    5200 4300
 	1    0    0    -1  
