@@ -1,8 +1,3 @@
-#### TODO / Parts to get
-- mounting holes
-- Check footprints for bulk decoupling caps
-- Go through BOM and order extras
-
 #### 2nd Board - ideas
 - VGA
 - AUDIO
