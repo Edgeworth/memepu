@@ -5,17 +5,20 @@
 <!--   Version : 2                       -->
 <!--   Program : TopoR 8 Layer 6.3.18019 -->
 <!--   Date    : Tuesday, June 12, 2018  -->
-<!--   Time    : 21:22                   -->
+<!--   Time    : 21:55                   -->
 <!--*************************************-->
 
 <Project>
    <Version current="2"/>
    <GUID>{6AF4A92F-6AC6-4145-852E-04877EAFB82D}</GUID>
    <Documents>
-      <Section name="PCB"/>
+      <Section name="PCB">
+         <File path=".\cpu.fsx" isopened="1" dateChange="2018-06-12 21:23:22"/>
+      </Section>
       <Section name="AutoRouting">
          <File path=".\autoroute_180610230518\cpu_57674-78sa.fsb" isopened="0" dateChange="2018-06-11 22:32:13"/>
          <File path=".\autoroute_180612210453\cpu_58457-127s.fsb" isopened="0" dateChange="2018-06-12 21:12:30"/>
+         <File path=".\autoroute_180612212331\cpu_57673-119s.fsb" isopened="0" dateChange="2018-06-12 21:55:42"/>
       </Section>
    </Documents>
    <Import>
