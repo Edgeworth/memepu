@@ -97,7 +97,7 @@
     )
     (component "Package_DIP:DIP-8_W7.62mm_Socket"
       (place U21 134000 -39000 front 90 (PN LM555))
-      (place U1 245000 -32000 front 180 (PN "LM555 - Adjustable Clock"))
+      (place U1 245000 -32000 front 180 (PN LM555))
     )
     (component Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm::1
       (place C30 131000 -39000 front 90 (PN 0.1nF))
@@ -209,7 +209,6 @@
     (component "Package_DIP:DIP-14_W7.62mm_Socket"
       (place U2 200000 -23500 front 270 (PN 74HC14))
       (place U5 189000 -79000 front 90 (PN 74HC04))
-      (place U15 97000 -191500 front 0 (PN 74HC86))
       (place U33 174000 -34500 front 270 (PN 74LS08))
       (place U35 219000 -44500 front 270 (PN 74LS107))
       (place U38 154000 -17000 front 270 (PN 74HC74))
@@ -323,6 +322,7 @@
     )
     (component "Package_DIP:DIP-14_W7.62mm_Socket::1"
       (place U13 108000 -191500 front 0 (PN 74HC86))
+      (place U15 97000 -191500 front 0 (PN 74HC86))
       (place U22 143000 -52000 front 0 (PN 74LS107))
       (place U30 196000 -34500 front 270 (PN 74HC86))
       (place U32 219000 -16500 front 270 (PN 74LS107))
@@ -3189,7 +3189,7 @@
       (pins U12-1 U95-4)
     )
     (net /SUB_NCLK
-      (pins U13-2 U13-10 U13-5 U13-13 U15-13 U15-5 U15-10 U15-2 U17-7 U115-8)
+      (pins U13-2 U13-10 U13-5 U13-13 U15-2 U15-10 U15-5 U15-13 U17-7 U115-8)
     )
     (net /~M1_OUT_NCLK
       (pins U14-1 U95-5)
