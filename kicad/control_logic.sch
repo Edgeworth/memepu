@@ -2826,8 +2826,6 @@ F 3 "" H 8300 1900 50  0001 C CNN
 	1    8300 1900
 	1    0    0    -1  
 $EndComp
-Text Notes 7150 5550 0    79   ~ 0
-TODO: Connect these and INs, \nand interrupt lines up to\nboard interconnect.\n
 Text HLabel 8200 4300 0    50   Input ~ 0
 ~INT0_OUT_NCLK
 Text HLabel 8200 4400 0    50   Input ~ 0
