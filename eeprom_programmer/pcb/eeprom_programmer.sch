@@ -26,7 +26,7 @@ F 3 "~" H 5700 1500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U1
+L eeprom_programmer-rescue:74HC595-74xx U1
 U 1 1 5AD2D7E6
 P 1300 1600
 F 0 "U1" H 1300 2478 50  0000 C CNN
@@ -37,7 +37,7 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 1300 1600 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U2
+L eeprom_programmer-rescue:74HC595-74xx U2
 U 1 1 5AD2D89E
 P 2850 1600
 F 0 "U2" H 2850 2478 50  0000 C CNN
@@ -48,7 +48,7 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 2850 1600 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U3
+L eeprom_programmer-rescue:74HC595-74xx U3
 U 1 1 5AD2D95A
 P 4350 1600
 F 0 "U3" H 4350 2478 50  0000 C CNN

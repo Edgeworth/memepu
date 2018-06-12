@@ -1,2 +1,3 @@
 (sym_lib_table
+  (lib (name eeprom_programmer-rescue)(type Legacy)(uri ${KIPRJMOD}/eeprom_programmer-rescue.lib)(options "")(descr ""))
 )
