@@ -4,8 +4,8 @@
 <!--   Format  : TopoR Project file      -->
 <!--   Version : 2                       -->
 <!--   Program : TopoR 8 Layer 6.3.18019 -->
-<!--   Date    : Tuesday, June 12, 2018  -->
-<!--   Time    : 22:26                   -->
+<!--   Date    : Thursday, June 14, 2018 -->
+<!--   Time    : 18:26                   -->
 <!--*************************************-->
 
 <Project>
@@ -15,7 +15,10 @@
       <Section name="PCB">
          <File path=".\cpu.fsx" isopened="1" dateChange="2018-06-12 22:26:53"/>
       </Section>
-      <Section name="AutoRouting"/>
+      <Section name="AutoRouting">
+         <File path=".\autoroute_180612222707\cpu_57584-109s.fsb" isopened="0" dateChange="2018-06-14 14:16:16"/>
+         <File path=".\autoroute_180612222707\cpu_60630-79s.fsb" isopened="0" dateChange="2018-06-14 14:11:00"/>
+      </Section>
    </Documents>
    <Import>
       <Specctra>
