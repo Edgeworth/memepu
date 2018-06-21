@@ -1,7 +1,3 @@
-#### TODO
-Go through ERC even though it's broken.
-check blog.txt for TODO
-
 #### Board 2
 VGA
 Keyboard
