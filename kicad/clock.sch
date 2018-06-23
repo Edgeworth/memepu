@@ -1713,33 +1713,25 @@ Wire Wire Line
 	1500 1050 1200 1050
 Text Label 1500 1050 2    50   ~ 0
 AC_TR
-Wire Wire Line
-	2750 1750 2750 1850
-Text Label 2750 1850 0    50   ~ 0
+Text Label 2750 1850 3    50   ~ 0
 AC_TR
 Wire Wire Line
 	3000 1250 2750 1250
 Wire Wire Line
 	2750 1250 2500 1250
 Connection ~ 2750 1250
-Wire Wire Line
-	2750 1250 2750 1450
 $Comp
 L Device:R R3
 U 1 1 5ADF2B89
-P 3100 1600
-F 0 "R3" H 3170 1646 50  0000 L CNN
-F 1 "10K" H 3170 1555 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 3030 1600 50  0001 C CNN
-F 3 "~" H 3100 1600 50  0001 C CNN
-	1    3100 1600
+P 2750 1400
+F 0 "R3" H 2820 1446 50  0000 L CNN
+F 1 "10K" H 2820 1355 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 2680 1400 50  0001 C CNN
+F 3 "~" H 2750 1400 50  0001 C CNN
+	1    2750 1400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2750 1450 3100 1450
-Wire Wire Line
-	3100 1750 2750 1750
-Text Notes 2800 1400 0    20   ~ 0
+Text Notes 2900 1950 0    20   ~ 0
 Impose a minimum value on the \nvariable resistor to keep duty \ncycle close to 50%. Current\nvalues give min 0.7 Hz, max 70 Hz.
 Text Label 2500 1050 0    50   ~ 0
 ADJ_CLK
@@ -1808,23 +1800,17 @@ F 3 "" H 1500 1450 50  0001 C CNN
 	1    1500 1450
 	0    -1   -1   0   
 $EndComp
-Connection ~ 2750 1750
-Connection ~ 2750 1450
 $Comp
 L Device:R_Variable R2
 U 1 1 5ADF287B
-P 2750 1600
-F 0 "R2" H 2878 1646 50  0000 L CNN
-F 1 "1M" H 2878 1555 50  0000 L CNN
-F 2 "cpu:Akizuki-Denshi Potentiometer" V 2680 1600 50  0001 C CNN
-F 3 "~" H 2750 1600 50  0001 C CNN
-	1    2750 1600
+P 2750 1700
+F 0 "R2" H 2878 1746 50  0000 L CNN
+F 1 "1M" H 2878 1655 50  0000 L CNN
+F 2 "cpu:Akizuki-Denshi Potentiometer" V 2680 1700 50  0001 C CNN
+F 3 "~" H 2750 1700 50  0001 C CNN
+	1    2750 1700
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2500 1450 2500 1750
-Wire Wire Line
-	2500 1750 2750 1750
 Text Label 12350 1900 2    50   ~ 0
 1.5MHZ_CLK
 Text Label 12950 1800 0    50   ~ 0
@@ -2286,4 +2272,8 @@ Wire Wire Line
 	4150 6650 4400 6650
 Wire Wire Line
 	4150 6750 4400 6750
+Wire Wire Line
+	2750 1850 2500 1850
+Wire Wire Line
+	2500 1850 2500 1450
 $EndSCHEMATC
