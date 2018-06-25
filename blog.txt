@@ -5,6 +5,7 @@
 
 #### Notes for next version:
 - Use longer resistor footprints.
+- Use wider tracks... current tracks are kind of weak
 
 
 stack pointers
