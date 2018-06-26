@@ -103,7 +103,7 @@ enum {
   OUT_N_INT5 = 29,
   OUT_N_INT6 = 30,
   OUT_N_INT7 = 31,
-}
+};
 
 
 // MULTI plane values
@@ -122,116 +122,183 @@ enum {
   MULTI_N_KSP_INC = 11,
   MULTI_N_KSP_DEC = 12,
   MULTI_N_ALU_FLAG_SET = 13,
+};
+
+// Control logic input address:
+enum {
+  ADDR_OP0 = 0,
+  ADDR_OP1 = 1,
+  ADDR_OP2 = 2,
+  ADDR_OP3 = 3,
+  ADDR_OP4 = 4,
+  ADDR_OP5 = 5,
+  ADDR_OP6 = 6,
+  ADDR_OP7 = 7,
+  ADDR_AUX0 = 8, // Corresponds to OP8 to OP11
+  ADDR_AUX1 = 9,
+  ADDR_AUX2 = 10,
+  ADDR_AUX3 = 11,
+  ADDR_MICROOP0 = 12,
+  ADDR_MICROOP1 = 13,
+  ADDR_MICROOP2 = 14,
+  ADDR_MICROOP3 = 15,
+  ADDR_INT_FLAG = 16,
+  ADDR_MMU_FAULT_FLAG = 17,
+  ADDR_UNUSED = 18,
+};
+
+uint32_t addr_opcode(int opcode) {
+  uint32_t output = 0;
+  if (opcode & 1) output |= 1uL << ADDR_OP0;
+  if (opcode & 2) output |= 1uL << ADDR_OP1;
+  if (opcode & 4) output |= 1uL << ADDR_OP2;
+  if (opcode & 8) output |= 1uL << ADDR_OP3;
+  if (opcode & 16) output |= 1uL << ADDR_OP4;
+  if (opcode & 32) output |= 1uL << ADDR_OP5;
+  if (opcode & 64) output |= 1uL << ADDR_OP6;
+  if (opcode & 128) output |= 1uL << ADDR_OP7;
+  return output;
 }
 
-// Control logic input:
-enum {
-  INPUT_OP0 = 0,
-  INPUT_OP1 = 1,
-  INPUT_OP2 = 2,
-  INPUT_OP3 = 3,
-  INPUT_OP4 = 4,
-  INPUT_OP5 = 5,
-  INPUT_OP6 = 6,
-  INPUT_OP7 = 7,
-  INPUT_AUX0 = 8, // Corresponds to OP8 to OP11
-  INPUT_AUX1 = 9,
-  INPUT_AUX2 = 10,
-  INPUT_AUX3 = 11,
-  INPUT_MICROOP0 = 12,
-  INPUT_MICROOP1 = 13,
-  INPUT_MICROOP2 = 14,
-  INPUT_MICROOP3 = 15,
-  INPUT_INT_FLAG = 16,
-  INPUT_MMU_FAULT_FLAG = 17,
-  INPUT_UNUSED = 18,
+uint32_t addr_aux(int aux) {
+  uint32_t output = 0;
+  if (aux & 1) output |= 1uL << ADDR_AUX0;
+  if (aux & 2) output |= 1uL << ADDR_AUX1;
+  if (aux & 4) output |= 1uL << ADDR_AUX2;
+  if (aux & 8) output |= 1uL << ADDR_AUX3;
+  return output;
+}
+
+uint32_t addr_microop(int microop) {
+  uint32_t output = 0;
+  if (microop & 1) output |= 1uL << ADDR_MICROOP0;
+  if (microop & 2) output |= 1uL << ADDR_MICROOP1;
+  if (microop & 4) output |= 1uL << ADDR_MICROOP2;
+  if (microop & 8) output |= 1uL << ADDR_MICROOP3;
+  return output;
+}
+
+uint32_t addr_int_flag(bool int_flag) {
+  return int_flag ? (1 << ADDR_INT_FLAG) : 0;
+}
+
+uint32_t addr_mmu_fault_flag(bool mmu_fault_flag) {
+  return mmu_fault_flag ? (1 << ADDR_MMU_FAULT_FLAG) : 0;
+}
+
+uint8_t select_eeprom_byte(uint32_t output) {
+  return (output >> (selection * 8)) & 0xFF;
+}
+
+void writeInstruction(uint8_t opcode0, uint32_t* microops, size_t num) {
+  printf("Writing instruction into eeprom %d with opcode %d using %d microops.\n", selection, opcode0, num);
+  for (int microop = 0; microop < num; ++microop) {
+    for (int aux = 0; aux < (1 << 4); ++aux) {
+      for (int int_flag = 0; int_flag < 2; ++int_flag) {
+        for (int mmu_fault_flag = 0; mmu_fault_flag < 2; ++mmu_fault_flag) {
+          uint32_t addr = 0;
+          addr |= addr_opcode(opcode0);
+          addr |= addr_aux(aux);
+          addr |= addr_microop(microop);
+          addr |= addr_int_flag(int_flag);
+          addr |= addr_mmu_fault_flag_flag(mmu_fault_flag);
+          CHECK((addr & 0xFFFFFF) == addr);
+          eeprom.writeByte(addr, select_eeprom_byte(microops[microop]));
+        }
+      }
+    }
+  }
+}
+
+#define WRITE_NO_AUX(opcode, instructions...) { \
+  uint32_t microops = {__VA_ARGS__}; \
+  writeInstruction(opcode, &microops, sizeof(microops) / sizeof(microops[0])); \
 }
 
 uint32_t in(int in_plane) {
   uint32_t output = 0;
-  if (in_plane & 1) output |= 1 << CTRL_IN0;
-  if (in_plane & 2) output |= 1 << CTRL_IN1;
-  if (in_plane & 4) output |= 1 << CTRL_IN2;
-  if (in_plane & 8) output |= 1 << CTRL_IN3;
-  if (in_plane & 16) output |= 1 << CTRL_IN4;
+  if (in_plane & 1) output |= 1uL << CTRL_IN0;
+  if (in_plane & 2) output |= 1uL << CTRL_IN1;
+  if (in_plane & 4) output |= 1uL << CTRL_IN2;
+  if (in_plane & 8) output |= 1uL << CTRL_IN3;
+  if (in_plane & 16) output |= 1uL << CTRL_IN4;
   return output;
 }
 
 uint32_t out(int out_plane) {
   uint32_t output = 0;
-  if (out_plane & 1) output |= 1 << CTRL_OUT0;
-  if (out_plane & 2) output |= 1 << CTRL_OUT1;
-  if (out_plane & 4) output |= 1 << CTRL_OUT2;
-  if (out_plane & 8) output |= 1 << CTRL_OUT3;
-  if (out_plane & 16) output |= 1 << CTRL_OUT4;
+  if (out_plane & 1) output |= 1uL << CTRL_OUT0;
+  if (out_plane & 2) output |= 1uL << CTRL_OUT1;
+  if (out_plane & 4) output |= 1uL << CTRL_OUT2;
+  if (out_plane & 8) output |= 1uL << CTRL_OUT3;
+  if (out_plane & 16) output |= 1uL << CTRL_OUT4;
   return output;
 }
 
 uint32_t multi(int multi_plane) {
   uint32_t output = 0;
-  if (multi_plane & 1) output |= 1 << CTRL_MULTI0;
-  if (multi_plane & 2) output |= 1 << CTRL_MULTI1;
-  if (multi_plane & 4) output |= 1 << CTRL_MULTI2;
-  if (multi_plane & 8) output |= 1 << CTRL_MULTI3;
+  if (multi_plane & 1) output |= 1uL << CTRL_MULTI0;
+  if (multi_plane & 2) output |= 1uL << CTRL_MULTI1;
+  if (multi_plane & 4) output |= 1uL << CTRL_MULTI2;
+  if (multi_plane & 8) output |= 1uL << CTRL_MULTI3;
   return output;
 }
 
 uint32_t mlu(int mlu_plane) {
   uint32_t output = 0;
-  if (mlu_plane & 1) output |= 1 << MLU_SEL0;
-  if (mlu_plane & 2) output |= 1 << MLU_SEL1;
-  if (mlu_plane & 4) output |= 1 << MLU_SEL2;
+  if (mlu_plane & 1) output |= 1uL << MLU_SEL0;
+  if (mlu_plane & 2) output |= 1uL << MLU_SEL1;
+  if (mlu_plane & 4) output |= 1uL << MLU_SEL2;
   return output;
 }
 
 uint32_t bus(int bus_plane) {
   uint32_t output = 0;
-  if (bus_plane & 1) output |= 1 << CTRL_BUS0;
-  if (bus_plane & 2) output |= 1 << CTRL_BUS1;
-  if (bus_plane & 4) output |= 1 << CTRL_BUS2;
-  if (bus_plane & 8) output |= 1 << CTRL_BUS3;
-  if (bus_plane & 16) output |= 1 << CTRL_BUS4;
-  if (bus_plane & 32) output |= 1 << CTRL_BUS5;
-  if (bus_plane & 64) output |= 1 << CTRL_BUS6;
-  if (bus_plane & 128) output |= 1 << CTRL_BUS7;
+  if (bus_plane & 1) output |= 1uL << CTRL_BUS0;
+  if (bus_plane & 2) output |= 1uL << CTRL_BUS1;
+  if (bus_plane & 4) output |= 1uL << CTRL_BUS2;
+  if (bus_plane & 8) output |= 1uL << CTRL_BUS3;
+  if (bus_plane & 16) output |= 1uL << CTRL_BUS4;
+  if (bus_plane & 32) output |= 1uL << CTRL_BUS5;
+  if (bus_plane & 64) output |= 1uL << CTRL_BUS6;
+  if (bus_plane & 128) output |= 1uL << CTRL_BUS7;
   return output;
 }
 
 void generateInstructions() {
   // Instruction set:
   // 0: Boot sequence
+  
+  
   // 1: Fetch opcode
-
   // TODO check interrupt, page fault
   // TODO what can AUX be? e.g. for fetch opcode need to be same for all AUX
-  uint32_t microops[] = {
-    // Set AUX opcode to 0
-    bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1),
-    // Load PC into MMU registers
-    out(OUT_N_PC0) | in(IN_N_MMU0),
-    out(OUT_N_PC1) | in(IN_N_MMU1),
-    out(OUT_N_PC2) | in(IN_N_MMU2),
-    // Load new opcode and reset uop counter.
-    out(OUT_N_MMU) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT), 
-  }
+  // WRITE_NO_AUX(1,
+  //   // Set AUX opcode to 0
+  //   bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1),
+  //   // Load PC into MMU registers
+  //   out(OUT_N_PC0) | in(IN_N_MMU0),
+  //   out(OUT_N_PC1) | in(IN_N_MMU1),
+  //   out(OUT_N_PC2) | in(IN_N_MMU2),
+  //   // Load new opcode and reset uop counter.
+  //   out(OUT_N_MMU) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT), 
+  // );
 
   // 2: Page fault
   // 3: Handle interrupt
-
 }
 
-}
+}  // namespace
 
 void runControl() {
   unsigned long start = millis();
   
-  SST39SF040 eeprom;
+  // SST39SF040 eeprom;
 
-  for (uint32_t i = 0; i < 256; ++i) {
-    eeprom.writeByte(i, i % 256);
-  }
+  // for (uint32_t i = 0; i < 256; ++i) {
+  // }
 
-  printf("Written in %ldms\n", millis() - start);
-  // eeprom.print(MAX - 8192, 8192);
-  eeprom.print(0, 256);
+  // printf("Written in %ldms\n", millis() - start);
+  // // eeprom.print(MAX - 8192, 8192);
+  // eeprom.print(0, 256);
 }
