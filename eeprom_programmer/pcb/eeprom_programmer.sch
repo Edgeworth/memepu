@@ -26,7 +26,7 @@ F 3 "~" H 5700 1500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L eeprom_programmer-rescue:74HC595-74xx U1
+L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue U1
 U 1 1 5AD2D7E6
 P 1300 1600
 F 0 "U1" H 1300 2478 50  0000 C CNN
@@ -37,7 +37,7 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 1300 1600 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L eeprom_programmer-rescue:74HC595-74xx U2
+L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue U2
 U 1 1 5AD2D89E
 P 2850 1600
 F 0 "U2" H 2850 2478 50  0000 C CNN
@@ -48,7 +48,7 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 2850 1600 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L eeprom_programmer-rescue:74HC595-74xx U3
+L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue U3
 U 1 1 5AD2D95A
 P 4350 1600
 F 0 "U3" H 4350 2478 50  0000 C CNN
@@ -652,49 +652,78 @@ $EndComp
 $Comp
 L Switch:SW_DIP_x03 SW1
 U 1 1 5AF911FD
-P 1450 6000
-F 0 "SW1" V 1404 6330 50  0000 L CNN
-F 1 "SW_DIP_x03" V 1495 6330 50  0000 L CNN
-F 2 "Button_Switch_THT:SW_DIP_SPSTx03_Slide_9.78x9.8mm_W7.62mm_P2.54mm" H 1450 6000 50  0001 C CNN
-F 3 "" H 1450 6000 50  0001 C CNN
-	1    1450 6000
+P 1300 6350
+F 0 "SW1" V 1254 6680 50  0000 L CNN
+F 1 "SW_DIP_x03" V 1345 6680 50  0000 L CNN
+F 2 "Button_Switch_THT:SW_DIP_SPSTx03_Slide_9.78x9.8mm_W7.62mm_P2.54mm" H 1300 6350 50  0001 C CNN
+F 3 "" H 1300 6350 50  0001 C CNN
+	1    1300 6350
 	0    1    1    0   
 $EndComp
 Wire Wire Line
 	1450 4750 1300 4750
-Wire Wire Line
-	1300 4750 1300 5700
-Wire Wire Line
-	1300 5700 1450 5700
-Wire Wire Line
-	1450 4850 1350 4850
-Wire Wire Line
-	1350 4850 1350 5600
-Wire Wire Line
-	1350 5600 1550 5600
-Wire Wire Line
-	1550 5600 1550 5700
-Wire Wire Line
-	1450 4950 1450 5500
-Wire Wire Line
-	1450 5500 1650 5500
-Wire Wire Line
-	1650 5500 1650 5700
 $Comp
 L power:GND #PWR0126
 U 1 1 5AF916B7
-P 1450 6300
-F 0 "#PWR0126" H 1450 6050 50  0001 C CNN
-F 1 "GND" H 1455 6127 50  0000 C CNN
-F 2 "" H 1450 6300 50  0001 C CNN
-F 3 "" H 1450 6300 50  0001 C CNN
-	1    1450 6300
+P 1300 6650
+F 0 "#PWR0126" H 1300 6400 50  0001 C CNN
+F 1 "GND" H 1305 6477 50  0000 C CNN
+F 2 "" H 1300 6650 50  0001 C CNN
+F 3 "" H 1300 6650 50  0001 C CNN
+	1    1300 6650
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1650 6300 1550 6300
+	1400 6650 1300 6650
 Wire Wire Line
-	1550 6300 1450 6300
-Connection ~ 1550 6300
-Connection ~ 1450 6300
+	1300 4750 1300 6050
+Wire Wire Line
+	1450 4850 1400 4850
+Wire Wire Line
+	1400 4850 1400 6050
+Wire Wire Line
+	1450 4950 1450 5800
+Wire Wire Line
+	1450 6050 1500 6050
+Connection ~ 1300 6650
+$Comp
+L power:+5V #PWR0127
+U 1 1 5B325FE8
+P 1500 6650
+F 0 "#PWR0127" H 1500 6500 50  0001 C CNN
+F 1 "+5V" V 1515 6778 50  0000 L CNN
+F 2 "" H 1500 6650 50  0001 C CNN
+F 3 "" H 1500 6650 50  0001 C CNN
+	1    1500 6650
+	-1   0    0    1   
+$EndComp
+Text Notes 2250 6200 0    50   ~ 0
+Use internal pullups on D11 and D12.\nUse external pull-down on D13\nbecause of attached LED.
+$Comp
+L Device:R R3
+U 1 1 5B3266A6
+P 1900 5800
+F 0 "R3" V 1693 5800 50  0000 C CNN
+F 1 "100K" V 1784 5800 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 1830 5800 50  0001 C CNN
+F 3 "~" H 1900 5800 50  0001 C CNN
+	1    1900 5800
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0128
+U 1 1 5B326728
+P 2050 5800
+F 0 "#PWR0128" H 2050 5550 50  0001 C CNN
+F 1 "GND" H 2055 5627 50  0000 C CNN
+F 2 "" H 2050 5800 50  0001 C CNN
+F 3 "" H 2050 5800 50  0001 C CNN
+	1    2050 5800
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	1750 5800 1450 5800
+Connection ~ 1450 5800
+Wire Wire Line
+	1450 5800 1450 6050
 $EndSCHEMATC
