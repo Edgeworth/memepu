@@ -135,11 +135,11 @@ X ~ 6 300 200 200 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# eeprom_programmer-rescue:74HC595-74xx
+# eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue
 #
-DEF eeprom_programmer-rescue:74HC595-74xx U 0 40 Y Y 1 L N
+DEF eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue U 0 40 Y Y 1 L N
 F0 "U" -300 550 50 H V C CNN
-F1 "eeprom_programmer-rescue:74HC595-74xx" -300 -650 50 H V C CNN
+F1 "eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue" -300 -650 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
