@@ -26,39 +26,6 @@ F 3 "~" H 5700 1500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue U1
-U 1 1 5AD2D7E6
-P 1300 1600
-F 0 "U1" H 1300 2478 50  0000 C CNN
-F 1 "74HC595" H 1300 2387 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 1300 1600 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 1300 1600 50  0001 C CNN
-	1    1300 1600
-	1    0    0    -1  
-$EndComp
-$Comp
-L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue U2
-U 1 1 5AD2D89E
-P 2850 1600
-F 0 "U2" H 2850 2478 50  0000 C CNN
-F 1 "74HC595" H 2850 2387 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 2850 1600 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 2850 1600 50  0001 C CNN
-	1    2850 1600
-	1    0    0    -1  
-$EndComp
-$Comp
-L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue U3
-U 1 1 5AD2D95A
-P 4350 1600
-F 0 "U3" H 4350 2478 50  0000 C CNN
-F 1 "74HC595" H 4350 2387 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 4350 1600 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 4350 1600 50  0001 C CNN
-	1    4350 1600
-	1    0    0    -1  
-$EndComp
-$Comp
 L kicad:AT28C64B U5
 U 1 1 5AD2FB52
 P 5200 4300
@@ -125,45 +92,45 @@ NoConn ~ 1450 3750
 NoConn ~ 2450 4850
 NoConn ~ 2450 4950
 NoConn ~ 2450 4050
-Text Label 1800 1200 0    50   ~ 0
+Text Label 1700 1100 0    50   ~ 0
 A0
-Text Label 1800 1300 0    50   ~ 0
+Text Label 1700 1200 0    50   ~ 0
 A1
-Text Label 1800 1400 0    50   ~ 0
+Text Label 1700 1300 0    50   ~ 0
 A2
-Text Label 1800 1500 0    50   ~ 0
+Text Label 1700 1400 0    50   ~ 0
 A3
-Text Label 1800 1600 0    50   ~ 0
+Text Label 1700 1500 0    50   ~ 0
 A4
-Text Label 1800 1700 0    50   ~ 0
+Text Label 1700 1600 0    50   ~ 0
 A5
-Text Label 1800 1800 0    50   ~ 0
+Text Label 1700 1700 0    50   ~ 0
 A6
-Text Label 1800 1900 0    50   ~ 0
+Text Label 1700 1800 0    50   ~ 0
 A7
-Text Label 3350 1200 0    50   ~ 0
+Text Label 3250 1100 0    50   ~ 0
 A8
-Text Label 3350 1300 0    50   ~ 0
+Text Label 3250 1200 0    50   ~ 0
 A9
-Text Label 3350 1400 0    50   ~ 0
+Text Label 3250 1300 0    50   ~ 0
 A10
-Text Label 3350 1500 0    50   ~ 0
+Text Label 3250 1400 0    50   ~ 0
 A11
-Text Label 3350 1600 0    50   ~ 0
+Text Label 3250 1500 0    50   ~ 0
 A12
-Text Label 3350 1700 0    50   ~ 0
+Text Label 3250 1600 0    50   ~ 0
 A13
-Text Label 3350 1800 0    50   ~ 0
+Text Label 3250 1700 0    50   ~ 0
 A14
-Text Label 3350 1900 0    50   ~ 0
+Text Label 3250 1800 0    50   ~ 0
 A15
-Text Label 4850 1200 0    50   ~ 0
+Text Label 4750 1100 0    50   ~ 0
 A16
-Text Label 4850 1300 0    50   ~ 0
+Text Label 4750 1200 0    50   ~ 0
 A17
-Text Label 4850 1400 0    50   ~ 0
+Text Label 4750 1300 0    50   ~ 0
 A18
-NoConn ~ 4850 2100
+NoConn ~ 4750 2000
 Text Label 3100 3100 2    50   ~ 0
 A0
 Text Label 3100 3200 2    50   ~ 0
@@ -251,37 +218,31 @@ F 3 "~" H 750 5150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1800 2100 2150 2100
+	1950 2000 1950 1100
 Wire Wire Line
-	2150 2100 2150 1200
+	3250 2000 3500 2000
 Wire Wire Line
-	2150 1200 2350 1200
-Wire Wire Line
-	3350 2100 3600 2100
-Wire Wire Line
-	3600 2100 3600 1200
-Wire Wire Line
-	3600 1200 3850 1200
+	3500 2000 3500 1100
 $Comp
 L power:+5V #PWR0101
 U 1 1 5AD320D1
-P 3850 1500
-F 0 "#PWR0101" H 3850 1350 50  0001 C CNN
-F 1 "+5V" V 3865 1628 50  0000 L CNN
-F 2 "" H 3850 1500 50  0001 C CNN
-F 3 "" H 3850 1500 50  0001 C CNN
-	1    3850 1500
+P 3950 1400
+F 0 "#PWR0101" H 3950 1250 50  0001 C CNN
+F 1 "+5V" V 3965 1528 50  0000 L CNN
+F 2 "" H 3950 1400 50  0001 C CNN
+F 3 "" H 3950 1400 50  0001 C CNN
+	1    3950 1400
 	0    -1   -1   0   
 $EndComp
 $Comp
 L power:+5V #PWR0102
 U 1 1 5AD3211A
-P 2350 1500
-F 0 "#PWR0102" H 2350 1350 50  0001 C CNN
-F 1 "+5V" V 2365 1628 50  0000 L CNN
-F 2 "" H 2350 1500 50  0001 C CNN
-F 3 "" H 2350 1500 50  0001 C CNN
-	1    2350 1500
+P 2450 1400
+F 0 "#PWR0102" H 2450 1250 50  0001 C CNN
+F 1 "+5V" V 2465 1528 50  0000 L CNN
+F 2 "" H 2450 1400 50  0001 C CNN
+F 3 "" H 2450 1400 50  0001 C CNN
+	1    2450 1400
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -303,17 +264,17 @@ Text Label 1450 3950 2    50   ~ 0
 SRCLK
 Text Label 800  1400 2    50   ~ 0
 SRCLK
-Text Label 2350 1400 2    50   ~ 0
+Text Label 2450 1300 2    50   ~ 0
 SRCLK
-Text Label 3850 1400 2    50   ~ 0
+Text Label 3950 1300 2    50   ~ 0
 SRCLK
 Text Label 1450 4050 2    50   ~ 0
 RCLK
 Text Label 800  1700 2    50   ~ 0
 RCLK
-Text Label 2350 1700 2    50   ~ 0
+Text Label 2450 1600 2    50   ~ 0
 RCLK
-Text Label 3850 1700 2    50   ~ 0
+Text Label 3950 1600 2    50   ~ 0
 RCLK
 $Comp
 L power:GND #PWR0104
@@ -329,23 +290,23 @@ $EndComp
 $Comp
 L power:GND #PWR0105
 U 1 1 5AD32457
-P 2350 1800
-F 0 "#PWR0105" H 2350 1550 50  0001 C CNN
-F 1 "GND" V 2355 1672 50  0000 R CNN
-F 2 "" H 2350 1800 50  0001 C CNN
-F 3 "" H 2350 1800 50  0001 C CNN
-	1    2350 1800
+P 2450 1700
+F 0 "#PWR0105" H 2450 1450 50  0001 C CNN
+F 1 "GND" V 2455 1572 50  0000 R CNN
+F 2 "" H 2450 1700 50  0001 C CNN
+F 3 "" H 2450 1700 50  0001 C CNN
+	1    2450 1700
 	0    1    1    0   
 $EndComp
 $Comp
 L power:GND #PWR0106
 U 1 1 5AD32478
-P 3850 1800
-F 0 "#PWR0106" H 3850 1550 50  0001 C CNN
-F 1 "GND" V 3855 1672 50  0000 R CNN
-F 2 "" H 3850 1800 50  0001 C CNN
-F 3 "" H 3850 1800 50  0001 C CNN
-	1    3850 1800
+P 3950 1700
+F 0 "#PWR0106" H 3950 1450 50  0001 C CNN
+F 1 "GND" V 3955 1572 50  0000 R CNN
+F 2 "" H 3950 1700 50  0001 C CNN
+F 3 "" H 3950 1700 50  0001 C CNN
+	1    3950 1700
 	0    1    1    0   
 $EndComp
 $Comp
@@ -434,11 +395,11 @@ Wire Wire Line
 	1450 4450 1150 4450
 Wire Wire Line
 	1150 4450 1150 4700
-NoConn ~ 4850 1500
-NoConn ~ 4850 1600
-NoConn ~ 4850 1700
-NoConn ~ 4850 1800
-NoConn ~ 4850 1900
+NoConn ~ 4750 1400
+NoConn ~ 4750 1500
+NoConn ~ 4750 1600
+NoConn ~ 4750 1700
+NoConn ~ 4750 1800
 $Comp
 L power:GND #PWR0111
 U 1 1 5AD33989
@@ -475,34 +436,34 @@ $EndComp
 $Comp
 L power:GND #PWR0114
 U 1 1 5AD33A61
-P 4350 2400
-F 0 "#PWR0114" H 4350 2150 50  0001 C CNN
-F 1 "GND" H 4355 2227 50  0000 C CNN
-F 2 "" H 4350 2400 50  0001 C CNN
-F 3 "" H 4350 2400 50  0001 C CNN
-	1    4350 2400
+P 4350 2200
+F 0 "#PWR0114" H 4350 1950 50  0001 C CNN
+F 1 "GND" H 4355 2027 50  0000 C CNN
+F 2 "" H 4350 2200 50  0001 C CNN
+F 3 "" H 4350 2200 50  0001 C CNN
+	1    4350 2200
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0115
 U 1 1 5AD33A82
-P 2850 2400
-F 0 "#PWR0115" H 2850 2150 50  0001 C CNN
-F 1 "GND" H 2855 2227 50  0000 C CNN
-F 2 "" H 2850 2400 50  0001 C CNN
-F 3 "" H 2850 2400 50  0001 C CNN
-	1    2850 2400
+P 2850 2200
+F 0 "#PWR0115" H 2850 1950 50  0001 C CNN
+F 1 "GND" H 2855 2027 50  0000 C CNN
+F 2 "" H 2850 2200 50  0001 C CNN
+F 3 "" H 2850 2200 50  0001 C CNN
+	1    2850 2200
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0116
 U 1 1 5AD33ADA
-P 1300 2400
-F 0 "#PWR0116" H 1300 2150 50  0001 C CNN
-F 1 "GND" H 1305 2227 50  0000 C CNN
-F 2 "" H 1300 2400 50  0001 C CNN
-F 3 "" H 1300 2400 50  0001 C CNN
-	1    1300 2400
+P 1300 2200
+F 0 "#PWR0116" H 1300 1950 50  0001 C CNN
+F 1 "GND" H 1305 2027 50  0000 C CNN
+F 2 "" H 1300 2200 50  0001 C CNN
+F 3 "" H 1300 2200 50  0001 C CNN
+	1    1300 2200
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -726,4 +687,43 @@ Wire Wire Line
 Connection ~ 1450 5800
 Wire Wire Line
 	1450 5800 1450 6050
+$Comp
+L 74xx:74HC595 U1
+U 1 1 5B34E9D4
+P 1300 1500
+F 0 "U1" H 1300 1500 50  0000 C CNN
+F 1 "74HC595" H 1300 1150 50  0000 C CNN
+F 2 "" H 1300 1500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 1300 1500 50  0001 C CNN
+	1    1300 1500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1700 2000 1950 2000
+$Comp
+L 74xx:74HC595 U2
+U 1 1 5B34F6A3
+P 2850 1500
+F 0 "U2" H 2850 1500 50  0000 C CNN
+F 1 "74HC595" H 2850 1150 50  0000 C CNN
+F 2 "" H 2850 1500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 2850 1500 50  0001 C CNN
+	1    2850 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC595 U3
+U 1 1 5B34F82B
+P 4350 1500
+F 0 "U3" H 4350 1450 50  0000 C CNN
+F 1 "74HC595" H 4350 1200 50  0000 C CNN
+F 2 "" H 4350 1500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 4350 1500 50  0001 C CNN
+	1    4350 1500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1950 1100 2450 1100
+Wire Wire Line
+	3500 1100 3950 1100
 $EndSCHEMATC
