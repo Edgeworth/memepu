@@ -26,39 +26,6 @@ F 3 "~" H 5700 1500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue-eeprom_programmer-rescue U1
-U 1 1 5AD2D7E6
-P -1450 1200
-F 0 "U1" H -1450 2078 50  0000 C CNN
-F 1 "74HC595" H -1450 1987 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H -1450 1200 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H -1450 1200 50  0001 C CNN
-	1    -1450 1200
-	1    0    0    -1  
-$EndComp
-$Comp
-L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue-eeprom_programmer-rescue U2
-U 1 1 5AD2D89E
-P -250 1250
-F 0 "U2" H -250 2128 50  0000 C CNN
-F 1 "74HC595" H -250 2037 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H -250 1250 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H -250 1250 50  0001 C CNN
-	1    -250 1250
-	1    0    0    -1  
-$EndComp
-$Comp
-L eeprom_programmer-rescue:74HC595-74xx-eeprom_programmer-rescue-eeprom_programmer-rescue U3
-U 1 1 5AD2D95A
-P 550 -600
-F 0 "U3" H 550 278 50  0000 C CNN
-F 1 "74HC595" H 550 187 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 550 -600 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT595.pdf" H 550 -600 50  0001 C CNN
-	1    550  -600
-	1    0    0    -1  
-$EndComp
-$Comp
 L kicad:AT28C64B U5
 U 1 1 5AD2FB52
 P 5200 4300
@@ -721,11 +688,11 @@ Connection ~ 1450 5800
 Wire Wire Line
 	1450 5800 1450 6050
 $Comp
-L 74xx:74HC595 U?
+L 74xx:74HC595 U1
 U 1 1 5B34E9D4
 P 1300 1500
-F 0 "U?" H 1300 2278 50  0000 C CNN
-F 1 "74HC595" H 1300 2187 50  0000 C CNN
+F 0 "U1" H 1300 1500 50  0000 C CNN
+F 1 "74HC595" H 1300 1150 50  0000 C CNN
 F 2 "" H 1300 1500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 1300 1500 50  0001 C CNN
 	1    1300 1500
@@ -734,22 +701,22 @@ $EndComp
 Wire Wire Line
 	1700 2000 1950 2000
 $Comp
-L 74xx:74HC595 U?
+L 74xx:74HC595 U2
 U 1 1 5B34F6A3
 P 2850 1500
-F 0 "U?" H 2850 2278 50  0000 C CNN
-F 1 "74HC595" H 2850 2187 50  0000 C CNN
+F 0 "U2" H 2850 1500 50  0000 C CNN
+F 1 "74HC595" H 2850 1150 50  0000 C CNN
 F 2 "" H 2850 1500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 2850 1500 50  0001 C CNN
 	1    2850 1500
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U?
+L 74xx:74HC595 U3
 U 1 1 5B34F82B
 P 4350 1500
-F 0 "U?" H 4350 2278 50  0000 C CNN
-F 1 "74HC595" H 4350 2187 50  0000 C CNN
+F 0 "U3" H 4350 1450 50  0000 C CNN
+F 1 "74HC595" H 4350 1200 50  0000 C CNN
 F 2 "" H 4350 1500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 4350 1500 50  0001 C CNN
 	1    4350 1500

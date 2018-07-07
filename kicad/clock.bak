@@ -268,9 +268,9 @@ F 3 "" H 3100 4250 50  0001 C CNN
 	1    3100 4250
 	0    1    1    0   
 $EndComp
-Text Label 3400 4800 2    50   ~ 0
+Text Label 3400 5300 2    50   ~ 0
 ADJ_CLK
-Text Label 3400 4700 2    50   ~ 0
+Text Label 3400 5400 2    50   ~ 0
 BTN_CLK
 $Comp
 L Device:C_Small C7
@@ -384,7 +384,7 @@ Wire Wire Line
 	8550 2050 8800 2050
 Wire Wire Line
 	8800 2050 8800 2400
-Text Label 3400 4900 2    50   ~ 0
+Text Label 3400 5200 2    50   ~ 0
 375KHZ_CLK
 Wire Wire Line
 	950  6450 1050 6450
@@ -1038,11 +1038,11 @@ F 3 "" H 2650 6600 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Connection ~ 2650 6600
-Text Label 3400 5000 2    50   ~ 0
-750KHZ_CLK
 Text Label 3400 5100 2    50   ~ 0
+750KHZ_CLK
+Text Label 3400 5000 2    50   ~ 0
 1.5MHZ_CLK
-Text Label 3400 5200 2    50   ~ 0
+Text Label 3400 4900 2    50   ~ 0
 3MHZ_CLK
 $Comp
 L 74xx:74HC86 U30
@@ -1201,9 +1201,9 @@ F 3 "~" H 8450 5400 50  0001 C CNN
 	1    8450 5400
 	-1   0    0    -1  
 $EndComp
-Text Label 3400 5400 2    50   ~ 0
+Text Label 3400 4700 2    50   ~ 0
 12MHZ_CLK
-Text Label 3400 5300 2    50   ~ 0
+Text Label 3400 4800 2    50   ~ 0
 6MHZ_CLK
 $Comp
 L 74xx:74LS08 U33
@@ -1713,33 +1713,25 @@ Wire Wire Line
 	1500 1050 1200 1050
 Text Label 1500 1050 2    50   ~ 0
 AC_TR
-Wire Wire Line
-	2750 1750 2750 1850
-Text Label 2750 1850 0    50   ~ 0
+Text Label 2750 1850 3    50   ~ 0
 AC_TR
 Wire Wire Line
 	3000 1250 2750 1250
 Wire Wire Line
 	2750 1250 2500 1250
 Connection ~ 2750 1250
-Wire Wire Line
-	2750 1250 2750 1450
 $Comp
 L Device:R R3
 U 1 1 5ADF2B89
-P 3100 1600
-F 0 "R3" H 3170 1646 50  0000 L CNN
-F 1 "10K" H 3170 1555 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 3030 1600 50  0001 C CNN
-F 3 "~" H 3100 1600 50  0001 C CNN
-	1    3100 1600
+P 2750 1400
+F 0 "R3" H 2820 1446 50  0000 L CNN
+F 1 "10K" H 2820 1355 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 2680 1400 50  0001 C CNN
+F 3 "~" H 2750 1400 50  0001 C CNN
+	1    2750 1400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2750 1450 3100 1450
-Wire Wire Line
-	3100 1750 2750 1750
-Text Notes 2800 1400 0    20   ~ 0
+Text Notes 2900 1950 0    20   ~ 0
 Impose a minimum value on the \nvariable resistor to keep duty \ncycle close to 50%. Current\nvalues give min 0.7 Hz, max 70 Hz.
 Text Label 2500 1050 0    50   ~ 0
 ADJ_CLK
@@ -1808,23 +1800,17 @@ F 3 "" H 1500 1450 50  0001 C CNN
 	1    1500 1450
 	0    -1   -1   0   
 $EndComp
-Connection ~ 2750 1750
-Connection ~ 2750 1450
 $Comp
 L Device:R_Variable R2
 U 1 1 5ADF287B
-P 2750 1600
-F 0 "R2" H 2878 1646 50  0000 L CNN
-F 1 "1M" H 2878 1555 50  0000 L CNN
-F 2 "cpu:Akizuki-Denshi Potentiometer" V 2680 1600 50  0001 C CNN
-F 3 "~" H 2750 1600 50  0001 C CNN
-	1    2750 1600
+P 2750 1700
+F 0 "R2" H 2878 1746 50  0000 L CNN
+F 1 "1M" H 2878 1655 50  0000 L CNN
+F 2 "cpu:Akizuki-Denshi Potentiometer" V 2680 1700 50  0001 C CNN
+F 3 "~" H 2750 1700 50  0001 C CNN
+	1    2750 1700
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2500 1450 2500 1750
-Wire Wire Line
-	2500 1750 2750 1750
 Text Label 12350 1900 2    50   ~ 0
 1.5MHZ_CLK
 Text Label 12950 1800 0    50   ~ 0
@@ -2286,4 +2272,8 @@ Wire Wire Line
 	4150 6650 4400 6650
 Wire Wire Line
 	4150 6750 4400 6750
+Wire Wire Line
+	2750 1850 2500 1850
+Wire Wire Line
+	2500 1850 2500 1450
 $EndSCHEMATC

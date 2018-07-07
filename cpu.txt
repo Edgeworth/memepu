@@ -179,4 +179,6 @@ PINS:
 #### Mouse
 #### VGA
 #### Ethernet
-#### USB mass storage?
+#### USB mass storage/SDCard/MMC - MMC may be simpler
+#### Timer
+#### RS232

@@ -5,6 +5,8 @@
 extern char printf_buf[128];
 extern int selection;
 
+void printTime(unsigned long us);
+
 #define printf(...) do { \
   snprintf(printf_buf, sizeof(printf_buf), __VA_ARGS__); \
   Serial.print(printf_buf); \
@@ -14,7 +16,9 @@ extern int selection;
   unsigned long st = micros(); \
   x; \
   unsigned long en = micros(); \
-  printf("Time for " #x ": %ld\n", en - st); \
+  printf("Time for " #x ": "); \
+  printTime(en - st); \
+  printf("\n"); \
 } while(0)
 
 #define CHECK(x) do { \

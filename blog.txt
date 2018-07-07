@@ -1,12 +1,16 @@
 #### 2nd Board - ideas
-- VGA
-- AUDIO
-- USB - keyboard, mouse
+- see cpu.txt
 
-#### Notes for next version:
+#### Notes for next version / problems that came up
 - Use longer resistor footprints.
 - Use wider tracks... current tracks are kind of weak
-
+- Takes some time for the clock source to be selected on startup for some reason
+ - so 12 MHz from the beginning, but it's not properly started up yet
+ - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
+ - solutions: make it so button clock from the beginning. increase reset timer
+- add power and reset LED ?
+- debug points - vcc, gnd, clk 
+- ZIF sockets for EEPROM programmer and EEPROM slots on CPU
 
 stack pointers
 status/control reg

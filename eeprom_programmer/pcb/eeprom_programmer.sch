@@ -248,21 +248,21 @@ $EndComp
 $Comp
 L power:+5V #PWR0103
 U 1 1 5AD3213B
-P 800 1500
-F 0 "#PWR0103" H 800 1350 50  0001 C CNN
-F 1 "+5V" V 815 1628 50  0000 L CNN
-F 2 "" H 800 1500 50  0001 C CNN
-F 3 "" H 800 1500 50  0001 C CNN
-	1    800  1500
+P 900 1400
+F 0 "#PWR0103" H 900 1250 50  0001 C CNN
+F 1 "+5V" V 915 1528 50  0000 L CNN
+F 2 "" H 900 1400 50  0001 C CNN
+F 3 "" H 900 1400 50  0001 C CNN
+	1    900  1400
 	0    -1   -1   0   
 $EndComp
-Text Label 800  1200 2    50   ~ 0
+Text Label 900  1100 2    50   ~ 0
 SER
 Text Label 1450 3850 2    50   ~ 0
 SER
 Text Label 1450 3950 2    50   ~ 0
 SRCLK
-Text Label 800  1400 2    50   ~ 0
+Text Label 900  1300 2    50   ~ 0
 SRCLK
 Text Label 2450 1300 2    50   ~ 0
 SRCLK
@@ -270,7 +270,7 @@ Text Label 3950 1300 2    50   ~ 0
 SRCLK
 Text Label 1450 4050 2    50   ~ 0
 RCLK
-Text Label 800  1700 2    50   ~ 0
+Text Label 900  1600 2    50   ~ 0
 RCLK
 Text Label 2450 1600 2    50   ~ 0
 RCLK
@@ -279,12 +279,12 @@ RCLK
 $Comp
 L power:GND #PWR0104
 U 1 1 5AD32424
-P 800 1800
-F 0 "#PWR0104" H 800 1550 50  0001 C CNN
-F 1 "GND" V 805 1672 50  0000 R CNN
-F 2 "" H 800 1800 50  0001 C CNN
-F 3 "" H 800 1800 50  0001 C CNN
-	1    800  1800
+P 900 1700
+F 0 "#PWR0104" H 900 1450 50  0001 C CNN
+F 1 "GND" V 905 1572 50  0000 R CNN
+F 2 "" H 900 1700 50  0001 C CNN
+F 3 "" H 900 1700 50  0001 C CNN
+	1    900  1700
 	0    1    1    0   
 $EndComp
 $Comp
