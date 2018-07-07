@@ -268,9 +268,9 @@ F 3 "" H 3100 4250 50  0001 C CNN
 	1    3100 4250
 	0    1    1    0   
 $EndComp
-Text Label 3400 4800 2    50   ~ 0
+Text Label 3400 5300 2    50   ~ 0
 ADJ_CLK
-Text Label 3400 4700 2    50   ~ 0
+Text Label 3400 5400 2    50   ~ 0
 BTN_CLK
 $Comp
 L Device:C_Small C7
@@ -384,7 +384,7 @@ Wire Wire Line
 	8550 2050 8800 2050
 Wire Wire Line
 	8800 2050 8800 2400
-Text Label 3400 4900 2    50   ~ 0
+Text Label 3400 5200 2    50   ~ 0
 375KHZ_CLK
 Wire Wire Line
 	950  6450 1050 6450
@@ -1038,11 +1038,11 @@ F 3 "" H 2650 6600 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Connection ~ 2650 6600
-Text Label 3400 5000 2    50   ~ 0
-750KHZ_CLK
 Text Label 3400 5100 2    50   ~ 0
+750KHZ_CLK
+Text Label 3400 5000 2    50   ~ 0
 1.5MHZ_CLK
-Text Label 3400 5200 2    50   ~ 0
+Text Label 3400 4900 2    50   ~ 0
 3MHZ_CLK
 $Comp
 L 74xx:74HC86 U30
@@ -1201,9 +1201,9 @@ F 3 "~" H 8450 5400 50  0001 C CNN
 	1    8450 5400
 	-1   0    0    -1  
 $EndComp
-Text Label 3400 5400 2    50   ~ 0
+Text Label 3400 4700 2    50   ~ 0
 12MHZ_CLK
-Text Label 3400 5300 2    50   ~ 0
+Text Label 3400 4800 2    50   ~ 0
 6MHZ_CLK
 $Comp
 L 74xx:74LS08 U33
@@ -2276,4 +2276,6 @@ Wire Wire Line
 	2750 1850 2500 1850
 Wire Wire Line
 	2500 1850 2500 1450
+Text Notes 1950 3900 0    50   ~ 0
+Make sure that when the computer\nis turned on, SEL0,1,2 start out\nselecting BTN_CLK so we don't\nget spurious clocks while the\nclock sources are stabilising.
 $EndSCHEMATC

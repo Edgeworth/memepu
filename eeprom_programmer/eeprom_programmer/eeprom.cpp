@@ -9,8 +9,8 @@ enum {
   IO3 = A3,
   IO4 = A4,
   IO5 = A5,
-  IO6 = 11,
-  IO7 = 12,
+  IO6 = 9,
+  IO7 = 10,
   REG_CLK = 4,
   SFT_CLK = 3,
   SER = 2,
@@ -31,7 +31,7 @@ void writeShiftBit(bool b) {
 
 void loadAddress(uint32_t addr) {
   for (int i = 23; i >= 0; --i)
-    writeShiftBit(addr & (1 << i));
+    writeShiftBit(addr & (1uL << i));
   digitalWrite(REG_CLK, HIGH);
   digitalWrite(REG_CLK, LOW);
 }
@@ -60,7 +60,7 @@ void writeIoPins(uint8_t val) {
 
 }
 
-EEPROM::EEPROM(uint32_t delay_us_) : delay_us(delay_us_) {
+EEPROM::EEPROM(uint32_t delay_us_, bool debug_) : delay_us(delay_us_), debug(debug_) {
   // Never changes:
   pinMode(REG_CLK, OUTPUT);
   pinMode(SFT_CLK, OUTPUT);
@@ -110,7 +110,7 @@ void EEPROM::print(uint32_t base, int bytes) {
 
 void EEPROM::writeByte(uint32_t addr, uint8_t val, bool check) {
   updateLed();
-  printf("Writing %02hhX to %08lX\n", val, addr);
+  if (debug) printf("Writing %02hhX to %08lX\n", val, addr);
   setupIOPins(OUTPUT);
 
   loadAddress(addr);
@@ -119,10 +119,12 @@ void EEPROM::writeByte(uint32_t addr, uint8_t val, bool check) {
   delayMicroseconds(1); 
   digitalWrite(NWE, HIGH);
   delayMicroseconds(delay_us);
+  num_bytes_written++;
 
   if (check) {
     setupIOPins(INPUT);
     digitalWrite(NOE, LOW);
+    delayMicroseconds(1);
     uint8_t read_val = readIoPins();
     if (read_val != val) {
       printf("FAILED to write %d at %08lX - read %d\n", val, addr, read_val);
@@ -135,7 +137,7 @@ void EEPROM::writeByte(uint32_t addr, uint8_t val, bool check) {
 void EEPROM::write(uint32_t base, uint8_t* data, int size) {
   if (size == 0) return;
 
-  printf("Writing %d bytes from %08lX.\n", size, base);
+  if (debug) printf("Writing %d bytes from %08lX.\n", size, base);
   uint32_t offset = 0;
   for (int i = 0; i < size; ++i) {
     writeByte(base + offset, data[offset]);
