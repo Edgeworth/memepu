@@ -41,7 +41,7 @@ enum {
   IN_N_B = 2,
   IN_N_M0 = 3,
   IN_N_M1 = 4,
-  IN_N_N2 = 5,
+  IN_N_M2 = 5,
   IN_N_S0 = 6,
   IN_N_S1 = 7,
   IN_N_S2 = 8,
@@ -77,7 +77,7 @@ enum {
   OUT_N_B = 2,
   OUT_N_M0 = 3,
   OUT_N_M1 = 4,
-  OUT_N_N2 = 5,
+  OUT_N_M2 = 5,
   OUT_N_S0 = 6,
   OUT_N_S1 = 7,
   OUT_N_S2 = 8,
@@ -179,18 +179,18 @@ uint32_t addr_microop(int microop) {
 }
 
 uint32_t addr_int_flag(bool int_flag) {
-  return int_flag ? (1 << ADDR_INT_FLAG) : 0;
+  return int_flag ? (1uL << ADDR_INT_FLAG) : 0;
 }
 
 uint32_t addr_mmu_fault_flag(bool mmu_fault_flag) {
-  return mmu_fault_flag ? (1 << ADDR_MMU_FAULT_FLAG) : 0;
+  return mmu_fault_flag ? (1uL << ADDR_MMU_FAULT_FLAG) : 0;
 }
 
 uint8_t select_eeprom_byte(uint32_t output) {
   return (output >> (selection * 8)) & 0xFF;
 }
 
-void writeInstruction(uint8_t opcode0, uint32_t* microops, size_t num) {
+void writeInstruction(uint8_t opcode0, uint32_t* microops, size_t num, SST39SF040& eeprom) {
   printf("Writing instruction into eeprom %d with opcode %d using %d microops.\n", selection, opcode0, num);
   for (int microop = 0; microop < num; ++microop) {
     for (int aux = 0; aux < (1 << 4); ++aux) {
@@ -201,8 +201,8 @@ void writeInstruction(uint8_t opcode0, uint32_t* microops, size_t num) {
           addr |= addr_aux(aux);
           addr |= addr_microop(microop);
           addr |= addr_int_flag(int_flag);
-          addr |= addr_mmu_fault_flag_flag(mmu_fault_flag);
-          CHECK((addr & 0xFFFFFF) == addr);
+          addr |= addr_mmu_fault_flag(mmu_fault_flag);
+          CHECK((addr & 0x03FFFF) == addr);  // Check only 18 bits
           eeprom.writeByte(addr, select_eeprom_byte(microops[microop]));
         }
       }
@@ -210,9 +210,9 @@ void writeInstruction(uint8_t opcode0, uint32_t* microops, size_t num) {
   }
 }
 
-#define WRITE_NO_AUX(opcode, instructions...) { \
-  uint32_t microops = {__VA_ARGS__}; \
-  writeInstruction(opcode, &microops, sizeof(microops) / sizeof(microops[0])); \
+#define WRITE_NO_AUX(eeprom, opcode, ...) { \
+  uint32_t microops[] = {__VA_ARGS__}; \
+  writeInstruction(opcode, microops, sizeof(microops) / sizeof(microops[0]), eeprom); \
 }
 
 uint32_t in(int in_plane) {
@@ -265,11 +265,18 @@ uint32_t bus(int bus_plane) {
   return output;
 }
 
-void generateInstructions() {
+void generateInstructions(SST39SF040& eeprom) {
   // Instruction set:
   // 0: Boot sequence
-  
-  
+  for (int i = 0; i < 255; ++i) {
+    WRITE_NO_AUX(eeprom, i,
+      bus(i) | out(OUT_N_CTRLLOGIC) | in(IN_N_DISP),
+      multi(MULTI_N_OPCODE0_INC),
+      multi(MULTI_N_RESET_UOP_COUNT)
+    );
+  }
+
+
   // 1: Fetch opcode
   // TODO check interrupt, page fault
   // TODO what can AUX be? e.g. for fetch opcode need to be same for all AUX
@@ -281,7 +288,7 @@ void generateInstructions() {
   //   out(OUT_N_PC1) | in(IN_N_MMU1),
   //   out(OUT_N_PC2) | in(IN_N_MMU2),
   //   // Load new opcode and reset uop counter.
-  //   out(OUT_N_MMU) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT), 
+  //   out(OUT_N_MMU) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT),
   // );
 
   // 2: Page fault
@@ -291,14 +298,19 @@ void generateInstructions() {
 }  // namespace
 
 void runControl() {
-  unsigned long start = millis();
-  
-  // SST39SF040 eeprom;
+  SST39SF040 eeprom(false);
+  PROFILE(generateInstructions(eeprom));
+  printf("Wrote %lu bytes.\n", eeprom.numBytesWritten());
+}
 
-  // for (uint32_t i = 0; i < 256; ++i) {
-  // }
-
-  // printf("Written in %ldms\n", millis() - start);
-  // // eeprom.print(MAX - 8192, 8192);
-  // eeprom.print(0, 256);
+void runTest() {
+  SST39SF040 eeprom(false);
+  uint32_t start = 0;
+  uint32_t size = 1;
+  printf("Writing test bytes from %lu to %lu\n", start, start + size);
+  for (uint32_t i = start; i < start+size; ++i) {
+    // eeprom.writeByte(i, 0b11001100);
+    eeprom.writeByte(i, 0b11111111);
+  }
+  printf("Test finished.\n");
 }

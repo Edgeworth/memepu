@@ -3,5 +3,6 @@
 #include "common.h"
 
 void runControl();
+void runTest();
 
 #endif
