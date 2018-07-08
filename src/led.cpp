@@ -1,7 +1,7 @@
 #include "led.h"
-#include "eeprom.h"
 
 namespace {
+
 enum {
   B = 1 << 0,
   BR = 1 << 6,
@@ -64,45 +64,34 @@ int getDigit(uint8_t val, int dig, int base) {
   }
   return val % base;
 }
-}
 
-void runLed(bool debug) {
-  AT28C64 eeprom;
-  // Delay because hardware data protection prevents write for 5 ms on startup.
-  delay(10);
+}  // anonymous
 
-  printf("Writing LED bytes");
-  for (int i = 0; i < 8192; ++i) {
+std::string generateLedData(bool debug) {
+  std::string bindata;
+  for (uint16_t i = 0; i < 8192; ++i) {
     const uint8_t data = buildDataByte(i);
     const int8_t data_signed = *reinterpret_cast<const int8_t*>(&data);
     const uint8_t seg = buildSegByte(i);
     const uint8_t mode = buildModeByte(i);
-    const bool sign = mode & 1;
+    const bool sign = static_cast<const bool>(mode & 1);
     const int base = (mode & (1 << 1)) ? 16 : 10;
     const int place = 3 - seg;  // digits place
     const int digit = getDigit(sign ? abs(data_signed) : data, place, base);
 
-    if (debug) {
-      printf("data %d, signed data %d, place: %d, base: %d, sign: %d, digit: %d\n",
-    	    int(data), int(data_signed), int(place), int(base), int(sign), int(digit));
-    }
     uint8_t val = digit;
     if (digit >= 0) {
-    	if (debug) printf("writing normal digit\n");
     	val = digitToLed(digit);
     } else if (digit == -place && base == 16) {  // (h)FF
-    	if (debug) printf("writing h\n");
     	val = TL | BL | M | BR;
     } else if (digit == -place + 1 && base == 16 && sign && data_signed < 0) {  // (-)hAF
-    	if (debug) printf("writing neg sign (base 16)\n");
     	val = M;
     } else if (digit == -place && base == 10 && sign && data_signed < 0) {  // (-)10
-    	if (debug) printf("writing neg sign (base 10)\n");
     	val = M;
     } else {
-    	if (debug) printf("writing no dig\n");
     	val = 0;
     }
-    eeprom.writeByte(i, val);
+    bindata += val;
   }
+  return bindata;
 }

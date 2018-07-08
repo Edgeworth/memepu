@@ -1,6 +1,11 @@
-#include <iostream>
+#include "common.h"
+#include "led.h"
+#include "control.h"
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+int main(int argc, char* argv[]) {
+  for (int i = 0; i < 3; ++i) {
+    ControlLogic logic(i);
+    std::string filename = std::string("out") + char('0' + i) + ".bin";
+    writeFile(filename, logic.generateControlData());
+  }
 }
