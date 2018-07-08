@@ -1,10 +1,12 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
+
 #include "common.h"
 
 class ControlLogic {
 public:
   explicit ControlLogic(int eeprom_number) : data_(SIZE, 0), eeprom_number_(eeprom_number) {}
+
   std::string generateControlData();
 
 private:
@@ -18,7 +20,7 @@ private:
     data_[addr] = uint8_t((output >> (eeprom_number_ * 8)) & 0xFF);
   }
 
-  void writeInstruction(uint8_t opcode0, uint32_t* microops, size_t num);
+  void writeInstruction(uint8_t opcode0, uint32_t *microops, size_t num);
 };
 
 
