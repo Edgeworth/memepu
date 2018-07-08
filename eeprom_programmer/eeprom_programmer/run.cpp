@@ -4,17 +4,7 @@
 
 void programEeprom() {
   switch (selection) {
-    case 0:
-    case 1:
-    case 2:
-      runControl();
-      break;
-    case 3:
-      runTest();
-      break;
-    case 7:
-      runLed(false);
-      break;
+    // Deprecated.
   }
 }
 

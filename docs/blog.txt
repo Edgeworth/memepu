@@ -1,0 +1,223 @@
+#### 2nd Board - ideas
+- see cpu.txt
+
+#### Notes for next version / problems that came up
+- Use longer resistor footprints.
+- Use wider tracks... current tracks are kind of weak
+- Takes some time for the clock source to be selected on startup for some reason
+ - so 12 MHz from the beginning, but it's not properly started up yet
+ - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
+ - solutions: make it so button clock from the beginning. increase reset timer
+- add power and reset LED ?
+- debug points - vcc, gnd, clk 
+- ZIF sockets for EEPROM programmer and EEPROM slots on CPU
+- use the bigger eeprom (still atmel one - 256) and add another display register, use it to control display output instead of switches.
+stack pointers
+status/control reg
+interrupt reg
+program counter
+display module
+memory module
+opcode register
+MLU
+control logic
+vga
+audio
+
+#### ALU
+Use 4-bit binary counters for add. For subtract, using 2's complement, so:
+-b = ~b + 1
+a - b = a + ~b + 1
+Can create ~b by XORing with SUB flag. Can do +1 by putting SUB flag into carry.
+Needs to access A and B registers all the time, so A and B registers need transceivers.
+
+#### Stack pointer:
+24 bit, needs set, increment, decrement.
+
+Switched from 74hc193 to 74hc191 since 74hc193 requires ripple carry/borrow which is slow. 125 ns latency for 6 chips (5 ripples). 74hc191 can be set up to use some flag. But, need to AND all previous flags together. It doesn't have the nice property the 74161 has where the carry output is only high if the previous carry output is also high.
+
+#### MMU
+3 MMU internal registers for memory. Support mapping an EEPROM in for boot or something.
+
+Protection (currently thinking)
+Task register
+Kernel
+2 MB address space, 1024 byte pages, read write for each one.
+Upon access memory, checks - if check fails, what do? I guess have to abort immediately, could do by resetting the micro-op counter and the opcode ? Alternately, have a page fault control signal.
+
+If reset micro-op counter and opcode, then:
+1. no opportunity for potential cleanup of instruction
+2. Questions about what initial state should do.
+3. Have multiple things asserting control signals. The control logic is latched. Potentially gets complicated to have multiple controllers.
+
+Page fault control flag:
+Can be on any time the MMU has an address the task can't access loaded.
+
+Decision: Use page fault control flag.
+
+Lookup: task id register (8 bit) + 9 bit page id => 8 bits, rw for each one (so 2 bits of addr) 
+
+What happens on interrupt / page fault? Need to set task register to 0 to read kernel memory, but need to know the previous task. Save currently running task in ram? If so, how transfer control back to task. Need specific instruction to set task register then jump? Decision: Store in memory. Then, use specific instruction to set task register and jump at the same time.
+
+#### Control logic
+What if input bus via a register into EEPROM? Then can have potential variable length instructions if run out of opcodes, by making an opcode into an opcode page, and loading next byte into the control register. Can also load Status/Control register into this reg, and do conditional jumps etc. Decision: 4 bit binary counter reading from bus fed into EEPROM (lack of eeprom inputs).
+
+If have stuff that can change on rising edge fed back into EEPROM, control signal output could change multiple times during HIGH clock? e.g. reset micro-up counter on CLK will change output of EEPROM. Reading in new data bus bits to control register may change EEPROM output. Need to latch control logic output.
+
+If add latching to eeprom output, can do control logic stuff on rising edge as well, then can increase frequency? EEPROM would have all the time until the next rising edge to stabilise. Assume 100ns total, gives 10MHz. HOWEVER, need time to output registers onto bus etc, so need to do on falling edge? Options:
+1. Slower clock, latch control on falling edge, AND IN signals on rising edge.
+2. Broken: Latch control on rising edge - need to AND IN signals (if IN signal continuously high need to AND to make sure it pulses), so IN signals need to be asserted earlier + HOLD time etc. Same issue for PRE edge and POST edge action idea
+3. Best soln: Latch on falling edge. AND IN's on rising. May require hold constraints for slower stuff like memory. Can do IN and OUT on same cycle for fast things.
+
+Make control logic like a finite state machine. Opcodes:
+0: Boot sequence
+1: Fetch opcode
+2: Page fault
+3: Handle interrupt
+
+Reset:
+Needs to reset when turn on. Boot sequence: Needs to set PC to a particular value to run bootloader etc. Useful for control logic to output directly onto the bus for this?
+
+Control planes:
+IN plane ANDed with the clock.
+OUT plane not anded.
+CONTROL plane varies.
+
+#### Boot sequence
+Have EEPROM mapped into some high bits in memory (e.g. bit 23 of address space goes to eeprom). Need to make sure PC is set to something initially good - use boot sequence opcode 0.
+
+#### Peripheral interface design
+How to talk with peripherals? Need some kind of polling along bus - e.g. control signals for each peripheral - in, out. On in, peripheral reads data from bus. On out, peripheral may assert bus.
+
+#### Random thoughts
+Trying to decide on LED brightness - use 10k or 1k resistors. If use 1k, then drawing 5mA from ICs, which could be a lot, e.g. clock source can only source 25mA. Went with 5mA for now.
+
+Instead of using falling edge, delay clock slightly for control logic latch? Gives more time (enough time for memory to react in one cycle). Decision: Can't do this, since we need time to write into memory on rising edge. (see maximum safe frequency calculation)
+
+#### Clock source notes
+Pierce oscillator: needs a filter for frequency ( high q value means graph of attenuation is not spread out?) and an amplifier. any noise will start the circuit. can make amplifier by biasing (connect output to input with a 1M resistor) an inverter. inverter provides 180 degree rotation. use capacitors to provide extra 180 degree rotation, so it can constructively interfere.
+
+Considering up to 8 clock sources... would be good for experimentation. Or variable frequency multiplier if that exists?
+
+frequency divider using binary counter or jk flipflops
+
+switching between clock sources can cause glitches. fundamentally this is an issue of the asynchronous input, that isn't synced with the clock. if the clock is low, then the source is switched, the new clock could be high, which would give a short cycle, breaking hold time, setup time constraints. also, during clock setup, maybe the clock takes a while to get running properly. so, xor all clock select inputs. if any of them change, the output of the final xor gate will change. latch this on the falling edge into a flip flop. connect output (A) of flipflop into a xor gate, and rc circuit into a schmitt triggered inverter. if the clock select changes, then until  the RC circuit charges, the output of the inverter will be the same as A. xoring those two will give a low signal while rc is charging, i.e. for a delay after the clock source has changed, then will go high. can AND this with the clock to disable the clock for a timeout on changes. during reset, if we feed the reset signal into the clock select xor gates, we will also disable the clock for a bit on reset, while the state in the computer is reset.
+
+Bit 0 of the bus is LSB.
+
+#### Interrupt design decisions
+Edge triggered - needs D flip-flop for each IRQ line. :
+- Need some way to clock it on the peripheral's demand, otherwise potentially complicated to make peripheral assert the data line long enough. Can miss interrupts if the peripheral asserts the IRQ during the interrupt handler (even though interrupts are disabled, we still need to record them), then the interrupt handler marks the interrupt as handled. Even if the interrupt handler marks the interrupt bit as what the device is currently asserting, timing issues can still happen i.e.: peripheral asserts, ISR started, peripheral asserts again, ISR marks interrupt bit as what the peripheral is currently asserting the line as, which has already gone back to 0, so the second interrupt is missed. Need a counter system to fix this.
+
+Level triggered with ACKs:
+- Each device will assert its interrupt line until it gets an ACK from the CPU via IN/OUT lines to peripherals. The cpu will potentially then read out data (e.g. from keyboard). If there is data remaining, the peripheral can keep its interrupt line asserted. In the case of timer like interrupts, the timer device could keep a count of ack'd timer interrupts and assert the IRQ while the count is positive, or it could just not care, and two timer interrupts very close together could be missed.
+- This also allows some sharing of interrupt lines, then the CPU can poll each device on the same line.
+
+Decision: Go with level triggered.
+
+Software interrupt:
+Can't wire interrupt 0's OUT line to INT0 line, for software interrupt - when running interrupt handle instruction, previous instruction can no longer assert interrupt 0's OUT line, so it will be lost. Alternatively, have a instruction which sets a flag in the status register ('software break'), or jumps to a pre-defined software interrupt handler vector. Decision: Since already need to jump to a pre-defined handler vector for ISR, do the same for software interrupts.
+
+Interrupt enable/disable:
+Can either AND interrupt flag (OR of all interrupts) with enable/disable flag, or check during interrupt handler.
+Checking during the interrupt handler doesn't work, since then the processor would be interrupted on every instruction, as the interrupts would never go away, since they would never be handled, because interrupts are disabled.
+
+Set the interrupt enable/disable flag synchronously, not with the clock, since the control logic eeprom needs time to respond to the update of the interrupt flag, and there is the propogation delay of the OR gates.
+
+#### Maximum safe frequency:
+EEPROM delay: 70ns
+SRAM delay: 70ns
+SRAM write pulse min width: 50ns, so CLK needs to be 50ns HIGH => 100ns period.
+Interrupt flag OR gates propogation delay: 
+ - Max 18ns per, 3 levels of gates => 54 ns. (typical 6ns)
+ - Then need 70ns for EEPROM to update.
+ - Period must be >= 154 ns (typical 88 ns however).
+
+154ns => 6.5 MHz
+
+#### Layout:
+Try #1
+Control logic LEDs were super compressed, and the bank of resistor networks caused so many traces there had to be a lot of vias.
+Length: 83050
+Vias: 869
+Time: 12 hours
+
+Try #2
+Spaced out control logic more, moved resistor networks.
+Length: 79000
+Vias: 729
+Time: 25 minutes
+
+Try #3:
+Moved MLU out of central routing area, to fringes.
+Length: 79680
+Vias: 716
+Time: 20 minutes
+
+Try #4: Made LEDs vertical to give more space between them. Spaced stuff out.
+Length: 78818
+Vias: 667
+Time: 20 min
+Also tried with freeroute:
+
+Try #5: Tried moving whole board - MMU next to registers, since it needs the task register.
+Still a bit spread out (not packed, not optimised);
+Length: 75400
+Vias: 490
+Time: 20 min
+
+Try #6: Relayout user and kernel stack pointers.
+Length: 75700
+Vias: 448
+Time: 20 min
+
+Try #7: Start breaking up control logic and moving it around.
+Length: 84500
+Vias: 300
+Time: 20 min
+
+Try #8: Started moving stuf back in to tidy up
+Length: 81200
+Vias: 426
+Time: 7 min
+
+Decided to remove LEDs.
+Try #9: Removed LEDs
+Length: 65000
+Vias: 250
+Time: 8 min
+
+Try #10: Spaced out IN plane logic and stack pointers
+Length: 64000
+Vias: 260
+Time: 20 min
+
+Try #11: Rearranged stuff
+Length: 65000
+Vias: 220
+Time: 15 min
+
+Try #12: Found a better way to lay out stack pointers.
+Length: 62000
+Vias: 217
+Time: 20 min
+
+Try #13: Swapped stack pointers and alu/mmu - stack pointers now back on the left
+Length: 59000
+Vias: 250
+Time: 20 min
+
+Try #14: Rejigged MMU layout.
+Length: 60000
+Vias: 230
+Time: 1 hour
+
+Try #15: Changed layout of program counter
+Length: 56000
+Vias: 230
+Time: 20 min
+
+Try #16: Finishing up layout. Reduced min track width, clearance, and via size.
+Length: 57000
+Vias: 130
+Time: 1 Hour
