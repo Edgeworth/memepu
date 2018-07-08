@@ -2,6 +2,6 @@
 #define LED_H_
 #include "common.h"
 
-void runLed(bool debug);
+std::string generateLedData();
 
 #endif
