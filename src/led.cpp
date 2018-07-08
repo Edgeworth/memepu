@@ -15,32 +15,32 @@ enum {
 
 uint8_t digitToLed(int digit) {
   constexpr uint8_t map[16] = {
-    T | TL | TR | BL | BR | B,
-    TR | BR,
-    T | TR | M | BL | B,
-    T | TR | M | BR | B,
-    TL | TR | M | BR,
-    T | TL | M | BR | B,
-    T | TL | BL | M | B | BR,
-    T | TR | BR,
-    T | TL | TR | BL | BR | B | M,
-    T | TL | TR | M | BR,
-    T | TL | TR | M | BR | BL,
-    TL | M | BL | B | BR,
-    T | TL | BL | B,
-    TL | M | BL | B | BR,
-    T | M | B | TL | BL,
-    T | M | TL | BL
+      T | TL | TR | BL | BR | B,
+      TR | BR,
+      T | TR | M | BL | B,
+      T | TR | M | BR | B,
+      TL | TR | M | BR,
+      T | TL | M | BR | B,
+      T | TL | BL | M | B | BR,
+      T | TR | BR,
+      T | TL | TR | BL | BR | B | M,
+      T | TL | TR | M | BR,
+      T | TL | TR | M | BR | BL,
+      TL | M | BL | B | BR,
+      T | TL | BL | B,
+      TL | M | BL | B | BR,
+      T | M | B | TL | BL,
+      T | M | TL | BL
   };
   return map[digit];
 }
 
 template<int Size>
-uint8_t buildByte(uint16_t addr, const int(&bits)[Size]) {
+uint8_t buildByte(uint16_t addr, const int(& bits)[Size]) {
   uint8_t byte = 0;
   for (int bit : bits) {
     byte <<= 1;
-    byte |= (bool)(addr & (1uL << bit));
+    byte |= (bool) (addr & (1uL << bit));
   }
   return byte;
 }
@@ -71,7 +71,7 @@ std::string generateLedData(bool debug) {
   std::string bindata;
   for (uint16_t i = 0; i < 8192; ++i) {
     const uint8_t data = buildDataByte(i);
-    const int8_t data_signed = *reinterpret_cast<const int8_t*>(&data);
+    const int8_t data_signed = *reinterpret_cast<const int8_t *>(&data);
     const uint8_t seg = buildSegByte(i);
     const uint8_t mode = buildModeByte(i);
     const bool sign = static_cast<const bool>(mode & 1);
@@ -81,15 +81,15 @@ std::string generateLedData(bool debug) {
 
     uint8_t val = digit;
     if (digit >= 0) {
-    	val = digitToLed(digit);
+      val = digitToLed(digit);
     } else if (digit == -place && base == 16) {  // (h)FF
-    	val = TL | BL | M | BR;
+      val = TL | BL | M | BR;
     } else if (digit == -place + 1 && base == 16 && sign && data_signed < 0) {  // (-)hAF
-    	val = M;
+      val = M;
     } else if (digit == -place && base == 10 && sign && data_signed < 0) {  // (-)10
-    	val = M;
+      val = M;
     } else {
-    	val = 0;
+      val = 0;
     }
     bindata += val;
   }

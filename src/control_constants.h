@@ -1,5 +1,6 @@
 #ifndef SRC_CONTROL_CONSTANTS_H
 #define SRC_CONTROL_CONSTANTS_H
+
 #include "common.h"
 
 // PIN mapping
