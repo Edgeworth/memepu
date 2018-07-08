@@ -6,7 +6,7 @@
   writeInstruction(opcode, microops, sizeof(microops) / sizeof(microops[0])); \
 }
 
-void ControlLogic::writeInstruction(uint8_t opcode0, uint32_t* microops, size_t num) {
+void ControlLogic::writeInstruction(uint8_t opcode0, uint32_t *microops, size_t num) {
   for (int microop = 0; microop < num; ++microop) {
     for (int aux = 0; aux < (1 << 4); ++aux) {
       for (int int_flag = 0; int_flag < 2; ++int_flag) {
@@ -30,9 +30,9 @@ std::string ControlLogic::generateControlData() {
   for (uint8_t i = 0; i < 255; ++i) {
     WRITE_NO_AUX(
         i,
-bus(i) | out(OUT_N_CTRLLOGIC) | in(IN_N_DISP),
-multi(MULTI_N_OPCODE0_INC),
-multi(MULTI_N_RESET_UOP_COUNT)
+        bus(i) | out(OUT_N_CTRLLOGIC) | in(IN_N_DISP),
+        multi(MULTI_N_OPCODE0_INC),
+        multi(MULTI_N_RESET_UOP_COUNT)
     );
   }
 
