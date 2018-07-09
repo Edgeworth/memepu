@@ -1,13 +1,14 @@
-#ifndef CONTROL_H_
-#define CONTROL_H_
+#ifndef MEMEPU_CONTROL_H_
+#define MEMEPU_CONTROL_H_
 
 #include "common.h"
+#include "asm.h"
 
 class ControlLogic {
 public:
   explicit ControlLogic(int eeprom_number) : data_(SIZE, 0), eeprom_number_(eeprom_number) {}
 
-  std::string generateControlData();
+  std::string getBinaryData();
 
 private:
   std::string data_;
@@ -20,7 +21,9 @@ private:
     data_[addr] = uint8_t((output >> (eeprom_number_ * 8)) & 0xFF);
   }
 
-  void writeInstruction(uint8_t opcode0, uint32_t *microops, size_t num);
+  void writeNoAux(Opcode opcode0, uint32_t* microops, int num);
+  void writeAux(Opcode opcode0, int aux, uint32_t* microops, int num);
+  void writeLoadImmediate(Opcode opcode0, int in_signal);
 };
 
 
