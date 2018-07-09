@@ -137,7 +137,7 @@ OUT plane:
 
 ### Instructions
 0 - LOAD from bootloader? / Page fault?
-LDA, LDB, LDC, LDD, OUT - immediate, memory addr, indirect memory addr
+LDA, LDB, OUT - immediate, memory addr, indirect memory addr
 ADD, SUB, MUL, DIV, MOD - A, B
 HLT, RST
 JNZ, JZ, JMP

@@ -1,5 +1,5 @@
-#ifndef SRC_CONTROL_CONSTANTS_H
-#define SRC_CONTROL_CONSTANTS_H
+#ifndef MEMEPU_CONTROL_CONSTANTS_H
+#define MEMEPU_CONTROL_CONSTANTS_H
 
 #include "common.h"
 
@@ -233,4 +233,4 @@ inline uint32_t addr_mmu_fault_flag(bool mmu_fault_flag) {
   return mmu_fault_flag ? (1uL << ADDR_MMU_FAULT_FLAG) : 0;
 }
 
-#endif // SRC_CONTROL_CONSTANTS_H
+#endif // MEMEPU_CONTROL_CONSTANTS_H
