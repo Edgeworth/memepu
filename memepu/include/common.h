@@ -1,10 +1,11 @@
-#ifndef SRC_COMMON_H_
-#define SRC_COMMON_H_
+#ifndef MEMEPU_COMMON_H_
+#define MEMEPU_COMMON_H_
 
 #include <cstdio>
 #include <cstdint>
 #include <string>
 
+std::string readFile(const std::string& filename);
 void writeFile(const std::string& filename, const std::string& data);
 
 #define verify_expr(expr, ...)                        \
@@ -18,4 +19,4 @@ void writeFile(const std::string& filename, const std::string& data);
   } while (0)
 
 
-#endif
+#endif  // MEMEPU_COMMON_H_

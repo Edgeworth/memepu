@@ -67,7 +67,7 @@ int getDigit(uint8_t val, int dig, int base) {
 
 }  // anonymous
 
-std::string generateLedData(bool debug) {
+std::string Led::getBinaryData() {
   std::string bindata;
   for (uint16_t i = 0; i < 8192; ++i) {
     const uint8_t data = buildDataByte(i);
