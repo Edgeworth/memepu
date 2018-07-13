@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 18 35
+Sheet 17 35
 Title ""
 Date ""
 Rev ""
@@ -1343,8 +1343,8 @@ F 3 "" H 3450 5700 50  0001 C CNN
 $EndComp
 Text Notes 5350 3100 0    50   ~ 0
 Use 4-16 line decoder to select\nwhich memory chip to use. 
-Text Notes 7350 6150 0    50   ~ 0
-M20 reads from memory \nmapped eeprom instead.
+Text Notes 7350 6300 0    50   ~ 0
+M20 reads from memory \nmapped eeprom instead.\nNote that ~OE is active low\nso M20 low = read from EEPROM.
 $Comp
 L 74xx:74HC245 U86
 U 1 1 5B0B7D74

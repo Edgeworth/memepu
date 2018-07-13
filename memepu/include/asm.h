@@ -3,6 +3,7 @@
 #include "common.h"
 
 enum class Opcode : uint8_t {
+  MICROOP_RESET_HACK,
   BOOT,
   FETCH,
   PAGE_FAULT,
