@@ -67,7 +67,7 @@ std::string ControlLogic::getBinaryData() {
       Opcode::BOOT,
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
-      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // EEPROM has line 20 low - BUG.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // TODO: EEPROM has line 20 low - BUG.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
