@@ -14,10 +14,11 @@
 - use the bigger eeprom (still atmel one - 256) and add another display register, use it to control display output instead of switches.
 - allow incrementing opcode0/1 at the same time as resetting micro-op counter somehow? although can just use bus output to set opcode, since we always know what our own opcode is
 - strange voltage difference problems - e.g. on trying to load PC0, observed voltage at IN plane decoder is ~1 V, observed at PC0 counters is ~4 V - WAS CAUSED BY using 74157 instead of 74161
-- connect up reset to MICRO_OP RESET as well?
+- connect up reset to MICRO_OP RESET as well? - can solve this by having opcode 0 just reset micro-op counter for each micro-op
 - power on reset
 - move multi to out plane?
 - need to move RAM select on U70 so M20 when HIGH selects rams. Since M20 is connected to OE of eeprom
+- don't need increment for single byte regs, since can just output on bus? e.g. opcode0, 1
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:

@@ -24,6 +24,7 @@ std::unordered_map<std::string, OpcodeData> OPCODE_DATA = {
 }  // namespace
 
 std::string Asm::assembleToBinaryData(const std::string& filedata) {
+  constexpr uint32_t START_OFFSET = 0x0; // TODO: EEPROM has line 20 low - BUG.
   std::istringstream stream(filedata);
   std::string output;
   std::string token;
@@ -34,7 +35,7 @@ std::string Asm::assembleToBinaryData(const std::string& filedata) {
     if (token.back() == ':') {
       label = token.substr(0, token.size() - 1);
       verify_expr(labels.find(label) == labels.end(), "redefinition of label %s", label.c_str());
-      labels[label] = static_cast<uint32_t>(output.size()) + 0x100000;  // TODO: Start offset - make configurable.
+      labels[label] = static_cast<uint32_t>(output.size()) + START_OFFSET;  // TODO: Start offset - make configurable.
       continue;
     }
     auto iter = OPCODE_DATA.find(token);
