@@ -1,4 +1,4 @@
-(kicad_pcb (version 20171130) (host pcbnew "(5.0.0-rc2-198-gb8bbb15aa)")
+(kicad_pcb (version 20171130) (host pcbnew "(5.0.0-rc3-dev-2-g101b68b61)")
 
   (general
     (thickness 1.6)
@@ -18904,13 +18904,13 @@
     )
   )
 
-  (gr_text MMU2 (at 208 147.5 90) (layer F.SilkS) (tstamp 5B5C9B63)
+  (gr_text MMU2 (at 180 147.5 90) (layer F.SilkS) (tstamp 5B5C9B63)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text MMU1 (at 194 147.5 90) (layer F.SilkS) (tstamp 5B5C9B61)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text MMU0 (at 180 147.5 90) (layer F.SilkS)
+  (gr_text MMU0 (at 208 147.5 90) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "SRAM Select" (at 206.5 134) (layer F.SilkS)
