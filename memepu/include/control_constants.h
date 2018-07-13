@@ -144,6 +144,7 @@ enum {
   ADDR_UNUSED = 18,
 };
 
+// TODO: Rewrite this section using magic.
 inline uint32_t in(int in_plane) {
   uint32_t output = 0;
   if (in_plane & 1) output |= 1uL << CTRL_IN0;
@@ -171,6 +172,18 @@ inline uint32_t multi(int multi_plane) {
   if (multi_plane & 4) output |= 1uL << CTRL_MULTI2;
   if (multi_plane & 8) output |= 1uL << CTRL_MULTI3;
   return output;
+}
+
+inline uint8_t multi_from_microop(uint32_t microop) {
+  uint8_t multi = 0;
+  if (microop & (1uL << CTRL_MULTI3)) multi |= 1;
+  multi <<= 1;
+  if (microop & (1uL << CTRL_MULTI2)) multi |= 1;
+  multi <<= 1;
+  if (microop & (1uL << CTRL_MULTI1)) multi |= 1;
+  multi <<= 1;
+  if (microop & (1uL << CTRL_MULTI0)) multi |= 1;
+  return multi;
 }
 
 inline uint32_t mlu(int mlu_plane) {
