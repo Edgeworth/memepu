@@ -20,26 +20,30 @@ void ControlLogic::writeNoAux(Opcode opcode0, uint32_t* microops, int num) {
 
 void ControlLogic::writeAux(Opcode opcode0, int aux, uint32_t* microops, int num) {
   verify_expr(num <= 16, "no more than 16 microops for opcode %d", static_cast<int>(opcode0));
-  for (int microop = 0; microop < 16; ++microop) {
+  for (int microop_idx = 0; microop_idx < 16; ++microop_idx) {
     for (int int_flag = 0; int_flag < 2; ++int_flag) {
       for (int mmu_fault_flag = 0; mmu_fault_flag < 2; ++mmu_fault_flag) {
-        uint32_t addr = 0;
-        addr |= addr_opcode(static_cast<uint8_t>(opcode0));
-        addr |= addr_aux(aux);
-        addr |= addr_microop(microop);
-        addr |= addr_int_flag(static_cast<bool>(int_flag));
-        addr |= addr_mmu_fault_flag(static_cast<bool>(mmu_fault_flag));
         // Verify last micro-op resets micro-op counter, unless it's the final micro-op.
-        if (microop == num - 1 && microop != 15)
-          verify_expr(multi_from_microop(microops[microop]) == MULTI_N_RESET_UOP_COUNT,
+        if (microop_idx == num - 1 && microop_idx != 15)
+          verify_expr(multi_from_microop(microops[microop_idx]) == MULTI_N_RESET_UOP_COUNT,
                       "last micro-op must reset micro-op count, opcode: %d", static_cast<int>(opcode0));
 
         // For unused portions, reset uop count for debug purposes.
-        if (microop < num) put(addr, microops[microop]);
-        else put(addr, multi(MULTI_N_RESET_UOP_COUNT));
+        if (microop_idx < num) write(opcode0, aux, int_flag, mmu_fault_flag, microop_idx, microops[microop_idx]);
+        else write(opcode0, aux, int_flag, mmu_fault_flag, microop_idx, MULTI_N_RESET_UOP_COUNT);
       }
     }
   }
+}
+
+void ControlLogic::write(Opcode opcode0, int aux, int int_flag, int mmu_fault_flag, int microop_idx, uint32_t microop_data) {
+  uint32_t addr = 0;
+  addr |= addr_opcode(static_cast<uint8_t>(opcode0));
+  addr |= addr_aux(aux);
+  addr |= addr_microop(microop_idx);
+  addr |= addr_int_flag(static_cast<bool>(int_flag));
+  addr |= addr_mmu_fault_flag(static_cast<bool>(mmu_fault_flag));
+  put(addr, microop_data);
 }
 
 void ControlLogic::writeLoadImmediate(Opcode opcode0, int in_signal) {
@@ -72,8 +76,6 @@ std::string ControlLogic::getBinaryData() {
   );
 
   // Banned combinations:
-  // TODO: Enforce.
-  // OUT_N_PCx + MULTI_N_PC_INC - probably fine though
   // Last microop resets uop counter. All cases?
 
   // Fetch. Increments PC.
@@ -82,7 +84,8 @@ std::string ControlLogic::getBinaryData() {
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1),  // Reset opcode1
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
-      out(OUT_N_PC2) | in(IN_N_MMU2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      multi(MULTI_N_PC_INC),  // Happens on falling edge, so make sure not to let it affect the load into MMU2.
   // Fetch opcode and reset micro-op counter
       out(OUT_N_MMU) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT),
   );
