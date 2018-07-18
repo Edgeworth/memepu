@@ -18996,7 +18996,7 @@
   (gr_text "Control Bus Output" (at 123.5 13 90) (layer F.SilkS) (tstamp 5B1B2D4E)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text "Interrupt Register" (at 101.5 13 90) (layer F.SilkS) (tstamp 5B1B2D2D)
+  (gr_text "Interrupt Register" (at 90.5 12.5 90) (layer F.SilkS) (tstamp 5B1B2D2D)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "Flag Logic" (at 74 24.5) (layer F.SilkS) (tstamp 5B1B2D3C)
