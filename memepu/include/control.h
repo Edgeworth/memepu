@@ -21,8 +21,12 @@ private:
     data_[addr] = uint8_t((output >> (eeprom_number_ * 8)) & 0xFF);
   }
 
+  // Writers:
   void writeNoAux(Opcode opcode0, uint32_t* microops, int num);
   void writeAux(Opcode opcode0, int aux, uint32_t* microops, int num);
+  void write(Opcode opcode0, int aux, int int_flag, int mmu_flag, int microop_idx, uint32_t microop_data);
+
+  // Instruction helpers:
   void writeLoadImmediate(Opcode opcode0, int in_signal);
 };
 

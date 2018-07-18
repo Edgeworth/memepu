@@ -17,8 +17,10 @@ add_library(memepu_utils
 )
 add_executable(eeprom src/programs/eeprom.cpp)
 add_executable(assembler src/programs/assembler.cpp)
+add_executable(run_test src/programs/test.cpp)
 
 target_link_libraries(eeprom memepu_utils)
 target_link_libraries(assembler memepu_utils)
+target_link_libraries(run_test memepu_utils)
 
 target_include_directories(memepu_utils PUBLIC include)
