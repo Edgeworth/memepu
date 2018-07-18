@@ -715,8 +715,6 @@ Text Label 1850 3550 2    50   ~ 0
 MMU_WRITE_FAULT
 Text Label 9550 6650 2    50   ~ 0
 ~INT_OUT
-Text Label 9550 6750 2    50   ~ 0
-INT_IN_CLK
 Text Label 10300 6000 0    50   ~ 0
 BUS0
 Text Label 10300 6100 0    50   ~ 0
