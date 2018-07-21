@@ -83,14 +83,15 @@ std::string ControlLogic::getBinaryData() {
   // TODO: Loads hard-coded address
   WRITE_NO_AUX(
       Opcode::BOOT,
-      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0) | multi(MULTI_N_SET_INT_ENABLE), // Enable interrupts (TODO)
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0) | multi(MULTI_N_UNSET_INT_ENABLE), // Interrupts disabled by default.
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // TODO: EEPROM has line 20 low - BUG.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
-  // Banned combinations:
+  // Checks:
   // Last microop resets uop counter. All cases?
+  // Using bus() implies OUT_N_CTRLLOGIC
 
   // Fetch. Increments PC.
   WRITE_INT_FLAG(
@@ -120,9 +121,9 @@ std::string ControlLogic::getBinaryData() {
   // TODO: Loads hard-coded address
   WRITE_NO_AUX(
       Opcode::HANDLE_INTERRUPT,
-      bus(0) | in(IN_N_PC0) | multi(MULTI_N_UNSET_INT_ENABLE),  // Disable interrupts.
-      bus(0) | in(IN_N_PC1),
-      bus(4) | in(IN_N_PC2),  // Load 0x040000 = 256K - halfway through EEPROM.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0) | multi(MULTI_N_UNSET_INT_ENABLE),  // Disable interrupts.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
+      bus(4) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // Load 0x040000 = 256K - halfway through EEPROM.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   )
 
@@ -132,13 +133,6 @@ std::string ControlLogic::getBinaryData() {
   writeLoadImmediate(Opcode::LDB_IMM, IN_N_B);
   // LDM0 immediate
   writeLoadImmediate(Opcode::LDM0_IMM, IN_N_M0);
-
-  // LDA_INT
-  WRITE_NO_AUX(
-      Opcode::LDA_INT,
-      out(OUT_N_INTERRUPT) | in(IN_N_A),
-      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
-  );
 
   // ADD
   WRITE_NO_AUX(
@@ -197,6 +191,13 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_A) | in(IN_N_M0),
       out(OUT_N_B) | in(IN_N_A),
       out(OUT_N_M0) | in(IN_N_B),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // LDA_INT
+  WRITE_NO_AUX(
+      Opcode::LDA_INT,
+      out(OUT_N_INTERRUPT) | in(IN_N_A),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
