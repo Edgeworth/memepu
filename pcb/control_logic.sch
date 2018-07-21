@@ -644,7 +644,7 @@ Text HLabel 8750 4000 2    50   Input ~ 0
 Text HLabel 8750 4400 2    50   Input ~ 0
 ~STATUS_OUT_NCLK
 Text HLabel 8750 4500 2    50   Input ~ 0
-~INTERRUPT_OUT_NCLK
+~INT_OUT_NCLK
 Text HLabel 8750 4600 2    50   Input ~ 0
 ~SUM_OUT_NCLK
 Text HLabel 8750 4700 2    50   Input ~ 0

@@ -24,6 +24,7 @@
 - interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch. 
 - need to pulldown interrupt lines to GND? otherwise they will be floating if not connected.
 - peripheral interconnect - has INT_LATCH lines instead of INT lines.
+- Control logic had INTERRUPT_OUT_NCLK but interrupt reg at INT_OUT - not connected.
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
