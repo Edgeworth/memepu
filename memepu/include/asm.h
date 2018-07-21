@@ -15,7 +15,8 @@ enum class Opcode : uint8_t {
   SUB,
   JMP,
   DISPLAY,
-  SWAP
+  SWAP,
+  LDA_INT
 };
 
 class Asm {
