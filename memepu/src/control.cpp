@@ -133,6 +133,13 @@ std::string ControlLogic::getBinaryData() {
   // LDM0 immediate
   writeLoadImmediate(Opcode::LDM0_IMM, IN_N_M0);
 
+  // LDA_INT
+  WRITE_NO_AUX(
+      Opcode::LDA_INT,
+      out(OUT_N_INTERRUPT) | in(IN_N_A),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
   // ADD
   WRITE_NO_AUX(
       Opcode::ADD,
@@ -168,13 +175,13 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
       out(OUT_N_M2) | in(IN_N_PC2),
-      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1writeMicroops  // Go to next part of the instruction.
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
   );
   WRITE_AUX(
       Opcode::JMP,
       1,
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) |
-      multi(MULTI_N_RESET_UOP_COUNTwriteMicroops
+      multi(MULTI_N_RESET_UOP_COUNT)
   );
 
   // DISPLAY
