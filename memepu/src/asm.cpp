@@ -19,6 +19,7 @@ std::unordered_map<std::string, OpcodeData> OPCODE_DATA = {
     {"JMP", {Opcode::JMP, 0, 1}},
     {"DSP", {Opcode::DISPLAY, 0, 0}},
     {"SWP", {Opcode::SWAP, 0, 0}},
+    {"LDINT", {Opcode::LDA_INT, 0, 0}}
 };
 
 }  // namespace
