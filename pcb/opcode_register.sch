@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 28 33
+Sheet 27 33
 Title ""
 Date ""
 Rev ""
@@ -14,19 +14,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-$Comp
-L 74xx:74LS161 U?
-U 1 1 5B0D6B9D
-P 1750 1600
-AR Path="/5B096BDD/5B0D6B9D" Ref="U?"  Part="1" 
-AR Path="/5B0C6DCD/5B0D66CF/5B0D6B9D" Ref="U91"  Part="1" 
-F 0 "U91" H 1750 1550 50  0000 C CNN
-F 1 "74LS161" H 1800 1300 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 1750 1600 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS161" H 1750 1600 50  0001 C CNN
-	1    1750 1600
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:GND #PWR023
 U 1 1 5B0D6BA4
@@ -73,7 +60,6 @@ F 3 "" H 2150 800 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	1950 800  1750 800 
-Connection ~ 1750 800 
 $Comp
 L 74xx:74LS161 U?
 U 1 1 5B0D6BBF
@@ -160,114 +146,82 @@ Text HLabel 1250 1900 0    50   Input ~ 0
 CLK
 Text HLabel 3100 1900 0    50   Input ~ 0
 CLK
-Text HLabel 1250 1700 0    50   Input ~ 0
-OPCODE0_INC
-$Comp
-L power:VCC #PWR016
-U 1 1 5B0D6BFC
-P 1250 1800
-F 0 "#PWR016" H 1250 1650 50  0001 C CNN
-F 1 "VCC" V 1268 1927 50  0000 L CNN
-F 2 "" H 1250 1800 50  0001 C CNN
-F 3 "" H 1250 1800 50  0001 C CNN
-	1    1250 1800
-	0    -1   -1   0   
-$EndComp
 $Comp
 L 74xx:74LS161 U?
 U 1 1 5B0D6CEE
-P 2100 4100
+P 1750 3650
 AR Path="/5B096BDD/5B0D6CEE" Ref="U?"  Part="1" 
 AR Path="/5B0C6DCD/5B0D66CF/5B0D6CEE" Ref="U105"  Part="1" 
-F 0 "U105" H 2100 4050 50  0000 C CNN
-F 1 "74LS161" H 2150 3800 50  0000 C CNN
-F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 2100 4100 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS161" H 2100 4100 50  0001 C CNN
-	1    2100 4100
+F 0 "U105" H 1750 3600 50  0000 C CNN
+F 1 "74LS161" H 1800 3350 50  0000 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 1750 3650 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS161" H 1750 3650 50  0001 C CNN
+	1    1750 3650
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR025
 U 1 1 5B0D6CF5
-P 2100 4900
-F 0 "#PWR025" H 2100 4650 50  0001 C CNN
-F 1 "GND" H 2105 4727 50  0000 C CNN
-F 2 "" H 2100 4900 50  0001 C CNN
-F 3 "" H 2100 4900 50  0001 C CNN
-	1    2100 4900
+P 1750 4450
+F 0 "#PWR025" H 1750 4200 50  0001 C CNN
+F 1 "GND" H 1755 4277 50  0000 C CNN
+F 2 "" H 1750 4450 50  0001 C CNN
+F 3 "" H 1750 4450 50  0001 C CNN
+	1    1750 4450
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:VCC #PWR024
 U 1 1 5B0D6CFB
-P 2100 3300
-F 0 "#PWR024" H 2100 3150 50  0001 C CNN
-F 1 "VCC" H 2117 3473 50  0000 C CNN
-F 2 "" H 2100 3300 50  0001 C CNN
-F 3 "" H 2100 3300 50  0001 C CNN
-	1    2100 3300
+P 1750 2850
+F 0 "#PWR024" H 1750 2700 50  0001 C CNN
+F 1 "VCC" H 1767 3023 50  0000 C CNN
+F 2 "" H 1750 2850 50  0001 C CNN
+F 3 "" H 1750 2850 50  0001 C CNN
+	1    1750 2850
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:C_Small C116
 U 1 1 5B0D6D01
-P 2400 3300
-F 0 "C116" V 2171 3300 50  0000 C CNN
-F 1 "0.1uF" V 2262 3300 50  0000 C CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 2400 3300 50  0001 C CNN
-F 3 "~" H 2400 3300 50  0001 C CNN
-	1    2400 3300
+P 2050 2850
+F 0 "C116" V 1821 2850 50  0000 C CNN
+F 1 "0.1uF" V 1912 2850 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 2050 2850 50  0001 C CNN
+F 3 "~" H 2050 2850 50  0001 C CNN
+	1    2050 2850
 	0    1    1    0   
 $EndComp
 $Comp
 L power:GND #PWR027
 U 1 1 5B0D6D08
-P 2500 3300
-F 0 "#PWR027" H 2500 3050 50  0001 C CNN
-F 1 "GND" V 2505 3172 50  0000 R CNN
-F 2 "" H 2500 3300 50  0001 C CNN
-F 3 "" H 2500 3300 50  0001 C CNN
-	1    2500 3300
+P 2150 2850
+F 0 "#PWR027" H 2150 2600 50  0001 C CNN
+F 1 "GND" V 2155 2722 50  0000 R CNN
+F 2 "" H 2150 2850 50  0001 C CNN
+F 3 "" H 2150 2850 50  0001 C CNN
+	1    2150 2850
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	2300 3300 2100 3300
-Connection ~ 2100 3300
-Text HLabel 1600 3600 0    50   Input ~ 0
+	1950 2850 1750 2850
+Connection ~ 1750 2850
+Text HLabel 1250 3150 0    50   Input ~ 0
 BUS0
-Text HLabel 1600 3700 0    50   Input ~ 0
+Text HLabel 1250 3250 0    50   Input ~ 0
 BUS1
-Text HLabel 1600 3800 0    50   Input ~ 0
+Text HLabel 1250 3350 0    50   Input ~ 0
 BUS2
-Text HLabel 1600 3900 0    50   Input ~ 0
+Text HLabel 1250 3450 0    50   Input ~ 0
 BUS3
-Text HLabel 1600 4100 0    50   Input ~ 0
+Text HLabel 1250 3650 0    50   Input ~ 0
 ~OPCODE1_IN
-Text HLabel 1600 4600 0    50   Input ~ 0
+Text HLabel 1250 4150 0    50   Input ~ 0
 ~RESET
-Text HLabel 1600 4400 0    50   Input ~ 0
+Text HLabel 1250 3950 0    50   Input ~ 0
 CLK
-Text HLabel 1600 4200 0    50   Input ~ 0
-OPCODE1_INC
-$Comp
-L power:VCC #PWR018
-U 1 1 5B0D6D1D
-P 1600 4300
-F 0 "#PWR018" H 1600 4150 50  0001 C CNN
-F 1 "VCC" V 1618 4427 50  0000 L CNN
-F 2 "" H 1600 4300 50  0001 C CNN
-F 3 "" H 1600 4300 50  0001 C CNN
-	1    1600 4300
-	0    -1   -1   0   
-$EndComp
 Text HLabel 3100 1600 0    50   Input ~ 0
 ~OPCODE0_IN
-Text HLabel 3100 1700 0    50   Input ~ 0
-OPCODE0_INC
-Wire Wire Line
-	2250 1600 2250 1800
-Wire Wire Line
-	2250 1800 3100 1800
 Text HLabel 2250 1100 2    50   Input ~ 0
 O0
 Text HLabel 2250 1200 2    50   Input ~ 0
@@ -285,13 +239,96 @@ O6
 Text HLabel 4100 1400 2    50   Input ~ 0
 O7
 NoConn ~ 4100 1600
-NoConn ~ 2600 4100
-Text HLabel 2600 3600 2    50   Input ~ 0
+NoConn ~ 2250 3650
+Text HLabel 2250 3150 2    50   Input ~ 0
 O8
-Text HLabel 2600 3700 2    50   Input ~ 0
+Text HLabel 2250 3250 2    50   Input ~ 0
 O9
-Text HLabel 2600 3800 2    50   Input ~ 0
+Text HLabel 2250 3350 2    50   Input ~ 0
 O10
-Text HLabel 2600 3900 2    50   Input ~ 0
+Text HLabel 2250 3450 2    50   Input ~ 0
 O11
+Text Notes 550  250  0    50   ~ 0
+Use counters here\nsince they are presettable.
+Connection ~ 1750 800 
+$Comp
+L 74xx:74LS161 U?
+U 1 1 5B0D6B9D
+P 1750 1600
+AR Path="/5B096BDD/5B0D6B9D" Ref="U?"  Part="1" 
+AR Path="/5B0C6DCD/5B0D66CF/5B0D6B9D" Ref="U91"  Part="1" 
+F 0 "U91" H 1750 1550 50  0000 C CNN
+F 1 "74LS161" H 1800 1300 50  0000 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 1750 1600 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS161" H 1750 1600 50  0001 C CNN
+	1    1750 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0214
+U 1 1 5B5F39D0
+P 1250 3750
+F 0 "#PWR0214" H 1250 3500 50  0001 C CNN
+F 1 "GND" H 1255 3577 50  0000 C CNN
+F 2 "" H 1250 3750 50  0001 C CNN
+F 3 "" H 1250 3750 50  0001 C CNN
+	1    1250 3750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0215
+U 1 1 5B5F39ED
+P 1250 3850
+F 0 "#PWR0215" H 1250 3600 50  0001 C CNN
+F 1 "GND" H 1255 3677 50  0000 C CNN
+F 2 "" H 1250 3850 50  0001 C CNN
+F 3 "" H 1250 3850 50  0001 C CNN
+	1    1250 3850
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0216
+U 1 1 5B5F3A04
+P 1250 1700
+F 0 "#PWR0216" H 1250 1450 50  0001 C CNN
+F 1 "GND" H 1255 1527 50  0000 C CNN
+F 2 "" H 1250 1700 50  0001 C CNN
+F 3 "" H 1250 1700 50  0001 C CNN
+	1    1250 1700
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0220
+U 1 1 5B5F3A1B
+P 1250 1800
+F 0 "#PWR0220" H 1250 1550 50  0001 C CNN
+F 1 "GND" H 1255 1627 50  0000 C CNN
+F 2 "" H 1250 1800 50  0001 C CNN
+F 3 "" H 1250 1800 50  0001 C CNN
+	1    1250 1800
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0221
+U 1 1 5B5F3A32
+P 3100 1700
+F 0 "#PWR0221" H 3100 1450 50  0001 C CNN
+F 1 "GND" H 3105 1527 50  0000 C CNN
+F 2 "" H 3100 1700 50  0001 C CNN
+F 3 "" H 3100 1700 50  0001 C CNN
+	1    3100 1700
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0222
+U 1 1 5B5F3A49
+P 3100 1800
+F 0 "#PWR0222" H 3100 1550 50  0001 C CNN
+F 1 "GND" H 3105 1627 50  0000 C CNN
+F 2 "" H 3100 1800 50  0001 C CNN
+F 3 "" H 3100 1800 50  0001 C CNN
+	1    3100 1800
+	0    1    1    0   
+$EndComp
+NoConn ~ 2250 1600
 $EndSCHEMATC
