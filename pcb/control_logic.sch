@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:cpu-cache
 EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
@@ -135,17 +134,6 @@ Wire Notes Line
 Text Notes 2650 2950 0    50   ~ 0
 Control word latch
 $Comp
-L Memory_Flash:SST39SF040 U88
-U 1 1 5B0C7203
-P 2200 7000
-F 0 "U88" H 2250 6800 50  0000 C CNN
-F 1 "SST39SF040" H 2300 6600 50  0000 C CNN
-F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 2200 7300 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 2200 7300 50  0001 C CNN
-	1    2200 7000
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:VCC #PWR0357
 U 1 1 5B0C730F
 P 2200 5700
@@ -182,7 +170,6 @@ Wire Wire Line
 	2200 5700 2400 5700
 Wire Wire Line
 	2400 5700 2400 5500
-Connection ~ 2200 5700
 $Comp
 L power:GND #PWR0359
 U 1 1 5B0C740B
@@ -228,17 +215,6 @@ F 3 "" H 1600 8100 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Memory_Flash:SST39SF040 U90
-U 1 1 5B0C7CC2
-P 4000 7000
-F 0 "U90" H 4050 6800 50  0000 C CNN
-F 1 "SST39SF040" H 4100 6600 50  0000 C CNN
-F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 4000 7300 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4000 7300 50  0001 C CNN
-	1    4000 7000
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:VCC #PWR0363
 U 1 1 5B0C7CC9
 P 4000 5700
@@ -275,7 +251,6 @@ Wire Wire Line
 	4000 5700 4200 5700
 Wire Wire Line
 	4200 5700 4200 5500
-Connection ~ 4000 5700
 $Comp
 L power:GND #PWR0365
 U 1 1 5B0C7CDF
@@ -909,17 +884,6 @@ Text Label 2000 11350 2    50   ~ 0
 Text Label 2000 11450 2    50   ~ 0
 ~INT7_IN_NCLK
 NoConn ~ 8200 4200
-$Comp
-L Memory_Flash:SST39SF040 U113
-U 1 1 5B10FF1D
-P 5950 6950
-F 0 "U113" H 6000 6750 50  0000 C CNN
-F 1 "SST39SF040" H 6050 6550 50  0000 C CNN
-F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 5950 7250 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 5950 7250 50  0001 C CNN
-	1    5950 6950
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:VCC #PWR0371
 U 1 1 5B10FF24
@@ -2844,4 +2808,39 @@ Text HLabel 8200 5000 0    50   Input ~ 0
 ~INT7_OUT_NCLK
 NoConn ~ 10050 11750
 NoConn ~ 10600 11650
+$Comp
+L Memory_Flash:SST39SF040 U113
+U 1 1 5B5502C3
+P 5950 6950
+F 0 "U113" H 5950 7050 50  0000 C CNN
+F 1 "SST39SF040" H 6000 6900 50  0000 C CNN
+F 2 "" H 5950 7250 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 5950 7250 50  0001 C CNN
+	1    5950 6950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Memory_Flash:SST39SF040 U90
+U 1 1 5B5526B8
+P 4000 7000
+F 0 "U90" H 4000 7100 50  0000 C CNN
+F 1 "SST39SF040" H 4050 6950 50  0000 C CNN
+F 2 "" H 4000 7300 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 4000 7300 50  0001 C CNN
+	1    4000 7000
+	1    0    0    -1  
+$EndComp
+Connection ~ 4000 5700
+$Comp
+L Memory_Flash:SST39SF040 U88
+U 1 1 5B552AB5
+P 2200 7000
+F 0 "U88" H 2200 7100 50  0000 C CNN
+F 1 "SST39SF040" H 2250 6950 50  0000 C CNN
+F 2 "" H 2200 7300 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 2200 7300 50  0001 C CNN
+	1    2200 7000
+	1    0    0    -1  
+$EndComp
+Connection ~ 2200 5700
 $EndSCHEMATC
