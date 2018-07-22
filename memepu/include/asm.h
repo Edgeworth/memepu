@@ -19,24 +19,25 @@ enum class Opcode : uint8_t {
   JMP,
   DISPLAY,
   SWAP,
-  LDA_INT
+  LDA_INT,
+  DUMP,
+  RETURN_FROM_ISR
 };
 
 class Asm {
 public:
-  Asm(const std::string& data) : data_(data), stream_(data_) {}
+  Asm(const std::string& data) : data_(data) {}
 
   std::string assembleToBinaryData();
 
 private:
   std::string data_;
-  std::istringstream stream_;
   std::map<int, std::string> extents_;
   std::map<std::string, uint32_t> labels_;
   int cur_extent_ = 0;
 
-  void parseLabelOrOffset(const std::string& token);
-  void parseInstruction(const std::string& token);
+  void parseLabelOrOffset(std::string token);
+  void parseInstruction(std::string token, std::istringstream& stream);
   std::string mergeExtents();
 };
 

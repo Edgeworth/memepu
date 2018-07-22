@@ -16,11 +16,34 @@ enum {
 };
 
 const int BUS_PINS[8] = {BUS0, BUS1, BUS2, BUS3, BUS4, BUS5, BUS6, BUS7};
+const int NUM_DUMP_REGS = 12;
+const char* DUMP_STRS[NUM_DUMP_REGS] = {
+  "A", "B", "M0", "M1", "M2", "SUM", "STATUS", "INTERRUPT", "PC0",
+  "PC1", "PC2", "TASK"
+};
+const int RING_SIZE = 64;
 
 volatile uint32_t num_clocks = 0;
+volatile int ring_start = 0;
+volatile int ring_end = 0;  // Exclusive.
+volatile uint8_t ring_buf[RING_SIZE];
 
 void clockIsr() {
   num_clocks += 1;
+}
+
+uint8_t readBus() {
+  uint8_t value = 0;
+  for (int pin : BUS_PINS) {
+    value <<= 1;
+    value |= (digitalRead(pin) == HIGH);
+  }
+  return value;
+}
+
+void peripheralIsr() {
+  digitalWrite(INT_FLAG, LOW);
+  ring_buf[ring_end++] = readBus();
 }
 
 void run() {
@@ -34,11 +57,29 @@ void run() {
   Serial.begin(57600);
 
   attachInterrupt(digitalPinToInterrupt(CLK), clockIsr, RISING);
+  attachInterrupt(digitalPinToInterrupt(INT_IN_CLK), peripheralIsr, RISING);
 
+  unsigned long before = millis();
+  int seq = 0;
   while (1) {
-    // Needs locking but w/e.
-    printf("%lu clocks occurred\n", num_clocks);
-    num_clocks = 0;
-    delay(2000);
+    while (ring_end - ring_start > 0) {
+      if (seq == 0) {
+        printf("Dump (ring buffer size: %d)", int(ring_end - ring_start));
+      }
+
+      printf("%s: %d", DUMP_STRS[seq], ring_buf[ring_start++]);
+      seq = (seq + 1) % NUM_DUMP_REGS;
+    }
+
+    unsigned long now = millis();
+    if (now - before > 2000) {
+      printf("%lu clocks occurred\n", num_clocks);
+      // Needs locking but w/e.
+      num_clocks = 0;
+      before = now;
+
+      // Send interrupt.
+      digitalWrite(INT_FLAG, HIGH);
+    }
   }
 }
