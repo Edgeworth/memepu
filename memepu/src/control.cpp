@@ -121,6 +121,10 @@ std::string ControlLogic::getBinaryData() {
   // TODO: Loads hard-coded address
   WRITE_NO_AUX(
       Opcode::HANDLE_INTERRUPT,
+      // TODO: Should save program-counter to memory not registers.
+      out(OUT_N_PC0) | in(IN_N_M0),
+      out(OUT_N_PC1) | in(IN_N_M1),
+      out(OUT_N_PC2) | in(IN_N_M2),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0) | multi(MULTI_N_UNSET_INT_ENABLE),  // Disable interrupts.
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
       bus(4) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // Load 0x040000 = 256K - halfway through EEPROM.
@@ -198,6 +202,34 @@ std::string ControlLogic::getBinaryData() {
   WRITE_NO_AUX(
       Opcode::LDA_INT,
       out(OUT_N_INTERRUPT) | in(IN_N_A),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // DUMP
+  // Dumps the state to a connected device.
+  WRITE_NO_AUX(
+      Opcode::DUMP,
+      out(OUT_N_A) | in(IN_N_INT0),
+      out(OUT_N_B) | in(IN_N_INT0),
+      out(OUT_N_M0) | in(IN_N_INT0),
+      out(OUT_N_M1) | in(IN_N_INT0),
+      out(OUT_N_M2) | in(IN_N_INT0),
+      out(OUT_N_SUM) | in(IN_N_INT0),
+      out(OUT_N_STATUS) | in(IN_N_INT0),
+      out(OUT_N_INTERRUPT) | in(IN_N_INT0),
+      out(OUT_N_PC0) | in(IN_N_INT0),
+      out(OUT_N_PC1) | in(IN_N_INT0),
+      out(OUT_N_PC2) | in(IN_N_INT0),
+      out(OUT_N_TASK) | in(IN_N_INT0),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // RETURN_FROM_ISR
+  WRITE_NO_AUX(
+      Opcode::RETURN_FROM_ISR,
+      out(OUT_N_M0) | in(IN_N_PC0),  // Restore PC from saved.
+      out(OUT_N_M1) | in(IN_N_PC1),
+      out(OUT_N_M2) | in(IN_N_PC2) | multi(MULTI_N_SET_INT_ENABLE),  // If we are executing this instruction, interrupts were enabled before.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
