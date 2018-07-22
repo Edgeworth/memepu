@@ -42,39 +42,29 @@ constexpr uint32_t START_OFFSET = 0x0; // TODO: EEPROM has line 20 low - BUG.
 }  // namespace
 
 std::string Asm::assembleToBinaryData() {
-  std::string token;
-  std::string line;
-  std::istringstream lines(data_);
-  while (std::getline(lines, line)) {
-    std::istringstream stream(line);
-    if (!(stream >> token))
-      continue;
+  // Do first pass to get label addresses.
+  doPass(true);
+  extents_.clear();
+  cur_extent_ = 0;
 
-    if (token.front() == ';') {
-      continue;  // Skip comments.
-    } else if (token.back() == ':') {
-      parseLabelOrOffset(token);
-    } else {
-      parseInstruction(token, stream);
-    }
-  }
+  doPass(false);
   return mergeExtents();
 }
 
-void Asm::parseLabelOrOffset(std::string token) {
+void Asm::parseLabelOrOffset(std::string token, bool first_pass) {
   std::string label = token.substr(0, token.size() - 1);
 
   int offset = parseHexInt(label);
   if (offset >= 0) {
     cur_extent_ = offset;
   } else {
-    verify_expr(labels_.find(label) == labels_.end(), "redefinition of label %s", label.c_str());
+    verify_expr(!first_pass || labels_.find(label) == labels_.end(), "redefinition of label %s", label.c_str());
     labels_[label] = uint32_t(extents_[cur_extent_].size()) + cur_extent_ + START_OFFSET;
   }
 
 }
 
-void Asm::parseInstruction(std::string token, std::istringstream& stream) {
+void Asm::parseInstruction(std::string token, std::istringstream& stream, bool first_pass) {
   auto iter = OPCODE_DATA.find(token);
   verify_expr(iter != OPCODE_DATA.end(), "unknown instruction %s", token.c_str());
 
@@ -92,10 +82,17 @@ void Asm::parseInstruction(std::string token, std::istringstream& stream) {
   for (int i = 0; i < opcode.label_params; ++i) {
     verify_expr(stream >> label, "expected %d labels after %s", opcode.label_params, token.c_str());
     auto label_iter = labels_.find(label);
-    verify_expr(label_iter != labels_.end(), "unknown label %s", label.c_str());  // TODO: Currently can't reference labels in the future.
-    extents_[cur_extent_] += uint8_t(label_iter->second);
-    extents_[cur_extent_] += uint8_t(label_iter->second >> 8);
-    extents_[cur_extent_] += uint8_t(label_iter->second >> 16);
+    verify_expr(first_pass || label_iter != labels_.end(), "unknown label %s", label.c_str());
+    if (first_pass) {
+      extents_[cur_extent_] += uint8_t(0);
+      extents_[cur_extent_] += uint8_t(0);
+      extents_[cur_extent_] += uint8_t(0);
+    } else {
+      extents_[cur_extent_] += uint8_t(label_iter->second);
+      extents_[cur_extent_] += uint8_t(label_iter->second >> 8);
+      extents_[cur_extent_] += uint8_t(label_iter->second >> 16);
+    }
+
   }
 }
 
@@ -112,4 +109,23 @@ std::string Asm::mergeExtents() {
     output += data;
   }
   return output;
+}
+
+void Asm::doPass(bool first_pass) {
+  std::string token;
+  std::string line;
+  std::istringstream lines(data_);
+  while (std::getline(lines, line)) {
+    std::istringstream stream(line);
+    if (!(stream >> token))
+      continue;
+
+    if (token.front() == ';') {
+      continue;  // Skip comments.
+    } else if (token.back() == ':') {
+      parseLabelOrOffset(token, first_pass);
+    } else {
+      parseInstruction(token, stream, first_pass);
+    }
+  }
 }
