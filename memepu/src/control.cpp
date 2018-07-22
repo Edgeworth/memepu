@@ -314,7 +314,7 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
-      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
+      bus(0b1100) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
   );
   WRITE_AUX_MASK(
       Opcode::JUMP_IF_EQUAL,
