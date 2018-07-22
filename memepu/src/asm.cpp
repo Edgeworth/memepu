@@ -17,7 +17,9 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"JMP", {Opcode::JMP, 0, 1}},
     {"DSP", {Opcode::DISPLAY, 0, 0}},
     {"SWP", {Opcode::SWAP, 0, 0}},
-    {"LDINT", {Opcode::LDA_INT, 0, 0}}
+    {"LDINT", {Opcode::LDA_INT, 0, 0}},
+    {"DMP", {Opcode::DUMP, 0, 0}},
+    {"RFI", {Opcode::RETURN_FROM_ISR, 0, 0}}
 };
 
 int parseHexInt(const std::string& s) {
@@ -35,20 +37,25 @@ constexpr uint32_t START_OFFSET = 0x0; // TODO: EEPROM has line 20 low - BUG.
 
 std::string Asm::assembleToBinaryData() {
   std::string token;
-  std::string label;
-  while (stream_ >> token) {
-    if (token.back() == ':') {
+  std::string line;
+  std::istringstream lines(data_);
+  while (std::getline(lines, line)) {
+    std::istringstream stream(line);
+    if (!(stream >> token))
+      continue;
+
+    if (token.front() == ';') {
+      continue;  // Skip comments.
+    } else if (token.back() == ':') {
       parseLabelOrOffset(token);
     } else {
-      parseInstruction(token);
+      parseInstruction(token, stream);
     }
-
-
   }
   return mergeExtents();
 }
 
-void Asm::parseLabelOrOffset(const std::string& token) {
+void Asm::parseLabelOrOffset(std::string token) {
   std::string label = token.substr(0, token.size() - 1);
 
   int offset = parseHexInt(label);
@@ -61,7 +68,7 @@ void Asm::parseLabelOrOffset(const std::string& token) {
 
 }
 
-void Asm::parseInstruction(const std::string& token) {
+void Asm::parseInstruction(std::string token, std::istringstream& stream) {
   auto iter = OPCODE_DATA.find(token);
   verify_expr(iter != OPCODE_DATA.end(), "unknown instruction %s", token.c_str());
 
@@ -70,14 +77,14 @@ void Asm::parseInstruction(const std::string& token) {
 
   int param;
   for (int i = 0; i < opcode.int_params; ++i) {
-    verify_expr(stream_ >> param, "expected %d ints after %s", opcode.int_params, token.c_str());
+    verify_expr(stream >> param, "expected %d ints after %s", opcode.int_params, token.c_str());
     verify_expr(uint8_t(param) == param, "param must be 8 bit");
     extents_[cur_extent_] += uint8_t(param);
   }
 
   std::string label;
   for (int i = 0; i < opcode.label_params; ++i) {
-    verify_expr(stream_ >> label, "expected %d labels after %s", opcode.label_params, token.c_str());
+    verify_expr(stream >> label, "expected %d labels after %s", opcode.label_params, token.c_str());
     auto label_iter = labels_.find(label);
     verify_expr(label_iter != labels_.end(), "unknown label %s", label.c_str());  // TODO: Currently can't reference labels in the future.
     extents_[cur_extent_] += uint8_t(label_iter->second);
