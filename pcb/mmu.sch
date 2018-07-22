@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:cpu-cache
 EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
@@ -242,17 +241,6 @@ F 2 "" H 5500 4300 50  0001 C CNN
 F 3 "" H 5500 4300 50  0001 C CNN
 	1    5500 4300
 	0    1    1    0   
-$EndComp
-$Comp
-L Memory_Flash:SST39SF040 U71
-U 1 1 5B098A2E
-P 7900 4800
-F 0 "U71" H 7900 5200 50  0000 C CNN
-F 1 "SST39SF040" H 8000 4950 50  0000 C CNN
-F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 7900 5100 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 7900 5100 50  0001 C CNN
-	1    7900 4800
-	1    0    0    -1  
 $EndComp
 Text Label 5500 3700 2    50   ~ 0
 M17
@@ -1564,4 +1552,17 @@ Text HLabel 6750 2050 0    50   Input ~ 0
 MMU1_IN
 Text HLabel 8000 2050 0    50   Input ~ 0
 MMU2_IN
+$Comp
+L Memory_Flash:SST39SF040 U?
+U 1 1 5B553ACE
+P 7900 4800
+AR Path="/5B0C6DCD/5B553ACE" Ref="U?"  Part="1" 
+AR Path="/5B09632F/5B553ACE" Ref="U71"  Part="1" 
+F 0 "U71" H 7900 4900 50  0000 C CNN
+F 1 "SST39SF040" H 7950 4750 50  0000 C CNN
+F 2 "" H 7900 5100 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 7900 5100 50  0001 C CNN
+	1    7900 4800
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
