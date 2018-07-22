@@ -24,6 +24,8 @@ private:
   // Writers:
   void writeNoAux(Opcode opcode0, uint32_t* microops, int num);
   void writeAux(Opcode opcode0, int aux, uint32_t* microops, int num);
+  // Writes given that we only care about the aux bits set in aux_mask.
+  void writeAuxMask(Opcode opcode0, int aux_mask, int aux, uint32_t* microops, int num);
   void writeIntFlag(Opcode opcode0, int int_flag, uint32_t* microops, int num);
   void writeMicroops(Opcode opcode0, int aux, int int_flag, int mmu_fault_flag, uint32_t* microops, int num);
   void write(Opcode opcode0, int aux, int int_flag, int mmu_flag, int microop_idx, uint32_t microop_data);

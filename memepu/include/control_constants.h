@@ -64,8 +64,8 @@ enum {
   IN_N_INT3 = 27,
   IN_N_INT4 = 28,
   IN_N_INT5 = 29,
-  IN_N_INT6 = 30,
-  IN_N_INT7 = 31,
+  IN_N_INT6 = 30,  // TODO: Replaced IN_N_INT7 with this, since can't SUB and load status.
+  IN_N_INT7 = 31,  // TODO: Bodged this to CLK in the interrupt register value.
 };
 
 // OUT plane values

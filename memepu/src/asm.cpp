@@ -19,7 +19,13 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"SWP", {Opcode::SWAP, 0, 0}},
     {"LDINT", {Opcode::LDA_INT, 0, 0}},
     {"DMP", {Opcode::DUMP, 0, 0}},
-    {"RFI", {Opcode::RETURN_FROM_ISR, 0, 0}}
+    {"RFI", {Opcode::RETURN_FROM_ISR, 0, 0}},
+    {"EINT", {Opcode::ENABLE_INTERRUPTS, 0, 0}},
+    {"DINT", {Opcode::DISABLE_INTERRUPTS, 0, 0}},
+    {"IN0", {Opcode::IN_DEV_0, 0, 0}},
+    {"OUT0", {Opcode::OUT_IMM_DEV_0, 1, 0}},
+    {"CMP", {Opcode::COMPARE, 0, 0}},
+    {"JEQ", {Opcode::JUMP_IF_EQUAL, 0, 0}}
 };
 
 int parseHexInt(const std::string& s) {
