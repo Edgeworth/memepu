@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import subprocess
 
 in_labels = [
@@ -9,9 +10,6 @@ in_labels = [
 '~S0_IN_NCLK',
 '~S1_IN_NCLK',
 '~S2_IN_NCLK',
-'~K0_IN_NCLK',
-'~K1_IN_NCLK',
-'~K2_IN_NCLK',
 '~PC0_IN_NCLK',
 '~PC1_IN_NCLK',
 '~PC2_IN_NCLK',
@@ -47,9 +45,6 @@ out_labels = [
 '~S0_OUT_NCLK',
 '~S1_OUT_NCLK',
 '~S2_OUT_NCLK',
-'~K0_OUT_NCLK',
-'~K1_OUT_NCLK',
-'~K2_OUT_NCLK',
 '~PC0_OUT_NCLK',
 '~PC1_OUT_NCLK',
 '~PC2_OUT_NCLK',
@@ -78,12 +73,10 @@ ctrl_labels = [
 '~SET_INT_ENABLE_ASYNC',
 '~UNSET_INT_ENABLE_ASYNC',
 'PC_INC_NCLK',
-'OPCODE0_INC_NCLK', 
+'OPCODE0_INC_NCLK',
 'OPCODE1_INC_NCLK',
 '~SP_INC_NCLK',
 '~SP_DEC_NCLK',
-'~KSP_INC_NCLK',
-'~KSP_DEC_NCLK',
 'ALU_FLAG_SET_NCLK',
 ]
 
@@ -222,7 +215,8 @@ def pcbnew_rotate_leds_after(num):
 		run_xdotool_key(*nav('EmErrEm5DECR5U'))
 
 # pcbnew_rotate_strip_270(7)
-pcbnew_rotate_leds_after(5)
+# pcbnew_rotate_leds_after(5)
+
 # generate_nclk_notters(in_labels)
 
 # in_labels_pos = replace(in_labels, '~', '')
@@ -237,7 +231,7 @@ pcbnew_rotate_leds_after(5)
 
 # generate_labels(test)
 
-# shuffle_pins_up(41, 1)
+shuffle_pins_up(12, 8)
 
 # labels = replace(ctrl_labels + misc_labels, '_NCLK', '')
 # generate_control_logic_leds(labels, replace(labels, '~', ''))
