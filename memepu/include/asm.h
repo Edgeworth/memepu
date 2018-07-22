@@ -42,9 +42,10 @@ private:
   std::map<std::string, uint32_t> labels_;
   int cur_extent_ = 0;
 
-  void parseLabelOrOffset(std::string token);
-  void parseInstruction(std::string token, std::istringstream& stream);
+  void parseLabelOrOffset(std::string token, bool first_pass);
+  void parseInstruction(std::string token, std::istringstream& stream, bool first_pass);
   std::string mergeExtents();
+  void doPass(bool first_pass);
 };
 
 #endif  // MEMEPU_ASM_H_
