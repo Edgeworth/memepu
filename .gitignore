@@ -4,6 +4,9 @@ cmake-build-*/
 *.bak
 *.bck
 *.kicad_pcb-bak
+*.fsx
+*.fsproj
+*.pyc
 *~
 _autosave-*
 *.tmp
