@@ -6,6 +6,11 @@
   writeNoAux(opcode, microops, sizeof(microops) / sizeof(microops[0])); \
 }
 
+#define WRITE_AUX_MASK(opcode, aux_mask, aux, ...) { \
+  uint32_t microops[] = {__VA_ARGS__}; \
+  writeAuxMask(opcode, aux_mask, aux, microops, sizeof(microops) / sizeof(microops[0])); \
+}
+
 #define WRITE_AUX(opcode, aux, ...) { \
   uint32_t microops[] = {__VA_ARGS__}; \
   writeAux(opcode, aux, microops, sizeof(microops) / sizeof(microops[0])); \
@@ -17,9 +22,19 @@
 }
 
 void ControlLogic::writeNoAux(Opcode opcode0, uint32_t* microops, int num) {
-  for (int aux = 0; aux < (1 << 4); ++aux)
-    writeAux(opcode0, aux, microops, num);
+  // Write using aux mask set to not care about any bits.
+  writeAuxMask(opcode0, 0, 0, microops, num);
 }
+
+void ControlLogic::writeAuxMask(Opcode opcode0, int aux_mask, int aux, uint32_t* microops, int num) {
+  verify_expr((~aux_mask & aux) == 0, "no point specifying aux bits for bits not in aux_mask: %x %x", aux_mask, aux);
+  for (int aux_idx = 0; aux_idx < (1 << 4); ++aux_idx) {
+    if ((aux_idx & aux_mask) == aux) {
+      writeAux(opcode0, aux_idx, microops, num);
+    }
+  }
+}
+
 
 void ControlLogic::writeAux(Opcode opcode0, int aux, uint32_t* microops, int num) {
   writeMicroops(opcode0, aux, 0, 0, microops, num);
@@ -230,6 +245,89 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_M0) | in(IN_N_PC0),  // Restore PC from saved.
       out(OUT_N_M1) | in(IN_N_PC1),
       out(OUT_N_M2) | in(IN_N_PC2) | multi(MULTI_N_SET_INT_ENABLE),  // If we are executing this instruction, interrupts were enabled before.
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // ENABLE_INTERRUPTS
+  WRITE_NO_AUX(
+      Opcode::ENABLE_INTERRUPTS,
+      multi(MULTI_N_SET_INT_ENABLE),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // DISABLE_INTERRUPTS
+  WRITE_NO_AUX(
+      Opcode::DISABLE_INTERRUPTS,
+      multi(MULTI_N_UNSET_INT_ENABLE),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // IN_DEV_0
+  WRITE_NO_AUX(
+      Opcode::IN_DEV_0,
+      out(OUT_N_INT0) | in(IN_N_A),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // OUT_IMM_DEV_0
+  WRITE_NO_AUX(
+      Opcode::OUT_IMM_DEV_0,
+      out(OUT_N_PC0) | in(IN_N_MMU0),  // Load next byte to send to device.
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_INT0) | multi(MULTI_N_PC_INC),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // COMPARE
+  // TODO: Can't tell ALU to save flags AND do subtraction at the same time. Need to bodge in a new IN signal for it.
+  WRITE_NO_AUX(
+      Opcode::COMPARE,
+      multi(MULTI_N_SUB) | in(IN_N_INT6),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // JUMP_IF_EQUAL
+  // Bit 0: Interrupt enable
+  // Bit 1: Carry flag
+  // Bit 2: Zero flag
+  WRITE_AUX_MASK(
+      Opcode::JUMP_IF_EQUAL,
+      0b100,  // Only care about zero flag
+      0b000,
+      out(OUT_N_STATUS) | in(IN_N_OPCODE1),
+      multi(MULTI_N_PC_INC), // Not zero, so don't branch. But still consume the address.
+      multi(MULTI_N_PC_INC),
+      multi(MULTI_N_PC_INC),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+  WRITE_AUX_MASK(
+      Opcode::JUMP_IF_EQUAL,
+      0b1100,
+      0b0100,
+      0, // Part of common instruction.
+      // On the second microop, we are here if the zero flag is true. So, branch.
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M0) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M1) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_M0) | in(IN_N_PC0),
+      out(OUT_N_M1) | in(IN_N_PC1),
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
+  );
+  WRITE_AUX_MASK(
+      Opcode::JUMP_IF_EQUAL,
+      0b1100,
+      0b1100,  // Continuation of previous instruction.
+      out(OUT_N_M2) | in(IN_N_PC2),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 

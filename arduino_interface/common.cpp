@@ -21,3 +21,8 @@ void printTime(unsigned long us) {
   Serial.print(time);
   Serial.print(suffixes[suffix]);
 }
+
+void setBusMode(int mode) {
+  for (int bus_pin : BUS_PINS)
+    pinMode(bus_pin, mode);
+}
