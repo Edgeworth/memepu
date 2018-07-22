@@ -19,6 +19,7 @@
 - ~reset wired to frequency dividers - means that if clock source is set to one of those and the computer resets itself, the clock dies and never comes back, since ~reset gets stuck in the control logic latch.
 - interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch.
 - need to pulldown interrupt lines to GND? otherwise they will be floating if not connected.
+- can't save ALU status to register AND tell ALU to do subtraction at the same time. should be on IN plane or something.
 
 Fixed:
 - peripheral interconnect - has INT_LATCH lines instead of INT lines. - FIXED

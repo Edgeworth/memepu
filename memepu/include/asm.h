@@ -21,7 +21,13 @@ enum class Opcode : uint8_t {
   SWAP,
   LDA_INT,
   DUMP,
-  RETURN_FROM_ISR
+  RETURN_FROM_ISR,
+  ENABLE_INTERRUPTS,
+  DISABLE_INTERRUPTS,
+  IN_DEV_0,
+  OUT_IMM_DEV_0,
+  COMPARE,
+  JUMP_IF_EQUAL
 };
 
 class Asm {
