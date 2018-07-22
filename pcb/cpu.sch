@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:cpu-cache
 EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
@@ -1250,22 +1251,6 @@ Text Label 10450 9600 2    50   ~ 0
 BUS6
 Text Label 10450 9700 2    50   ~ 0
 BUS7
-Text Label 10450 9800 2    50   ~ 0
-INT0_LATCH
-Text Label 10450 9900 2    50   ~ 0
-INT1_LATCH
-Text Label 10450 10000 2    50   ~ 0
-INT2_LATCH
-Text Label 10450 10100 2    50   ~ 0
-INT3_LATCH
-Text Label 10450 10200 2    50   ~ 0
-INT4_LATCH
-Text Label 10450 10300 2    50   ~ 0
-INT5_LATCH
-Text Label 10450 10400 2    50   ~ 0
-INT6_LATCH
-Text Label 10450 10500 2    50   ~ 0
-INT7_LATCH
 Text Label 10450 8600 2    50   ~ 0
 VCC
 Text Label 10950 8700 0    50   ~ 0
@@ -1367,4 +1352,20 @@ Wire Wire Line
 	3950 750  3950 950 
 Connection ~ 3950 950 
 NoConn ~ 4950 1250
+Text Label 10450 9800 2    50   ~ 0
+INT0
+Text Label 10450 9900 2    50   ~ 0
+INT1
+Text Label 10450 10000 2    50   ~ 0
+INT2
+Text Label 10450 10100 2    50   ~ 0
+INT3
+Text Label 10450 10200 2    50   ~ 0
+INT4
+Text Label 10450 10300 2    50   ~ 0
+INT5
+Text Label 10450 10400 2    50   ~ 0
+INT6
+Text Label 10450 10500 2    50   ~ 0
+INT7
 $EndSCHEMATC

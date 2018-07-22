@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:cpu-cache
 EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
@@ -138,12 +139,6 @@ Text Label 8550 1350 0    50   ~ 0
 M19
 Text Label 8550 1450 0    50   ~ 0
 M20
-Text Label 8550 1550 0    50   ~ 0
-M21
-Text Label 8550 1650 0    50   ~ 0
-M22
-Text Label 8550 1750 0    50   ~ 0
-M23
 $Comp
 L power:VCC #PWR0289
 U 1 1 5B097BEB
@@ -1565,4 +1560,9 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 7900 5100 50 
 	1    7900 4800
 	1    0    0    -1  
 $EndComp
+NoConn ~ 8550 1550
+NoConn ~ 8550 1650
+NoConn ~ 8550 1750
+Text Notes 7900 2400 0    50   ~ 0
+Currently, top 3 bits of\naddress space not used.
 $EndSCHEMATC
