@@ -9,7 +9,7 @@
  - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
  - solutions: make it so button clock from the beginning. increase reset timer
 - add power and reset LED ?
-- debug points - vcc, gnd, clk 
+- debug points - vcc, gnd, clk
 - ZIF sockets for EEPROM programmer and EEPROM slots on CPU
 - use the bigger eeprom (still atmel one - 256) and add another display register, use it to control display output instead of switches.
 - allow incrementing opcode0/1 at the same time as resetting micro-op counter somehow? although can just use bus output to set opcode, since we always know what our own opcode is
@@ -21,9 +21,11 @@
 - don't need increment for single byte regs, since can just output on bus? e.g. opcode0, 1
 - can get rid of kernel stack pointer, by just saving stack pointer during interrupt handler to set addresses?
 - ~reset wired to frequency dividers - means that if clock source is set to one of those and the computer resets itself, the clock dies and never comes back, since ~reset gets stuck in the control logic latch.
-- interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch. 
+- interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch.
 - need to pulldown interrupt lines to GND? otherwise they will be floating if not connected.
-- peripheral interconnect - has INT_LATCH lines instead of INT lines.
+
+Fixed:
+- peripheral interconnect - has INT_LATCH lines instead of INT lines. - FIXED
 - Control logic had INTERRUPT_OUT_NCLK but interrupt reg at INT_OUT - not connected. - FIXED
 
 #### ALU
@@ -57,7 +59,7 @@ Can be on any time the MMU has an address the task can't access loaded.
 
 Decision: Use page fault control flag.
 
-Lookup: task id register (8 bit) + 9 bit page id => 8 bits, rw for each one (so 2 bits of addr) 
+Lookup: task id register (8 bit) + 9 bit page id => 8 bits, rw for each one (so 2 bits of addr)
 
 What happens on interrupt / page fault? Need to set task register to 0 to read kernel memory, but need to know the previous task. Save currently running task in ram? If so, how transfer control back to task. Need specific instruction to set task register then jump? Decision: Store in memory. Then, use specific instruction to set task register and jump at the same time.
 
@@ -130,7 +132,7 @@ Set the interrupt enable/disable flag synchronously, not with the clock, since t
 EEPROM delay: 70ns
 SRAM delay: 70ns
 SRAM write pulse min width: 50ns, so CLK needs to be 50ns HIGH => 100ns period.
-Interrupt flag OR gates propogation delay: 
+Interrupt flag OR gates propogation delay:
  - Max 18ns per, 3 levels of gates => 54 ns. (typical 6ns)
  - Then need 70ns for EEPROM to update.
  - Period must be >= 154 ns (typical 88 ns however).
