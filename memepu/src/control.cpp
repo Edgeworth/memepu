@@ -51,7 +51,7 @@ void ControlLogic::writeIntFlag(Opcode opcode0, int int_flag, uint32_t* microops
 }
 
 void ControlLogic::writeMicroops(Opcode opcode0, int aux, int int_flag, int mmu_fault_flag, uint32_t* microops, int num) {
-  verify_expr(num <= 16, "no more than 16 microops for opcode %d", static_cast<int>(opcode0));
+  verify_expr(num <= 16, "no more than 16 microops for opcode %d, has %d microops", static_cast<int>(opcode0), num);
   for (int microop_idx = 0; microop_idx < 16; ++microop_idx) {
     // Verify last micro-op resets micro-op counter, unless it's the final micro-op.
     if (microop_idx == num - 1 && microop_idx != 15)
@@ -168,9 +168,8 @@ std::string ControlLogic::getBinaryData() {
   );
 
   // JMP
-  WRITE_AUX(
+  WRITE_NO_AUX(
       Opcode::JMP,
-      0,
       // Load next 3 bytes into M0, M1, M2
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
@@ -188,13 +187,7 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
       out(OUT_N_M2) | in(IN_N_PC2),
-      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
-  );
-  WRITE_AUX(
-      Opcode::JMP,
-      1,
-      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) |
-      multi(MULTI_N_RESET_UOP_COUNT)
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
   // DISPLAY
