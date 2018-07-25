@@ -16,7 +16,7 @@ enum class Opcode : uint8_t {
   LDM0_IMM,
   ADD,
   SUB,
-  JMP,
+  JUMP,
   DISPLAY,
   SWAP,
   LDA_INT,
@@ -27,7 +27,7 @@ enum class Opcode : uint8_t {
   IN_DEV_0,
   OUT_IMM_DEV_0,
   COMPARE,
-  JUMP_IF_EQUAL
+  JUMP_IF_ZERO
 };
 
 class Asm {
