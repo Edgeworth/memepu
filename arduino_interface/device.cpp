@@ -70,10 +70,9 @@ void DeviceConnection::onRisingClock() {
     setBusMode(INPUT);
 }
 
-
 void DeviceConnection::onFallingClock() {
   // Output data to the device if we are asked to and we have something to write.
-  if (digitalRead(INT_OUT_NCLK) == LOW || cur_cmd_ == -1) return;
+  if (digitalRead(INT_OUT_NCLK) == HIGH || cur_cmd_ == -1) return;
 
   setBusMode(OUTPUT);
   writeBus(cur_cmd_);

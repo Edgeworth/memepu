@@ -167,9 +167,9 @@ std::string ControlLogic::getBinaryData() {
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
-  // JMP
+  // JUMP
   WRITE_NO_AUX(
-      Opcode::JMP,
+      Opcode::JUMP,
       // Load next 3 bytes into M0, M1, M2
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
@@ -235,7 +235,7 @@ std::string ControlLogic::getBinaryData() {
   // RETURN_FROM_ISR
   WRITE_NO_AUX(
       Opcode::RETURN_FROM_ISR,
-      out(OUT_N_M0) | in(IN_N_PC0),  // Restore PC from saved.
+      out(OUT_N_M0) | in(IN_N_PC0),  // TODO: This needs to be from memory.
       out(OUT_N_M1) | in(IN_N_PC1),
       out(OUT_N_M2) | in(IN_N_PC2) | multi(MULTI_N_SET_INT_ENABLE),  // If we are executing this instruction, interrupts were enabled before.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
@@ -276,18 +276,18 @@ std::string ControlLogic::getBinaryData() {
   // TODO: Can't tell ALU to save flags AND do subtraction at the same time. Need to bodge in a new IN signal for it.
   WRITE_NO_AUX(
       Opcode::COMPARE,
-      multi(MULTI_N_SUB) | in(IN_N_INT6),
+      multi(MULTI_N_SUB) | in(IN_N_INT6), // TODO: Bodged.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
-  // JUMP_IF_EQUAL
+  // JUMP_IF_ZERO
   // Bit 0: Interrupt enable
   // Bit 1: Carry flag
   // Bit 2: Zero flag
   WRITE_AUX_MASK(
-      Opcode::JUMP_IF_EQUAL,
-      0b100,  // Only care about zero flag
-      0b000,
+      Opcode::JUMP_IF_ZERO,
+      0b0100,  // Only care about zero flag
+      0b0000,
       out(OUT_N_STATUS) | in(IN_N_OPCODE1),
       multi(MULTI_N_PC_INC), // Not zero, so don't branch. But still consume the address.
       multi(MULTI_N_PC_INC),
@@ -295,7 +295,7 @@ std::string ControlLogic::getBinaryData() {
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
   WRITE_AUX_MASK(
-      Opcode::JUMP_IF_EQUAL,
+      Opcode::JUMP_IF_ZERO,
       0b1100,
       0b0100,
       0, // Part of common instruction.
@@ -317,7 +317,7 @@ std::string ControlLogic::getBinaryData() {
       bus(0b1100) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
   );
   WRITE_AUX_MASK(
-      Opcode::JUMP_IF_EQUAL,
+      Opcode::JUMP_IF_ZERO,
       0b1100,
       0b1100,  // Continuation of previous instruction.
       out(OUT_N_M2) | in(IN_N_PC2),
