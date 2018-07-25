@@ -25,8 +25,10 @@ void checkCommandFromHost() {
     serial_buf[serial_idx] = Serial.read();
     if (serial_buf[serial_idx] == '\n') {
       if (serial_buf[0] == 'd') { // Dump
+        printf("Dumping state\n");
         device.sendDumpDataCommand();
       } else if (serial_buf[0] == 'r') { // Read byte
+        printf("Reading data\n");
         device.sendReadByteCommand();
       }
 

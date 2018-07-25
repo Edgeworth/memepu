@@ -14,7 +14,7 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"LDM0", {Opcode::LDM0_IMM, 1, 0}},
     {"ADD", {Opcode::ADD, 0, 0}},
     {"SUB", {Opcode::SUB, 0, 0}},
-    {"JMP", {Opcode::JMP, 0, 1}},
+    {"JMP", {Opcode::JUMP, 0, 1}},
     {"DSP", {Opcode::DISPLAY, 0, 0}},
     {"SWP", {Opcode::SWAP, 0, 0}},
     {"LDINT", {Opcode::LDA_INT, 0, 0}},
@@ -25,7 +25,7 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"IN0", {Opcode::IN_DEV_0, 0, 0}},
     {"OUT0", {Opcode::OUT_IMM_DEV_0, 1, 0}},
     {"CMP", {Opcode::COMPARE, 0, 0}},
-    {"JEQ", {Opcode::JUMP_IF_EQUAL, 0, 0}}
+    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}}
 };
 
 int parseHexInt(const std::string& s) {

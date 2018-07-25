@@ -9,9 +9,13 @@ start: ;Compute fibonnaci
 
 ;Interrupt handler
 040000:
+  LDA 99
+  DSP 
   IN0 ;TODO: clobbers the A register, but whatever.
   CMP ;0 is dump, 1 is read. Compare A to 0.
-  JEQ 
+  JZ dump
+  LDA 1
+  DSP 
   OUT0 75 ;Send bytes
   OUT0 69
   OUT0 75
@@ -19,6 +23,8 @@ start: ;Compute fibonnaci
   OUT0 0
   JMP return
 dump: 
+  LDA 0
+  DSP 
   DMP ;Dump internal state
 return:
   RFI ;Return from interrupt.
