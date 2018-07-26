@@ -11,7 +11,7 @@ start: ;Compute fibonnaci
 040000:
   LDA 99
   DSP 
-  IN0 ;TODO: clobbers the A register, but whatever.
+  IN0
   CMP ;0 is dump, 1 is read. Compare A to 0.
   JZ dump
   LDA 1

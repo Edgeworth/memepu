@@ -22,6 +22,7 @@ public:
 
 private:
   volatile int cur_cmd_ = -1;
+  volatile bool bus_mode_output_ = false;
   int cmd_seq_ = 0;
 };
 

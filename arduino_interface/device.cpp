@@ -41,13 +41,14 @@ void peripheralIsr() {
 void DeviceConnection::checkData() {
   while (ringBufferSize() > 0) {
     if (cur_cmd_ == -1) {
-      printf("Error: Unprompted data from device, size: %d\n", ringBufferSize());
+      printf("Error: Unprompted data from device, size: %d, first byte: %d\n", 
+          ringBufferSize(), int(ring_buf[ring_start]));
     }
 
     if (cur_cmd_ == 0) {
       if (cmd_seq_ == 0)
         printf("Dump (ring buffer size: %d)\n", ringBufferSize());
-      printf("%s: %d\n", DUMP_STRS[cmd_seq_], ring_buf[ring_start]);
+      printf("%s: 0x%02x\n", DUMP_STRS[cmd_seq_], ring_buf[ring_start]);
 
       cmd_seq_ = (cmd_seq_ + 1) % NUM_DUMP_REGS;
       // Dump finished.
@@ -55,6 +56,7 @@ void DeviceConnection::checkData() {
         cur_cmd_ = -1;
     } else if (cur_cmd_ == 1) {
       if (ring_buf[ring_start] == 0) {  // End of data.
+        printf("End of reading data\n");
         cur_cmd_ = -1;
       } else {
         printf("%c", char(ring_buf[ring_start]));
@@ -66,15 +68,21 @@ void DeviceConnection::checkData() {
 }
 
 void DeviceConnection::onRisingClock() {
-  if (cur_cmd_ != -1)
-    setBusMode(INPUT);
 }
 
 void DeviceConnection::onFallingClock() {
   // Output data to the device if we are asked to and we have something to write.
-  if (digitalRead(INT_OUT_NCLK) == HIGH || cur_cmd_ == -1) return;
+  // Don't assert the bus for more than one cycle.
+  if (digitalRead(INT_OUT_NCLK) == HIGH || cur_cmd_ == -1 || bus_mode_output_) {
+    if (bus_mode_output_) {
+      setBusMode(INPUT);
+      bus_mode_output_ = false;
+    }
+    return;
+  }
 
   setBusMode(OUTPUT);
+  bus_mode_output_ = true;
   writeBus(cur_cmd_);
 }
 

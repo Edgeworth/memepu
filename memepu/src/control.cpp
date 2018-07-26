@@ -100,7 +100,7 @@ std::string ControlLogic::getBinaryData() {
       Opcode::BOOT,
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0) | multi(MULTI_N_UNSET_INT_ENABLE), // Interrupts disabled by default.
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
-      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // TODO: EEPROM has line 20 low - BUG.
+      bus(0x10) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // EEPROM mapped in at 0x100000
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
@@ -133,16 +133,25 @@ std::string ControlLogic::getBinaryData() {
   // Page fault
 
   // Handle interrupt
-  // TODO: Loads hard-coded address
+  // TODO: Loads hard-coded address to jump to. Use interrupt vector?
   WRITE_NO_AUX(
       Opcode::HANDLE_INTERRUPT,
-      // TODO: Should save program-counter to memory not registers.
-      out(OUT_N_PC0) | in(IN_N_M0),
-      out(OUT_N_PC1) | in(IN_N_M1),
-      out(OUT_N_PC2) | in(IN_N_M2),
-      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0) | multi(MULTI_N_UNSET_INT_ENABLE),  // Disable interrupts.
+      // Save return address into memory at 0, 1, 2. Save A, B registers. Disable interrupts.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0) | multi(MULTI_N_UNSET_INT_ENABLE),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU1),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU2),
+      out(OUT_N_PC0) | in(IN_N_MMU),
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU),
+      bus(2) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_PC2) | in(IN_N_MMU),
+      bus(3) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_A) | in(IN_N_MMU),
+      bus(4) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_B) | in(IN_N_MMU),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
-      bus(4) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // Load 0x040000 = 256K - halfway through EEPROM.
+      bus(0x14) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // Load 0x140000 = 0x100000 + 0x040000 = 256K, halfway through EEPROM.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   )
 
@@ -235,9 +244,18 @@ std::string ControlLogic::getBinaryData() {
   // RETURN_FROM_ISR
   WRITE_NO_AUX(
       Opcode::RETURN_FROM_ISR,
-      out(OUT_N_M0) | in(IN_N_PC0),  // TODO: This needs to be from memory.
-      out(OUT_N_M1) | in(IN_N_PC1),
-      out(OUT_N_M2) | in(IN_N_PC2) | multi(MULTI_N_SET_INT_ENABLE),  // If we are executing this instruction, interrupts were enabled before.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),  // Load return address into memory at 0, 1, 2. Load A, B registers.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU1),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_PC0),
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_PC1),
+      bus(2) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_PC2),
+      bus(3) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_A),
+      bus(4) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_B) | multi(MULTI_N_SET_INT_ENABLE),  // If we are executing this instruction, interrupts were enabled before.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
@@ -311,7 +329,7 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
       out(OUT_N_PC2) | in(IN_N_MMU2),
-      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),  // TODO: Can optimise by loading last one into PC2, not M2.
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
       bus(0b1100) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
@@ -321,6 +339,26 @@ std::string ControlLogic::getBinaryData() {
       0b1100,
       0b1100,  // Continuation of previous instruction.
       out(OUT_N_M2) | in(IN_N_PC2),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // JUMP_IF_ZERO_HACKED - TODO: Remove.
+  WRITE_NO_AUX(
+      Opcode::JUMP_IF_ZERO_HACKED,
+      0, // First step was to load into Opcode1.
+      multi(MULTI_N_PC_INC), // Not zero, so don't branch. But still consume the address.
+      multi(MULTI_N_PC_INC),
+      multi(MULTI_N_PC_INC),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  WRITE_AUX(
+      Opcode::JUMP_IF_ZERO_HACKED,
+      0,
+      out(OUT_N_), // First step was to load into Opcode1.
+      multi(MULTI_N_PC_INC), // Not zero, so don't branch. But still consume the address.
+      multi(MULTI_N_PC_INC),
+      multi(MULTI_N_PC_INC),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
