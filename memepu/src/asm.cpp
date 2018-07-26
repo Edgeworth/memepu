@@ -25,7 +25,8 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"IN0", {Opcode::IN_DEV_0, 0, 0}},
     {"OUT0", {Opcode::OUT_IMM_DEV_0, 1, 0}},
     {"CMP", {Opcode::COMPARE, 0, 0}},
-    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}}
+//    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}},  TODO: Currently broken.
+    {"JZH", {Opcode::JUMP_IF_ZERO_HACKED, 0, 1}},
 };
 
 int parseHexInt(const std::string& s) {
@@ -37,7 +38,7 @@ int parseHexInt(const std::string& s) {
   return val;
 }
 
-constexpr uint32_t START_OFFSET = 0x0; // TODO: EEPROM has line 20 low - BUG.
+constexpr uint32_t START_OFFSET = 0x100000; // EEPROM mapped into memory from 0x100000
 
 }  // namespace
 
