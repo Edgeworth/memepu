@@ -351,14 +351,24 @@ std::string ControlLogic::getBinaryData() {
       multi(MULTI_N_PC_INC),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
-
   WRITE_AUX(
       Opcode::JUMP_IF_ZERO_HACKED,
       0,
-      out(OUT_N_), // First step was to load into Opcode1.
-      multi(MULTI_N_PC_INC), // Not zero, so don't branch. But still consume the address.
-      multi(MULTI_N_PC_INC),
-      multi(MULTI_N_PC_INC),
+      out(OUT_N_A) | in(IN_N_OPCODE1),
+      out(OUT_N_PC0) | in(IN_N_MMU0),  // If we're still here, it's 0.
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M0) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M1) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_PC2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_M0) | in(IN_N_PC0),
+      out(OUT_N_M1) | in(IN_N_PC1),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 

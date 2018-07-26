@@ -13,7 +13,7 @@ start: ;Compute fibonnaci
   DSP 
   IN0
   CMP ;0 is dump, 1 is read. Compare A to 0.
-  JZ dump
+  JZH dump
   LDA 1
   DSP 
   OUT0 75 ;Send bytes
