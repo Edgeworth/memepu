@@ -63,7 +63,7 @@ void run() {
     checkCommandFromHost();
 
     unsigned long now = millis();
-    if (now - before > 2000) {
+    if (now - before > 5000) {
       printf("%lu clocks occurred\n", num_clocks);
       // Needs locking but w/e.
       num_clocks = 0;

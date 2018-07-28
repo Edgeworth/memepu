@@ -144,6 +144,21 @@ enum {
   ADDR_UNUSED = 18,
 };
 
+enum {
+  MLU_AND,
+  MLU_OR,
+  MLU_XOR,
+  MLU_MUL,
+  MLU_DIV,
+  MLU_MOD,
+  MLU_SINGLE
+};
+
+enum {
+  MLU_SINGLE_NOT,
+  MLU_SINGLE_POPCOUNT
+};
+
 // TODO: Rewrite this section using magic.
 inline uint32_t in(int in_plane) {
   uint32_t output = 0;

@@ -17,7 +17,7 @@ private:
 
   // TODO: do more static analysis
   void put(uint32_t addr, uint32_t output) {
-    verify_expr((addr & 0x03FFFF) == addr, "only 18 bits for address");  // Check only 18 bits
+    verify_expr((addr & 0x03FFFF) == addr, "only 18 bits for address");  // 19th bit not currently used.
     data_[addr] = uint8_t((output >> (eeprom_number_ * 8)) & 0xFF);
   }
 

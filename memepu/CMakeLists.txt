@@ -14,6 +14,8 @@ add_library(memepu_utils
     include/control_constants.h
     src/led.cpp
     include/led.h
+    src/mlu.cpp
+    include/mlu.h
 )
 add_executable(eeprom src/programs/eeprom.cpp)
 add_executable(assembler src/programs/assembler.cpp)
