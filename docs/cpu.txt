@@ -68,7 +68,8 @@ Need boot eeprom mapped into memory. Memory protection. Both read and write perm
 - MMU_CONTROL_OUT
 
 #### MLU
-Ops: AND, OR, NOT, XOR, POPCOUNT, MUL, DIV, MOD - lshift and rshift implemented as MUL and DIV.
+Two byte ops: AND, OR, XOR, MUL, DIV, MOD, SINGLE - shifts implemented as MUL and DIV.
+One byte ops: NOT, POPCOUNT, math functions?
 
 - MLU out
 - 3 bits for operation select

@@ -101,7 +101,12 @@ std::string ControlLogic::getBinaryData() {
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0) | multi(MULTI_N_UNSET_INT_ENABLE), // Interrupts disabled by default.
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
       bus(0x10) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // EEPROM mapped in at 0x100000
-      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_TASK),
+      // Set up the memory protection stuff before fetching.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1),  // Reset opcode1
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_A),  // SETUP_MEMORY_PROTECTION expects A to be 0.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_M0),  // Set everything to 0 - i.e. task 0 can do anything.
+      bus(static_cast<uint8_t>(Opcode::SETUP_MEMORY_PROTECTION)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
   // Checks:
@@ -134,9 +139,10 @@ std::string ControlLogic::getBinaryData() {
 
   // Handle interrupt
   // TODO: Loads hard-coded address to jump to. Use interrupt vector?
-  WRITE_NO_AUX(
+  WRITE_AUX(
       Opcode::HANDLE_INTERRUPT,
-      // Save return address into memory at 0, 1, 2. Save A, B registers. Disable interrupts.
+      0,
+      // Save return address into memory at 0, 1, 2. Save A, B, TASK registers. Disable interrupts.
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0) | multi(MULTI_N_UNSET_INT_ENABLE),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU1),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU2),
@@ -149,12 +155,19 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_A) | in(IN_N_MMU),
       bus(4) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
       out(OUT_N_B) | in(IN_N_MMU),
+      bus(5) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_TASK) | in(IN_N_MMU),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_TASK),  // TASK = 0.
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1),  // Continue instruction.
+  )
+  WRITE_AUX(
+      Opcode::HANDLE_INTERRUPT,
+      1,
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
       bus(0x14) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // Load 0x140000 = 0x100000 + 0x040000 = 256K, halfway through EEPROM.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
-  )
-
+  );
   // LDA immediate
   writeLoadImmediate(Opcode::LDA_IMM, IN_N_A);
   // LDB immediate
@@ -244,7 +257,7 @@ std::string ControlLogic::getBinaryData() {
   // RETURN_FROM_ISR
   WRITE_NO_AUX(
       Opcode::RETURN_FROM_ISR,
-      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),  // Load return address into memory at 0, 1, 2. Load A, B registers.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),  // Load return address into memory at 0, 1, 2. Load A, B, TASK registers.
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU1),
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU2),
       out(OUT_N_MMU) | in(IN_N_PC0),
@@ -255,7 +268,9 @@ std::string ControlLogic::getBinaryData() {
       bus(3) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
       out(OUT_N_MMU) | in(IN_N_A),
       bus(4) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
-      out(OUT_N_MMU) | in(IN_N_B) | multi(MULTI_N_SET_INT_ENABLE),  // If we are executing this instruction, interrupts were enabled before.
+      out(OUT_N_MMU) | in(IN_N_B),
+      bus(5) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_TASK) | multi(MULTI_N_SET_INT_ENABLE),  // If we are executing this instruction, interrupts were enabled before.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
@@ -372,5 +387,32 @@ std::string ControlLogic::getBinaryData() {
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
+  // SETUP_MEMORY_PROTECTION
+  // Write the contents of M0 into the memory protection data for the current task. Expects A to be 0.
+  // Set the page protection bytes to the contents of M0.
+  WRITE_NO_AUX(
+      Opcode::SETUP_MEMORY_PROTECTION,
+      bus(1 << 4) | out(OUT_N_CTRLLOGIC) | in(IN_N_B),
+      mlu(MLU_MUL) | out(OUT_N_MLU) | in(IN_N_MMU1),  // Load low 4 bits of A into high 4 bits of MMU1, by shifting up 4.
+      mlu(MLU_DIV) | out(OUT_N_MLU) | in(IN_N_MMU2),  // Load high 4 bits of A into low 4 bits of MMU2, by shifting down 4. 5th bit of MMU2 is 0.
+      out(OUT_N_M0) | in(IN_N_MMU_CONTROL),
+      out(OUT_N_A) | in(IN_N_M1),  // Save A.
+      mlu(MLU_DIV) | out(OUT_N_MLU) | in(IN_N_A),  // A = (A >> 4).
+      bus(0b10000) | out(OUT_N_CTRLLOGIC) | in(IN_N_B), // B = 0b10000.
+      mlu(MLU_OR) | out(OUT_N_MLU) | in(IN_N_MMU2), // MMU2 = A | 0b10000.  // Now 5th bit of MMU2 is 1.
+      out(OUT_N_M0) | in(IN_N_MMU_CONTROL),
+      out(OUT_N_M1) | in(IN_N_A), // Restore A.
+      in(IN_N_INT6), // TODO: Bodged. Load ALU flags into status register.
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_B),  // If we are here, carry is 0 so we aren't done. Load B for incrementing.
+      out(OUT_N_SUM) | in(IN_N_A) | multi(MULTI_N_RESET_UOP_COUNT), // Increment A and loop.
+  );
+  // Override in the case of the carry bit.
+  WRITE_AUX_MASK(
+      Opcode::SETUP_MEMORY_PROTECTION,
+      0b0010,  // Only care about carry bit.
+      0b0010,  // If we have the carry bit set, we are done.
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Skip the first 11 micro-ops.
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
   return data_;
 }
