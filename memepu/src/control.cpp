@@ -402,8 +402,9 @@ std::string ControlLogic::getBinaryData() {
       mlu(MLU_OR) | out(OUT_N_MLU) | in(IN_N_MMU2), // MMU2 = A | 0b10000.  // Now 5th bit of MMU2 is 1.
       out(OUT_N_M0) | in(IN_N_MMU_CONTROL),
       out(OUT_N_M1) | in(IN_N_A), // Restore A.
-      in(IN_N_INT6), // TODO: Bodged. Load ALU flags into status register.
       bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_B),  // If we are here, carry is 0 so we aren't done. Load B for incrementing.
+      in(IN_N_INT6), // TODO: Bodged. Load ALU flags into status register.
+      out(OUT_N_STATUS) | in(IN_N_OPCODE1),
       out(OUT_N_SUM) | in(IN_N_A) | multi(MULTI_N_RESET_UOP_COUNT), // Increment A and loop.
   );
   // Override in the case of the carry bit.
@@ -411,7 +412,7 @@ std::string ControlLogic::getBinaryData() {
       Opcode::SETUP_MEMORY_PROTECTION,
       0b0010,  // Only care about carry bit.
       0b0010,  // If we have the carry bit set, we are done.
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Skip the first 11 micro-ops.
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Skip the first 13 micro-ops.
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
   return data_;
