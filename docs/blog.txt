@@ -27,7 +27,8 @@
 - add protection for instructions ? need task register to be set to zero on boot not via an instruction but preset via reset line or something. Then privileged instructions can just check task reg by comparing to zero. If not have task register set to be zero on reset then application code can call boot opcode / microop counter setup opcode. this effectively reboots the machine.
 - it's kind of annoying when trying to use AUX Opcode1 register as extra space for micro-ops AND for loading status reg to do if statements at the same time.
 - bodge wires getting crushed and shorting stuff?
-- MMU_IN signal needs to be inverted. INSTEAD of inverting, what about ANDing with ~CLK instead - ALSO stack register control signals. Avoids double negation.
+- MMU_IN and MMU_CONTROL_IN signal needs to be inverted. INSTEAD of inverting, what about ORing with ~CLK instead - ALSO stack register control signals. Avoids double negation.
+
 Fixed:
 - peripheral interconnect - has INT_LATCH lines instead of INT lines. - FIXED
 - Control logic had INTERRUPT_OUT_NCLK but interrupt reg at INT_OUT - not connected. - FIXED
