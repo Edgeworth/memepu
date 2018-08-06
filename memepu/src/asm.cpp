@@ -27,6 +27,8 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"CMP", {Opcode::COMPARE, 0, 0}},
 //    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}},  TODO: Currently broken.
     {"JZH", {Opcode::JUMP_IF_ZERO_HACKED, 0, 1}},
+    {"STA", {Opcode::STA_ADDR, 1, 0}},
+    {"LDAADDR", {Opcode::LDA_ADDR, 1, 0}},
 };
 
 int parseHexInt(const std::string& s) {
