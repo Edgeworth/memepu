@@ -1555,7 +1555,7 @@ AR Path="/5B0C6DCD/5B553ACE" Ref="U?"  Part="1"
 AR Path="/5B09632F/5B553ACE" Ref="U71"  Part="1" 
 F 0 "U71" H 7900 4900 50  0000 C CNN
 F 1 "SST39SF040" H 7950 4750 50  0000 C CNN
-F 2 "" H 7900 5100 50  0001 C CNN
+F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 7900 5100 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 7900 5100 50  0001 C CNN
 	1    7900 4800
 	1    0    0    -1  

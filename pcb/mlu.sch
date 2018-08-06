@@ -144,7 +144,7 @@ AR Path="/5B0C6DCD/5B55481F" Ref="U?"  Part="1"
 AR Path="/5B04243E/5B55481F" Ref="U31"  Part="1" 
 F 0 "U31" H 1950 2700 50  0000 C CNN
 F 1 "SST39SF040" H 2000 2550 50  0000 C CNN
-F 2 "" H 1950 2900 50  0001 C CNN
+F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 1950 2900 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 1950 2900 50  0001 C CNN
 	1    1950 2600
 	1    0    0    -1  
