@@ -1762,12 +1762,12 @@ $EndComp
 $Comp
 L 74xx:74HC04 U114
 U 6 1 5B141E3D
-P 19100 1850
-F 0 "U114" H 19100 1850 50  0000 C CNN
-F 1 "74HC04" H 19250 1750 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 19100 1850 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 19100 1850 50  0001 C CNN
-	6    19100 1850
+P 10350 9350
+F 0 "U114" H 10350 9350 50  0000 C CNN
+F 1 "74HC04" H 10500 9250 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 9350 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 9350 50  0001 C CNN
+	6    10350 9350
 	1    0    0    -1  
 $EndComp
 Text Label 4050 9350 2    50   ~ 0
@@ -1810,7 +1810,7 @@ Text Label 6650 9650 0    50   ~ 0
 MMU2_IN_NCLK
 Text Label 10050 11750 2    50   ~ 0
 ~MMU_IN_NCLK
-Text Label 10500 12250 2    50   ~ 0
+Text Label 10050 9350 2    50   ~ 0
 ~MMU_CONTROL_IN_NCLK
 Text Label 6050 9950 2    50   ~ 0
 ~DISP_IN_NCLK
@@ -2171,8 +2171,8 @@ Text HLabel 4600 12350 2    50   Input ~ 0
 MMU2_IN_CLK
 Text HLabel 10600 11650 2    50   Input ~ 0
 ~MMU_IN_CLK
-Text HLabel 11050 12150 2    50   Input ~ 0
-MMU_CONTROL_IN_CLK
+Text HLabel 10650 9650 2    50   Input ~ 0
+~MMU_CONTROL_IN_CLK
 Text HLabel 11150 6200 2    50   Input ~ 0
 PC_INC_NCLK
 Text Label 12650 6850 2    50   ~ 0
@@ -2197,18 +2197,6 @@ Text Notes 12150 2700 0    50   ~ 0
 Update the micro-op counter on the rising edge so\nwe have enough time to latch the control word on\nthe falling edge (not trying to simultaneously \nupdate the micro op counter).
 Text Label 12700 3050 2    50   ~ 0
 CLK
-$Comp
-L power:GND #PWR0458
-U 1 1 5B402A3D
-P 18800 1850
-F 0 "#PWR0458" H 18800 1600 50  0001 C CNN
-F 1 "GND" V 18805 1722 50  0000 R CNN
-F 2 "" H 18800 1850 50  0001 C CNN
-F 3 "" H 18800 1850 50  0001 C CNN
-	1    18800 1850
-	0    1    1    0   
-$EndComp
-NoConn ~ 19400 1850
 Text HLabel 8200 4300 0    50   Input ~ 0
 ~INT0_OUT_NCLK
 Text HLabel 8200 4400 0    50   Input ~ 0
@@ -2342,7 +2330,7 @@ S 10050 11300 550  550
 U 5B69518E
 F0 "IN or 1" 50
 F1 "clk_or.sch" 50
-F2 "CLK" I L 10050 11350 50 
+F2 "~CLK" I L 10050 11350 50 
 F3 "I0" I L 10050 11450 50 
 F4 "I1" I L 10050 11550 50 
 F5 "I2" I L 10050 11650 50 
@@ -2354,4 +2342,28 @@ F10 "O3" I R 10600 11650 50
 $EndSheet
 Text HLabel 10050 11350 0    50   Input ~ 0
 ~CLK
+Text Notes 11550 9600 0    50   ~ 0
+Spare taken from Clock
+$Comp
+L 74xx:74HC04 U?
+U 4 1 5B6AA8E4
+P 10350 9650
+AR Path="/5ADF0E03/5B6AA8E4" Ref="U?"  Part="4" 
+AR Path="/5B6AA8E4" Ref="U?"  Part="4" 
+AR Path="/5B0C6DCD/5B6AA8E4" Ref="U5"  Part="4" 
+F 0 "U5" H 10300 9650 50  0000 C CNN
+F 1 "74HC04" H 10500 9550 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 9650 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 9650 50  0001 C CNN
+	4    10350 9650
+	1    0    0    -1  
+$EndComp
+Text Label 10650 9350 0    50   ~ 0
+MMU_CONTROL_IN_NCLK
+Text Label 8050 11750 2    50   ~ 0
+MMU_CONTROL_IN_NCLK
+Text Label 8600 11650 0    50   ~ 0
+MMU_CONTROL_IN_CLK
+Text Label 10050 9650 2    50   ~ 0
+MMU_CONTROL_IN_CLK
 $EndSCHEMATC
