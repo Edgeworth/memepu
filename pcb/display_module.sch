@@ -854,7 +854,7 @@ U 1 1 5B5448BD
 P 7800 4050
 F 0 "U24" H 7800 4000 50  0000 C CNN
 F 1 "28C256" H 7900 3800 50  0000 C CNN
-F 2 "" H 7800 4050 50  0001 C CNN
+F 2 "Package_DIP:DIP-28_W15.24mm_Socket" H 7800 4050 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/doc0006.pdf" H 7800 4050 50  0001 C CNN
 	1    7800 4050
 	1    0    0    -1  
