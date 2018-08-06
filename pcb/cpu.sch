@@ -1200,7 +1200,7 @@ NoConn ~ 9550 6750
 Text Notes 9000 7100 0    50   ~ 0
 TODO: Connect this up\n
 Text Notes 13550 7550 0    50   ~ 0
-Used spares:\n74hc04: \n74hc08: 1 in Clock from Control Logic, 3 in ALU from Clock
+Used spares:\n74hc04: 1 In Control Logic from Clock\n74hc08: 1 in Clock from Control Logic, 3 in ALU from Clock
 $Sheet
 S 1850 2550 2050 6450
 U 5B0C6DCD
