@@ -52,7 +52,7 @@ void run() {
 
   digitalWrite(INT_FLAG, LOW);
 
-  Serial.begin(57600);
+  Serial.begin(9600);
 
   attachInterrupt(digitalPinToInterrupt(CLK), clockIsr, CHANGE);
   attachInterrupt(digitalPinToInterrupt(INT_IN_CLK), peripheralIsr, RISING);

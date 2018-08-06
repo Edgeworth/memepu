@@ -27,8 +27,8 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"CMP", {Opcode::COMPARE, 0, 0}},
 //    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}},  TODO: Currently broken.
     {"JZH", {Opcode::JUMP_IF_ZERO_HACKED, 0, 1}},
-    {"STA", {Opcode::STA_ADDR, 1, 0}},
-    {"LDAADDR", {Opcode::LDA_ADDR, 1, 0}},
+    {"STA", {Opcode::STA_ADDR, 0, 1}},
+    {"LDAADDR", {Opcode::LDA_ADDR, 0, 1}},
 };
 
 int parseHexInt(const std::string& s) {
@@ -64,7 +64,6 @@ void Asm::parseLabelOrOffset(std::string token, bool first_pass) {
     verify_expr(!first_pass || labels_.find(label) == labels_.end(), "redefinition of label %s", label.c_str());
     labels_[label] = uint32_t(extents_[cur_extent_].size()) + cur_extent_ + START_OFFSET;
   }
-
 }
 
 void Asm::parseInstruction(std::string token, std::istringstream& stream, bool first_pass) {
@@ -84,18 +83,22 @@ void Asm::parseInstruction(std::string token, std::istringstream& stream, bool f
   std::string label;
   for (int i = 0; i < opcode.label_params; ++i) {
     verify_expr(stream >> label, "expected %d labels after %s", opcode.label_params, token.c_str());
+    int loc = parseHexInt(label);
     auto label_iter = labels_.find(label);
-    verify_expr(first_pass || label_iter != labels_.end(), "unknown label %s", label.c_str());
     if (first_pass) {
       extents_[cur_extent_] += uint8_t(0);
       extents_[cur_extent_] += uint8_t(0);
       extents_[cur_extent_] += uint8_t(0);
+    } else if (loc >= 0) {
+      extents_[cur_extent_] += uint8_t(loc);
+      extents_[cur_extent_] += uint8_t(loc >> 8);
+      extents_[cur_extent_] += uint8_t(loc >> 16);
     } else {
+      verify_expr(label_iter != labels_.end(), "unknown label %s", label.c_str());
       extents_[cur_extent_] += uint8_t(label_iter->second);
       extents_[cur_extent_] += uint8_t(label_iter->second >> 8);
       extents_[cur_extent_] += uint8_t(label_iter->second >> 16);
     }
-
   }
 }
 
