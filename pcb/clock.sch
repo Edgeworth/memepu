@@ -2019,18 +2019,6 @@ Wire Wire Line
 	6850 5200 6850 5550
 Text HLabel 5550 5550 0    50   Input ~ 0
 ~RESET
-$Comp
-L power:GND #PWR0167
-U 1 1 5B0C83CD
-P 14000 5250
-F 0 "#PWR0167" H 14000 5000 50  0001 C CNN
-F 1 "GND" H 14005 5077 50  0000 C CNN
-F 2 "" H 14000 5250 50  0001 C CNN
-F 3 "" H 14000 5250 50  0001 C CNN
-	1    14000 5250
-	0    1    1    0   
-$EndComp
-NoConn ~ 14600 5250
 Text Notes 5450 5900 0    50   ~ 0
 Simulate a clock source change on\nreset to pull CLK low for a bit while\nmachine state is reset.
 Wire Wire Line
@@ -2039,20 +2027,6 @@ Wire Wire Line
 	10250 5350 10300 5350
 Text HLabel 10900 5350 2    50   Input ~ 0
 ~CLK
-$Comp
-L 74xx:74HC04 U5
-U 4 1 5B19871A
-P 14300 5250
-AR Path="/5ADF0E03/5B19871A" Ref="U5"  Part="4" 
-AR Path="/5B19871A" Ref="U?"  Part="4" 
-AR Path="/5B0C6DCD/5B19871A" Ref="U?"  Part="4" 
-F 0 "U5" H 14300 5567 50  0000 C CNN
-F 1 "74HC04" H 14300 5476 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 14300 5250 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14300 5250 50  0001 C CNN
-	4    14300 5250
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	1150 4550 1150 5100
 Wire Wire Line
