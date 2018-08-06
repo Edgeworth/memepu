@@ -710,7 +710,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8400 1950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Notes 8150 1450 0    50   ~ 0
-Note: AND gates from CLK spare parts
+SPARE TAKEN: AND gates from Clock
 Wire Wire Line
 	7850 1450 8100 1450
 Wire Wire Line

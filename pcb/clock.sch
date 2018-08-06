@@ -1323,7 +1323,7 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10600 5350 50  00
 	1    0    0    -1  
 $EndComp
 Text Notes 13700 4950 0    50   ~ 0
-Spares
+SPARE AVAILABLE
 Text HLabel 10250 5000 2    50   Input ~ 0
 CLK
 Text Label 4500 4450 0    50   ~ 0
@@ -2140,7 +2140,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8450 7250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Notes 8150 6800 0    50   ~ 0
-Spare AND taken \nfrom control logic
+SPARE TAKEN: AND taken \nfrom control logic
 Wire Wire Line
 	7350 7150 8150 7150
 Text Notes 8000 7750 0    50   ~ 0
