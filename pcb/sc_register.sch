@@ -145,8 +145,8 @@ Wire Notes Line
 	2200 5050 2200 3900
 Wire Notes Line
 	2200 3900 850  3900
-Text Notes 950  4050 0    50   ~ 0
-Spares
+Text Notes 850  4050 0    50   ~ 0
+SPARE AVAILABLE
 $Comp
 L 74xx:74HC74 U38
 U 3 1 5B0D5613
