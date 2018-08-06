@@ -835,8 +835,8 @@ Wire Notes Line
 	7950 3400 7950 2400
 Wire Notes Line
 	7950 2400 7000 2400
-Text Notes 7300 2600 0    50   ~ 0
-Spare
+Text Notes 7150 2600 0    50   ~ 0
+SPARE AVAILABLE
 Text Label 6350 2700 0    50   ~ 0
 ~ENABLE3
 Text Label 6350 3400 0    50   ~ 0
