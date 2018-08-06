@@ -204,7 +204,7 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
       out(OUT_N_PC2) | in(IN_N_MMU2),
-      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),  // TODO: Can optimise stuff like this by loading directly into PC2 not M2. TODO: Can remove M2 register entirely?
       // Load PC with value from memory.
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
@@ -413,6 +413,48 @@ std::string ControlLogic::getBinaryData() {
       0b0010,  // Only care about carry bit.
       0b0010,  // If we have the carry bit set, we are done.
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Skip the first 13 micro-ops.
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // STA_ADDR
+  WRITE_NO_AUX(
+      Opcode::STA_ADDR,
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M0) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M1) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_MMU2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_M0) | in(IN_N_MMU0),
+      out(OUT_N_M1) | in(IN_N_MMU1),
+      out(OUT_N_A) |  in(IN_N_MMU),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // LDA_ADDR
+  WRITE_NO_AUX(
+      Opcode::LDA_ADDR,
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M0) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M1) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_MMU2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_M0) | in(IN_N_MMU0),
+      out(OUT_N_M1) | in(IN_N_MMU1),
+      out(OUT_N_MMU) |  in(IN_N_A),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
   return data_;
