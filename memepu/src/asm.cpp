@@ -29,6 +29,9 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"JZH", {Opcode::JUMP_IF_ZERO_HACKED, 0, 1}},
     {"STA", {Opcode::STA_ADDR, 0, 1}},
     {"LDAADDR", {Opcode::LDA_ADDR, 0, 1}},
+    {"SYSCALL", {Opcode::SYSCALL, 0, 0}},
+    {"RFS", {Opcode::RETURN_FROM_SYSCALL, 0, 0}},
+    {"TASK", {Opcode::START_TASK, 0, 1}},
 };
 
 int parseHexInt(const std::string& s) {
