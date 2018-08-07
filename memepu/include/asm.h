@@ -31,7 +31,10 @@ enum class Opcode : uint8_t {
   JUMP_IF_ZERO_HACKED, // TODO: Remove. Only works on lowest 4 bits.
   SETUP_MEMORY_PROTECTION,
   STA_ADDR,
-  LDA_ADDR
+  LDA_ADDR,
+  SYSCALL,
+  RETURN_FROM_SYSCALL,
+  START_TASK
 };
 
 class Asm {
