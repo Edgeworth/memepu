@@ -204,7 +204,7 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
       out(OUT_N_PC2) | in(IN_N_MMU2),
-      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),  // TODO: Can optimise stuff like this by loading directly into PC2 not M2. TODO: Can remove M2 register entirely?
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),  // TODO: Can optimise stuff like this by loading directly into PC2 not M2. TODO: Can remove M2 register entirely? ACTUALLY, can't load into PC2 and increment PC.
       // Load PC with value from memory.
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
@@ -344,7 +344,7 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
       out(OUT_N_PC2) | in(IN_N_MMU2),
-      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),  // TODO: Can optimise by loading last one into PC2, not M2.
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),  // TODO: Can optimise by loading last one into PC2, not M2? Incrementing at the same time though.
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
       bus(0b1100) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE1)  // Go to next part of the instruction.
@@ -381,9 +381,10 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
       out(OUT_N_PC2) | in(IN_N_MMU2),
-      out(OUT_N_MMU) | in(IN_N_PC2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
+      out(OUT_N_M2) | in(IN_N_PC2),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
@@ -455,6 +456,62 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_M0) | in(IN_N_MMU0),
       out(OUT_N_M1) | in(IN_N_MMU1),
       out(OUT_N_MMU) |  in(IN_N_A),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // SYSCALL
+  // TODO: Copied from HANDLE_INTERRUPT. Except, don't save A and B.
+  WRITE_NO_AUX(
+      Opcode::SYSCALL,
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0) | multi(MULTI_N_UNSET_INT_ENABLE),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU1),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU2),
+      out(OUT_N_PC0) | in(IN_N_MMU),
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU),
+      bus(2) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_PC2) | in(IN_N_MMU),
+      bus(3) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_TASK) | in(IN_N_MMU),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_TASK),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC0),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC1),
+      bus(0x12) | out(OUT_N_CTRLLOGIC) | in(IN_N_PC2),  // Load 0x140000 = 0x100000 + 0x040000 = 256K, halfway through EEPROM.
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  )
+
+  // RETURN_FROM_SYSCALL
+  WRITE_NO_AUX(
+      Opcode::RETURN_FROM_SYSCALL,
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),  // Load return address into memory at 0, 1, 2. Load A, B, TASK registers.
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU1),
+      bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_PC0),
+      bus(1) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_PC1),
+      bus(2) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_PC2),
+      bus(3) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0),
+      out(OUT_N_MMU) | in(IN_N_TASK) | multi(MULTI_N_SET_INT_ENABLE),
+      bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
+  );
+
+  // RETURN_FROM_SYSCALL
+  WRITE_NO_AUX(
+      Opcode::START_TASK,
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M0) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M1) | multi(MULTI_N_PC_INC),
+      out(OUT_N_PC0) | in(IN_N_MMU0),
+      out(OUT_N_PC1) | in(IN_N_MMU1),
+      out(OUT_N_PC2) | in(IN_N_MMU2),
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC), // TODO here.
+      out(OUT_N_MMU) | in(IN_N_TASK) | multi(MULTI_N_SET_INT_ENABLE),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
   return data_;
