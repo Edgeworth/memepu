@@ -21,13 +21,29 @@
 - need to pulldown interrupt lines to GND? otherwise they will be floating if not connected.
 - can't save ALU status to register AND tell ALU to do subtraction at the same time. should be on IN plane or something.
 - ZERO LOGIC is wrong. Used NAND, should be NOR. Maybe there is a better way to do it though.
-- on adjustable clock, 1 to 70 Hz is pretty useless. Maybe replace 10K resistor with 1K?
+- on adjustable clock, 1 to 70 Hz is pretty useless. Maybe replace 10K resistor with 1K to make it faster?
 - can use memory as extra registers? m0,1,2 may have to stay though
 - add protection for instructions ? need task register to be set to zero on boot not via an instruction but preset via reset line or something. Then privileged instructions can just check task reg by comparing to zero. If not have task register set to be zero on reset then application code can call boot opcode / microop counter setup opcode. this effectively reboots the machine.
 - it's kind of annoying when trying to use AUX Opcode1 register as extra space for micro-ops AND for loading status reg to do if statements at the same time.
 - bodge wires getting crushed and shorting stuff?
-- Remove M2 ?
-
+- make status bit for booted or not? use that to decide if have permissions to run opcodes.
+- don't use counters, just use ALU to do increments? would save a lot of chips.
+ - Add 1 
+- bump micro-op count to 5 bit?
+ - replace micro-op counter with 74hc590?
+- change opcode registers to regular registers?
+ - Not using increment functionality.
+ - what do for setting to zero? - make opcode registers 74HC273 which has main reset, but no tri-state output. It is write only, so it doesn't matter.
+- change pc and sp to be regular registers.
+- Remove ALU, use MLU instead
+ - ops are: add, sub, div, mod, mul, single, alu status, nand
+- have registers in sets of three to enable potential microcode based 3 byte words.
+- rename a, b to a0, a1, a2, b0, b1, b2?
+- replace frequency counters with 74hc590. then since 8 bit can have some slower speeds on the low end
+ - 12, 6, 3, 1.5, 700, 350, 125, 60
+- connect display module to register not dip switches
+- feed display module clock from frequency divider, can remove 555 timer circuitry and counters. May need to add second 8 bit counter to frequency dividers but probably not
+- Remove clock selector leds
 Fixed:
 - peripheral interconnect - has INT_LATCH lines instead of INT lines. - FIXED
 - Control logic had INTERRUPT_OUT_NCLK but interrupt reg at INT_OUT - not connected. - FIXED
