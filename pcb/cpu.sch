@@ -938,7 +938,7 @@ Text Label 6350 4800 2    50   ~ 0
 Text Label 6350 5000 2    50   ~ 0
 ~S2_IN_CLK
 Text Notes 12000 7750 0    50   ~ 0
-Spare parts:\n74hc04: Stack register, Clock\n74hc08: Control Logic\n74hc14: Clock\n74hc74: Status/Control Register
+Spare parts:\n74hc04: Clock\n74hc08: Control Logic\n74hc14: Clock\n74hc74: Status/Control Register
 Text Label 12550 3750 2    50   ~ 0
 ~STATUS_OUT_NCLK
 Text Label 10450 1700 2    50   ~ 0
