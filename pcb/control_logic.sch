@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
 encoding utf-8
-Sheet 25 35
+Sheet 26 37
 Title ""
 Date ""
 Rev ""
@@ -585,8 +585,6 @@ Text HLabel 8650 6550 2    50   Input ~ 0
 Text HLabel 8650 6650 2    50   Input ~ 0
 ~UNSET_INT_ENABLE_ASYNC
 Text Label 8650 6750 0    50   ~ 0
-~PC_INC_NCLK
-Text Label 8650 6850 0    50   ~ 0
 ~ALU_FLAG_SET_NCLK
 Text Label 2550 11350 0    50   ~ 0
 ~OPCODE1_IN_NCLK
@@ -1738,12 +1736,12 @@ $EndComp
 $Comp
 L 74xx:74HC04 U114
 U 2 1 5B141E21
-P 10850 6500
-F 0 "U114" H 10850 6500 50  0000 C CNN
-F 1 "74HC04" H 11000 6400 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10850 6500 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10850 6500 50  0001 C CNN
-	2    10850 6500
+P 19100 2600
+F 0 "U114" H 19100 2600 50  0000 C CNN
+F 1 "74HC04" H 19250 2500 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 19100 2600 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 19100 2600 50  0001 C CNN
+	2    19100 2600
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1941,10 +1939,8 @@ INT7_IN_NCLK
 Text HLabel 8600 11450 2    50   Input ~ 0
 INT7_IN_CLK
 Text Label 10550 6200 2    50   ~ 0
-~PC_INC_NCLK
-Text Label 10550 6500 2    50   ~ 0
 ~ALU_FLAG_SET_NCLK
-Text Label 11150 6500 0    50   ~ 0
+Text Label 11150 6200 0    50   ~ 0
 ALU_FLAG_SET_NCLK
 Text Label 8050 11650 2    50   ~ 0
 ALU_FLAG_SET_NCLK
@@ -2171,8 +2167,6 @@ Text HLabel 10600 11650 2    50   Input ~ 0
 ~MMU_IN_CLK
 Text HLabel 10650 9650 2    50   Input ~ 0
 ~MMU_CONTROL_IN_CLK
-Text HLabel 11150 6200 2    50   Input ~ 0
-PC_INC_NCLK
 Text HLabel 10600 4050 0    50   Input ~ 0
 ~RESET
 Text HLabel 10600 3950 0    50   Input ~ 0
@@ -2379,4 +2373,17 @@ $EndComp
 NoConn ~ 20700 2500
 NoConn ~ 8650 7050
 NoConn ~ 8650 6950
+NoConn ~ 8650 6850
+$Comp
+L power:GND #PWR?
+U 1 1 5B6F8DAA
+P 18800 2600
+F 0 "#PWR?" H 18800 2350 50  0001 C CNN
+F 1 "GND" V 18805 2472 50  0000 R CNN
+F 2 "" H 18800 2600 50  0001 C CNN
+F 3 "" H 18800 2600 50  0001 C CNN
+	1    18800 2600
+	0    1    1    0   
+$EndComp
+NoConn ~ 19400 2600
 $EndSCHEMATC
