@@ -43,13 +43,14 @@
  - 12, 6, 3, 1.5, 700, 350, 125, 60
 - connect display module to register not dip switches
 - feed display module clock from frequency divider, can remove 555 timer circuitry and counters. May need to add second 8 bit counter to frequency dividers but probably not
-- Remove clock selector leds
+
 Fixed:
 - peripheral interconnect - has INT_LATCH lines instead of INT lines. - FIXED
 - Control logic had INTERRUPT_OUT_NCLK but interrupt reg at INT_OUT - not connected. - FIXED
 - can get rid of kernel stack pointer, by just saving stack pointer during interrupt handler to set addresses - FIXED
 - allow incrementing opcode0/1 at the same time as resetting micro-op counter somehow? although can just use bus output to set opcode, since we always know what our own opcode is - JUST USE BUS OUTPUT. REMOVE INCREMENTING FUNCTIONALITY. But can't turn into regular registers since need presetting. - FIXED
 - MMU_IN and MMU_CONTROL_IN signal needs to be inverted. INSTEAD of inverting, what about ORing with ~CLK instead - ALSO stack register control signals. Avoids double negation.
+- Remove clock selector leds
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
