@@ -1184,8 +1184,6 @@ Wire Wire Line
 	3950 750  3950 950 
 Connection ~ 3950 950 
 NoConn ~ 4950 1250
-Text Label 10450 9800 2    50   ~ 0
-INT0
 Text Label 10450 9900 2    50   ~ 0
 INT1
 Text Label 10450 10000 2    50   ~ 0
@@ -1304,4 +1302,37 @@ Text Label 8550 2100 2    50   ~ 0
 47KHZ_CLK
 Text Label 8550 2000 2    50   ~ 0
 94KHZ_CLK
+Text Label 9400 9650 0    50   ~ 0
+INT0
+Text Label 9400 9750 0    50   ~ 0
+INT1
+Text Label 9400 9850 0    50   ~ 0
+INT2
+Text Label 9400 9950 0    50   ~ 0
+INT3
+Text Label 9400 10050 0    50   ~ 0
+INT4
+Text Label 9400 10150 0    50   ~ 0
+INT5
+Text Label 9400 10250 0    50   ~ 0
+INT6
+Text Label 9400 10350 0    50   ~ 0
+INT7
+Text Label 10450 9800 2    50   ~ 0
+INT0
+$Comp
+L Device:R_Network08 RN?
+U 1 1 5B786556
+P 9200 9950
+F 0 "RN?" V 9717 9950 50  0000 C CNN
+F 1 "10K" V 9626 9950 50  0000 C CNN
+F 2 "Resistor_THT:R_Array_SIP9" V 9675 9950 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 9200 9950 50  0001 C CNN
+	1    9200 9950
+	0    -1   -1   0   
+$EndComp
+Text Label 9000 10350 2    50   ~ 0
+GND
+Text Notes 8900 10550 0    50   ~ 0
+Pull interrupt lines low.
 $EndSCHEMATC
