@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 2 39
+Sheet 2 37
 Title ""
 Date ""
 Rev ""
@@ -1599,21 +1599,6 @@ Wire Wire Line
 	950  4550 1300 4550
 Text HLabel 8150 7350 0    50   Input ~ 0
 ~RESET_NCLK
-$Comp
-L 74xx:74LS08 U?
-U 4 1 5B3C7132
-P 8450 7250
-AR Path="/5B0C6DCD/5B3C7132" Ref="U?"  Part="4" 
-AR Path="/5ADF0E03/5B3C7132" Ref="U117"  Part="4" 
-F 0 "U117" H 8450 7575 50  0000 C CNN
-F 1 "74LS08" H 8450 7484 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8450 7250 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8450 7250 50  0001 C CNN
-	4    8450 7250
-	1    0    0    -1  
-$EndComp
-Text Notes 8150 6800 0    50   ~ 0
-SPARE TAKEN: AND taken \nfrom control logic
 Wire Wire Line
 	7350 7150 8150 7150
 Text Notes 8000 7750 0    50   ~ 0
@@ -1859,4 +1844,92 @@ F 3 "" H 13550 6150 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 NoConn ~ 14150 6150
+$Comp
+L 74xx:74LS08 U33
+U 2 1 5B6E2608
+P 8450 7250
+AR Path="/5ADF0E03/5B6E2608" Ref="U33"  Part="2" 
+AR Path="/5B6E2608" Ref="U?"  Part="2" 
+AR Path="/5AFDA122/5B6E2608" Ref="U?"  Part="2" 
+F 0 "U33" H 8450 7250 50  0000 C CNN
+F 1 "74LS08" H 8450 7484 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8450 7250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8450 7250 50  0001 C CNN
+	2    8450 7250
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U33
+U 4 1 5B6E260F
+P 15300 6100
+AR Path="/5ADF0E03/5B6E260F" Ref="U33"  Part="4" 
+AR Path="/5B6E260F" Ref="U?"  Part="4" 
+AR Path="/5AFDA122/5B6E260F" Ref="U?"  Part="4" 
+F 0 "U33" H 15300 6100 50  0000 C CNN
+F 1 "74LS08" H 15300 6334 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 15300 6100 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 15300 6100 50  0001 C CNN
+	4    15300 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS08 U33
+U 3 1 5B6E2616
+P 15300 6650
+AR Path="/5ADF0E03/5B6E2616" Ref="U33"  Part="3" 
+AR Path="/5B6E2616" Ref="U?"  Part="3" 
+AR Path="/5AFDA122/5B6E2616" Ref="U?"  Part="3" 
+F 0 "U33" H 15300 6650 50  0000 C CNN
+F 1 "74LS08" H 15300 6884 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 15300 6650 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 15300 6650 50  0001 C CNN
+	3    15300 6650
+	1    0    0    -1  
+$EndComp
+NoConn ~ 15600 6100
+NoConn ~ 15600 6650
+$Comp
+L power:GND #PWR042
+U 1 1 5B6F9CF2
+P 15000 6550
+F 0 "#PWR042" H 15000 6300 50  0001 C CNN
+F 1 "GND" H 15005 6377 50  0000 C CNN
+F 2 "" H 15000 6550 50  0001 C CNN
+F 3 "" H 15000 6550 50  0001 C CNN
+	1    15000 6550
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR043
+U 1 1 5B6F9CF8
+P 15000 6750
+F 0 "#PWR043" H 15000 6500 50  0001 C CNN
+F 1 "GND" H 15005 6577 50  0000 C CNN
+F 2 "" H 15000 6750 50  0001 C CNN
+F 3 "" H 15000 6750 50  0001 C CNN
+	1    15000 6750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR040
+U 1 1 5B6FD0FE
+P 15000 6000
+F 0 "#PWR040" H 15000 5750 50  0001 C CNN
+F 1 "GND" H 15005 5827 50  0000 C CNN
+F 2 "" H 15000 6000 50  0001 C CNN
+F 3 "" H 15000 6000 50  0001 C CNN
+	1    15000 6000
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR041
+U 1 1 5B6FD104
+P 15000 6200
+F 0 "#PWR041" H 15000 5950 50  0001 C CNN
+F 1 "GND" H 15005 6027 50  0000 C CNN
+F 2 "" H 15000 6200 50  0001 C CNN
+F 3 "" H 15000 6200 50  0001 C CNN
+	1    15000 6200
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
