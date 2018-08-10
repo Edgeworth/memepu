@@ -1,30 +1,18 @@
 ### Registers
 ####General purpose: 
 - A, B
-Initial: random
 
 ####Memory address:
 May be clobbered by the system for e.g. loads
-
 - M0, M1, M2 
-Initial: random
 
-#### Stack pointer (SYSTEM) - Read only (except via increment, decrement)
-Need two stack pointers - during ISR, don't want to use stack of existing process. Suppose we change the stack pointer, we'd need to save it, which would take stack memory. K for kernel. Need IN to set initial values - kernel should decide.
-
-Made out of 4 bit up/down binary counters.
-- K0, K1, K2 - initial random
-####Stack pointer (USER): 
-Actually made out of 4 bit up/down binary counters. Need IN to set it for context switch. Out to save for context switch.
-
-- S0, S1, S2 - initial random
+####Stack pointe: 
+- S0, S1, S2
 
 #### Status/Control SC register
 
 Need to be able to set individiual bits somehow.
 - Interrupt enable (initial 0) - jk flipflop
-- Carry (initial 0) - set from ALU - d flipflop
-- Zero (initial 0) - set from ALU - d flipflop
 
 #### Interrupt register - 
 Level triggered, but latched on each falling clock, each device will assert until ack comes and it decides to stop asserting.
@@ -40,9 +28,6 @@ Note this means devices need to assert the line until they get serviced (level t
 Actually made out of 4 bit binary counters.
 - PC0, PC1, PC2
 Initial: 0
-
-#### SUM - read only 
-Output from ALU
 
 #### DISP - Display output - write only
 - DISP
@@ -68,13 +53,12 @@ Need boot eeprom mapped into memory. Memory protection. Both read and write perm
 - MMU_CONTROL_OUT
 
 #### MLU
-Two byte ops: AND, OR, XOR, MUL, DIV, MOD, SINGLE - shifts implemented as MUL and DIV.
+Two byte ops: add, sub, div, mod, mul, single, alu status, nand
 One byte ops: NOT, POPCOUNT, math functions?
 
 - MLU out
 - 3 bits for operation select
 - Wired to A, B
-- For one byte ops (e.g. NOT, POPCOUNT) can also have B register give operation constraint? e.g. 256 functions
 
 ### Control signals
 5 + 5 + 4 + 2 MLU select + 8 bus (1 overloaded for MLU) = 24 bits
@@ -101,7 +85,6 @@ OUT plane:
 	PC0, PC1, PC2,
 	STATUS, 
 	INTERRUPT, - needs to be read for ISR to know which devices to talk to.
-	SUM, 
 	MMU, MMU_CONTROL, 
 	TASK, 
 	MLU, 
@@ -110,15 +93,10 @@ OUT plane:
 
 #### Control plane
 16 line decoder may be sufficient - 4 bits:
-- SUB: NCLK
 - RESET: NCLK
 - Reset uop counter: NCLK
 - Set interrupt enable synchronos: NCLK
 - Unset interrupt enable synchronos: NCLK
-- PC increment: CLK
-- SP increment: CLK
-- SP decrement: CLK
-- Set flags from ALU (zero and carry): CLK
 
 ### MLU operation select / BUS output
 - MLU - 3 bit operation select
@@ -133,18 +111,7 @@ OUT plane:
 - 1 spare
 
 ### Instructions
-0 - LOAD from bootloader? / Page fault?
-LDA, LDB, OUT - immediate, memory addr, indirect memory addr
-ADD, SUB, MUL, DIV, MOD - A, B
-HLT, RST
-JNZ, JZ, JMP
-JLES, JLTS, JGES, JGTS
-JLE, JLT, JGE, JGT
-AND, OR, NOT, XOR - A, B
-INT - software interrupt
-PUSH, POP
-RTI - return from interrupt - re-enables interrupts
-bitwise ops (and, or, not, xor, nand?)
+- To fill out.
 
 ### Module notes:
 #### MMU
@@ -154,10 +121,6 @@ Need to also interface into EEPROM for boot
 Need to make sure everything is properly reset.
 
 - TASK reg set to 0
-- Boot EEPROM used
-
-#### ALU
-Produces carry and zero signal.
 
 #### Clock
 Pierce oscillator. Add frequency dividers using JK flipflops. 12 MHz with frequency dividers

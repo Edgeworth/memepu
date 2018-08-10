@@ -695,20 +695,6 @@ Text HLabel 7250 2700 0    50   Input ~ 0
 A6
 Text HLabel 7250 2900 0    50   Input ~ 0
 A7
-$Comp
-L 74xx:74LS08 U?
-U 2 1 5B078AB5
-P 8400 1950
-AR Path="/5ADF0E03/5B078AB5" Ref="U?"  Part="2" 
-AR Path="/5B078AB5" Ref="U?"  Part="2" 
-AR Path="/5AFDA122/5B078AB5" Ref="U33"  Part="2" 
-F 0 "U33" H 8400 1950 50  0000 C CNN
-F 1 "74LS08" H 8400 2184 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8400 1950 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8400 1950 50  0001 C CNN
-	2    8400 1950
-	1    0    0    -1  
-$EndComp
 Text Notes 8150 1450 0    50   ~ 0
 SPARE TAKEN: AND gates from Clock
 Wire Wire Line
@@ -727,42 +713,6 @@ Wire Wire Line
 	7850 2800 8100 2800
 Wire Wire Line
 	8100 2800 8100 2500
-$Comp
-L 74xx:74LS08 U?
-U 4 1 5B08DA36
-P 9150 2150
-AR Path="/5ADF0E03/5B08DA36" Ref="U?"  Part="4" 
-AR Path="/5B08DA36" Ref="U?"  Part="4" 
-AR Path="/5AFDA122/5B08DA36" Ref="U33"  Part="4" 
-F 0 "U33" H 9150 2150 50  0000 C CNN
-F 1 "74LS08" H 9150 2384 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 9150 2150 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9150 2150 50  0001 C CNN
-	4    9150 2150
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74LS08 U?
-U 3 1 5B078AD6
-P 8400 2400
-AR Path="/5ADF0E03/5B078AD6" Ref="U?"  Part="3" 
-AR Path="/5B078AD6" Ref="U?"  Part="3" 
-AR Path="/5AFDA122/5B078AD6" Ref="U33"  Part="3" 
-F 0 "U33" H 8400 2400 50  0000 C CNN
-F 1 "74LS08" H 8400 2634 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8400 2400 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 8400 2400 50  0001 C CNN
-	3    8400 2400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8700 1950 8850 1950
-Wire Wire Line
-	8850 1950 8850 2050
-Wire Wire Line
-	8700 2400 8700 2250
-Wire Wire Line
-	8700 2250 8850 2250
 Text HLabel 9450 2150 2    50   Input ~ 0
 ZERO
 $EndSCHEMATC
