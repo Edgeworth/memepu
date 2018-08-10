@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
 encoding utf-8
-Sheet 26 37
+Sheet 26 39
 Title ""
 Date ""
 Rev ""
@@ -1758,12 +1758,12 @@ $EndComp
 $Comp
 L 74xx:74HC04 U114
 U 6 1 5B141E3D
-P 10350 9350
-F 0 "U114" H 10350 9350 50  0000 C CNN
-F 1 "74HC04" H 10500 9250 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 9350 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 9350 50  0001 C CNN
-	6    10350 9350
+P 19750 2900
+F 0 "U114" H 19750 2900 50  0000 C CNN
+F 1 "74HC04" H 19900 2800 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 19750 2900 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 19750 2900 50  0001 C CNN
+	6    19750 2900
 	1    0    0    -1  
 $EndComp
 Text Label 4050 9350 2    50   ~ 0
@@ -1786,11 +1786,11 @@ Text Label 4050 10550 2    50   ~ 0
 ~M2_IN_NCLK
 Text Label 4650 10550 0    50   ~ 0
 M2_IN_NCLK
-Text Label 10050 11450 2    50   ~ 0
+Text Label 10050 9350 2    50   ~ 0
 ~S0_IN_NCLK
-Text Label 10050 11550 2    50   ~ 0
+Text Label 10050 9650 2    50   ~ 0
 ~S1_IN_NCLK
-Text Label 10050 11650 2    50   ~ 0
+Text Label 10050 9950 2    50   ~ 0
 ~S2_IN_NCLK
 Text Label 4050 10850 2    50   ~ 0
 ~MMU0_IN_NCLK
@@ -1804,9 +1804,9 @@ Text Label 6050 9650 2    50   ~ 0
 ~MMU2_IN_NCLK
 Text Label 6650 9650 0    50   ~ 0
 MMU2_IN_NCLK
-Text Label 10050 11750 2    50   ~ 0
+Text Label 12050 11500 2    50   ~ 0
 ~MMU_IN_NCLK
-Text Label 10050 9350 2    50   ~ 0
+Text Label 12050 11400 2    50   ~ 0
 ~MMU_CONTROL_IN_NCLK
 Text Label 6050 9950 2    50   ~ 0
 ~DISP_IN_NCLK
@@ -2006,50 +2006,50 @@ $EndComp
 $Comp
 L 74xx:74LS08 U117
 U 5 1 5B1CDB22
-P 5800 1450
-F 0 "U117" H 6030 1496 50  0000 L CNN
-F 1 "74LS08" H 6030 1405 50  0000 L CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 5800 1450 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 5800 1450 50  0001 C CNN
-	5    5800 1450
+P 7800 1450
+F 0 "U117" H 8030 1496 50  0000 L CNN
+F 1 "74LS08" H 8030 1405 50  0000 L CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 7800 1450 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 7800 1450 50  0001 C CNN
+	5    7800 1450
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:VCC #PWR0455
 U 1 1 5B1CED2B
-P 5800 950
-F 0 "#PWR0455" H 5800 800 50  0001 C CNN
-F 1 "VCC" H 5817 1123 50  0000 C CNN
-F 2 "" H 5800 950 50  0001 C CNN
-F 3 "" H 5800 950 50  0001 C CNN
-	1    5800 950 
+P 7800 950
+F 0 "#PWR0455" H 7800 800 50  0001 C CNN
+F 1 "VCC" H 7817 1123 50  0000 C CNN
+F 2 "" H 7800 950 50  0001 C CNN
+F 3 "" H 7800 950 50  0001 C CNN
+	1    7800 950 
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:C_Small C128
 U 1 1 5B1CED31
-P 6150 950
-F 0 "C128" V 5921 950 50  0000 C CNN
-F 1 "0.1uF" V 6012 950 50  0000 C CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 6150 950 50  0001 C CNN
-F 3 "~" H 6150 950 50  0001 C CNN
-	1    6150 950 
+P 8150 950
+F 0 "C128" V 7921 950 50  0000 C CNN
+F 1 "0.1uF" V 8012 950 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 8150 950 50  0001 C CNN
+F 3 "~" H 8150 950 50  0001 C CNN
+	1    8150 950 
 	0    1    1    0   
 $EndComp
 $Comp
 L power:GND #PWR0456
 U 1 1 5B1CED38
-P 6250 950
-F 0 "#PWR0456" H 6250 700 50  0001 C CNN
-F 1 "GND" V 6255 822 50  0000 R CNN
-F 2 "" H 6250 950 50  0001 C CNN
-F 3 "" H 6250 950 50  0001 C CNN
-	1    6250 950 
+P 8250 950
+F 0 "#PWR0456" H 8250 700 50  0001 C CNN
+F 1 "GND" V 8255 822 50  0000 R CNN
+F 2 "" H 8250 950 50  0001 C CNN
+F 3 "" H 8250 950 50  0001 C CNN
+	1    8250 950 
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	5800 950  6050 950 
-Connection ~ 5800 950 
+	7800 950  8050 950 
+Connection ~ 7800 950 
 Text HLabel 13900 4850 0    50   Input ~ 0
 INTERRUPT_ENABLE_FLAG
 Wire Wire Line
@@ -2137,35 +2137,21 @@ SUB_NCLK
 $Comp
 L power:GND #PWR061
 U 1 1 5B243822
-P 5800 1950
-F 0 "#PWR061" H 5800 1700 50  0001 C CNN
-F 1 "GND" V 5805 1822 50  0000 R CNN
-F 2 "" H 5800 1950 50  0001 C CNN
-F 3 "" H 5800 1950 50  0001 C CNN
-	1    5800 1950
+P 7800 1950
+F 0 "#PWR061" H 7800 1700 50  0001 C CNN
+F 1 "GND" V 7805 1822 50  0000 R CNN
+F 2 "" H 7800 1950 50  0001 C CNN
+F 3 "" H 7800 1950 50  0001 C CNN
+	1    7800 1950
 	1    0    0    -1  
 $EndComp
 Text Notes 14600 5900 0    50   ~ 0
 SUB is active high.
-Text Notes 11300 11400 0    50   ~ 0
-Stack registers are presettable.\nBut, they read on an active low\nsignal. So, invert.
-Text HLabel 10600 11350 2    50   Input ~ 0
-~S0_IN_CLK
-Text HLabel 10600 11450 2    50   Input ~ 0
-~S1_IN_CLK
-Text HLabel 10600 11550 2    50   Input ~ 0
-~S2_IN_CLK
-Text HLabel 2550 10250 2    50   Input ~ 0
-~PC0_IN_NCLK
-Text HLabel 2550 10350 2    50   Input ~ 0
-~PC1_IN_NCLK
-Text HLabel 2550 10450 2    50   Input ~ 0
-~PC2_IN_NCLK
 Text HLabel 4600 12350 2    50   Input ~ 0
 MMU2_IN_CLK
-Text HLabel 10600 11650 2    50   Input ~ 0
+Text HLabel 12600 11400 2    50   Input ~ 0
 ~MMU_IN_CLK
-Text HLabel 10650 9650 2    50   Input ~ 0
+Text HLabel 12600 11300 2    50   Input ~ 0
 ~MMU_CONTROL_IN_CLK
 Text HLabel 10600 4050 0    50   Input ~ 0
 ~RESET
@@ -2308,46 +2294,22 @@ NoConn ~ 19700 2100
 NoConn ~ 8650 7150
 NoConn ~ 8650 7250
 $Sheet
-S 10050 11300 550  550 
+S 12050 11250 550  550 
 U 5B69518E
 F0 "IN or 1" 50
 F1 "clk_or.sch" 50
-F2 "~CLK" I L 10050 11350 50 
-F3 "I0" I L 10050 11450 50 
-F4 "I1" I L 10050 11550 50 
-F5 "I2" I L 10050 11650 50 
-F6 "I3" I L 10050 11750 50 
-F7 "O0" I R 10600 11350 50 
-F8 "O1" I R 10600 11450 50 
-F9 "O2" I R 10600 11550 50 
-F10 "O3" I R 10600 11650 50 
+F2 "~CLK" I L 12050 11300 50 
+F3 "I0" I L 12050 11400 50 
+F4 "I1" I L 12050 11500 50 
+F5 "I2" I L 12050 11600 50 
+F6 "I3" I L 12050 11700 50 
+F7 "O0" I R 12600 11300 50 
+F8 "O1" I R 12600 11400 50 
+F9 "O2" I R 12600 11500 50 
+F10 "O3" I R 12600 11600 50 
 $EndSheet
-Text HLabel 10050 11350 0    50   Input ~ 0
+Text HLabel 12050 11300 0    50   Input ~ 0
 ~CLK
-Text Notes 11650 9650 0    50   ~ 0
-SPARE TAKEN: NOT taken from Clock
-$Comp
-L 74xx:74HC04 U?
-U 4 1 5B6AA8E4
-P 10350 9650
-AR Path="/5ADF0E03/5B6AA8E4" Ref="U?"  Part="4" 
-AR Path="/5B6AA8E4" Ref="U?"  Part="4" 
-AR Path="/5B0C6DCD/5B6AA8E4" Ref="U5"  Part="4" 
-F 0 "U5" H 10300 9650 50  0000 C CNN
-F 1 "74HC04" H 10500 9550 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 9650 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 9650 50  0001 C CNN
-	4    10350 9650
-	1    0    0    -1  
-$EndComp
-Text Label 10650 9350 0    50   ~ 0
-MMU_CONTROL_IN_NCLK
-Text Label 8050 11750 2    50   ~ 0
-MMU_CONTROL_IN_NCLK
-Text Label 8600 11650 0    50   ~ 0
-MMU_CONTROL_IN_CLK
-Text Label 10050 9650 2    50   ~ 0
-MMU_CONTROL_IN_CLK
 $Comp
 L power:GND #PWR0141
 U 1 1 5B7989AB
@@ -2386,4 +2348,234 @@ F 3 "" H 18800 2600 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 NoConn ~ 19400 2600
+Text Label 2550 10250 0    50   ~ 0
+~PC0_IN_NCLK
+Text Label 2550 10350 0    50   ~ 0
+~PC1_IN_NCLK
+Text Label 2550 10450 0    50   ~ 0
+~PC2_IN_NCLK
+$Comp
+L 74xx:74HC04 U39
+U 4 1 5B6E7414
+P 10350 10250
+F 0 "U39" H 10350 10250 50  0000 C CNN
+F 1 "74HC04" H 10500 10150 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 10250 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 10250 50  0001 C CNN
+	4    10350 10250
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U39
+U 1 1 5B6E741B
+P 10350 9350
+F 0 "U39" H 10350 9350 50  0000 C CNN
+F 1 "74HC04" H 10500 9250 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 9350 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 9350 50  0001 C CNN
+	1    10350 9350
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U39
+U 2 1 5B6E7422
+P 10350 9650
+F 0 "U39" H 10350 9650 50  0000 C CNN
+F 1 "74HC04" H 10500 9550 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 9650 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 9650 50  0001 C CNN
+	2    10350 9650
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U39
+U 5 1 5B6E7429
+P 10350 10550
+F 0 "U39" H 10350 10550 50  0000 C CNN
+F 1 "74HC04" H 10500 10450 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 10550 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 10550 50  0001 C CNN
+	5    10350 10550
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U39
+U 6 1 5B6E7430
+P 10350 10850
+F 0 "U39" H 10350 10850 50  0000 C CNN
+F 1 "74HC04" H 10500 10750 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 10850 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 10850 50  0001 C CNN
+	6    10350 10850
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U39
+U 3 1 5B6E7437
+P 10350 9950
+F 0 "U39" H 10350 9950 50  0000 C CNN
+F 1 "74HC04" H 10500 9850 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 10350 9950 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 10350 9950 50  0001 C CNN
+	3    10350 9950
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U39
+U 7 1 5B6E82B1
+P 5650 1450
+F 0 "U39" H 5880 1496 50  0000 L CNN
+F 1 "74HC04" H 5880 1405 50  0000 L CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 5650 1450 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 5650 1450 50  0001 C CNN
+	7    5650 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0151
+U 1 1 5B6E82B8
+P 5650 950
+F 0 "#PWR0151" H 5650 800 50  0001 C CNN
+F 1 "VCC" H 5667 1123 50  0000 C CNN
+F 2 "" H 5650 950 50  0001 C CNN
+F 3 "" H 5650 950 50  0001 C CNN
+	1    5650 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C47
+U 1 1 5B6E82BE
+P 6000 950
+F 0 "C47" V 5771 950 50  0000 C CNN
+F 1 "0.1uF" V 5862 950 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 6000 950 50  0001 C CNN
+F 3 "~" H 6000 950 50  0001 C CNN
+	1    6000 950 
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0152
+U 1 1 5B6E82C5
+P 6100 950
+F 0 "#PWR0152" H 6100 700 50  0001 C CNN
+F 1 "GND" V 6105 822 50  0000 R CNN
+F 2 "" H 6100 950 50  0001 C CNN
+F 3 "" H 6100 950 50  0001 C CNN
+	1    6100 950 
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5650 950  5900 950 
+Connection ~ 5650 950 
+$Comp
+L power:GND #PWR0186
+U 1 1 5B6E82CD
+P 5650 1950
+F 0 "#PWR0186" H 5650 1700 50  0001 C CNN
+F 1 "GND" V 5655 1822 50  0000 R CNN
+F 2 "" H 5650 1950 50  0001 C CNN
+F 3 "" H 5650 1950 50  0001 C CNN
+	1    5650 1950
+	1    0    0    -1  
+$EndComp
+Text Label 10050 10250 2    50   ~ 0
+~PC0_IN_NCLK
+Text Label 10050 10550 2    50   ~ 0
+~PC1_IN_NCLK
+Text Label 10050 10850 2    50   ~ 0
+~PC2_IN_NCLK
+Text Label 10650 9350 0    50   ~ 0
+S0_IN_NCLK
+Text Label 10650 9650 0    50   ~ 0
+S1_IN_NCLK
+Text Label 10650 9950 0    50   ~ 0
+S2_IN_NCLK
+Text Label 10650 10250 0    50   ~ 0
+PC0_IN_NCLK
+Text Label 10650 10550 0    50   ~ 0
+PC1_IN_NCLK
+Text Label 10650 10850 0    50   ~ 0
+PC2_IN_NCLK
+$Sheet
+S 8050 12050 550  550 
+U 5B6EF94B
+F0 "IN and 6" 50
+F1 "clk_and.sch" 50
+F2 "CLK" I L 8050 12100 50 
+F3 "I0" I L 8050 12200 50 
+F4 "I1" I L 8050 12300 50 
+F5 "I2" I L 8050 12400 50 
+F6 "I3" I L 8050 12500 50 
+F7 "O0" I R 8600 12100 50 
+F8 "O1" I R 8600 12200 50 
+F9 "O2" I R 8600 12300 50 
+F10 "O3" I R 8600 12400 50 
+$EndSheet
+Text HLabel 8050 12100 0    50   Input ~ 0
+CLK
+Text Label 8050 12200 2    50   ~ 0
+S0_IN_NCLK
+Text Label 8050 12300 2    50   ~ 0
+S1_IN_NCLK
+Text Label 8050 12400 2    50   ~ 0
+S2_IN_NCLK
+Text HLabel 8600 12100 2    50   Input ~ 0
+S0_IN_CLK
+Text HLabel 8600 12200 2    50   Input ~ 0
+S1_IN_CLK
+Text HLabel 8600 12300 2    50   Input ~ 0
+S2_IN_CLK
+$Sheet
+S 10050 11300 550  550 
+U 5B6F3EF3
+F0 "IN and 7" 50
+F1 "clk_and.sch" 50
+F2 "CLK" I L 10050 11350 50 
+F3 "I0" I L 10050 11450 50 
+F4 "I1" I L 10050 11550 50 
+F5 "I2" I L 10050 11650 50 
+F6 "I3" I L 10050 11750 50 
+F7 "O0" I R 10600 11350 50 
+F8 "O1" I R 10600 11450 50 
+F9 "O2" I R 10600 11550 50 
+F10 "O3" I R 10600 11650 50 
+$EndSheet
+Text HLabel 10050 11350 0    50   Input ~ 0
+CLK
+Text Label 8050 12500 2    50   ~ 0
+PC0_IN_NCLK
+Text Label 10050 11450 2    50   ~ 0
+PC1_IN_NCLK
+Text Label 10050 11550 2    50   ~ 0
+PC2_IN_NCLK
+Text HLabel 8600 12400 2    50   Input ~ 0
+PC0_IN_CLK
+Text HLabel 10600 11350 2    50   Input ~ 0
+PC1_IN_CLK
+Text HLabel 10600 11450 2    50   Input ~ 0
+PC2_IN_CLK
+$Comp
+L power:GND #PWR0187
+U 1 1 5B6F885A
+P 19450 2900
+F 0 "#PWR0187" H 19450 2650 50  0001 C CNN
+F 1 "GND" V 19455 2772 50  0000 R CNN
+F 2 "" H 19450 2900 50  0001 C CNN
+F 3 "" H 19450 2900 50  0001 C CNN
+	1    19450 2900
+	0    1    1    0   
+$EndComp
+NoConn ~ 20050 2900
+Text Notes 10050 12200 0    50   ~ 0
+TODO: When remove ALU, can remove ALU flag in IN and 5 and reduce clock anders by 1.
+NoConn ~ 8050 11750
+NoConn ~ 8600 11650
+NoConn ~ 10050 11650
+NoConn ~ 10050 11750
+NoConn ~ 10600 11550
+NoConn ~ 10600 11650
+NoConn ~ 12050 11600
+NoConn ~ 12050 11700
+NoConn ~ 12600 11500
+NoConn ~ 12600 11600
 $EndSCHEMATC
