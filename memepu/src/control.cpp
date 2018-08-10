@@ -204,7 +204,7 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
       out(OUT_N_PC2) | in(IN_N_MMU2),
-      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),  // TODO: Can optimise stuff like this by loading directly into PC2 not M2. TODO: Can remove M2 register entirely? ACTUALLY, can't load into PC2 and increment PC.
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),
       // Load PC with value from memory.
       out(OUT_N_M0) | in(IN_N_PC0),
       out(OUT_N_M1) | in(IN_N_PC1),
@@ -460,7 +460,7 @@ std::string ControlLogic::getBinaryData() {
   );
 
   // SYSCALL
-  // TODO: Copied from HANDLE_INTERRUPT. Except, don't save A and B.
+  // TODO: Copied from HANDLE_INTERRUPT. Except, don't save A and B so they can be used for syscall result.
   WRITE_NO_AUX(
       Opcode::SYSCALL,
       bus(0) | out(OUT_N_CTRLLOGIC) | in(IN_N_MMU0) | multi(MULTI_N_UNSET_INT_ENABLE),
@@ -496,7 +496,7 @@ std::string ControlLogic::getBinaryData() {
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
 
-  // RETURN_FROM_SYSCALL
+  // START_TASK
   WRITE_NO_AUX(
       Opcode::START_TASK,
       out(OUT_N_PC0) | in(IN_N_MMU0),
@@ -510,8 +510,8 @@ std::string ControlLogic::getBinaryData() {
       out(OUT_N_PC0) | in(IN_N_MMU0),
       out(OUT_N_PC1) | in(IN_N_MMU1),
       out(OUT_N_PC2) | in(IN_N_MMU2),
-      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC), // TODO here.
-      out(OUT_N_MMU) | in(IN_N_TASK) | multi(MULTI_N_SET_INT_ENABLE),
+      out(OUT_N_MMU) | in(IN_N_M2) | multi(MULTI_N_PC_INC),
+      out(OUT_N_MMU) | in(IN_N_TASK),
       bus(static_cast<uint8_t>(Opcode::FETCH)) | out(OUT_N_CTRLLOGIC) | in(IN_N_OPCODE0) | multi(MULTI_N_RESET_UOP_COUNT)
   );
   return data_;
