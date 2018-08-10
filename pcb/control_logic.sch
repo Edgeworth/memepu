@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
 encoding utf-8
-Sheet 22 33
+Sheet 25 35
 Title ""
 Date ""
 Rev ""
@@ -586,9 +586,7 @@ Text HLabel 8650 6650 2    50   Input ~ 0
 ~UNSET_INT_ENABLE_ASYNC
 Text Label 8650 6750 0    50   ~ 0
 ~PC_INC_NCLK
-Text Label 8650 6950 0    50   ~ 0
-~SP_DEC_NCLK
-Text Label 8650 7050 0    50   ~ 0
+Text Label 8650 6850 0    50   ~ 0
 ~ALU_FLAG_SET_NCLK
 Text Label 2550 11350 0    50   ~ 0
 ~OPCODE1_IN_NCLK
@@ -1990,12 +1988,12 @@ $EndComp
 $Comp
 L 74xx:74LS08 U117
 U 2 1 5B1CD7DD
-P 12950 6750
-F 0 "U117" H 12950 7075 50  0000 C CNN
-F 1 "74LS08" H 12950 6984 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 12950 6750 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 12950 6750 50  0001 C CNN
-	2    12950 6750
+P 20400 2500
+F 0 "U117" H 20400 2825 50  0000 C CNN
+F 1 "74LS08" H 20400 2734 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 20400 2500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 20400 2500 50  0001 C CNN
+	2    20400 2500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -2175,16 +2173,6 @@ Text HLabel 10650 9650 2    50   Input ~ 0
 ~MMU_CONTROL_IN_CLK
 Text HLabel 11150 6200 2    50   Input ~ 0
 PC_INC_NCLK
-Text Label 12650 6850 2    50   ~ 0
-~SP_DEC_NCLK
-Text Notes 12600 6300 0    50   ~ 0
-Compute flag of whether\nSP should change - if either\nINC or DEC is activated.
-Text HLabel 13250 6750 2    50   Input ~ 0
-~SP_COUNT_NCLK
-Text HLabel 12650 6650 0    50   Input ~ 0
-~SP_INC_NCLK
-Text HLabel 8650 6850 2    50   Input ~ 0
-~SP_INC_NCLK
 Text HLabel 10600 4050 0    50   Input ~ 0
 ~RESET
 Text HLabel 10600 3950 0    50   Input ~ 0
@@ -2366,4 +2354,29 @@ Text Label 8600 11650 0    50   ~ 0
 MMU_CONTROL_IN_CLK
 Text Label 10050 9650 2    50   ~ 0
 MMU_CONTROL_IN_CLK
+$Comp
+L power:GND #PWR0141
+U 1 1 5B7989AB
+P 20100 2400
+F 0 "#PWR0141" H 20100 2150 50  0001 C CNN
+F 1 "GND" V 20105 2272 50  0000 R CNN
+F 2 "" H 20100 2400 50  0001 C CNN
+F 3 "" H 20100 2400 50  0001 C CNN
+	1    20100 2400
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0144
+U 1 1 5B7989B1
+P 20100 2600
+F 0 "#PWR0144" H 20100 2350 50  0001 C CNN
+F 1 "GND" V 20105 2472 50  0000 R CNN
+F 2 "" H 20100 2600 50  0001 C CNN
+F 3 "" H 20100 2600 50  0001 C CNN
+	1    20100 2600
+	0    1    1    0   
+$EndComp
+NoConn ~ 20700 2500
+NoConn ~ 8650 7050
+NoConn ~ 8650 6950
 $EndSCHEMATC
