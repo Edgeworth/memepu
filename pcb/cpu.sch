@@ -15,14 +15,16 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Sheet
-S 1000 950  650  600 
+S 10450 950  650  850 
 U 5ADF0E03
 F0 "Clock" 50
 F1 "clock.sch" 50
-F2 "CLK" I R 1650 1050 50 
-F3 "~RESET" I R 1650 1250 50 
-F4 "~CLK" I R 1650 1150 50 
-F5 "~RESET_NCLK" I L 1000 1400 50 
+F2 "CLK" I R 11100 1050 50 
+F3 "~RESET" I R 11100 1250 50 
+F4 "~CLK" I R 11100 1150 50 
+F5 "~RESET_NCLK" I L 10450 1700 50 
+F6 "47KHZ_CLK" I R 11100 1350 50 
+F7 "94KHZ_CLK" I R 11100 1450 50 
 $EndSheet
 $Comp
 L power:PWR_FLAG #FLG01
@@ -285,7 +287,7 @@ BUS6
 Text Label 10050 3650 0    50   ~ 0
 BUS7
 $Sheet
-S 8550 1000 550  1000
+S 8550 1000 550  1300
 U 5AFEE19A
 F0 "Display" 50
 F1 "display_module.sch" 50
@@ -298,6 +300,8 @@ F7 "BUS5" I L 8550 1600 50
 F8 "BUS6" I L 8550 1700 50 
 F9 "BUS7" I L 8550 1800 50 
 F10 "DISP_IN" I L 8550 1900 50 
+F11 "DISP_CLK0" I L 8550 2000 50 
+F12 "DISP_CLK1" I L 8550 2100 50 
 $EndSheet
 $Sheet
 S 6600 7450 550  1650
@@ -461,13 +465,13 @@ Text Label 7100 6100 0    50   ~ 0
 BUS6
 Text Label 7100 6200 0    50   ~ 0
 BUS7
-Text Label 1650 1250 0    50   ~ 0
+Text Label 11100 1250 0    50   ~ 0
 ~RESET
 Text Label 12550 3050 2    50   ~ 0
 ~RESET
 Text Label 6400 6150 2    50   ~ 0
 ~RESET
-Text Label 1650 1050 0    50   ~ 0
+Text Label 11100 1050 0    50   ~ 0
 CLK
 Text Label 6400 6050 2    50   ~ 0
 CLK
@@ -668,7 +672,7 @@ F 3 "~" H 7450 1150 50  0001 C CNN
 	1    7450 1150
 	0    1    1    0   
 $EndComp
-Text Label 1650 1150 0    50   ~ 0
+Text Label 11100 1150 0    50   ~ 0
 ~CLK
 Text Label 1850 3450 2    50   ~ 0
 MMU_READ_FAULT
@@ -1037,7 +1041,7 @@ Text Notes 12000 7750 0    50   ~ 0
 Spare parts:\n74hc04: Stack register, Clock\n74hc08: Control Logic\n74hc14: Clock\n74hc74: Status/Control Register
 Text Label 12550 3750 2    50   ~ 0
 ~STATUS_OUT_NCLK
-Text Label 1000 1400 2    50   ~ 0
+Text Label 10450 1700 2    50   ~ 0
 ~RESET_NCLK
 Text Notes 1450 2300 0    50   ~ 0
 TODO: Reset uop counter flag - check and remove from Control logic hierarchy.\n
@@ -1292,4 +1296,12 @@ F84 "~INT5_OUT_NCLK" I R 3900 8650 50
 F85 "~INT6_OUT_NCLK" I R 3900 8750 50 
 F86 "~INT7_OUT_NCLK" I R 3900 8850 50 
 $EndSheet
+Text Label 11100 1450 0    50   ~ 0
+94KHZ_CLK
+Text Label 11100 1350 0    50   ~ 0
+47KHZ_CLK
+Text Label 8550 2100 2    50   ~ 0
+47KHZ_CLK
+Text Label 8550 2000 2    50   ~ 0
+94KHZ_CLK
 $EndSCHEMATC
