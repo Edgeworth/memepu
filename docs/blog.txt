@@ -40,7 +40,6 @@
 - have registers in sets of three to enable potential microcode based 3 byte words.
 - rename a, b to a0, a1, a2, b0, b1, b2?
 - connect display module to register not dip switches
-- feed display module clock from frequency divider, can remove 555 timer circuitry and counters. May need to add second 8 bit counter to frequency dividers but probably not
 
 Fixed:
 - peripheral interconnect - has INT_LATCH lines instead of INT lines. - FIXED
@@ -51,6 +50,7 @@ Fixed:
 - Remove clock selector leds
 - replace frequency counters with 74hc590. then since 8 bit can have some slower speeds on the low end
  - 12, 6, 3, 1.5, 700, 350, 125, 60
+- feed display module clock from frequency divider, can remove 555 timer circuitry and counters. May need to add second 8 bit counter to frequency dividers but probably not
  
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
