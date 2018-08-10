@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 33
+Sheet 3 35
 Title ""
 Date ""
 Rev ""
@@ -115,124 +115,124 @@ REG_M0_IN
 Text HLabel 1550 3700 2    50   Input ~ 0
 ~REG_M0_OUT
 $Sheet
-S 2600 2800 550  1100
+S 2500 2800 550  1100
 U 5AFCB55D
 F0 "Register M1" 50
 F1 "register.sch" 50
-F2 "REG_IN" I L 2600 3800 50 
-F3 "I0" I L 2600 2900 50 
-F4 "I1" I L 2600 3000 50 
-F5 "I2" I L 2600 3100 50 
-F6 "I3" I L 2600 3200 50 
-F7 "I4" I L 2600 3300 50 
-F8 "I5" I L 2600 3400 50 
-F9 "I6" I L 2600 3500 50 
-F10 "I7" I L 2600 3600 50 
-F11 "~REG_OUT" I R 3150 3700 50 
-F12 "O0" I R 3150 2900 50 
-F13 "O1" I R 3150 3000 50 
-F14 "O2" I R 3150 3100 50 
-F15 "O3" I R 3150 3200 50 
-F16 "O4" I R 3150 3300 50 
-F17 "O5" I R 3150 3400 50 
-F18 "O6" I R 3150 3500 50 
-F19 "O7" I R 3150 3600 50 
+F2 "REG_IN" I L 2500 3800 50 
+F3 "I0" I L 2500 2900 50 
+F4 "I1" I L 2500 3000 50 
+F5 "I2" I L 2500 3100 50 
+F6 "I3" I L 2500 3200 50 
+F7 "I4" I L 2500 3300 50 
+F8 "I5" I L 2500 3400 50 
+F9 "I6" I L 2500 3500 50 
+F10 "I7" I L 2500 3600 50 
+F11 "~REG_OUT" I R 3050 3700 50 
+F12 "O0" I R 3050 2900 50 
+F13 "O1" I R 3050 3000 50 
+F14 "O2" I R 3050 3100 50 
+F15 "O3" I R 3050 3200 50 
+F16 "O4" I R 3050 3300 50 
+F17 "O5" I R 3050 3400 50 
+F18 "O6" I R 3050 3500 50 
+F19 "O7" I R 3050 3600 50 
 $EndSheet
-Text HLabel 2600 2900 0    50   Input ~ 0
+Text HLabel 2500 2900 0    50   Input ~ 0
 BUS0
-Text HLabel 2600 3000 0    50   Input ~ 0
+Text HLabel 2500 3000 0    50   Input ~ 0
 BUS1
-Text HLabel 2600 3100 0    50   Input ~ 0
+Text HLabel 2500 3100 0    50   Input ~ 0
 BUS2
-Text HLabel 2600 3200 0    50   Input ~ 0
+Text HLabel 2500 3200 0    50   Input ~ 0
 BUS3
-Text HLabel 2600 3300 0    50   Input ~ 0
+Text HLabel 2500 3300 0    50   Input ~ 0
 BUS4
-Text HLabel 2600 3400 0    50   Input ~ 0
+Text HLabel 2500 3400 0    50   Input ~ 0
 BUS5
-Text HLabel 2600 3500 0    50   Input ~ 0
+Text HLabel 2500 3500 0    50   Input ~ 0
 BUS6
-Text HLabel 2600 3600 0    50   Input ~ 0
+Text HLabel 2500 3600 0    50   Input ~ 0
 BUS7
-Text HLabel 3150 2900 2    50   Input ~ 0
+Text HLabel 3050 2900 2    50   Input ~ 0
 BUS0
-Text HLabel 3150 3000 2    50   Input ~ 0
+Text HLabel 3050 3000 2    50   Input ~ 0
 BUS1
-Text HLabel 3150 3100 2    50   Input ~ 0
+Text HLabel 3050 3100 2    50   Input ~ 0
 BUS2
-Text HLabel 3150 3200 2    50   Input ~ 0
+Text HLabel 3050 3200 2    50   Input ~ 0
 BUS3
-Text HLabel 3150 3300 2    50   Input ~ 0
+Text HLabel 3050 3300 2    50   Input ~ 0
 BUS4
-Text HLabel 3150 3400 2    50   Input ~ 0
+Text HLabel 3050 3400 2    50   Input ~ 0
 BUS5
-Text HLabel 3150 3500 2    50   Input ~ 0
+Text HLabel 3050 3500 2    50   Input ~ 0
 BUS6
-Text HLabel 3150 3600 2    50   Input ~ 0
+Text HLabel 3050 3600 2    50   Input ~ 0
 BUS7
-Text HLabel 2600 3800 0    50   Input ~ 0
+Text HLabel 2500 3800 0    50   Input ~ 0
 REG_M1_IN
-Text HLabel 3150 3700 2    50   Input ~ 0
+Text HLabel 3050 3700 2    50   Input ~ 0
 ~REG_M1_OUT
 $Sheet
-S 4050 2800 550  1100
+S 4000 2800 550  1100
 U 5AFCB584
 F0 "Register M2" 50
 F1 "register.sch" 50
-F2 "REG_IN" I L 4050 3800 50 
-F3 "I0" I L 4050 2900 50 
-F4 "I1" I L 4050 3000 50 
-F5 "I2" I L 4050 3100 50 
-F6 "I3" I L 4050 3200 50 
-F7 "I4" I L 4050 3300 50 
-F8 "I5" I L 4050 3400 50 
-F9 "I6" I L 4050 3500 50 
-F10 "I7" I L 4050 3600 50 
-F11 "~REG_OUT" I R 4600 3700 50 
-F12 "O0" I R 4600 2900 50 
-F13 "O1" I R 4600 3000 50 
-F14 "O2" I R 4600 3100 50 
-F15 "O3" I R 4600 3200 50 
-F16 "O4" I R 4600 3300 50 
-F17 "O5" I R 4600 3400 50 
-F18 "O6" I R 4600 3500 50 
-F19 "O7" I R 4600 3600 50 
+F2 "REG_IN" I L 4000 3800 50 
+F3 "I0" I L 4000 2900 50 
+F4 "I1" I L 4000 3000 50 
+F5 "I2" I L 4000 3100 50 
+F6 "I3" I L 4000 3200 50 
+F7 "I4" I L 4000 3300 50 
+F8 "I5" I L 4000 3400 50 
+F9 "I6" I L 4000 3500 50 
+F10 "I7" I L 4000 3600 50 
+F11 "~REG_OUT" I R 4550 3700 50 
+F12 "O0" I R 4550 2900 50 
+F13 "O1" I R 4550 3000 50 
+F14 "O2" I R 4550 3100 50 
+F15 "O3" I R 4550 3200 50 
+F16 "O4" I R 4550 3300 50 
+F17 "O5" I R 4550 3400 50 
+F18 "O6" I R 4550 3500 50 
+F19 "O7" I R 4550 3600 50 
 $EndSheet
-Text HLabel 4050 2900 0    50   Input ~ 0
+Text HLabel 4000 2900 0    50   Input ~ 0
 BUS0
-Text HLabel 4050 3000 0    50   Input ~ 0
+Text HLabel 4000 3000 0    50   Input ~ 0
 BUS1
-Text HLabel 4050 3100 0    50   Input ~ 0
+Text HLabel 4000 3100 0    50   Input ~ 0
 BUS2
-Text HLabel 4050 3200 0    50   Input ~ 0
+Text HLabel 4000 3200 0    50   Input ~ 0
 BUS3
-Text HLabel 4050 3300 0    50   Input ~ 0
+Text HLabel 4000 3300 0    50   Input ~ 0
 BUS4
-Text HLabel 4050 3400 0    50   Input ~ 0
+Text HLabel 4000 3400 0    50   Input ~ 0
 BUS5
-Text HLabel 4050 3500 0    50   Input ~ 0
+Text HLabel 4000 3500 0    50   Input ~ 0
 BUS6
-Text HLabel 4050 3600 0    50   Input ~ 0
+Text HLabel 4000 3600 0    50   Input ~ 0
 BUS7
-Text HLabel 4600 2900 2    50   Input ~ 0
+Text HLabel 4550 2900 2    50   Input ~ 0
 BUS0
-Text HLabel 4600 3000 2    50   Input ~ 0
+Text HLabel 4550 3000 2    50   Input ~ 0
 BUS1
-Text HLabel 4600 3100 2    50   Input ~ 0
+Text HLabel 4550 3100 2    50   Input ~ 0
 BUS2
-Text HLabel 4600 3200 2    50   Input ~ 0
+Text HLabel 4550 3200 2    50   Input ~ 0
 BUS3
-Text HLabel 4600 3300 2    50   Input ~ 0
+Text HLabel 4550 3300 2    50   Input ~ 0
 BUS4
-Text HLabel 4600 3400 2    50   Input ~ 0
+Text HLabel 4550 3400 2    50   Input ~ 0
 BUS5
-Text HLabel 4600 3500 2    50   Input ~ 0
+Text HLabel 4550 3500 2    50   Input ~ 0
 BUS6
-Text HLabel 4600 3600 2    50   Input ~ 0
+Text HLabel 4550 3600 2    50   Input ~ 0
 BUS7
-Text HLabel 4050 3800 0    50   Input ~ 0
+Text HLabel 4000 3800 0    50   Input ~ 0
 REG_M2_IN
-Text HLabel 4600 3700 2    50   Input ~ 0
+Text HLabel 4550 3700 2    50   Input ~ 0
 ~REG_M2_OUT
 Text HLabel 5800 1700 2    50   Input ~ 0
 BUS0
@@ -446,4 +446,184 @@ Text HLabel 5800 1500 2    50   Input ~ 0
 TASK6
 Text HLabel 5800 1600 2    50   Input ~ 0
 TASK7
+$Sheet
+S 1000 4300 550  1100
+U 5B789019
+F0 "Register S0" 50
+F1 "register.sch" 50
+F2 "REG_IN" I L 1000 5300 50 
+F3 "I0" I L 1000 4400 50 
+F4 "I1" I L 1000 4500 50 
+F5 "I2" I L 1000 4600 50 
+F6 "I3" I L 1000 4700 50 
+F7 "I4" I L 1000 4800 50 
+F8 "I5" I L 1000 4900 50 
+F9 "I6" I L 1000 5000 50 
+F10 "I7" I L 1000 5100 50 
+F11 "~REG_OUT" I R 1550 5200 50 
+F12 "O0" I R 1550 4400 50 
+F13 "O1" I R 1550 4500 50 
+F14 "O2" I R 1550 4600 50 
+F15 "O3" I R 1550 4700 50 
+F16 "O4" I R 1550 4800 50 
+F17 "O5" I R 1550 4900 50 
+F18 "O6" I R 1550 5000 50 
+F19 "O7" I R 1550 5100 50 
+$EndSheet
+Text HLabel 1000 4400 0    50   Input ~ 0
+BUS0
+Text HLabel 1000 4500 0    50   Input ~ 0
+BUS1
+Text HLabel 1000 4600 0    50   Input ~ 0
+BUS2
+Text HLabel 1000 4700 0    50   Input ~ 0
+BUS3
+Text HLabel 1000 4800 0    50   Input ~ 0
+BUS4
+Text HLabel 1000 4900 0    50   Input ~ 0
+BUS5
+Text HLabel 1000 5000 0    50   Input ~ 0
+BUS6
+Text HLabel 1000 5100 0    50   Input ~ 0
+BUS7
+Text HLabel 1550 4400 2    50   Input ~ 0
+BUS0
+Text HLabel 1550 4500 2    50   Input ~ 0
+BUS1
+Text HLabel 1550 4600 2    50   Input ~ 0
+BUS2
+Text HLabel 1550 4700 2    50   Input ~ 0
+BUS3
+Text HLabel 1550 4800 2    50   Input ~ 0
+BUS4
+Text HLabel 1550 4900 2    50   Input ~ 0
+BUS5
+Text HLabel 1550 5000 2    50   Input ~ 0
+BUS6
+Text HLabel 1550 5100 2    50   Input ~ 0
+BUS7
+Text HLabel 1000 5300 0    50   Input ~ 0
+REG_S0_IN
+Text HLabel 1550 5200 2    50   Input ~ 0
+~REG_S0_OUT
+$Sheet
+S 2500 4300 550  1100
+U 5B7890ED
+F0 "Register S1" 50
+F1 "register.sch" 50
+F2 "REG_IN" I L 2500 5300 50 
+F3 "I0" I L 2500 4400 50 
+F4 "I1" I L 2500 4500 50 
+F5 "I2" I L 2500 4600 50 
+F6 "I3" I L 2500 4700 50 
+F7 "I4" I L 2500 4800 50 
+F8 "I5" I L 2500 4900 50 
+F9 "I6" I L 2500 5000 50 
+F10 "I7" I L 2500 5100 50 
+F11 "~REG_OUT" I R 3050 5200 50 
+F12 "O0" I R 3050 4400 50 
+F13 "O1" I R 3050 4500 50 
+F14 "O2" I R 3050 4600 50 
+F15 "O3" I R 3050 4700 50 
+F16 "O4" I R 3050 4800 50 
+F17 "O5" I R 3050 4900 50 
+F18 "O6" I R 3050 5000 50 
+F19 "O7" I R 3050 5100 50 
+$EndSheet
+Text HLabel 2500 4400 0    50   Input ~ 0
+BUS0
+Text HLabel 2500 4500 0    50   Input ~ 0
+BUS1
+Text HLabel 2500 4600 0    50   Input ~ 0
+BUS2
+Text HLabel 2500 4700 0    50   Input ~ 0
+BUS3
+Text HLabel 2500 4800 0    50   Input ~ 0
+BUS4
+Text HLabel 2500 4900 0    50   Input ~ 0
+BUS5
+Text HLabel 2500 5000 0    50   Input ~ 0
+BUS6
+Text HLabel 2500 5100 0    50   Input ~ 0
+BUS7
+Text HLabel 3050 4400 2    50   Input ~ 0
+BUS0
+Text HLabel 3050 4500 2    50   Input ~ 0
+BUS1
+Text HLabel 3050 4600 2    50   Input ~ 0
+BUS2
+Text HLabel 3050 4700 2    50   Input ~ 0
+BUS3
+Text HLabel 3050 4800 2    50   Input ~ 0
+BUS4
+Text HLabel 3050 4900 2    50   Input ~ 0
+BUS5
+Text HLabel 3050 5000 2    50   Input ~ 0
+BUS6
+Text HLabel 3050 5100 2    50   Input ~ 0
+BUS7
+Text HLabel 2500 5300 0    50   Input ~ 0
+REG_S1_IN
+Text HLabel 3050 5200 2    50   Input ~ 0
+~REG_S1_OUT
+$Sheet
+S 4000 4300 550  1100
+U 5B789113
+F0 "Register S2" 50
+F1 "register.sch" 50
+F2 "REG_IN" I L 4000 5300 50 
+F3 "I0" I L 4000 4400 50 
+F4 "I1" I L 4000 4500 50 
+F5 "I2" I L 4000 4600 50 
+F6 "I3" I L 4000 4700 50 
+F7 "I4" I L 4000 4800 50 
+F8 "I5" I L 4000 4900 50 
+F9 "I6" I L 4000 5000 50 
+F10 "I7" I L 4000 5100 50 
+F11 "~REG_OUT" I R 4550 5200 50 
+F12 "O0" I R 4550 4400 50 
+F13 "O1" I R 4550 4500 50 
+F14 "O2" I R 4550 4600 50 
+F15 "O3" I R 4550 4700 50 
+F16 "O4" I R 4550 4800 50 
+F17 "O5" I R 4550 4900 50 
+F18 "O6" I R 4550 5000 50 
+F19 "O7" I R 4550 5100 50 
+$EndSheet
+Text HLabel 4000 4400 0    50   Input ~ 0
+BUS0
+Text HLabel 4000 4500 0    50   Input ~ 0
+BUS1
+Text HLabel 4000 4600 0    50   Input ~ 0
+BUS2
+Text HLabel 4000 4700 0    50   Input ~ 0
+BUS3
+Text HLabel 4000 4800 0    50   Input ~ 0
+BUS4
+Text HLabel 4000 4900 0    50   Input ~ 0
+BUS5
+Text HLabel 4000 5000 0    50   Input ~ 0
+BUS6
+Text HLabel 4000 5100 0    50   Input ~ 0
+BUS7
+Text HLabel 4550 4400 2    50   Input ~ 0
+BUS0
+Text HLabel 4550 4500 2    50   Input ~ 0
+BUS1
+Text HLabel 4550 4600 2    50   Input ~ 0
+BUS2
+Text HLabel 4550 4700 2    50   Input ~ 0
+BUS3
+Text HLabel 4550 4800 2    50   Input ~ 0
+BUS4
+Text HLabel 4550 4900 2    50   Input ~ 0
+BUS5
+Text HLabel 4550 5000 2    50   Input ~ 0
+BUS6
+Text HLabel 4550 5100 2    50   Input ~ 0
+BUS7
+Text HLabel 4000 5300 0    50   Input ~ 0
+REG_S2_IN
+Text HLabel 4550 5200 2    50   Input ~ 0
+~REG_S2_OUT
 $EndSCHEMATC
