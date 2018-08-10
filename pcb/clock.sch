@@ -1799,12 +1799,6 @@ $EndComp
 NoConn ~ 11700 2350
 Text Label 11700 1950 0    50   ~ 0
 187KHZ_CLK
-Text Label 11700 2050 0    50   ~ 0
-94KHZ_CLK
-Text Label 11700 2150 0    50   ~ 0
-47KHZ_CLK
-Text Label 3400 5200 2    50   ~ 0
-47KHZ_CLK
 Text Label 3400 5100 2    50   ~ 0
 187KHZ_CLK
 Wire Notes Line
@@ -1859,5 +1853,10 @@ F 3 "" H 14600 5300 50  0001 C CNN
 $EndComp
 NoConn ~ 11700 1750
 NoConn ~ 11700 1850
-NoConn ~ 11700 2050
+Text HLabel 11700 2150 2    50   Input ~ 0
+47KHZ_CLK
+Text HLabel 11700 2050 2    50   Input ~ 0
+94KHZ_CLK
+Text HLabel 3400 5200 0    50   Input ~ 0
+47KHZ_CLK
 $EndSCHEMATC
