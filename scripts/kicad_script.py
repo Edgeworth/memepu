@@ -50,7 +50,6 @@ out_labels = [
 '~PC2_OUT_NCLK',
 '~STATUS_OUT_NCLK',
 '~INT_OUT_NCLK',
-'~SUM_OUT_NCLK',
 '~MMU_OUT_NCLK',
 '~MMU_CONTROL_OUT_NCLK',
 '~TASK_OUT_NCLK',
@@ -67,15 +66,10 @@ out_labels = [
 ]
 
 ctrl_labels = [
-'SUB_NCLK',
 '~RESET_NCLK',
 '~RESET_UOP_COUNT_NCLK',
 '~SET_INT_ENABLE_ASYNC',
 '~UNSET_INT_ENABLE_ASYNC',
-'PC_INC_NCLK',
-'~SP_INC_NCLK',
-'~SP_DEC_NCLK',
-'ALU_FLAG_SET_NCLK',
 ]
 
 misc_labels = [
