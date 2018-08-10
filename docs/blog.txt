@@ -29,7 +29,6 @@
 - change opcode registers to regular registers?
  - Not using increment functionality.
  - what do for setting to zero? - make opcode registers 74HC273 which has main reset, but no tri-state output. It is write only, so it doesn't matter.
-- change pc and sp to be regular registers. will do increment/decrement in software using MLU.
 - Remove ALU, use MLU instead
  - ops are: add, sub, div, mod, mul, single, alu status, nand
  - add special MLU registers?
@@ -54,6 +53,7 @@ Fixed:
  - 12, 6, 3, 1.5, 700, 350, 125, 60
 - feed display module clock from frequency divider, can remove 555 timer circuitry and counters. May need to add second 8 bit counter to frequency dividers but probably not
 - need to pulldown interrupt lines to GND? otherwise they will be floating if not connected.
+- change pc and sp to be regular registers. will do increment/decrement in software using MLU.
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
