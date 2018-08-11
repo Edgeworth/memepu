@@ -29,8 +29,8 @@ Actually made out of 4 bit binary counters.
 - PC0, PC1, PC2
 Initial: 0
 
-#### DISP - Display output - write only
-- DISP
+#### DISP - Display output and mode - write only
+- DISP, DISP_MODE
 
 #### Internal MMU registers for loading - write only
 - MMU0, MMU1, MMU2
@@ -72,7 +72,7 @@ IN plane:
 	PC0, PC1, PC2, 
 	MMU0, MMU1, MMU2, 
 	MMU, MMU_CONTROL, 
-	DISP, 
+	DISP, DISP_MODE
 	TASK, 
 	OPCODE0, OPCODE1,
 	INT0, INT1, INT2, INT3, INT4, INT5, INT6, INT7
