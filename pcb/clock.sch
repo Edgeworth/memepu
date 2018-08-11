@@ -1664,7 +1664,7 @@ U 1 1 5B6EDC8B
 P 11300 1950
 F 0 "U6" H 11300 1950 50  0000 C CNN
 F 1 "74HC590" H 11300 1700 50  0000 C CNN
-F 2 "" H 11300 2000 50  0001 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 11300 2000 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC590.pdf" H 11300 2000 50  0001 C CNN
 	1    11300 1950
 	1    0    0    -1  
