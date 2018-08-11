@@ -1717,7 +1717,8 @@ Text Label 3400 5700 2    50   ~ 0
 MICROOP4
 Text Label 1600 5700 2    50   ~ 0
 MICROOP4
-NoConn ~ 8500 7750
 Text HLabel 9050 7850 2    50   Input ~ 0
 DISP_MODE_IN_CLK
+Text HLabel 8500 7750 0    50   Input ~ 0
+INT_IN_CLK
 $EndSCHEMATC
