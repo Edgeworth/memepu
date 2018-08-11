@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
 encoding utf-8
-Sheet 25 29
+Sheet 26 30
 Title ""
 Date ""
 Rev ""
@@ -1055,7 +1055,7 @@ Text HLabel 9050 7350 2    50   Input ~ 0
 MMU1_IN_CLK
 Text HLabel 9050 7750 2    50   Input ~ 0
 DISP_IN_CLK
-Text HLabel 9050 7850 2    50   Input ~ 0
+Text HLabel 9050 7950 2    50   Input ~ 0
 TASK_IN_CLK
 Text HLabel 8500 7550 0    50   Input ~ 0
 INT0_IN_CLK
@@ -1529,11 +1529,9 @@ MMU_IN_CLK
 Text Label 9050 7650 0    50   ~ 0
 MMU_CONTROL_IN_CLK
 NoConn ~ 8500 7650
-NoConn ~ 8500 7750
-NoConn ~ 8500 7850
-Text Label 9050 7950 0    50   ~ 0
-OPCODE0_IN_CLK
 Text Label 8500 7950 2    50   ~ 0
+OPCODE0_IN_CLK
+Text Label 8500 7850 2    50   ~ 0
 OPCODE1_IN_CLK
 Text Label 10550 6150 2    50   ~ 0
 MMU_IN_CLK
@@ -1742,4 +1740,7 @@ Text Label 3400 5700 2    50   ~ 0
 MICROOP4
 Text Label 1600 5700 2    50   ~ 0
 MICROOP4
+NoConn ~ 8500 7750
+Text HLabel 9050 7850 2    50   Input ~ 0
+DISP_MODE_IN_CLK
 $EndSCHEMATC

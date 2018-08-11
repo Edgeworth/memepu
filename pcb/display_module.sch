@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 11 29
+Sheet 16 30
 Title ""
 Date ""
 Rev ""
@@ -90,8 +90,6 @@ F 3 "" H 1100 2400 50  0001 C CNN
 	1    1100 2400
 	0    1    1    0   
 $EndComp
-Text Notes 1200 3350 0    50   ~ 0
-Two JK flipflops form a 2 bit binary counter
 $Comp
 L Display_Character:HDSP-7803 U25
 U 1 1 5B029BDE
@@ -102,17 +100,6 @@ F 2 "Display_7Segment:HDSP-7801" H 3100 1700 50  0001 C CNN
 F 3 "https://docs.broadcom.com/docs/AV02-2553EN" H 3100 2250 50  0001 C CNN
 	1    3100 2250
 	1    0    0    -1  
-$EndComp
-$Comp
-L Switch:SW_DIP_x03 SW5
-U 1 1 5B02B242
-P 1100 4250
-F 0 "SW5" V 1146 4120 50  0000 R CNN
-F 1 "SW_DIP_x03" V 1055 4120 50  0000 R CNN
-F 2 "Button_Switch_THT:SW_DIP_SPSTx03_Slide_9.78x9.8mm_W7.62mm_P2.54mm" H 1100 4250 50  0001 C CNN
-F 3 "" H 1100 4250 50  0001 C CNN
-	1    1100 4250
-	0    -1   -1   0   
 $EndComp
 $Comp
 L Display_Character:HDSP-7803 U26
@@ -352,108 +339,6 @@ Wire Wire Line
 Text HLabel 2100 4450 0    50   Input ~ 0
 DISP_IN
 $Comp
-L Device:R R33
-U 1 1 5B064869
-P 2000 5000
-F 0 "R33" V 1900 5000 50  0000 C CNN
-F 1 "100K" V 2000 5000 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 1930 5000 50  0001 C CNN
-F 3 "~" H 2000 5000 50  0001 C CNN
-	1    2000 5000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R34
-U 1 1 5B067DBC
-P 2200 5000
-F 0 "R34" V 2100 5000 50  0000 C CNN
-F 1 "100K" V 2200 5000 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 2130 5000 50  0001 C CNN
-F 3 "~" H 2200 5000 50  0001 C CNN
-	1    2200 5000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R35
-U 1 1 5B068448
-P 2400 5000
-F 0 "R35" V 2300 5000 50  0000 C CNN
-F 1 "100K" V 2400 5000 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 2330 5000 50  0001 C CNN
-F 3 "~" H 2400 5000 50  0001 C CNN
-	1    2400 5000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3350 4550 2850 4550
-Wire Wire Line
-	2850 4550 2850 4650
-Wire Wire Line
-	2900 4700 2900 4650
-Wire Wire Line
-	2900 4650 3350 4650
-$Comp
-L power:VCC #PWR0162
-U 1 1 5B0742D0
-P 900 3950
-F 0 "#PWR0162" H 900 3800 50  0001 C CNN
-F 1 "VCC" H 917 4123 50  0000 C CNN
-F 2 "" H 900 3950 50  0001 C CNN
-F 3 "" H 900 3950 50  0001 C CNN
-	1    900  3950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	900  3950 1000 3950
-Connection ~ 900  3950
-Wire Wire Line
-	1000 3950 1100 3950
-Connection ~ 1000 3950
-Wire Wire Line
-	900  4550 900  4650
-Wire Wire Line
-	900  4650 2000 4650
-Wire Wire Line
-	1000 4550 1000 4700
-Wire Wire Line
-	1000 4700 2200 4700
-Wire Wire Line
-	1100 4550 1100 4750
-Wire Wire Line
-	1100 4750 2400 4750
-Wire Wire Line
-	2000 4650 2000 4850
-Connection ~ 2000 4650
-Wire Wire Line
-	2000 4650 2850 4650
-Wire Wire Line
-	2200 4700 2200 4850
-Connection ~ 2200 4700
-Wire Wire Line
-	2200 4700 2900 4700
-Wire Wire Line
-	2400 4750 2400 4850
-Connection ~ 2400 4750
-Wire Wire Line
-	2400 4750 3350 4750
-$Comp
-L power:GND #PWR0163
-U 1 1 5B07E43B
-P 2000 5150
-F 0 "#PWR0163" H 2000 4900 50  0001 C CNN
-F 1 "GND" H 2005 4977 50  0000 C CNN
-F 2 "" H 2000 5150 50  0001 C CNN
-F 3 "" H 2000 5150 50  0001 C CNN
-	1    2000 5150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2000 5150 2200 5150
-Connection ~ 2000 5150
-Wire Wire Line
-	2200 5150 2400 5150
-Connection ~ 2200 5150
-$Comp
 L Device:R R36
 U 1 1 5B091D6D
 P 2250 2100
@@ -497,30 +382,6 @@ F 3 "~" H 2250 2400 50  0001 C CNN
 	1    2250 2400
 	0    1    1    0   
 $EndComp
-$Sheet
-S 2100 3450 550  1100
-U 5B043D5C
-F0 "sheet5B043D48" 50
-F1 "register.sch" 50
-F2 "REG_IN" I L 2100 4450 50 
-F3 "I0" I L 2100 3550 50 
-F4 "I1" I L 2100 3650 50 
-F5 "I2" I L 2100 3750 50 
-F6 "I3" I L 2100 3850 50 
-F7 "I4" I L 2100 3950 50 
-F8 "I5" I L 2100 4050 50 
-F9 "I6" I L 2100 4150 50 
-F10 "I7" I L 2100 4250 50 
-F11 "~REG_OUT" I R 2650 4350 50 
-F12 "O0" I R 2650 3550 50 
-F13 "O1" I R 2650 3650 50 
-F14 "O2" I R 2650 3750 50 
-F15 "O3" I R 2650 3850 50 
-F16 "O4" I R 2650 3950 50 
-F17 "O5" I R 2650 4050 50 
-F18 "O6" I R 2650 4150 50 
-F19 "O7" I R 2650 4250 50 
-$EndSheet
 $Comp
 L power:GND #PWR049
 U 1 1 5B0A97E2
@@ -544,28 +405,6 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/doc0006.pdf" H 3750 4450 50
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR0461
-U 1 1 5B548238
-P 3350 4850
-F 0 "#PWR0461" H 3350 4600 50  0001 C CNN
-F 1 "GND" V 3355 4722 50  0000 R CNN
-F 2 "" H 3350 4850 50  0001 C CNN
-F 3 "" H 3350 4850 50  0001 C CNN
-	1    3350 4850
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0462
-U 1 1 5B5482D9
-P 3350 4950
-F 0 "#PWR0462" H 3350 4700 50  0001 C CNN
-F 1 "GND" V 3355 4822 50  0000 R CNN
-F 2 "" H 3350 4950 50  0001 C CNN
-F 3 "" H 3350 4950 50  0001 C CNN
-	1    3350 4950
-	0    1    1    0   
-$EndComp
-$Comp
 L power:GND #PWR0469
 U 1 1 5B54AF62
 P 4200 3050
@@ -585,8 +424,108 @@ Text HLabel 1100 2100 0    50   Input ~ 0
 DISP_CLK0
 Text HLabel 1100 2200 0    50   Input ~ 0
 DISP_CLK1
-Text HLabel 3350 4350 0    50   Input ~ 0
+Text HLabel 3350 4950 0    50   Input ~ 0
 DISP_CLK0
-Text HLabel 3350 4450 0    50   Input ~ 0
+Text HLabel 3350 4850 0    50   Input ~ 0
 DISP_CLK1
+$Sheet
+S 2100 3450 550  1100
+U 5B043D5C
+F0 "Display Register" 50
+F1 "register.sch" 50
+F2 "REG_IN" I L 2100 4450 50 
+F3 "I0" I L 2100 3550 50 
+F4 "I1" I L 2100 3650 50 
+F5 "I2" I L 2100 3750 50 
+F6 "I3" I L 2100 3850 50 
+F7 "I4" I L 2100 3950 50 
+F8 "I5" I L 2100 4050 50 
+F9 "I6" I L 2100 4150 50 
+F10 "I7" I L 2100 4250 50 
+F11 "~REG_OUT" I R 2650 4350 50 
+F12 "O0" I R 2650 3550 50 
+F13 "O1" I R 2650 3650 50 
+F14 "O2" I R 2650 3750 50 
+F15 "O3" I R 2650 3850 50 
+F16 "O4" I R 2650 3950 50 
+F17 "O5" I R 2650 4050 50 
+F18 "O6" I R 2650 4150 50 
+F19 "O7" I R 2650 4250 50 
+$EndSheet
+$Sheet
+S 1600 4950 550  1100
+U 5B70E496
+F0 "Display Mode Register" 50
+F1 "register.sch" 50
+F2 "REG_IN" I L 1600 5950 50 
+F3 "I0" I L 1600 5050 50 
+F4 "I1" I L 1600 5150 50 
+F5 "I2" I L 1600 5250 50 
+F6 "I3" I L 1600 5350 50 
+F7 "I4" I L 1600 5450 50 
+F8 "I5" I L 1600 5550 50 
+F9 "I6" I L 1600 5650 50 
+F10 "I7" I L 1600 5750 50 
+F11 "~REG_OUT" I R 2150 5850 50 
+F12 "O0" I R 2150 5050 50 
+F13 "O1" I R 2150 5150 50 
+F14 "O2" I R 2150 5250 50 
+F15 "O3" I R 2150 5350 50 
+F16 "O4" I R 2150 5450 50 
+F17 "O5" I R 2150 5550 50 
+F18 "O6" I R 2150 5650 50 
+F19 "O7" I R 2150 5750 50 
+$EndSheet
+Text HLabel 1600 5050 0    50   Input ~ 0
+BUS0
+Text HLabel 1600 5150 0    50   Input ~ 0
+BUS1
+Text HLabel 1600 5250 0    50   Input ~ 0
+BUS2
+Text HLabel 1600 5350 0    50   Input ~ 0
+BUS3
+Text HLabel 1600 5450 0    50   Input ~ 0
+BUS4
+Text HLabel 1600 5550 0    50   Input ~ 0
+BUS5
+Text HLabel 1600 5650 0    50   Input ~ 0
+BUS6
+Text HLabel 1600 5750 0    50   Input ~ 0
+BUS7
+$Comp
+L power:GND #PWR014
+U 1 1 5B70E6E0
+P 2150 5850
+F 0 "#PWR014" H 2150 5600 50  0001 C CNN
+F 1 "GND" H 2155 5677 50  0000 C CNN
+F 2 "" H 2150 5850 50  0001 C CNN
+F 3 "" H 2150 5850 50  0001 C CNN
+	1    2150 5850
+	0    -1   -1   0   
+$EndComp
+Text HLabel 1600 5950 0    50   Input ~ 0
+DISP_MODE_IN
+Text Label 2150 5050 0    50   ~ 0
+MODE0
+Text Label 2150 5150 0    50   ~ 0
+MODE1
+Text Label 2150 5250 0    50   ~ 0
+MODE2
+Text Label 2150 5350 0    50   ~ 0
+MODE3
+Text Label 2150 5450 0    50   ~ 0
+MODE4
+NoConn ~ 2150 5550
+NoConn ~ 2150 5650
+NoConn ~ 2150 5750
+Text Label 3350 4350 2    50   ~ 0
+MODE0
+Text Label 3350 4450 2    50   ~ 0
+MODE1
+Text Label 3350 4550 2    50   ~ 0
+MODE2
+Text Label 3350 4650 2    50   ~ 0
+MODE3
+Text Label 3350 4750 2    50   ~ 0
+MODE4
 $EndSCHEMATC
