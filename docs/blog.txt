@@ -8,12 +8,8 @@
  - so 12 MHz from the beginning, but it's not properly started up yet
  - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
  - solutions: make it so button clock from the beginning. increase reset timer
-- ZIF sockets for EEPROM programmer and EEPROM slots on CPU
-- use the bigger eeprom (still atmel one - 256) and add another display register, use it to control display output instead of switches.
-- strange voltage difference problems - e.g. on trying to load PC0, observed voltage at IN plane decoder is ~1 V, observed at PC0 counters is ~4 V - WAS CAUSED BY using 74157 instead of 74161
 - connect up reset to MICRO_OP RESET as well? - can solve this by having opcode 0 just reset micro-op counter for each micro-op
 - power on reset
-- need to NOT A20 going into memory mapped EEPROM
 - don't need increment for single byte regs, since can just output on bus? e.g. opcode0, 1
 - interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch.
 - on adjustable clock, 1 to 70 Hz is pretty useless. Maybe replace 10K resistor with 1K to make it faster?
@@ -29,6 +25,7 @@
 Interesting issues:
 - bodge wires getting crushed and shorting stuff?
 - it's kind of annoying when trying to use AUX Opcode1 register as extra space for micro-ops AND for loading status reg to do if statements at the same time.
+- strange voltage difference problems - e.g. on trying to load PC0, observed voltage at IN plane decoder is ~1 V, observed at PC0 counters is ~4 V - WAS CAUSED BY using 74157 instead of 74161
 
 Fixed:
 - peripheral interconnect - has INT_LATCH lines instead of INT lines. - FIXED
@@ -56,6 +53,7 @@ Fixed:
 - bump micro-op count to 5 bit?
  - replace micro-op counter with 74hc590?
 - connect display module to register not dip switches
+- need to NOT A20 going into memory mapped EEPROM
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:

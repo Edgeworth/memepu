@@ -1028,17 +1028,6 @@ F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 7850 6550 50  000
 	5    7850 6550
 	1    0    0    -1  
 $EndComp
-$Comp
-L 74xx:74HC04 U114
-U 6 1 5B141E3D
-P 19750 2900
-F 0 "U114" H 19750 2900 50  0000 C CNN
-F 1 "74HC04" H 19900 2800 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 19750 2900 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 19750 2900 50  0001 C CNN
-	6    19750 2900
-	1    0    0    -1  
-$EndComp
 Text HLabel 9050 6150 2    50   Input ~ 0
 A_IN_CLK
 Text HLabel 9050 6250 2    50   Input ~ 0
@@ -1380,18 +1369,6 @@ Text HLabel 9050 7050 2    50   Input ~ 0
 PC1_IN_CLK
 Text HLabel 9050 7150 2    50   Input ~ 0
 PC2_IN_CLK
-$Comp
-L power:GND #PWR0187
-U 1 1 5B6F885A
-P 19450 2900
-F 0 "#PWR0187" H 19450 2650 50  0001 C CNN
-F 1 "GND" V 19455 2772 50  0000 R CNN
-F 2 "" H 19450 2900 50  0001 C CNN
-F 3 "" H 19450 2900 50  0001 C CNN
-	1    19450 2900
-	0    1    1    0   
-$EndComp
-NoConn ~ 20050 2900
 $Comp
 L 74xx:74LS08 U117
 U 4 1 5B715A18
