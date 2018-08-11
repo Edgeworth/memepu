@@ -835,7 +835,7 @@ Text Label 8950 5850 2    50   ~ 0
 Text Label 10450 1700 2    50   ~ 0
 ~RESET_NCLK
 Text Notes 1250 700  0    50   ~ 0
-TODO: Reset uop counter flag - check and remove from Control logic hierarchy.\n
+TODO: Clean up order of signals here.
 Text Label 1650 3150 2    50   ~ 0
 ~RESET
 Text Label 10550 5850 0    50   ~ 0
@@ -989,7 +989,6 @@ Text Label 14800 4850 2    50   ~ 0
 INT6
 Text Label 14800 4950 2    50   ~ 0
 INT7
-NoConn ~ 8900 4550
 Text Notes 8350 4900 0    50   ~ 0
 TODO: Connect this up\n
 Text Notes 14350 7400 0    50   ~ 0
@@ -1079,6 +1078,7 @@ F78 "PC0_IN_CLK" I R 3700 4050 50
 F79 "PC1_IN_CLK" I R 3700 4150 50 
 F80 "PC2_IN_CLK" I R 3700 4250 50 
 F81 "DISP_MODE_IN_CLK" I R 3700 5850 50 
+F82 "INT_IN_CLK" I R 3700 7050 50 
 $EndSheet
 Text Label 11100 1450 0    50   ~ 0
 94KHZ_CLK
@@ -1141,4 +1141,8 @@ Text Label 8550 2200 2    50   ~ 0
 DISP_MODE_IN_CLK
 Text Label 3700 5850 0    50   ~ 0
 DISP_MODE_IN_CLK
+Text Label 8900 4550 2    50   ~ 0
+INT_IN_CLK
+Text Label 3700 7050 0    50   ~ 0
+INT_IN_CLK
 $EndSCHEMATC

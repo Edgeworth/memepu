@@ -10,8 +10,6 @@
  - solutions: make it so button clock from the beginning. increase reset timer
 - connect up reset to MICRO_OP RESET as well? - can solve this by having opcode 0 just reset micro-op counter for each micro-op
 - power on reset
-- don't need increment for single byte regs, since can just output on bus? e.g. opcode0, 1
-- interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch.
 - can use memory as extra registers? m0,1,2 may have to stay though
 - make status bit for booted or not? use that to decide if have permissions to run opcodes.
 - add special MLU registers?
@@ -56,6 +54,7 @@ Fixed:
 - connect display module to register not dip switches
 - need to NOT A20 going into memory mapped EEPROM
 - on adjustable clock, 1 to 70 Hz is pretty useless. Maybe replace 10K resistor with 1K to make it faster?
+- interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch.
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
