@@ -12,15 +12,16 @@
 - power on reset
 - don't need increment for single byte regs, since can just output on bus? e.g. opcode0, 1
 - interrupt latch INT_IN_CLK not connected to anything. Should just connect to CLK ? If so, value of INT_FLAG (any interrupt?) could change during an instruction. maybe want to make it a poll thing, then latch.
-- on adjustable clock, 1 to 70 Hz is pretty useless. Maybe replace 10K resistor with 1K to make it faster?
 - can use memory as extra registers? m0,1,2 may have to stay though
-- add protection for instructions ? need task register to be set to zero on boot not via an instruction but preset via reset line or something. Then privileged instructions can just check task reg by comparing to zero. If not have task register set to be zero on reset then application code can call boot opcode / microop counter setup opcode. this effectively reboots the machine.
 - make status bit for booted or not? use that to decide if have permissions to run opcodes.
 - add special MLU registers?
 - have registers in sets of three to enable potential microcode based 3 byte words.
 - rename a, b to a0, a1, a2, b0, b1, b2?
 - don't set interrupt flag asynchronously?
 - temporarily remove extra memory to reduce size?
+
+Software changes:
+- add protection for instructions ? need task register to be set to zero on boot not via an instruction but preset via reset line or something. Then privileged instructions can just check task reg by comparing to zero. If not have task register set to be zero on reset then application code can call boot opcode / microop counter setup opcode. this effectively reboots the machine. Alternatively, can have booted flag which boot instruction checks then sets.
 
 Interesting issues:
 - bodge wires getting crushed and shorting stuff?
@@ -54,6 +55,7 @@ Fixed:
  - replace micro-op counter with 74hc590?
 - connect display module to register not dip switches
 - need to NOT A20 going into memory mapped EEPROM
+- on adjustable clock, 1 to 70 Hz is pretty useless. Maybe replace 10K resistor with 1K to make it faster?
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
