@@ -32,6 +32,7 @@
 - rename a, b to a0, a1, a2, b0, b1, b2?
 - connect display module to register not dip switches
 - don't set interrupt flag asynchronously?
+- can use output enable flag on CTRL logic bus output instead of a buffer.
 
 Interesting issues:
 - bodge wires getting crushed and shorting stuff?
