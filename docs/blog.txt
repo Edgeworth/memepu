@@ -24,15 +24,12 @@
 - make status bit for booted or not? use that to decide if have permissions to run opcodes.
 - bump micro-op count to 5 bit?
  - replace micro-op counter with 74hc590?
-- change opcode registers to regular registers?
- - Not using increment functionality.
- - what do for setting to zero? - make opcode registers 74HC273 which has main reset, but no tri-state output. It is write only, so it doesn't matter.
+
 - add special MLU registers?
 - have registers in sets of three to enable potential microcode based 3 byte words.
 - rename a, b to a0, a1, a2, b0, b1, b2?
 - connect display module to register not dip switches
 - don't set interrupt flag asynchronously?
-- can use output enable flag on CTRL logic bus output instead of a buffer.
 
 Interesting issues:
 - bodge wires getting crushed and shorting stuff?
@@ -56,6 +53,10 @@ Fixed:
 - ZERO LOGIC is wrong. Used NAND, should be NOR. Maybe there is a better way to do it though. will be fixed by removing ALU.
 - switch to active high decoders to remove a bunch of nots for in plane? using 74hc238 * 4
  - can remove clock anders by wiring clock to enable input on 74hc238? + delete and clk + or clk sheet
+- change opcode registers to regular registers?
+ - Not using increment functionality.
+ - what do for setting to zero? - make opcode registers 74HC273 which has main reset, but no tri-state output. It is write only, so it doesn't matter.
+- can use output enable flag on CTRL logic bus output instead of a buffer, if we make MLU pins not overlap with it, by reducing the number of things for the multi-plane.
 
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
