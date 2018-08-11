@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 19 30
+Sheet 21 30
 Title ""
 Date ""
 Rev ""
@@ -142,23 +142,23 @@ M20
 $Comp
 L power:VCC #PWR0289
 U 1 1 5B097BEB
-P 6000 3400
-F 0 "#PWR0289" H 6000 3250 50  0001 C CNN
-F 1 "VCC" H 6017 3573 50  0000 C CNN
-F 2 "" H 6000 3400 50  0001 C CNN
-F 3 "" H 6000 3400 50  0001 C CNN
-	1    6000 3400
+P 6100 3200
+F 0 "#PWR0289" H 6100 3050 50  0001 C CNN
+F 1 "VCC" H 6117 3373 50  0000 C CNN
+F 2 "" H 6100 3200 50  0001 C CNN
+F 3 "" H 6100 3200 50  0001 C CNN
+	1    6100 3200
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0290
 U 1 1 5B097C44
-P 6000 5500
-F 0 "#PWR0290" H 6000 5250 50  0001 C CNN
-F 1 "GND" H 6005 5327 50  0000 C CNN
-F 2 "" H 6000 5500 50  0001 C CNN
-F 3 "" H 6000 5500 50  0001 C CNN
-	1    6000 5500
+P 6100 4500
+F 0 "#PWR0290" H 6100 4250 50  0001 C CNN
+F 1 "GND" H 6105 4327 50  0000 C CNN
+F 2 "" H 6100 4500 50  0001 C CNN
+F 3 "" H 6100 4500 50  0001 C CNN
+	1    6100 4500
 	1    0    0    -1  
 $EndComp
 Text Label 9200 1050 2    50   ~ 0
@@ -216,32 +216,21 @@ Text HLabel 9200 3050 0    50   Input ~ 0
 Text HLabel 9200 3150 0    50   Input ~ 0
 ~MMU_IN
 $Comp
-L power:GND #PWR0292
-U 1 1 5B0985CB
-P 5500 4200
-F 0 "#PWR0292" H 5500 3950 50  0001 C CNN
-F 1 "GND" V 5505 4072 50  0000 R CNN
-F 2 "" H 5500 4200 50  0001 C CNN
-F 3 "" H 5500 4200 50  0001 C CNN
-	1    5500 4200
-	0    1    1    0   
-$EndComp
-$Comp
 L power:GND #PWR0293
 U 1 1 5B0985DC
-P 5500 4300
-F 0 "#PWR0293" H 5500 4050 50  0001 C CNN
-F 1 "GND" V 5505 4172 50  0000 R CNN
-F 2 "" H 5500 4300 50  0001 C CNN
-F 3 "" H 5500 4300 50  0001 C CNN
-	1    5500 4300
+P 5600 4200
+F 0 "#PWR0293" H 5600 3950 50  0001 C CNN
+F 1 "GND" V 5605 4072 50  0000 R CNN
+F 2 "" H 5600 4200 50  0001 C CNN
+F 3 "" H 5600 4200 50  0001 C CNN
+	1    5600 4200
 	0    1    1    0   
 $EndComp
-Text Label 5500 3700 2    50   ~ 0
+Text Label 5600 3500 2    50   ~ 0
 M17
-Text Label 5500 3800 2    50   ~ 0
+Text Label 5600 3600 2    50   ~ 0
 M18
-Text Label 5500 3900 2    50   ~ 0
+Text Label 5600 3700 2    50   ~ 0
 M19
 $Comp
 L Device:C_Small C78
@@ -287,28 +276,7 @@ F 3 "" H 9900 800 50  0001 C CNN
 	1    9900 800 
 	-1   0    0    1   
 $EndComp
-$Comp
-L 74xx:74LS154 U70
-U 1 1 5B099625
-P 6000 4400
-F 0 "U70" H 6000 4450 50  0000 C CNN
-F 1 "74LS154" H 6000 4200 50  0000 C CNN
-F 2 "Package_DIP:DIP-24_W7.62mm_Socket" H 6000 4400 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS154" H 6000 4400 50  0001 C CNN
-	1    6000 4400
-	1    0    0    -1  
-$EndComp
-Text Label 5500 4000 2    50   ~ 0
-M20
-NoConn ~ 6500 4500
-NoConn ~ 6500 4600
-NoConn ~ 6500 4700
-NoConn ~ 6500 4800
-NoConn ~ 6500 4900
-NoConn ~ 6500 5000
-NoConn ~ 6500 5100
-NoConn ~ 6500 5200
-Text Label 7300 5900 2    50   ~ 0
+Text Label 6150 5900 2    50   ~ 0
 M20
 Text Label 7300 3600 2    50   ~ 0
 M0
@@ -986,21 +954,21 @@ F 3 "" H 15500 3500 50  0001 C CNN
 	1    15500 3500
 	-1   0    0    1   
 $EndComp
-Text Label 6500 3700 0    50   ~ 0
+Text Label 6600 3500 0    50   ~ 0
 ~SEL0
-Text Label 6500 3800 0    50   ~ 0
+Text Label 6600 3600 0    50   ~ 0
 ~SEL1
-Text Label 6500 3900 0    50   ~ 0
+Text Label 6600 3700 0    50   ~ 0
 ~SEL2
-Text Label 6500 4000 0    50   ~ 0
+Text Label 6600 3800 0    50   ~ 0
 ~SEL3
-Text Label 6500 4100 0    50   ~ 0
+Text Label 6600 3900 0    50   ~ 0
 ~SEL4
-Text Label 6500 4200 0    50   ~ 0
+Text Label 6600 4000 0    50   ~ 0
 ~SEL5
-Text Label 6500 4300 0    50   ~ 0
+Text Label 6600 4100 0    50   ~ 0
 ~SEL6
-Text Label 6500 4400 0    50   ~ 0
+Text Label 6600 4200 0    50   ~ 0
 ~SEL7
 Text Label 9200 2850 2    50   ~ 0
 ~SEL0
@@ -1324,10 +1292,8 @@ F 3 "" H 3450 5700 50  0001 C CNN
 	1    3450 5700
 	1    0    0    -1  
 $EndComp
-Text Notes 5350 3100 0    50   ~ 0
-Use 4-16 line decoder to select\nwhich memory chip to use. 
 Text Notes 7350 6300 0    50   ~ 0
-M20 reads from memory \nmapped eeprom instead.\nNote that ~OE is active low\nso M20 low = read from EEPROM.
+~M20~ reads from memory \nmapped eeprom instead.\nNote that ~OE~ is active low\nso M20 high = read from EEPROM.
 $Comp
 L 74xx:74HC245 U86
 U 1 1 5B0B7D74
@@ -1378,28 +1344,25 @@ Connection ~ 4000 600
 $Comp
 L Device:C_Small C94
 U 1 1 5B0B9313
-P 6300 3400
-F 0 "C94" V 6529 3400 50  0000 C CNN
-F 1 "0.1uF" V 6438 3400 50  0000 C CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 6300 3400 50  0001 C CNN
-F 3 "~" H 6300 3400 50  0001 C CNN
-	1    6300 3400
+P 6400 3200
+F 0 "C94" V 6629 3200 50  0000 C CNN
+F 1 "0.1uF" V 6538 3200 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 6400 3200 50  0001 C CNN
+F 3 "~" H 6400 3200 50  0001 C CNN
+	1    6400 3200
 	0    -1   -1   0   
 $EndComp
 $Comp
 L power:GND #PWR0344
 U 1 1 5B0B93A5
-P 6400 3400
-F 0 "#PWR0344" H 6400 3150 50  0001 C CNN
-F 1 "GND" H 6405 3227 50  0000 C CNN
-F 2 "" H 6400 3400 50  0001 C CNN
-F 3 "" H 6400 3400 50  0001 C CNN
-	1    6400 3400
+P 6500 3200
+F 0 "#PWR0344" H 6500 2950 50  0001 C CNN
+F 1 "GND" H 6505 3027 50  0000 C CNN
+F 2 "" H 6500 3200 50  0001 C CNN
+F 3 "" H 6500 3200 50  0001 C CNN
+	1    6500 3200
 	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	6200 3400 6000 3400
-Connection ~ 6000 3400
 $Comp
 L power:VCC #PWR0345
 U 1 1 5B0B9FA5
@@ -1565,4 +1528,50 @@ NoConn ~ 8550 1650
 NoConn ~ 8550 1750
 Text Notes 7900 2400 0    50   ~ 0
 Currently, top 3 bits of\naddress space not used.
+$Comp
+L 74xx:74LS138 U41
+U 1 1 5B6EFA87
+P 6100 3800
+F 0 "U41" H 6100 3850 50  0000 C CNN
+F 1 "74LS138" H 6050 3700 50  0000 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm" H 6100 3800 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS138" H 6100 3800 50  0001 C CNN
+	1    6100 3800
+	1    0    0    -1  
+$EndComp
+Text Label 5600 4100 2    50   ~ 0
+M20
+Wire Wire Line
+	6300 3200 6100 3200
+Connection ~ 6100 3200
+Text Notes 4900 4600 0    50   ~ 0
+Enable access to SRAM\nif M20 is low.
+$Comp
+L power:VCC #PWR020
+U 1 1 5B6F46DB
+P 5600 4000
+F 0 "#PWR020" H 5600 3850 50  0001 C CNN
+F 1 "VCC" H 5617 4173 50  0000 C CNN
+F 2 "" H 5600 4000 50  0001 C CNN
+F 3 "" H 5600 4000 50  0001 C CNN
+	1    5600 4000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L 74xx:74HC04 U?
+U 6 1 5B701650
+P 6450 5900
+AR Path="/5B0C6DCD/5B701650" Ref="U?"  Part="6" 
+AR Path="/5B09632F/5B701650" Ref="U114"  Part="6" 
+F 0 "U114" H 6450 5900 50  0000 C CNN
+F 1 "74HC04" H 6600 5800 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 6450 5900 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 6450 5900 50  0001 C CNN
+	6    6450 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6750 5900 7300 5900
+Text Notes 6100 6250 0    50   ~ 0
+SPARE TAKEN\nNOT from Control Logic\n
 $EndSCHEMATC

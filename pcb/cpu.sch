@@ -358,67 +358,67 @@ Text Label 8950 5550 2    50   ~ 0
 Text Label 11100 1050 0    50   ~ 0
 CLK
 $Sheet
-S 6600 9350 1150 1600
+S 6350 8850 1150 1600
 U 5B09632F
 F0 "MMU" 50
 F1 "mmu.sch" 50
-F2 "BUS0" I R 7750 9450 50 
-F3 "BUS1" I R 7750 9550 50 
-F4 "BUS2" I R 7750 9650 50 
-F5 "BUS3" I R 7750 9750 50 
-F6 "BUS4" I R 7750 9850 50 
-F7 "BUS5" I R 7750 9950 50 
-F8 "BUS6" I R 7750 10050 50 
-F9 "BUS7" I R 7750 10150 50 
-F10 "~MMU_OUT" I L 6600 9450 50 
-F11 "~MMU_CONTROL_IN" I L 6600 9650 50 
-F12 "TASK0" I L 6600 9850 50 
-F13 "TASK1" I L 6600 9950 50 
-F14 "TASK2" I L 6600 10050 50 
-F15 "TASK3" I L 6600 10150 50 
-F16 "TASK4" I L 6600 10250 50 
-F17 "TASK5" I L 6600 10350 50 
-F18 "TASK6" I L 6600 10450 50 
-F19 "TASK7" I L 6600 10550 50 
-F20 "~MMU_CONTROL_OUT" I L 6600 9750 50 
-F21 "MMU_READ_FAULT" I R 7750 10250 50 
-F22 "MMU_WRITE_FAULT" I R 7750 10350 50 
-F23 "~MMU_IN" I L 6600 9550 50 
-F24 "MMU0_IN" I L 6600 10650 50 
-F25 "MMU1_IN" I L 6600 10750 50 
-F26 "MMU2_IN" I L 6600 10850 50 
+F2 "BUS0" I R 7500 8950 50 
+F3 "BUS1" I R 7500 9050 50 
+F4 "BUS2" I R 7500 9150 50 
+F5 "BUS3" I R 7500 9250 50 
+F6 "BUS4" I R 7500 9350 50 
+F7 "BUS5" I R 7500 9450 50 
+F8 "BUS6" I R 7500 9550 50 
+F9 "BUS7" I R 7500 9650 50 
+F10 "~MMU_OUT" I L 6350 8950 50 
+F11 "~MMU_CONTROL_IN" I L 6350 9150 50 
+F12 "TASK0" I L 6350 9350 50 
+F13 "TASK1" I L 6350 9450 50 
+F14 "TASK2" I L 6350 9550 50 
+F15 "TASK3" I L 6350 9650 50 
+F16 "TASK4" I L 6350 9750 50 
+F17 "TASK5" I L 6350 9850 50 
+F18 "TASK6" I L 6350 9950 50 
+F19 "TASK7" I L 6350 10050 50 
+F20 "~MMU_CONTROL_OUT" I L 6350 9250 50 
+F21 "MMU_READ_FAULT" I R 7500 9750 50 
+F22 "MMU_WRITE_FAULT" I R 7500 9850 50 
+F23 "~MMU_IN" I L 6350 9050 50 
+F24 "MMU0_IN" I L 6350 10150 50 
+F25 "MMU1_IN" I L 6350 10250 50 
+F26 "MMU2_IN" I L 6350 10350 50 
 $EndSheet
-Text Label 6600 9850 2    50   ~ 0
+Text Label 6350 9350 2    50   ~ 0
 TASK0
-Text Label 6600 9950 2    50   ~ 0
+Text Label 6350 9450 2    50   ~ 0
 TASK1
-Text Label 6600 10050 2    50   ~ 0
+Text Label 6350 9550 2    50   ~ 0
 TASK2
-Text Label 6600 10150 2    50   ~ 0
+Text Label 6350 9650 2    50   ~ 0
 TASK3
-Text Label 6600 10250 2    50   ~ 0
+Text Label 6350 9750 2    50   ~ 0
 TASK4
-Text Label 6600 10350 2    50   ~ 0
+Text Label 6350 9850 2    50   ~ 0
 TASK5
-Text Label 6600 10450 2    50   ~ 0
+Text Label 6350 9950 2    50   ~ 0
 TASK6
-Text Label 6600 10550 2    50   ~ 0
+Text Label 6350 10050 2    50   ~ 0
 TASK7
-Text Label 7750 9450 0    50   ~ 0
+Text Label 7500 8950 0    50   ~ 0
 BUS0
-Text Label 7750 9550 0    50   ~ 0
+Text Label 7500 9050 0    50   ~ 0
 BUS1
-Text Label 7750 9650 0    50   ~ 0
+Text Label 7500 9150 0    50   ~ 0
 BUS2
-Text Label 7750 9750 0    50   ~ 0
+Text Label 7500 9250 0    50   ~ 0
 BUS3
-Text Label 7750 9850 0    50   ~ 0
+Text Label 7500 9350 0    50   ~ 0
 BUS4
-Text Label 7750 9950 0    50   ~ 0
+Text Label 7500 9450 0    50   ~ 0
 BUS5
-Text Label 7750 10050 0    50   ~ 0
+Text Label 7500 9550 0    50   ~ 0
 BUS6
-Text Label 7750 10150 0    50   ~ 0
+Text Label 7500 9650 0    50   ~ 0
 BUS7
 $Comp
 L Device:CP C95
@@ -698,19 +698,19 @@ Text Label 7050 8000 0    50   ~ 0
 MLU_SEL1
 Text Label 7050 8100 0    50   ~ 0
 MLU_SEL2
-Text Label 6600 9450 2    50   ~ 0
+Text Label 6350 8950 2    50   ~ 0
 ~MMU_OUT_NCLK
-Text Label 6600 9750 2    50   ~ 0
+Text Label 6350 9250 2    50   ~ 0
 ~MMU_CONTROL_OUT_NCLK
-Text Label 6600 9550 2    50   ~ 0
+Text Label 6350 9050 2    50   ~ 0
 ~MMU_IN_CLK
-Text Label 6600 9650 2    50   ~ 0
+Text Label 6350 9150 2    50   ~ 0
 ~MMU_CONTROL_IN_CLK
-Text Label 6600 10650 2    50   ~ 0
+Text Label 6350 10150 2    50   ~ 0
 MMU0_IN_CLK
-Text Label 6600 10750 2    50   ~ 0
+Text Label 6350 10250 2    50   ~ 0
 MMU1_IN_CLK
-Text Label 6600 10850 2    50   ~ 0
+Text Label 6350 10350 2    50   ~ 0
 MMU2_IN_CLK
 Text Label 3900 3550 0    50   ~ 0
 ~PC0_OUT_NCLK
@@ -774,9 +774,9 @@ Text Label 1850 4550 2    50   ~ 0
 INT7_LATCH
 Text Label 1850 3650 2    50   ~ 0
 ~CLK
-Text Label 7750 10250 0    50   ~ 0
+Text Label 7500 9750 0    50   ~ 0
 MMU_READ_FAULT
-Text Label 7750 10350 0    50   ~ 0
+Text Label 7500 9850 0    50   ~ 0
 MMU_WRITE_FAULT
 Text Label 6350 4700 2    50   ~ 0
 ~S0_OUT_NCLK
@@ -829,7 +829,7 @@ S1_IN_CLK
 Text Label 6350 5000 2    50   ~ 0
 S2_IN_CLK
 Text Notes 12000 7750 0    50   ~ 0
-Spare parts:\n74hc04: Clock\n74hc08: Control Logic (3), Clock (2) - TODO: can optimise?\n74hc14: Clock\n74hc107: Clock\n74hc74: Status/Control Register
+Spare parts:\n74hc04: Clock, Control Logic\n74hc08: Control Logic (3), Clock (2) - TODO: can optimise?\n74hc14: Clock\n74hc107: Clock\n74hc74: Status/Control Register
 Text Label 8950 5850 2    50   ~ 0
 ~STATUS_OUT_NCLK
 Text Label 10450 1700 2    50   ~ 0
@@ -993,7 +993,7 @@ NoConn ~ 8900 4550
 Text Notes 8350 4900 0    50   ~ 0
 TODO: Connect this up\n
 Text Notes 14350 7400 0    50   ~ 0
-Used spares:\n74hc08: 1 in Clock from Control Logic
+Used spares:\n74hc04: 1 in MMU from Control Logic
 $Sheet
 S 1850 2550 2050 6450
 U 5B0C6DCD
