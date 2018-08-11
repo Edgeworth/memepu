@@ -12,11 +12,13 @@
 - power on reset
 - can use memory as extra registers? m0,1,2 may have to stay though
 - make status bit for booted or not? use that to decide if have permissions to run opcodes.
-- add special MLU registers?
+- add special MLU registers? - if do, do we make them savable using a bus transceiver? If not, then they could be changed when an interrupt happens, meaning that conditional jumps can't rely on the MLU output being the same after setting MLU0, MLU1 over multiple instructions.
 - have registers in sets of three to enable potential microcode based 3 byte words.
 - rename a, b to a0, a1, a2, b0, b1, b2?
 - don't set interrupt flag asynchronously?
+ - adds 1 gate delay to not do it asynchronously, since need to compute AND(INT_FLAG, ENABLED).
 - temporarily remove extra memory to reduce size?
+- instead of user controllable clock select, select via register?
 
 Software changes:
 - add protection for instructions ? need task register to be set to zero on boot not via an instruction but preset via reset line or something. Then privileged instructions can just check task reg by comparing to zero. If not have task register set to be zero on reset then application code can call boot opcode / microop counter setup opcode. this effectively reboots the machine. Alternatively, can have booted flag which boot instruction checks then sets.
