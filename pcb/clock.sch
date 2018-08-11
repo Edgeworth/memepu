@@ -1240,14 +1240,14 @@ L Device:R R3
 U 1 1 5ADF2B89
 P 2750 1400
 F 0 "R3" H 2820 1446 50  0000 L CNN
-F 1 "10K" H 2820 1355 50  0000 L CNN
+F 1 "1K" H 2820 1355 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 2680 1400 50  0001 C CNN
 F 3 "~" H 2750 1400 50  0001 C CNN
 	1    2750 1400
 	1    0    0    -1  
 $EndComp
 Text Notes 2900 1950 0    20   ~ 0
-Impose a minimum value on the \nvariable resistor to keep duty \ncycle close to 50%. Current\nvalues give min 0.7 Hz, max 70 Hz.
+Impose a minimum value on the \nvariable resistor to keep duty \ncycle close to 50%. Current\nvalues give min 0.7 Hz, max 500 Hz\nDuty cycle: 66%
 Text Label 2500 1050 0    50   ~ 0
 ADJ_CLK
 Wire Notes Line
