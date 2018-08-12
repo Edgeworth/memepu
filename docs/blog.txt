@@ -10,7 +10,6 @@
  - solutions: make it so button clock from the beginning. increase reset timer
 - connect up reset to MICRO_OP RESET as well? - can solve this by having opcode 0 just reset micro-op counter for each micro-op
 - power on reset
-- can use memory as extra registers? m0,1,2 may have to stay though
 - make status bit for booted or not? use that to decide if have permissions to run opcodes.
 - add special MLU registers? - if do, do we make them savable using a bus transceiver? If not, then they could be changed when an interrupt happens, meaning that conditional jumps can't rely on the MLU output being the same after setting MLU0, MLU1 over multiple instructions.
 - have registers in sets of three to enable potential microcode based 3 byte words.
