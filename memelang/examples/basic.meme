@@ -1,0 +1,15 @@
+bubblesort<T>(vector<T>* v) {
+  for (int16 i = 0; i < v.size(); ++i) {
+    for (int16 j = 0; j < v.size() - 1; ++j) {
+      if (v[j] > v[j + 1]) {
+        swap(v[j], v[j + 1]);
+      }
+    }
+  }
+}
+
+auto v = vector<int8>::new();
+v.push(4);
+v.push(3);
+v.push(1);
+bubblesort(v);
