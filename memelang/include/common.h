@@ -8,6 +8,13 @@
 std::string readFile(const std::string& filename);
 void writeFile(const std::string& filename, const std::string& data);
 
+#define format_str(str, fmt, ...) \
+  do { \
+    char buf[256]; \
+    snprintf(buf, sizeof(buf), fmt, __VA_ARGS__); \
+    str = buf; \
+  } while (0)
+
 #define verify_expr(expr, ...)                        \
   do {                                                \
     if (!(expr)) {                                    \

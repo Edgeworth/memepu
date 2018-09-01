@@ -1,4 +1,4 @@
-bubblesort<T>(vector<T>* v) {
+func bubblesort<T>(vector<T>* v) {
   for (int16 i = 0; i < v.size(); ++i) {
     for (int16 j = 0; j < v.size() - 1; ++j) {
       if (v[j] > v[j + 1]) {
