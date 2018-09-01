@@ -9,12 +9,14 @@ constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t?,:";
 const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
   {"interface", Token::INTERFACE},
   {"struct", Token::STRUCT},
+  {"func", Token::FUNCTION},
+  {"for", Token::FOR},
+  {"while", Token::WHILE},
   {"+", Token::PLUS},
   {"-", Token::MINUS},
   {"*", Token::ASTERISK},
   {"/", Token::FSLASH},
   {"'", Token::QUOTE},
-  {"for", Token::FOR},
   {"(", Token::LPAREN},
   {")", Token::RPAREN},
   {"{", Token::LBRACE},
@@ -33,23 +35,16 @@ const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
 
 std::vector<Token> Tokeniser::tokenise() {
   tokens_.clear();
-  linenum_ = 1;
-  colnum_ = 1;
-  for (char c : data_) {
-    verify_expr(isprint(c) || c == '\n', "unprintable character '%c' at %d:%d", c, linenum_, colnum_);
+  const auto& data = contents_->data();
+  for (idx_ = 0; idx_ < data.size(); ++idx_) {
+    char c = data[idx_];
+    verify_expr(isprint(c) || c == '\n', "unprintable character '%c' at %d:%d", c, contents_->getLineNumber(idx_), contents_->getColNumber(idx_));
 
     if (atCompleteToken() || startsNewToken(c)) {
       pushCurrentToken();
     }
     if (!isspace(c))
       curtok_ += c;
-
-    if (c == '\n') {
-      linenum_++;
-      colnum_ = 1;
-    } else {
-      colnum_++;
-    }
   }
   pushCurrentToken();
 
@@ -68,7 +63,7 @@ void Tokeniser::pushCurrentToken() {
   } else {
     type = Token::IDENT;
   }
-  tokens_.push_back({type, curtok_, linenum_, colnum_});
+  tokens_.push_back({type, idx_ - int(curtok_.size()), int(curtok_.size())});
   curtok_ = "";
 }
 
