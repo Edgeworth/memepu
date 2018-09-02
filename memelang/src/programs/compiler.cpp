@@ -1,6 +1,4 @@
 #include <parser.h>
-#include "common.h"
-#include "tokeniser.h"
 
 int main(int argc, char* argv[]) {
   verify_expr(argc == 2, "need filename");
