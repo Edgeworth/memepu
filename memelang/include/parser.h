@@ -41,23 +41,34 @@ private:
 
   std::unique_ptr<Node> tryInternal();
   std::unique_ptr<Node> tryTopLevel();
-  std::unique_ptr<Node> tryInterface();
-  std::unique_ptr<Node> tryFunctionDeclaration(bool allow_template);
-  std::unique_ptr<Node> tryFunctionDefinition(bool allow_template);
+
+  // Building blocks:
   std::unique_ptr<Node> tryFunctionSignature(bool allow_template);
-  std::unique_ptr<Node> tryStruct();
-  std::unique_ptr<Node> tryBlock();
-  std::unique_ptr<Node> tryStatement();
-  std::unique_ptr<Node> tryExpression(int last_precedence = -1);
   std::unique_ptr<Node> tryLiteral();
   std::unique_ptr<Node> tryIdentifier();
   std::unique_ptr<Node> tryType();
-  std::unique_ptr<Node> tryVariableDeclaration();
-  std::unique_ptr<Node> tryVariableDefinition();
-  std::unique_ptr<Node> tryFunctionCall();
+  std::unique_ptr<Node> tryBlock();
   std::unique_ptr<Parser::Node> tryTemplateDeclaration();
-
   void maybeAddTemplateDeclaration(Node* root);
+
+  // Struct possibilities:
+  std::unique_ptr<Node> tryStruct();
+  std::unique_ptr<Node> tryVariableDeclaration();
+  std::unique_ptr<Node> tryFunctionDefinition(bool allow_template);
+
+  // Interface possibilities:
+  std::unique_ptr<Node> tryInterface();
+  std::unique_ptr<Node> tryFunctionDeclaration(bool allow_template);
+
+  // Statement possibilities:
+  std::unique_ptr<Node> tryStatement();
+  std::unique_ptr<Node> tryVariableDefinition();
+  std::unique_ptr<Node> tryIf();
+  std::unique_ptr<Node> tryReturn();
+
+  // Expression possibilities:
+  std::unique_ptr<Node> tryExpression(int last_precedence = -1);
+  std::unique_ptr<Node> tryFunctionCall();
 
   const Token* curToken();
   const Token* nextToken();

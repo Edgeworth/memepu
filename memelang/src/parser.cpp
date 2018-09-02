@@ -84,6 +84,7 @@ void Parser::parse() {
   }
 }
 
+// Top level
 
 std::unique_ptr<Parser::Node> Parser::tryInternal() {
   auto node = std::make_unique<Parser::Node>();
@@ -111,6 +112,142 @@ std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
   return nullptr;
 }
 
+// Building blocks:
+std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
+  consume_token(function_token, Token::FUNCTION, "function declaraton");
+  auto node = nodeFromToken(Node::FUNCTION, function_token);
+
+  consume_token(name_token, Token::LITERAL, "function name");
+  node->children.push_back(nodeFromToken(Node::IDENT, name_token));
+
+  if (allow_template)
+    maybeAddTemplateDeclaration(node.get());
+
+  expect_token(Token::LPAREN, "opening paren");
+  expect_token(Token::RPAREN, "closing paren");
+
+  expect_parse(child, [this] { return tryType(); });
+  node->children.push_back(std::move(child));
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryLiteral() {
+  consume_token(token, Token::LITERAL, "literal");
+  auto node = std::make_unique<Node>();
+  int lit = parseInt(contents_->getSpan(token->loc, token->size));
+  if (lit != INT_MIN) {
+    node = nodeFromToken(Node::INTEGER_LITERAL, token);
+  } else {
+    node = nodeFromToken(Node::IDENT, token);
+  }
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryIdentifier() {
+  peek_token(token);
+  expect_parse(node, [this] { return tryLiteral(); });
+  token_error(node->type == Node::IDENT, token, "token not identifier");
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryType() {
+  expect_parse(node, [this] { return tryIdentifier(); });
+  maybeAddTemplateDeclaration(node.get());
+  peek_token(pointer_token);
+  if (pointer_token->type == Token::ASTERISK) {
+    node->children.push_back(nodeFromToken(Node::POINTER, pointer_token));
+    discard_token();
+  }
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryBlock() {
+  consume_token(block_token, Token::LBRACE, "left brace");
+  auto node = nodeFromToken(Node::BLOCK, block_token);
+
+  while (true) {
+    peek_token(token);
+    if (token->type == Token::RBRACE) break;
+
+    expect_parse(child, [this] { return tryStatement(); });
+    node->children.push_back(std::move(child));
+  }
+  expect_token(Token::RBRACE, "right brace");
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryTemplateDeclaration() {
+  consume_token(template_token, Token::LANGLE, "left angle bracket");
+  auto node = nodeFromToken(Node::TEMPLATE, template_token);
+  while (true) {
+    expect_parse(type, [this] { return tryIdentifier(); });
+    node->children.push_back(std::move(type));
+
+    peek_token(token);
+    if (token->type == Token::RANGLE) break;
+
+    peek_token(comma_token);
+    if (comma_token->type == Token::COMMA)
+      discard_token();
+  }
+  expect_token(Token::RANGLE, "closing right angle brace");
+
+  return node;
+}
+
+void Parser::maybeAddTemplateDeclaration(Parser::Node* root) {
+  auto template_declaration = tri([this] { return tryTemplateDeclaration(); });
+  if (template_declaration)
+    root->children.push_back(std::move(template_declaration));
+}
+
+// Struct possibilities:
+std::unique_ptr<Parser::Node> Parser::tryStruct() {
+  expect_token(Token::STRUCT, "struct");
+  expect_parse(node, [this] { return tryIdentifier(); });
+
+  maybeAddTemplateDeclaration(node.get());
+
+  expect_token(Token::LBRACE, "left brace");
+  while (true) {
+    peek_token(token);
+    if (token->type == Token::RBRACE) break;
+
+    expect_parse(child, [this] { return tryVariableDeclaration(); }, [this] { return tryFunctionDefinition(false); });
+
+    if (child->type != Node::FUNCTION)
+      expect_token(Token::SEMICOLON, "semicolon");
+
+    node->children.push_back(std::move(child));
+  }
+  expect_token(Token::RBRACE, "right brace");
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
+  peek_token(token);
+  auto node = nodeFromToken(Node::VARIABLE_DECLARATION, token);
+
+  expect_parse(type, [this] { return tryType(); });
+  node->children.push_back(std::move(type));
+
+  expect_parse(name, [this] { return tryIdentifier(); });
+  node->children.push_back(std::move(name));
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template) {
+  expect_parse(node, [this, allow_template] { return tryFunctionSignature(allow_template); });
+  expect_parse(child, [this] { return tryBlock(); });
+  node->children.push_back(std::move(child));
+  return node;
+}
+
+// Interface possibilities:
 std::unique_ptr<Parser::Node> Parser::tryInterface() {
   expect_token(Token::INTERFACE, "interface");
 
@@ -139,95 +276,38 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDeclaration(bool allow_template
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template) {
-  expect_parse(node, [this, allow_template] { return tryFunctionSignature(allow_template); });
-  expect_parse(child, [this] { return tryBlock(); });
-  node->children.push_back(std::move(child));
-  return node;
-}
-
-std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
-  consume_token(function_token, Token::FUNCTION, "function declaraton");
-  auto node = nodeFromToken(Node::FUNCTION, function_token);
-
-  consume_token(name_token, Token::LITERAL, "function name");
-  node->children.push_back(nodeFromToken(Node::IDENT, name_token));
-
-  if (allow_template)
-    maybeAddTemplateDeclaration(node.get());
-
-  expect_token(Token::LPAREN, "opening paren");
-  expect_token(Token::RPAREN, "closing paren");
-
-  expect_parse(child, [this] { return tryType(); });
-  node->children.push_back(std::move(child));
-
-  return node;
-}
-
-std::unique_ptr<Parser::Node> Parser::tryStruct() {
-  expect_token(Token::STRUCT, "struct");
-  expect_parse(node, [this] { return tryIdentifier(); });
-
-  maybeAddTemplateDeclaration(node.get());
-
-  expect_token(Token::LBRACE, "left brace");
-  while (true) {
-    peek_token(token);
-    if (token->type == Token::RBRACE) break;
-
-    expect_parse(child, [this] { return tryVariableDeclaration(); }, [this] { return tryFunctionDefinition(false); });
-
-    if (child->type != Node::FUNCTION)
-      expect_token(Token::SEMICOLON, "semicolon");
-
-    node->children.push_back(std::move(child));
-  }
-  expect_token(Token::RBRACE, "right brace");
-
-  return node;
-}
-
-std::unique_ptr<Parser::Node> Parser::tryBlock() {
-  consume_token(block_token, Token::LBRACE, "left brace");
-  auto node = nodeFromToken(Node::BLOCK, block_token);
-
-  while (true) {
-    peek_token(token);
-    if (token->type == Token::RBRACE) break;
-
-    expect_parse(child, [this] { return tryStatement(); });
-    node->children.push_back(std::move(child));
-  }
-  expect_token(Token::RBRACE, "right brace");
-
-  return node;
-}
-
+// Statement possibilities:
 std::unique_ptr<Parser::Node> Parser::tryStatement() {
   peek_token(token);
-  auto node = std::make_unique<Node>();
-  switch (token->type) {
-    case Token::LITERAL: {
-      expect_parse(literal, [this] { return tryVariableDefinition(); }, [this] { return tryExpression(); });
-      node = std::move(literal);
-      break;
-    }
-    case Token::RETURN: {
-      consume_token(return_token, Token::RETURN, "return");
-      node = nodeFromToken(Node::RETURN, return_token);
-      expect_parse(child, [this] { return tryExpression(); });
-      node->children.push_back(std::move(child));
-      break;
-    }
-    default:
-      token_error(false, token, "unexpected token");
-  }
-
+  expect_parse(node, [this] { return tryVariableDefinition(); },
+      [this] { return tryExpression(); }, [this] { return tryIf(); },
+      [this] { return tryReturn(); });
   expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
 
+std::unique_ptr<Parser::Node> Parser::tryVariableDefinition() {
+  expect_parse(node, [this] { return tryVariableDeclaration(); });
+  expect_token(Token::EQUAL, "equals sign");
+  expect_parse(initialiser, [this] { return tryExpression(); });
+  node->children.push_back(std::move(initialiser));
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryIf() {
+  return std::unique_ptr<Parser::Node>();
+}
+
+std::unique_ptr<Parser::Node> Parser::tryReturn() {
+  consume_token(return_token, Token::RETURN, "return");
+  auto node = nodeFromToken(Node::RETURN, return_token);
+  expect_parse(child, [this] { return tryExpression(); });
+  node->children.push_back(std::move(child));
+  return node;
+}
+
+// Expression possibilities:
 std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
   std::unique_ptr<Node> node;
   while (true) {
@@ -280,80 +360,6 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryLiteral() {
-  consume_token(token, Token::LITERAL, "literal");
-  auto node = std::make_unique<Node>();
-  int lit = parseInt(contents_->getSpan(token->loc, token->size));
-  if (lit != INT_MIN) {
-    node = nodeFromToken(Node::INTEGER_LITERAL, token);
-  } else {
-    node = nodeFromToken(Node::IDENT, token);
-  }
-  return node;
-}
-
-std::unique_ptr<Parser::Node> Parser::tryIdentifier() {
-  peek_token(token);
-  expect_parse(node, [this] { return tryLiteral(); });
-  token_error(node->type == Node::IDENT, token, "token not identifier");
-  return node;
-}
-
-
-std::unique_ptr<Parser::Node> Parser::tryType() {
-  expect_parse(node, [this] { return tryIdentifier(); });
-  maybeAddTemplateDeclaration(node.get());
-  peek_token(pointer_token);
-  if (pointer_token->type == Token::ASTERISK) {
-    node->children.push_back(nodeFromToken(Node::POINTER, pointer_token));
-    discard_token();
-  }
-  return node;
-}
-
-std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
-  peek_token(token);
-  auto node = nodeFromToken(Node::VARIABLE_DECLARATION, token);
-
-  expect_parse(type, [this] { return tryType(); });
-  node->children.push_back(std::move(type));
-
-  expect_parse(name, [this] { return tryIdentifier(); });
-  node->children.push_back(std::move(name));
-
-  return node;
-}
-
-std::unique_ptr<Parser::Node> Parser::tryVariableDefinition() {
-  expect_parse(node, [this] { return tryVariableDeclaration(); });
-
-  expect_token(Token::EQUAL, "equals sign");
-
-  expect_parse(initialiser, [this] { return tryExpression(); });
-  node->children.push_back(std::move(initialiser));
-
-  return node;
-}
-
-std::unique_ptr<Parser::Node> Parser::tryTemplateDeclaration() {
-  consume_token(template_token, Token::LANGLE, "left angle bracket");
-  auto node = nodeFromToken(Node::TEMPLATE, template_token);
-  while (true) {
-    expect_parse(type, [this] { return tryIdentifier(); });
-    node->children.push_back(std::move(type));
-
-    peek_token(token);
-    if (token->type == Token::RANGLE) break;
-
-    peek_token(comma_token);
-    if (comma_token->type == Token::COMMA)
-      discard_token();
-  }
-  expect_token(Token::RANGLE, "closing right angle brace");
-
-  return node;
-}
-
 std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
   expect_parse(node, [this] { return tryIdentifier(); });
   node->type = Node::FUNCTION_CALL;  // Actually this is a function call.
@@ -374,13 +380,6 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
 
   return node;
 }
-
-void Parser::maybeAddTemplateDeclaration(Parser::Node* root) {
-  auto template_declaration = tri([this] { return tryTemplateDeclaration(); });
-  if (template_declaration)
-    root->children.push_back(std::move(template_declaration));
-}
-
 
 std::string Parser::astToString(const Node* root) {
   verify_expr(root, "astToString called with null root");
