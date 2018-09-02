@@ -14,7 +14,8 @@ class Parser {
 public:
   struct Node {
     enum Type {
-      BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL, DIV, MOD
+      BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
+      DIV, MOD, VARIABLE_DECLARATION
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
@@ -32,27 +33,48 @@ private:
   const FileContents* contents_;
   std::vector<Token> tokens_;
   std::unique_ptr<Node> root_;
+  std::string error_;
 
+  // AST printing related.
   std::unordered_set<int> bars_;
 
-  std::unique_ptr<Node> parseTopLevel();
-  std::unique_ptr<Node> parseInterface();
-  std::unique_ptr<Node> parseFunctionDeclaration(bool allow_template);
-  std::unique_ptr<Node> parseFunctionDefinition(bool allow_template);
-  std::unique_ptr<Node> parseFunctionSignature(bool allow_template);
-  std::unique_ptr<Node> parseStruct();
-  std::unique_ptr<Node> parseBlock();
-  std::unique_ptr<Node> parseStatement();
-  std::unique_ptr<Node> parseExpression(int last_precedence = -1);
-  std::unique_ptr<Node> parseLiteral();
-  std::unique_ptr<Node> parseIdentifier();
-  std::unique_ptr<Node> parseType();
+  std::unique_ptr<Node> tryInternal();
+  std::unique_ptr<Node> tryTopLevel();
+  std::unique_ptr<Node> tryInterface();
+  std::unique_ptr<Node> tryFunctionDeclaration(bool allow_template);
+  std::unique_ptr<Node> tryFunctionDefinition(bool allow_template);
+  std::unique_ptr<Node> tryFunctionSignature(bool allow_template);
+  std::unique_ptr<Node> tryStruct();
+  std::unique_ptr<Node> tryBlock();
+  std::unique_ptr<Node> tryStatement();
+  std::unique_ptr<Node> tryExpression(int last_precedence = -1);
+  std::unique_ptr<Node> tryLiteral();
+  std::unique_ptr<Node> tryIdentifier();
+  std::unique_ptr<Node> tryType();
+  std::unique_ptr<Node> tryVariableDeclaration();
+  std::unique_ptr<Node> tryFunctionCall();
+  std::unique_ptr<Parser::Node> tryTemplateList();
 
-  void maybeParseTemplateSpecifier(Node* root);
+  const Token* curToken();
+  const Token* nextToken();
+  const Token* peekToken(int ahead = 1);
+  bool hasToken(int ahead = 0) { return idx_ + ahead < tokens_.size(); }
+  void compileError();
 
-  const Token& curToken();
-  const Token& nextToken();
-  bool hasToken() { return idx_ < tokens_.size(); }
+  std::unique_ptr<Node> tri() {
+    return nullptr;
+  }
+
+  template<typename T, typename... Args>
+  std::unique_ptr<Node> tri(T func, Args... args) {
+    int prev_idx = idx_;
+    auto child = func();
+    if (!child) {
+      idx_ = prev_idx;
+      child = tri(args...);
+    }
+    return child;
+  }
 
   void astToStringInternal(const Parser::Node* const root, std::string& out, int indent);
 };

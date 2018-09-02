@@ -6,3 +6,8 @@ interface<T> {
 func testFunc<T>() vector<int8> {
     return (3 + 4) * 5 + 3 / 4;
 }
+
+func main() int8 {
+    int8 val = 5;
+    print(val);
+}
