@@ -15,7 +15,8 @@ struct vector_iter<T> {
     if idx_ == vec_.size() {
       return nullptr;
     }
-    return vec_[idx_++];
+    idx_ += 1;
+    return vec_[idx_ - 1];
   }
 
   func static new(vector<T>* vec) vector_iter<T> {

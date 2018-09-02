@@ -63,14 +63,20 @@ std::unordered_map<Token::Type, Parser::Node::Type> OPMAP = {
     {Token::Type::MINUS, Parser::Node::SUB},
     {Token::Type::ASTERISK, Parser::Node::MUL},
     {Token::Type::FSLASH, Parser::Node::DIV},
+    {Token::Type::DEQUAL, Parser::Node::EQUALS},
+    {Token::Type::NEQUAL, Parser::Node::NOT_EQUALS},
+    {Token::Type::DOT, Parser::Node::ACCESS},
 };
 
 std::unordered_map<Parser::Node::Type, int> PRECEDENCE = {
-    {Parser::Node::MUL, 1},
-    {Parser::Node::DIV, 1},
-    {Parser::Node::MOD, 1},
-    {Parser::Node::ADD, 0},
-    {Parser::Node::SUB, 0},
+    {Parser::Node::ACCESS, 3},
+    {Parser::Node::MUL, 2},
+    {Parser::Node::DIV, 2},
+    {Parser::Node::MOD, 2},
+    {Parser::Node::ADD, 1},
+    {Parser::Node::SUB, 1},
+    {Parser::Node::EQUALS, 0},
+    {Parser::Node::NOT_EQUALS, 0},
 };
 
 }  // namespace
@@ -280,8 +286,8 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDeclaration(bool allow_template
 std::unique_ptr<Parser::Node> Parser::tryStatement() {
   peek_token(token);
   expect_parse(node, [this] { return tryVariableDefinition(); },
-      [this] { return tryExpression(); }, [this] { return tryIf(); },
-      [this] { return tryReturn(); });
+      [this] { return tryExpression(); }, [this] { return tryReturn(); },
+      [this] { return tryIf(); });
   expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
@@ -296,7 +302,13 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDefinition() {
 }
 
 std::unique_ptr<Parser::Node> Parser::tryIf() {
-  return std::unique_ptr<Parser::Node>();
+  consume_token(if_token, Token::IF, "if");
+  auto node = nodeFromToken(Node::IF, if_token);
+  expect_parse(cond, [this] { return tryExpression(); });
+  expect_parse(block, [this] { return tryBlock(); });
+  node->children.push_back(std::move(cond));
+  node->children.push_back(std::move(block));
+  return node;
 }
 
 std::unique_ptr<Parser::Node> Parser::tryReturn() {
@@ -312,7 +324,9 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
   std::unique_ptr<Node> node;
   while (true) {
     peek_token(token);
-    if (token->type == Token::SEMICOLON || token->type == Token::RPAREN)
+    printf("Expr at token: %s\n", token->toString(contents_).c_str());
+    // TODO: LBRACE stops expr?
+    if (token->type == Token::SEMICOLON || token->type == Token::RPAREN || token->type == Token::LBRACE)
       break;
 
     auto iter = OPMAP.find(token->type);
