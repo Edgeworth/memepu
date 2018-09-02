@@ -15,7 +15,7 @@ public:
   struct Node {
     enum Type {
       BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL, POINTER, STRUCT, IF, EQUALS, NOT_EQUALS, ACCESS, ASSIGN
+      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL, POINTER, STRUCT, IF, EQUALS, NOT_EQUALS, ACCESS, ASSIGN, STATIC
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
@@ -49,6 +49,7 @@ private:
   std::unique_ptr<Node> tryType();
   std::unique_ptr<Node> tryBlock();
   std::unique_ptr<Parser::Node> tryTemplateDeclaration();
+  std::unique_ptr<Parser::Node> tryStaticQualifier();
   void maybeAddTemplateDeclaration(Node* root);
 
   // Struct possibilities:
@@ -69,6 +70,7 @@ private:
   // Expression possibilities:
   std::unique_ptr<Node> tryExpression(int last_precedence = -1);
   std::unique_ptr<Node> tryFunctionCall();
+  std::unique_ptr<Node> tryIndex();
 
   const Token* curToken();
   const Token* nextToken();
