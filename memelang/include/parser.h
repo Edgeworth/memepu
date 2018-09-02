@@ -15,7 +15,7 @@ public:
   struct Node {
     enum Type {
       BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-      DIV, MOD, VARIABLE_DECLARATION
+      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
