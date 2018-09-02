@@ -63,20 +63,22 @@ std::unordered_map<Token::Type, Parser::Node::Type> OPMAP = {
     {Token::Type::MINUS, Parser::Node::SUB},
     {Token::Type::ASTERISK, Parser::Node::MUL},
     {Token::Type::FSLASH, Parser::Node::DIV},
+    {Token::Type::EQUAL, Parser::Node::ASSIGN},
     {Token::Type::DEQUAL, Parser::Node::EQUALS},
     {Token::Type::NEQUAL, Parser::Node::NOT_EQUALS},
     {Token::Type::DOT, Parser::Node::ACCESS},
 };
 
 std::unordered_map<Parser::Node::Type, int> PRECEDENCE = {
-    {Parser::Node::ACCESS, 3},
-    {Parser::Node::MUL, 2},
-    {Parser::Node::DIV, 2},
-    {Parser::Node::MOD, 2},
-    {Parser::Node::ADD, 1},
-    {Parser::Node::SUB, 1},
-    {Parser::Node::EQUALS, 0},
-    {Parser::Node::NOT_EQUALS, 0},
+    {Parser::Node::ACCESS, 4},
+    {Parser::Node::MUL, 3},
+    {Parser::Node::DIV, 3},
+    {Parser::Node::MOD, 3},
+    {Parser::Node::ADD, 2},
+    {Parser::Node::SUB, 2},
+    {Parser::Node::EQUALS, 1},
+    {Parser::Node::NOT_EQUALS, 1},
+    {Parser::Node::ASSIGN, 0},
 };
 
 }  // namespace
@@ -288,7 +290,8 @@ std::unique_ptr<Parser::Node> Parser::tryStatement() {
   expect_parse(node, [this] { return tryVariableDefinition(); },
       [this] { return tryExpression(); }, [this] { return tryReturn(); },
       [this] { return tryIf(); });
-  expect_token(Token::SEMICOLON, "semicolon");
+  if (node->type != Node::IF)
+    expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
 
