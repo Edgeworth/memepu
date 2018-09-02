@@ -67,15 +67,22 @@ std::unordered_map<Token::Type, Parser::Node::Type> OPMAP = {
     {Token::Type::DEQUAL, Parser::Node::EQUALS},
     {Token::Type::NEQUAL, Parser::Node::NOT_EQUALS},
     {Token::Type::DOT, Parser::Node::ACCESS},
+    {Token::Type::LANGLE, Parser::Node::LESS_THAN},
+    {Token::Type::RANGLE, Parser::Node::GREATER_THAN},
+    {Token::Type::LTEQUAL, Parser::Node::LESS_THAN_EQUAL},
+    {Token::Type::GTEQUAL, Parser::Node::GREATER_THAN_EQUAL},
 };
 
 std::unordered_map<Parser::Node::Type, int> PRECEDENCE = {
     {Parser::Node::ACCESS, 4},
     {Parser::Node::MUL, 3},
     {Parser::Node::DIV, 3},
-    {Parser::Node::MOD, 3},
     {Parser::Node::ADD, 2},
     {Parser::Node::SUB, 2},
+    {Parser::Node::LESS_THAN, 1},
+    {Parser::Node::GREATER_THAN, 1},
+    {Parser::Node::LESS_THAN_EQUAL, 1},
+    {Parser::Node::GREATER_THAN_EQUAL, 1},
     {Parser::Node::EQUALS, 1},
     {Parser::Node::NOT_EQUALS, 1},
     {Parser::Node::ASSIGN, 0},
@@ -312,8 +319,8 @@ std::unique_ptr<Parser::Node> Parser::tryStatement() {
   peek_token(token);
   expect_parse(node, [this] { return tryVariableDefinition(); },
       [this] { return tryExpression(); }, [this] { return tryReturn(); },
-      [this] { return tryIf(); });
-  if (node->type != Node::IF)
+      [this] { return tryIf(); }, [this] { return tryFor(); });
+  if (node->type != Node::IF && node->type != Node::FOR)
     expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
@@ -329,8 +336,10 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDefinition() {
 
 std::unique_ptr<Parser::Node> Parser::tryIf() {
   consume_token(if_token, Token::IF, "if");
+  expect_token(Token::LPAREN, "left parent");
   auto node = nodeFromToken(Node::IF, if_token);
   expect_parse(cond, [this] { return tryExpression(); });
+  expect_token(Token::RPAREN, "right parent");
   expect_parse(block, [this] { return tryBlock(); });
   node->children.push_back(std::move(cond));
   node->children.push_back(std::move(block));
@@ -338,7 +347,6 @@ std::unique_ptr<Parser::Node> Parser::tryIf() {
 }
 
 std::unique_ptr<Parser::Node> Parser::tryReturn() {
-  printf("Try return, cur token: %s\n", curToken()->toString(contents_).c_str());
   consume_token(return_token, Token::RETURN, "return");
   auto node = nodeFromToken(Node::RETURN, return_token);
   expect_parse(child, [this] { return tryExpression(); });
@@ -346,15 +354,37 @@ std::unique_ptr<Parser::Node> Parser::tryReturn() {
   return node;
 }
 
+std::unique_ptr<Parser::Node> Parser::tryFor() {
+  consume_token(for_token, Token::FOR, "for");
+  auto node = nodeFromToken(Node::FOR, for_token);
+
+  expect_token(Token::LPAREN, "left parent");
+  expect_parse(initialiser, [this] { return tryStatement(); });
+  expect_parse(cond, [this] { return tryExpression(); });
+  expect_token(Token::SEMICOLON, "semicolon");
+  expect_parse(update, [this] { return tryExpression(); });
+  expect_token(Token::RPAREN, "right parent");
+
+  node->children.push_back(std::move(initialiser));
+  node->children.push_back(std::move(cond));
+  node->children.push_back(std::move(update));
+
+  expect_parse(block, [this] { return tryBlock(); });
+  node->children.push_back(std::move(block));
+
+  return node;
+}
+
+
 // Expression possibilities:
 std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
   std::unique_ptr<Node> node;
   while (true) {
     peek_token(token);
     // Stop parsing at the end of a statement, sub-expression, start of a block (e.g. if statement),
-    // or end of an indexing.
+    // end of an indexing, or part of a list (comma).
     if (token->type == Token::SEMICOLON || token->type == Token::RPAREN ||
-        token->type == Token::LBRACE || token->type == Token::RSQUARE)
+        token->type == Token::LBRACE || token->type == Token::RSQUARE || token->type == Token::COMMA)
       break;
 
     auto iter = OPMAP.find(token->type);
@@ -381,10 +411,9 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
 
     switch (token->type) {
       case Token::LITERAL: {
-        // Parse literal last - it might be an index or function call.
-        // TODO: Maybe this should recurisvely call into tryExpression?
+        // Parse literal last - it might be an index,  function call, or struct initialiser.
         expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryIndex(); },
-            [this] { return tryLiteral(); });
+            [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); });
         node = std::move(literal);
         continue;
       }
@@ -414,7 +443,7 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
     peek_token(token);
     if (token->type == Token::RPAREN) break;
 
-    expect_parse(child, [this] { return tryIdentifier(); });
+    expect_parse(child, [this] { return tryExpression(); });
     node->children.push_back(std::move(child));
 
     peek_token(comma_token);
@@ -433,6 +462,28 @@ std::unique_ptr<Parser::Node> Parser::tryIndex() {
   expect_parse(index, [this] { return tryExpression(); });
   node->children.push_back(std::move(index));
   expect_token(Token::RSQUARE, "right square bracket");
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryStructInitialiser() {
+  expect_parse(node, [this] { return tryType(); });
+  node->type = Node::STRUCT_INITIALISER;  // Actually this is an initialisation operation.
+  expect_token(Token::LBRACE, "left brace");
+  while (true) {
+    peek_token(token);
+    if (token->type == Token::RBRACE) break;
+
+    expect_parse(member, [this] { return tryIdentifier(); });
+    node->children.push_back(std::move(member));
+    expect_token(Token::COLON, "colon");
+
+    expect_parse(expr, [this] { return tryExpression(); });
+    node->children.push_back(std::move(expr));
+
+    expect_token(Token::COMMA, "comma");
+  }
+
+  expect_token(Token::RBRACE, "right brace");
   return node;
 }
 
@@ -476,11 +527,6 @@ const Token* Parser::nextToken() {
 const Token* Parser::curToken() {
   token_error(hasToken(), &tokens_.back(), "unexpected end of file");
   return &tokens_[idx_];
-}
-
-const Token* Parser::peekToken(int ahead) {
-  token_error(hasToken() && hasToken(1), &tokens_.back(), "unexpected end of file");
-  return &tokens_[idx_ + ahead];
 }
 
 void Parser::compileError() {

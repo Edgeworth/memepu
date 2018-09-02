@@ -12,7 +12,7 @@ struct vector_iter<T> {
   int16 idx_;
 
   func next() T* {
-    if idx_ == vec_.size() {
+    if (idx_ == vec_.size()) {
       return nullptr;
     }
     idx_ = idx_ + 1;
@@ -36,30 +36,32 @@ struct vector<T> {
     return data_[index];
   }
 
-  func push(T val) {
-    if size_ == capacity_ {
-      capacity_ *= 2;
+  func push(T val) void {
+    if (size_ == capacity_) {
+      capacity_ = capacity_ * 2;
       T* newdata = malloc(capacity_ * sizeof(T));
-      for (int16 i = 0; i < size_; i++) {
+      for (int16 i = 0; i < size_; i = i + 1) {
         newdata[i] = data_[i].move();
       }
       free(data_);
       data_ = newdata;
     }
 
-    data_[size_++] = val;
+    size_ = size_ + 1;
+    data_[size_ - 1] = val;
   }
 
   func pop() T {
-    return data_[--size_].move();
+    size_ = size_ - 1;
+    return data_[size_].move();
   }
 
   func size() int16 {
     return size_;
   }
 
-  func destroy() {
-    for (int16 i = 0; i < size; i++) {
+  func destroy() void {
+    for (int16 i = 0; i < size; i = i + 1) {
       data_[i].destroy();
     }
     free(data_);
@@ -74,43 +76,38 @@ struct vector<T> {
   }
 
   func iter() vector_iter<T> {
-    return vector_iter<T>::new(this);
+    return vector_iter<T>.new(this);
   }
 
   func static new(int16 size) vector<T> {
-    // Unspecified stuff set to 0 automatically for structs?
-    // Structs with at least 1 private field can't be created except from static fn?
     return vector<T>{
       data_: nullptr,
       size_: 0,
       capacity_: 0,
-    }.move();  // auto .move() for returns? but what if returning member var.
+    }.move();
   }
 }
 
-func swap<T>(T* a, T* b) {
+func swap<T>(T* a, T* b) void {
   T c = a.move();
   a = b.move();
   b = c.move();
 }
 
-func bubblesort<T>(vector<T>* v) {
-  for (int16 i = 0; i < v.size(); ++i) {
-    for (int16 j = 0; j < v.size() - 1; ++j) {
-      if v[j] > v[j + 1] {
+func bubblesort<T>(vector<T>* v) void {
+  for (int16 i = 0; i < v.size(); i = i + 1) {
+    for (int16 j = 0; j < v.size() - 1; j = j + 1) {
+      if (v[j] > v[j + 1]) {
         swap(v[j], v[j + 1]);
       }
     }
   }
 }
 
-auto v = vector<int8>::new();
-v.push(4);
-v.push(3);
-v.push(1);
-bubblesort(v);
-
-for (auto val : v) {
-  // varargs?
-  print(val);
+func main() int8 {
+    auto v = vector<int8>.new();
+    v.push(4);
+    v.push(3);
+    v.push(1);
+    bubblesort(v);
 }
