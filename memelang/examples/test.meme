@@ -1,2 +1,8 @@
 interface {
+    func testFunc() int8;
+    func testFunc2() int16;
+}
+
+func testFunc() int8 {
+    return 5;
 }
