@@ -1,8 +1,6 @@
 #include "parser.h"
 
 #include <sstream>
-#include <parser.h>
-
 
 #define token_error(expr, token, ...) \
   do { \
