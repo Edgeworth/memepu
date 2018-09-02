@@ -15,7 +15,7 @@ struct vector_iter<T> {
     if idx_ == vec_.size() {
       return nullptr;
     }
-    idx_ += 1;
+    idx_ = idx_ + 1;
     return vec_[idx_ - 1];
   }
 
