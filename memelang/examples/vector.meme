@@ -21,8 +21,8 @@ struct vector_iter<T> {
 
   func static new(vector<T>* vec) vector_iter<T> {
     return vector_iter<T> {
-      vec_: vec;
-      idx_: 0
+      vec_: vec,
+      idx_: 0,
     };
   }
 }

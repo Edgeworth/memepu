@@ -125,6 +125,10 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
   consume_token(function_token, Token::FUNCTION, "function declaraton");
   auto node = nodeFromToken(Node::FUNCTION, function_token);
 
+  auto static_node = tri([this] { return tryStaticQualifier(); });
+  if (static_node)
+    node->children.push_back(std::move(static_node));
+
   consume_token(name_token, Token::LITERAL, "function name");
   node->children.push_back(nodeFromToken(Node::IDENT, name_token));
 
@@ -132,6 +136,20 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
     maybeAddTemplateDeclaration(node.get());
 
   expect_token(Token::LPAREN, "opening paren");
+  while (true) {
+    peek_token(token);
+    if (token->type == Token::RPAREN) break;
+
+    expect_parse(type, [this] { return tryType(); });
+    expect_parse(identifier, [this] { return tryIdentifier(); });
+
+    node->children.push_back(std::move(type));
+    node->children.push_back(std::move(identifier));
+
+    peek_token(comma_token);
+    if (comma_token->type == Token::COMMA)
+      discard_token();
+  }
   expect_token(Token::RPAREN, "closing paren");
 
   expect_parse(child, [this] { return tryType(); });
@@ -209,6 +227,11 @@ void Parser::maybeAddTemplateDeclaration(Parser::Node* root) {
   auto template_declaration = tri([this] { return tryTemplateDeclaration(); });
   if (template_declaration)
     root->children.push_back(std::move(template_declaration));
+}
+
+std::unique_ptr<Parser::Node> Parser::tryStaticQualifier() {
+  consume_token(token, Token::STATIC, "static");
+  return nodeFromToken(Node::STATIC, token);
 }
 
 // Struct possibilities:
@@ -315,6 +338,7 @@ std::unique_ptr<Parser::Node> Parser::tryIf() {
 }
 
 std::unique_ptr<Parser::Node> Parser::tryReturn() {
+  printf("Try return, cur token: %s\n", curToken()->toString(contents_).c_str());
   consume_token(return_token, Token::RETURN, "return");
   auto node = nodeFromToken(Node::RETURN, return_token);
   expect_parse(child, [this] { return tryExpression(); });
@@ -327,9 +351,10 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
   std::unique_ptr<Node> node;
   while (true) {
     peek_token(token);
-    printf("Expr at token: %s\n", token->toString(contents_).c_str());
-    // TODO: LBRACE stops expr?
-    if (token->type == Token::SEMICOLON || token->type == Token::RPAREN || token->type == Token::LBRACE)
+    // Stop parsing at the end of a statement, sub-expression, start of a block (e.g. if statement),
+    // or end of an indexing.
+    if (token->type == Token::SEMICOLON || token->type == Token::RPAREN ||
+        token->type == Token::LBRACE || token->type == Token::RSQUARE)
       break;
 
     auto iter = OPMAP.find(token->type);
@@ -356,7 +381,10 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
 
     switch (token->type) {
       case Token::LITERAL: {
-        expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryLiteral(); });
+        // Parse literal last - it might be an index or function call.
+        // TODO: Maybe this should recurisvely call into tryExpression?
+        expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryIndex(); },
+            [this] { return tryLiteral(); });
         node = std::move(literal);
         continue;
       }
@@ -395,6 +423,16 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
   }
   expect_token(Token::RPAREN, "right paren");
 
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryIndex() {
+  expect_parse(node, [this] { return tryIdentifier(); });
+  node->type = Node::INDEX;  // Actually this is an indexing operation.
+  expect_token(Token::LSQUARE, "left square bracket");
+  expect_parse(index, [this] { return tryExpression(); });
+  node->children.push_back(std::move(index));
+  expect_token(Token::RSQUARE, "right square bracket");
   return node;
 }
 
