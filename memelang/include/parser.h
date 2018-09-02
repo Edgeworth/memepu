@@ -14,16 +14,7 @@ class Parser {
 public:
   struct Node {
     enum Type {
-      BLOCK,
-      FOR,
-      FUNCTION,
-      FUNCTION_PARAM,
-      FUNCTION_CALL,
-      INTERFACE,
-      WHILE,
-      TYPE,
-      IDENT,
-      INDEX,
+      BLOCK, FOR, FUNCTION, RETURN, FUNCTION_CALL, INTERFACE, WHILE, TYPE, IDENT, INDEX, INTEGER_LITERAL
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
@@ -48,14 +39,17 @@ private:
 
   std::unordered_set<int> bars_;
 
-  std::unique_ptr<Parser::Node> parseTopLevel();
-  std::unique_ptr<Parser::Node> parseInterface();
-  std::unique_ptr<Parser::Node> parseFunction();
-  std::unique_ptr<Parser::Node> parseStruct();
-  std::unique_ptr<Parser::Node> parseBlock();
-  std::unique_ptr<Parser::Node> parseStatement();
+  std::unique_ptr<Node> parseTopLevel();
+  std::unique_ptr<Node> parseInterface();
+  std::unique_ptr<Node> parseFunctionDeclaration();
+  std::unique_ptr<Node> parseFunctionDefinition();
+  std::unique_ptr<Node> parseFunctionSignature();
+  std::unique_ptr<Node> parseStruct();
+  std::unique_ptr<Node> parseBlock();
+  std::unique_ptr<Node> parseStatement();
+  std::unique_ptr<Node> parseExpression();
 
-  const Token& curToken() { return tokens_[state_.idx]; }
+  const Token& curToken();
   const Token& nextToken();
   bool hasToken() { return state_.idx < tokens_.size(); }
 

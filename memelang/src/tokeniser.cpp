@@ -7,28 +7,12 @@ namespace {
 constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t?,:";
 
 const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
-  {"interface", Token::INTERFACE},
-  {"struct", Token::STRUCT},
-  {"func", Token::FUNCTION},
-  {"for", Token::FOR},
-  {"while", Token::WHILE},
-  {"+", Token::PLUS},
-  {"-", Token::MINUS},
-  {"*", Token::ASTERISK},
-  {"/", Token::FSLASH},
-  {"'", Token::QUOTE},
-  {"(", Token::LPAREN},
-  {")", Token::RPAREN},
-  {"{", Token::LBRACE},
-  {"}", Token::RBRACE},
-  {"<", Token::LANGLE},
-  {">", Token::RANGLE},
-  {"[", Token::LSQUARE},
-  {"]", Token::RSQUARE},
-  {";", Token::SEMICOLON},
-  {"?", Token::QUESTION},
-  {",", Token::COMMA},
-  {":", Token::COLON}
+  {"interface", Token::INTERFACE}, {"struct", Token::STRUCT}, {"func", Token::FUNCTION}, {"for", Token::FOR},
+  {"while", Token::WHILE}, {"return", Token::RETURN},
+  {"+", Token::PLUS}, {"-", Token::MINUS}, {"*", Token::ASTERISK}, {"/", Token::FSLASH},
+  {"'", Token::QUOTE}, {"(", Token::LPAREN}, {")", Token::RPAREN}, {"{", Token::LBRACE}, {"}", Token::RBRACE},
+  {"<", Token::LANGLE}, {">", Token::RANGLE}, {"[", Token::LSQUARE}, {"]", Token::RSQUARE}, {";", Token::SEMICOLON},
+  {"?", Token::QUESTION}, {",", Token::COMMA}, {":", Token::COLON}
 };
 
 }  // anonymous
@@ -61,7 +45,7 @@ void Tokeniser::pushCurrentToken() {
   if (iter != TOKEN_MAP.end()) {
     type = iter->second;
   } else {
-    type = Token::IDENT;
+    type = Token::LITERAL;
   }
   tokens_.push_back({type, idx_ - int(curtok_.size()), int(curtok_.size())});
   curtok_ = "";
