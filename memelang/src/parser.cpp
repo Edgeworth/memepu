@@ -28,14 +28,14 @@
 #define discard_token() \
   if (!nextToken()) return nullptr;
 
-#define consume_token(name) \
+#define consume_token(name, expected_type, note) \
   const auto* name = nextToken(); \
-  if (!name) return nullptr;
+  if (!name) return nullptr; \
+  token_error(name->type == expected_type, token, "expecting " note);
 
 #define expect_token(expected_type, note) \
   do { \
-    consume_token(token); \
-    token_error(token->type == expected_type, token, "expecting " note); \
+    consume_token(token, expected_type, note); \
   } while (0)
 
 #define expect_parse(name, ...) \
@@ -110,8 +110,11 @@ std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
 }
 
 std::unique_ptr<Parser::Node> Parser::tryInterface() {
-  consume_token(interface_token);
-  auto node = nodeFromToken(Node::INTERFACE, interface_token);
+  expect_token(Token::INTERFACE, "interface");
+
+  auto node = tri([this] { return tryIdentifier(); });
+  node->type = Node::INTERFACE;  // This is actually an interface.
+
   // Don't consider it an error to be missing a template list.
   auto template_list = tri([this] { return tryTemplateList(); });
   if (template_list)
@@ -200,7 +203,7 @@ std::unique_ptr<Parser::Node> Parser::tryStatement() {
       break;
     }
     case Token::RETURN: {
-      consume_token(return_token);
+      consume_token(return_token, Token::RETURN, "return");
       node = nodeFromToken(Node::RETURN, return_token);
       expect_parse(child, [this] { return tryExpression(); });
       node->children.push_back(std::move(child));
@@ -267,7 +270,7 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
 }
 
 std::unique_ptr<Parser::Node> Parser::tryLiteral() {
-  consume_token(token);
+  consume_token(token, Token::LITERAL, "literal");
   auto node = std::make_unique<Node>();
   int lit = parseInt(contents_->getSpan(token->loc, token->size));
   if (lit != INT_MIN) {
@@ -291,6 +294,11 @@ std::unique_ptr<Parser::Node> Parser::tryType() {
   auto template_list = tri([this] { return tryTemplateList(); });
   if (template_list)
     node->children.push_back(std::move(template_list));
+  peek_token(pointer_token);
+  if (pointer_token->type == Token::ASTERISK) {
+    node->children.push_back(nodeFromToken(Node::POINTER, pointer_token));
+    discard_token();
+  }
   return node;
 }
 
