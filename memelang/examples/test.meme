@@ -1,8 +1,8 @@
-interface {
+interface<T> {
     func testFunc() int8;
     func testFunc2() int16;
 }
 
-func testFunc() int8 {
+func testFunc<T>() vector<int8> {
     return (3 + 4) * 5 + 3 / 4;
 }
