@@ -210,7 +210,7 @@ std::unique_ptr<Parser::Node> Parser::tryStatement() {
       token_error(false, token, "unexpected token");
   }
 
-  expect_token(Token::SEMICOLON, "expected semicolon");
+  expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
 
@@ -253,7 +253,7 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
         discard_token();
         expect_parse(subexpr, [this] { return tryExpression(); });
         node = std::move(subexpr);
-        expect_token(Token::RPAREN, "expected closing paren");
+        expect_token(Token::RPAREN, "closing paren");
         continue;
       }
       default:
@@ -304,7 +304,7 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
   expect_parse(name, [this] { return tryIdentifier(); });
   node->children.push_back(std::move(name));
 
-  expect_token(Token::EQUAL, "expected equals sign");
+  expect_token(Token::EQUAL, "equals sign");
 
   expect_parse(initialiser, [this] { return tryExpression(); });
   node->children.push_back(std::move(initialiser));
@@ -315,7 +315,7 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
 std::unique_ptr<Parser::Node> Parser::tryTemplateList() {
   peek_token(template_token);
   auto node = nodeFromToken(Node::TEMPLATE, template_token);
-  expect_token(Token::LANGLE, "expected left angle bracket");
+  expect_token(Token::LANGLE, "left angle bracket");
   while (true) {
     expect_parse(type, [this] { return tryIdentifier(); });
     node->children.push_back(std::move(type));
@@ -323,15 +323,34 @@ std::unique_ptr<Parser::Node> Parser::tryTemplateList() {
     peek_token(token)
     if (token->type == Token::RANGLE) break;
 
-    expect_token(Token::COMMA, "expected comma");
+    peek_token(comma_token);
+    if (comma_token->type == Token::COMMA)
+      discard_token();
   }
-  expect_token(Token::RANGLE, "expected closing right angle brace");
+  expect_token(Token::RANGLE, "closing right angle brace");
 
   return node;
 }
 
 std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
-  return nullptr;
+  expect_parse(node, [this] { return tryIdentifier(); });
+  node->type = Node::FUNCTION_CALL;  // Actually this is a function call.
+
+  expect_token(Token::LPAREN, "left paren");
+  while (true) {
+    peek_token(token);
+    if (token->type == Token::RPAREN) break;
+
+    expect_parse(child, [this] { return tryIdentifier(); });
+    node->children.push_back(std::move(child));
+
+    peek_token(comma_token);
+    if (comma_token->type == Token::COMMA)
+      discard_token();
+  }
+  expect_token(Token::RPAREN, "right paren");
+
+  return node;
 }
 
 std::string Parser::astToString() {
