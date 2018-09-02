@@ -14,7 +14,7 @@ class Parser {
 public:
   struct Node {
     enum Type {
-      BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL, DIV, MOD
+      BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL, DIV, MOD
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
@@ -37,14 +37,18 @@ private:
 
   std::unique_ptr<Node> parseTopLevel();
   std::unique_ptr<Node> parseInterface();
-  std::unique_ptr<Node> parseFunctionDeclaration();
-  std::unique_ptr<Node> parseFunctionDefinition();
-  std::unique_ptr<Node> parseFunctionSignature();
+  std::unique_ptr<Node> parseFunctionDeclaration(bool allow_template);
+  std::unique_ptr<Node> parseFunctionDefinition(bool allow_template);
+  std::unique_ptr<Node> parseFunctionSignature(bool allow_template);
   std::unique_ptr<Node> parseStruct();
   std::unique_ptr<Node> parseBlock();
   std::unique_ptr<Node> parseStatement();
   std::unique_ptr<Node> parseExpression(int last_precedence = -1);
   std::unique_ptr<Node> parseLiteral();
+  std::unique_ptr<Node> parseIdentifier();
+  std::unique_ptr<Node> parseType();
+
+  void maybeParseTemplateSpecifier(Node* root);
 
   const Token& curToken();
   const Token& nextToken();

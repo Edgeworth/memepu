@@ -2,10 +2,13 @@
 
 #include <sstream>
 #include <unordered_map>
+#include <parser.h>
+
 
 #define token_error(expr, token, ...) \
   do { \
     if (!(expr)) { \
+      fprintf(stderr, "%s:%d: ", __func__, __LINE__); \
       fprintf(stderr, "compile error at %s - ", token.toString(contents_).c_str()); \
       fprintf(stderr, __VA_ARGS__); \
       fprintf(stderr, "\n"); \
@@ -13,10 +16,10 @@
     } \
   } while (0)
 
-#define expect_token(type, note) \
+#define expect_token(expected_type, note) \
   do { \
     auto token = nextToken(); \
-    token_error(token.type == type, token, "expecting " note); \
+    token_error(token.type == expected_type, token, "expecting " note); \
   } while (0)
 
 namespace {
@@ -69,7 +72,7 @@ std::unique_ptr<Parser::Node> Parser::parseTopLevel() {
     case Token::STRUCT:
       return parseStruct();
     case Token::FUNCTION:
-      return parseFunctionDefinition();
+      return parseFunctionDefinition(true);
     default:
       token_error(false, token, "unexpected token");
   }
@@ -77,12 +80,13 @@ std::unique_ptr<Parser::Node> Parser::parseTopLevel() {
 
 std::unique_ptr<Parser::Node> Parser::parseInterface() {
   auto node = nodeFromToken(Node::INTERFACE, nextToken());
+  maybeParseTemplateSpecifier(node.get());
   expect_token(Token::LBRACE, "left brace");
 
   while (true) {
     auto token = curToken();
     if (token.type == Token::RBRACE) break;
-    node->children.push_back(parseFunctionDeclaration());
+    node->children.push_back(parseFunctionDeclaration(false));
   }
   expect_token(Token::RBRACE, "right brace");
 
@@ -90,30 +94,32 @@ std::unique_ptr<Parser::Node> Parser::parseInterface() {
 }
 
 
-std::unique_ptr<Parser::Node> Parser::parseFunctionDeclaration() {
-  auto node = parseFunctionSignature();
+std::unique_ptr<Parser::Node> Parser::parseFunctionDeclaration(bool allow_template) {
+  auto node = parseFunctionSignature(allow_template);
   expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseFunctionDefinition() {
-  auto node = parseFunctionSignature();
+std::unique_ptr<Parser::Node> Parser::parseFunctionDefinition(bool allow_template) {
+  auto node = parseFunctionSignature(allow_template);
   node->children.push_back(parseBlock());
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseFunctionSignature() {
+std::unique_ptr<Parser::Node> Parser::parseFunctionSignature(bool allow_template) {
   auto node = nodeFromToken(Node::FUNCTION, curToken());
   expect_token(Token::FUNCTION, "function declaration");
 
   node->children.push_back(nodeFromToken(Node::IDENT, curToken()));
   expect_token(Token::LITERAL, "function name");
 
+  if (allow_template)
+    maybeParseTemplateSpecifier(node.get());
+
   expect_token(Token::LPAREN, "opening paren");
   expect_token(Token::RPAREN, "closing paren");
 
-  node->children.push_back(nodeFromToken(Node::IDENT, curToken()));
-  expect_token(Token::LITERAL, "return type");
+  node->children.push_back(parseType());
 
   return node;
 }
@@ -155,7 +161,7 @@ std::unique_ptr<Parser::Node> Parser::parseStatement() {
 
 std::unique_ptr<Parser::Node> Parser::parseExpression(int last_precedence) {
   auto node = std::make_unique<Node>();
-  while (1) {
+  while (true) {
     auto token = curToken();
     if (token.type == Token::SEMICOLON || token.type == Token::RPAREN)
       break;
@@ -206,6 +212,39 @@ std::unique_ptr<Parser::Node> Parser::parseLiteral() {
     node = nodeFromToken(Node::IDENT, token);
   }
   return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::parseIdentifier() {
+  auto token = curToken();
+  auto node = parseLiteral();
+  token_error(node->type == Node::IDENT, token, "token not identifier");
+  return node;
+}
+
+
+std::unique_ptr<Parser::Node> Parser::parseType() {
+  auto node = parseIdentifier();
+  maybeParseTemplateSpecifier(node.get());
+  return node;
+}
+
+void Parser::maybeParseTemplateSpecifier(Node* root) {
+  auto token = curToken();
+  if (token.type != Token::LANGLE) return;
+
+  auto node = nodeFromToken(Node::TEMPLATE, token);
+  nextToken();
+  while (true) {
+    node->children.push_back(parseIdentifier());
+
+    token = curToken();
+    if (token.type == Token::RANGLE) break;
+
+    expect_token(Token::COMMA, "expected comma");
+  }
+  expect_token(Token::RANGLE, "expected closing right angle brace");
+
+  root->children.push_back(std::move(node));
 }
 
 std::string Parser::astToString() {
