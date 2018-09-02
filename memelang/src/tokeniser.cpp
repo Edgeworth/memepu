@@ -11,7 +11,7 @@ const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
   {"+", Token::PLUS}, {"-", Token::MINUS}, {"*", Token::ASTERISK}, {"/", Token::FSLASH},
   {"'", Token::QUOTE}, {"(", Token::LPAREN}, {")", Token::RPAREN}, {"{", Token::LBRACE}, {"}", Token::RBRACE},
   {"<", Token::LANGLE}, {">", Token::RANGLE}, {"[", Token::LSQUARE}, {"]", Token::RSQUARE}, {";", Token::SEMICOLON},
-  {"?", Token::QUESTION}, {",", Token::COMMA}, {":", Token::COLON}
+  {"?", Token::QUESTION}, {",", Token::COMMA}, {":", Token::COLON}, {"=", Token::EQUAL}
 };
 
 }  // anonymous

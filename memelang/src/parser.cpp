@@ -4,29 +4,49 @@
 #include <unordered_map>
 #include <parser.h>
 
+#define compile_error(msg) \
+  do { \
+    error_ = msg; \
+    return nullptr; \
+  } while (0)
 
 #define token_error(expr, token, ...) \
   do { \
     if (!(expr)) { \
-      fprintf(stderr, "%s:%d: ", __func__, __LINE__); \
-      fprintf(stderr, "compile error at %s - ", token.toString(contents_).c_str()); \
-      fprintf(stderr, __VA_ARGS__); \
-      fprintf(stderr, "\n"); \
-      exit(1); \
+      char buf0[4096], buf1[4096]; \
+      snprintf(buf0, sizeof(buf0), "%s:%d: compile error at %s - ", __func__, \
+               __LINE__, (token)->toString(contents_).c_str()); \
+      snprintf(buf1, sizeof(buf1), __VA_ARGS__); \
+      compile_error(std::string(buf0) + std::string(buf1) + "\n") ; \
     } \
   } while (0)
 
+#define peek_token(name) \
+  const auto* name = curToken(); \
+  if (!name) return nullptr;
+
+#define discard_token() \
+  if (!nextToken()) return nullptr;
+
+#define consume_token(name) \
+  const auto* name = nextToken(); \
+  if (!name) return nullptr;
+
 #define expect_token(expected_type, note) \
   do { \
-    auto token = nextToken(); \
-    token_error(token.type == expected_type, token, "expecting " note); \
+    consume_token(token); \
+    token_error(token->type == expected_type, token, "expecting " note); \
   } while (0)
+
+#define expect_parse(name, ...) \
+  auto name = tri(__VA_ARGS__); \
+  if (!name) return nullptr;
 
 namespace {
 
-std::unique_ptr<Parser::Node> nodeFromToken(Parser::Node::Type type, const Token& token) {
+std::unique_ptr<Parser::Node> nodeFromToken(Parser::Node::Type type, const Token* token) {
   auto node = std::make_unique<Parser::Node>();
-  *node = Parser::Node{type, {}, token.loc, token.size};
+  *node = Parser::Node{type, {}, token->loc, token->size};
   return node;
 }
 
@@ -56,101 +76,136 @@ std::unordered_map<Parser::Node::Type, int> PRECEDENCE = {
 }  // namespace
 
 void Parser::parse() {
-  root_ = std::make_unique<Parser::Node>();
   idx_ = 0;
 
-  while (hasToken()) {
-    root_->children.push_back(parseTopLevel());
-  }
+  root_ = tryInternal();
+  if (!root_) compileError();
 }
 
-std::unique_ptr<Parser::Node> Parser::parseTopLevel() {
-  auto token = curToken();
-  switch (token.type) {
+
+std::unique_ptr<Parser::Node> Parser::tryInternal() {
+  auto node = std::make_unique<Parser::Node>();
+
+  while (hasToken()) {
+    expect_parse(child, [this] { return tryTopLevel(); });
+    node->children.push_back(std::move(child));
+  }
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
+  peek_token(token);
+  switch (token->type) {
     case Token::INTERFACE:
-      return parseInterface();
+      return tryInterface();
     case Token::STRUCT:
-      return parseStruct();
+      return tryStruct();
     case Token::FUNCTION:
-      return parseFunctionDefinition(true);
+      return tryFunctionDefinition(true);
     default:
       token_error(false, token, "unexpected token");
   }
+  return nullptr;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseInterface() {
-  auto node = nodeFromToken(Node::INTERFACE, nextToken());
-  maybeParseTemplateSpecifier(node.get());
+std::unique_ptr<Parser::Node> Parser::tryInterface() {
+  consume_token(interface_token);
+  auto node = nodeFromToken(Node::INTERFACE, interface_token);
+  // Don't consider it an error to be missing a template list.
+  auto template_list = tri([this] { return tryTemplateList(); });
+  if (template_list)
+    node->children.push_back(std::move(template_list));
   expect_token(Token::LBRACE, "left brace");
 
   while (true) {
-    auto token = curToken();
-    if (token.type == Token::RBRACE) break;
-    node->children.push_back(parseFunctionDeclaration(false));
+    peek_token(token);
+    if (token->type == Token::RBRACE) break;
+
+    expect_parse(child, [this] { return tryFunctionDeclaration(false); });
+
+    node->children.push_back(std::move(child));
   }
   expect_token(Token::RBRACE, "right brace");
 
   return node;
 }
 
-
-std::unique_ptr<Parser::Node> Parser::parseFunctionDeclaration(bool allow_template) {
-  auto node = parseFunctionSignature(allow_template);
+std::unique_ptr<Parser::Node> Parser::tryFunctionDeclaration(bool allow_template) {
+  expect_parse(node, [this, allow_template] { return tryFunctionSignature(allow_template); });
   expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseFunctionDefinition(bool allow_template) {
-  auto node = parseFunctionSignature(allow_template);
-  node->children.push_back(parseBlock());
+std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template) {
+  expect_parse(node, [this, allow_template] { return tryFunctionSignature(allow_template); });
+  expect_parse(child, [this] { return tryBlock(); });
+  node->children.push_back(std::move(child));
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseFunctionSignature(bool allow_template) {
-  auto node = nodeFromToken(Node::FUNCTION, curToken());
+std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
+  peek_token(function_token)
+  auto node = nodeFromToken(Node::FUNCTION, function_token);
   expect_token(Token::FUNCTION, "function declaration");
 
-  node->children.push_back(nodeFromToken(Node::IDENT, curToken()));
+  peek_token(name_token);
+  node->children.push_back(nodeFromToken(Node::IDENT, name_token));
   expect_token(Token::LITERAL, "function name");
 
-  if (allow_template)
-    maybeParseTemplateSpecifier(node.get());
+  if (allow_template) {
+    auto template_list = tri([this] { return tryTemplateList(); });
+    if (template_list)
+      node->children.push_back(std::move(template_list));
+  }
 
   expect_token(Token::LPAREN, "opening paren");
   expect_token(Token::RPAREN, "closing paren");
 
-  node->children.push_back(parseType());
+  expect_parse(child, [this] { return tryType(); });
+  node->children.push_back(std::move(child));
 
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseStruct() {
+std::unique_ptr<Parser::Node> Parser::tryStruct() {
 //  auto node = nodeFromToken(Node::FUNCTION, tokens_[idx_++]);
   return std::unique_ptr<Parser::Node>();
 }
 
-std::unique_ptr<Parser::Node> Parser::parseBlock() {
-  auto node = nodeFromToken(Node::BLOCK, curToken());
+std::unique_ptr<Parser::Node> Parser::tryBlock() {
+  peek_token(block_token)
+  auto node = nodeFromToken(Node::BLOCK, block_token);
   expect_token(Token::LBRACE, "left brace");
 
   while (true) {
-    auto token = curToken();
-    if (token.type == Token::RBRACE) break;
-    node->children.push_back(parseStatement());
+    peek_token(token);
+    if (token->type == Token::RBRACE) break;
+
+    expect_parse(child, [this] { return tryStatement(); });
+    node->children.push_back(std::move(child));
   }
   expect_token(Token::RBRACE, "right brace");
 
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseStatement() {
-  auto token = curToken();
+std::unique_ptr<Parser::Node> Parser::tryStatement() {
+  peek_token(token);
   auto node = std::make_unique<Node>();
-  switch (token.type) {
-    case Token::RETURN:
-      node = nodeFromToken(Node::RETURN, nextToken());
-      node->children.push_back(parseExpression());
+  switch (token->type) {
+    case Token::LITERAL: {
+      expect_parse(literal, [this] { return tryVariableDeclaration(); }, [this] { return tryExpression(); });
+      node = std::move(literal);
       break;
+    }
+    case Token::RETURN: {
+      consume_token(return_token);
+      node = nodeFromToken(Node::RETURN, return_token);
+      expect_parse(child, [this] { return tryExpression(); });
+      node->children.push_back(std::move(child));
+      break;
+    }
     default:
       token_error(false, token, "unexpected token");
   }
@@ -159,27 +214,14 @@ std::unique_ptr<Parser::Node> Parser::parseStatement() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseExpression(int last_precedence) {
-  auto node = std::make_unique<Node>();
+std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
+  std::unique_ptr<Node> node;
   while (true) {
-    auto token = curToken();
-    if (token.type == Token::SEMICOLON || token.type == Token::RPAREN)
+    peek_token(token);
+    if (token->type == Token::SEMICOLON || token->type == Token::RPAREN)
       break;
 
-    switch (token.type) {
-      case Token::LITERAL:
-        node = parseLiteral();
-        continue;
-      case Token::LPAREN:
-        nextToken();
-        node = parseExpression();
-        expect_token(Token::RPAREN, "expected closing paren");
-        continue;
-      default:
-        break;
-    }
-
-    auto iter = OPMAP.find(token.type);
+    auto iter = OPMAP.find(token->type);
     if (iter != OPMAP.end()) {
       auto type = iter->second;
       auto precedence = PRECEDENCE[type];
@@ -188,12 +230,34 @@ std::unique_ptr<Parser::Node> Parser::parseExpression(int last_precedence) {
       if (precedence <= last_precedence)
         break;
 
-      nextToken();
+      discard_token();
       auto child = nodeFromToken(type, token);
       std::swap(child, node);
       node->children.push_back(std::move(child));
-      node->children.push_back(parseExpression(precedence));
+
+      expect_parse(subexpr, [this, precedence] { return tryExpression(precedence); });
+      node->children.push_back(std::move(subexpr));
       continue;
+    }
+
+    // Don't want hanging exprs.
+    token_error(!node, token, "unexpected token in expression");
+
+    switch (token->type) {
+      case Token::LITERAL: {
+        expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryLiteral(); });
+        node = std::move(literal);
+        continue;
+      }
+      case Token::LPAREN: {
+        discard_token();
+        expect_parse(subexpr, [this] { return tryExpression(); });
+        node = std::move(subexpr);
+        expect_token(Token::RPAREN, "expected closing paren");
+        continue;
+      }
+      default:
+        break;
     }
 
     token_error(false, token, "unexpected token");
@@ -202,10 +266,10 @@ std::unique_ptr<Parser::Node> Parser::parseExpression(int last_precedence) {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseLiteral() {
-  auto token = nextToken();
+std::unique_ptr<Parser::Node> Parser::tryLiteral() {
+  consume_token(token);
   auto node = std::make_unique<Node>();
-  int lit = parseInt(contents_->getSpan(token.loc, token.size));
+  int lit = parseInt(contents_->getSpan(token->loc, token->size));
   if (lit != INT_MIN) {
     node = nodeFromToken(Node::INTEGER_LITERAL, token);
   } else {
@@ -214,37 +278,60 @@ std::unique_ptr<Parser::Node> Parser::parseLiteral() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseIdentifier() {
-  auto token = curToken();
-  auto node = parseLiteral();
+std::unique_ptr<Parser::Node> Parser::tryIdentifier() {
+  peek_token(token);
+  expect_parse(node, [this] { return tryLiteral(); });
   token_error(node->type == Node::IDENT, token, "token not identifier");
   return node;
 }
 
 
-std::unique_ptr<Parser::Node> Parser::parseType() {
-  auto node = parseIdentifier();
-  maybeParseTemplateSpecifier(node.get());
+std::unique_ptr<Parser::Node> Parser::tryType() {
+  expect_parse(node, [this] { return tryIdentifier(); });
+  auto template_list = tri([this] { return tryTemplateList(); });
+  if (template_list)
+    node->children.push_back(std::move(template_list));
   return node;
 }
 
-void Parser::maybeParseTemplateSpecifier(Node* root) {
-  auto token = curToken();
-  if (token.type != Token::LANGLE) return;
+std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
+  peek_token(token);
+  auto node = nodeFromToken(Node::VARIABLE_DECLARATION, token);
 
-  auto node = nodeFromToken(Node::TEMPLATE, token);
-  nextToken();
+  expect_parse(type, [this] { return tryType(); });
+  node->children.push_back(std::move(type));
+
+  expect_parse(name, [this] { return tryIdentifier(); });
+  node->children.push_back(std::move(name));
+
+  expect_token(Token::EQUAL, "expected equals sign");
+
+  expect_parse(initialiser, [this] { return tryExpression(); });
+  node->children.push_back(std::move(initialiser));
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryTemplateList() {
+  peek_token(template_token);
+  auto node = nodeFromToken(Node::TEMPLATE, template_token);
+  expect_token(Token::LANGLE, "expected left angle bracket");
   while (true) {
-    node->children.push_back(parseIdentifier());
+    expect_parse(type, [this] { return tryIdentifier(); });
+    node->children.push_back(std::move(type));
 
-    token = curToken();
-    if (token.type == Token::RANGLE) break;
+    peek_token(token)
+    if (token->type == Token::RANGLE) break;
 
     expect_token(Token::COMMA, "expected comma");
   }
   expect_token(Token::RANGLE, "expected closing right angle brace");
 
-  root->children.push_back(std::move(node));
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
+  return nullptr;
 }
 
 std::string Parser::astToString() {
@@ -277,12 +364,22 @@ void Parser::astToStringInternal(const Parser::Node* const root, std::string& ou
   }
 }
 
-const Token& Parser::nextToken() {
-  token_error(hasToken(), tokens_.back(), "unexpected end of file");
-  return tokens_[idx_++];
+const Token* Parser::nextToken() {
+  token_error(hasToken(), &tokens_.back(), "unexpected end of file");
+  return &tokens_[idx_++];
 }
 
-const Token& Parser::curToken() {
-  token_error(hasToken(), tokens_.back(), "unexpected end of file");
-  return tokens_[idx_];
+const Token* Parser::curToken() {
+  token_error(hasToken(), &tokens_.back(), "unexpected end of file");
+  return &tokens_[idx_];
+}
+
+const Token* Parser::peekToken(int ahead) {
+  token_error(hasToken() && hasToken(1), &tokens_.back(), "unexpected end of file");
+  return &tokens_[idx_ + ahead];
+}
+
+void Parser::compileError() {
+  fprintf(stderr, "Compile error:\n%s\n", error_.empty() ? "unknown error" : error_.c_str());
+  exit(1);
 }
