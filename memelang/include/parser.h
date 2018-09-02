@@ -14,7 +14,7 @@ class Parser {
 public:
   struct Node {
     enum Type {
-      BLOCK, FOR, FUNCTION, RETURN, FUNCTION_CALL, INTERFACE, WHILE, TYPE, IDENT, INDEX, INTEGER_LITERAL
+      BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL, DIV, MOD
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
@@ -28,11 +28,7 @@ public:
   std::string astToString();
 
 private:
-  struct TraversalState {
-    int idx = 0;
-    int depth = 0;
-  } state_;
-
+  int idx_ = 0;
   const FileContents* contents_;
   std::vector<Token> tokens_;
   std::unique_ptr<Node> root_;
@@ -47,11 +43,12 @@ private:
   std::unique_ptr<Node> parseStruct();
   std::unique_ptr<Node> parseBlock();
   std::unique_ptr<Node> parseStatement();
-  std::unique_ptr<Node> parseExpression();
+  std::unique_ptr<Node> parseExpression(int last_precedence = -1);
+  std::unique_ptr<Node> parseLiteral();
 
   const Token& curToken();
   const Token& nextToken();
-  bool hasToken() { return state_.idx < tokens_.size(); }
+  bool hasToken() { return idx_ < tokens_.size(); }
 
   void astToStringInternal(const Parser::Node* const root, std::string& out, int indent);
 };
