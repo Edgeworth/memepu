@@ -5,6 +5,10 @@ cmake-build-*/
 *.bck
 *.kicad_pcb-bak
 *.fsx
+*.fsb
+autoroute_*/
+gerbers/
+*.fsxview
 *.fsproj
 *.pyc
 *~
@@ -17,3 +21,5 @@ _autosave-*
 *.net
 *.dsn
 *.ses
+datasheets/
+*.bin
