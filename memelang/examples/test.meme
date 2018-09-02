@@ -1,3 +1,8 @@
+func asdf() void {
+    if (a == b) {
+    }
+}
+
 interface Meme<T> {
     func testFunc() int8;
     func testFunc2() int16;

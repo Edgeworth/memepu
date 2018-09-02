@@ -15,7 +15,8 @@ public:
   struct Node {
     enum Type {
       BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL, POINTER, STRUCT, IF, EQUALS, NOT_EQUALS, ACCESS, ASSIGN, STATIC
+      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL, POINTER, STRUCT, IF, EQUALS, NOT_EQUALS, ACCESS, ASSIGN, STATIC,
+      STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
@@ -66,15 +67,16 @@ private:
   std::unique_ptr<Node> tryVariableDefinition();
   std::unique_ptr<Node> tryIf();
   std::unique_ptr<Node> tryReturn();
+  std::unique_ptr<Node> tryFor();
 
   // Expression possibilities:
   std::unique_ptr<Node> tryExpression(int last_precedence = -1);
   std::unique_ptr<Node> tryFunctionCall();
   std::unique_ptr<Node> tryIndex();
+  std::unique_ptr<Node> tryStructInitialiser();
 
   const Token* curToken();
   const Token* nextToken();
-  const Token* peekToken(int ahead = 1);
   bool hasToken(int ahead = 0) { return idx_ + ahead < tokens_.size(); }
   void compileError();
 
