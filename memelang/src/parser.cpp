@@ -31,7 +31,7 @@
 #define consume_token(name, expected_type, note) \
   const auto* name = nextToken(); \
   if (!name) return nullptr; \
-  token_error(name->type == expected_type, token, "expecting " note);
+  token_error(name->type == expected_type, name, "expecting " note);
 
 #define expect_token(expected_type, note) \
   do { \
@@ -79,7 +79,9 @@ void Parser::parse() {
   idx_ = 0;
 
   root_ = tryInternal();
-  if (!root_) compileError();
+  if (!root_) {
+    compileError();
+  }
 }
 
 
@@ -115,12 +117,9 @@ std::unique_ptr<Parser::Node> Parser::tryInterface() {
   auto node = tri([this] { return tryIdentifier(); });
   node->type = Node::INTERFACE;  // This is actually an interface.
 
-  // Don't consider it an error to be missing a template list.
-  auto template_list = tri([this] { return tryTemplateList(); });
-  if (template_list)
-    node->children.push_back(std::move(template_list));
-  expect_token(Token::LBRACE, "left brace");
+  maybeAddTemplateDeclaration(node.get());
 
+  expect_token(Token::LBRACE, "left brace");
   while (true) {
     peek_token(token);
     if (token->type == Token::RBRACE) break;
@@ -148,19 +147,14 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template)
 }
 
 std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
-  peek_token(function_token)
+  consume_token(function_token, Token::FUNCTION, "function declaraton");
   auto node = nodeFromToken(Node::FUNCTION, function_token);
-  expect_token(Token::FUNCTION, "function declaration");
 
-  peek_token(name_token);
+  consume_token(name_token, Token::LITERAL, "function name");
   node->children.push_back(nodeFromToken(Node::IDENT, name_token));
-  expect_token(Token::LITERAL, "function name");
 
-  if (allow_template) {
-    auto template_list = tri([this] { return tryTemplateList(); });
-    if (template_list)
-      node->children.push_back(std::move(template_list));
-  }
+  if (allow_template)
+    maybeAddTemplateDeclaration(node.get());
 
   expect_token(Token::LPAREN, "opening paren");
   expect_token(Token::RPAREN, "closing paren");
@@ -172,14 +166,31 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
 }
 
 std::unique_ptr<Parser::Node> Parser::tryStruct() {
-//  auto node = nodeFromToken(Node::FUNCTION, tokens_[idx_++]);
-  return std::unique_ptr<Parser::Node>();
+  expect_token(Token::STRUCT, "struct");
+  expect_parse(node, [this] { return tryIdentifier(); });
+
+  maybeAddTemplateDeclaration(node.get());
+
+  expect_token(Token::LBRACE, "left brace");
+  while (true) {
+    peek_token(token);
+    if (token->type == Token::RBRACE) break;
+
+    expect_parse(child, [this] { return tryVariableDeclaration(); }, [this] { return tryFunctionDefinition(false); });
+
+    if (child->type != Node::FUNCTION)
+      expect_token(Token::SEMICOLON, "semicolon");
+
+    node->children.push_back(std::move(child));
+  }
+  expect_token(Token::RBRACE, "right brace");
+
+  return node;
 }
 
 std::unique_ptr<Parser::Node> Parser::tryBlock() {
-  peek_token(block_token)
+  consume_token(block_token, Token::LBRACE, "left brace");
   auto node = nodeFromToken(Node::BLOCK, block_token);
-  expect_token(Token::LBRACE, "left brace");
 
   while (true) {
     peek_token(token);
@@ -198,7 +209,7 @@ std::unique_ptr<Parser::Node> Parser::tryStatement() {
   auto node = std::make_unique<Node>();
   switch (token->type) {
     case Token::LITERAL: {
-      expect_parse(literal, [this] { return tryVariableDeclaration(); }, [this] { return tryExpression(); });
+      expect_parse(literal, [this] { return tryVariableDefinition(); }, [this] { return tryExpression(); });
       node = std::move(literal);
       break;
     }
@@ -291,9 +302,7 @@ std::unique_ptr<Parser::Node> Parser::tryIdentifier() {
 
 std::unique_ptr<Parser::Node> Parser::tryType() {
   expect_parse(node, [this] { return tryIdentifier(); });
-  auto template_list = tri([this] { return tryTemplateList(); });
-  if (template_list)
-    node->children.push_back(std::move(template_list));
+  maybeAddTemplateDeclaration(node.get());
   peek_token(pointer_token);
   if (pointer_token->type == Token::ASTERISK) {
     node->children.push_back(nodeFromToken(Node::POINTER, pointer_token));
@@ -312,6 +321,12 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
   expect_parse(name, [this] { return tryIdentifier(); });
   node->children.push_back(std::move(name));
 
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::tryVariableDefinition() {
+  expect_parse(node, [this] { return tryVariableDeclaration(); });
+
   expect_token(Token::EQUAL, "equals sign");
 
   expect_parse(initialiser, [this] { return tryExpression(); });
@@ -320,15 +335,14 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryTemplateList() {
-  peek_token(template_token);
+std::unique_ptr<Parser::Node> Parser::tryTemplateDeclaration() {
+  consume_token(template_token, Token::LANGLE, "left angle bracket");
   auto node = nodeFromToken(Node::TEMPLATE, template_token);
-  expect_token(Token::LANGLE, "left angle bracket");
   while (true) {
     expect_parse(type, [this] { return tryIdentifier(); });
     node->children.push_back(std::move(type));
 
-    peek_token(token)
+    peek_token(token);
     if (token->type == Token::RANGLE) break;
 
     peek_token(comma_token);
@@ -361,9 +375,18 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
   return node;
 }
 
-std::string Parser::astToString() {
+void Parser::maybeAddTemplateDeclaration(Parser::Node* root) {
+  auto template_declaration = tri([this] { return tryTemplateDeclaration(); });
+  if (template_declaration)
+    root->children.push_back(std::move(template_declaration));
+}
+
+
+std::string Parser::astToString(const Node* root) {
+  verify_expr(root, "astToString called with null root");
+
   std::string out;
-  for (const auto& child : root_->children) {
+  for (const auto& child : root->children) {
     bars_.clear();
     astToStringInternal(child.get(), out, 0);
   }
@@ -407,6 +430,7 @@ const Token* Parser::peekToken(int ahead) {
 }
 
 void Parser::compileError() {
+  fflush(stdout);
   fprintf(stderr, "Compile error:\n%s\n", error_.empty() ? "unknown error" : error_.c_str());
   exit(1);
 }

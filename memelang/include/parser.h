@@ -15,7 +15,7 @@ public:
   struct Node {
     enum Type {
       BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL, POINTER
+      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL, POINTER, STRUCT
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
@@ -25,8 +25,9 @@ public:
   Parser(const FileContents* contents, std::vector<Token> tokens) : contents_(contents), tokens_(std::move(tokens)) {}
 
   void parse();
+  const Node* root() { return root_.get(); }
 
-  std::string astToString();
+  std::string astToString(const Node* root);
 
 private:
   int idx_ = 0;
@@ -52,8 +53,11 @@ private:
   std::unique_ptr<Node> tryIdentifier();
   std::unique_ptr<Node> tryType();
   std::unique_ptr<Node> tryVariableDeclaration();
+  std::unique_ptr<Node> tryVariableDefinition();
   std::unique_ptr<Node> tryFunctionCall();
-  std::unique_ptr<Parser::Node> tryTemplateList();
+  std::unique_ptr<Parser::Node> tryTemplateDeclaration();
+
+  void maybeAddTemplateDeclaration(Node* root);
 
   const Token* curToken();
   const Token* nextToken();

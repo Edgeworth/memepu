@@ -11,14 +11,14 @@ struct vector_iter<T> {
   vector<T>* vec_;
   int16 idx_;
 
-  next() T* {
-    if (idx_ == vec_.size()) {
+  func next() T* {
+    if idx_ == vec_.size() {
       return nullptr;
     }
     return vec_[idx_++];
   }
 
-  static new(vector<T>* vec) vector_iter<T> {
+  func static new(vector<T>* vec) vector_iter<T> {
     return vector_iter<T> {
       vec_: vec;
       idx_: 0
@@ -31,12 +31,12 @@ struct vector<T> {
   int16 size_;
   int16 capacity_;
 
-  index(int16 index) T* {
+  func index(int16 index) T* {
     return data_[index];
   }
 
   func push(T val) {
-    if (size_ == capacity_) {
+    if size_ == capacity_ {
       capacity_ *= 2;
       T* newdata = malloc(capacity_ * sizeof(T));
       for (int16 i = 0; i < size_; i++) {
@@ -96,7 +96,7 @@ func swap<T>(T* a, T* b) {
 func bubblesort<T>(vector<T>* v) {
   for (int16 i = 0; i < v.size(); ++i) {
     for (int16 j = 0; j < v.size() - 1; ++j) {
-      if (v[j] > v[j + 1]) {
+      if v[j] > v[j + 1] {
         swap(v[j], v[j + 1]);
       }
     }
