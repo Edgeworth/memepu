@@ -1,6 +1,7 @@
 #include "parser.h"
 
 #include <sstream>
+#include <unordered_map>
 
 #define token_error(expr, token, ...) \
   do { \
@@ -34,11 +35,26 @@ int parseInt(const std::string& str) {
   return out;
 }
 
-}  // namspace
+std::unordered_map<Token::Type, Parser::Node::Type> OPMAP = {
+    {Token::Type::PLUS, Parser::Node::ADD},
+    {Token::Type::MINUS, Parser::Node::SUB},
+    {Token::Type::ASTERISK, Parser::Node::MUL},
+    {Token::Type::FSLASH, Parser::Node::DIV},
+};
+
+std::unordered_map<Parser::Node::Type, int> PRECEDENCE = {
+    {Parser::Node::MUL, 1},
+    {Parser::Node::DIV, 1},
+    {Parser::Node::MOD, 1},
+    {Parser::Node::ADD, 0},
+    {Parser::Node::SUB, 0},
+};
+
+}  // namespace
 
 void Parser::parse() {
   root_ = std::make_unique<Parser::Node>();
-  state_ = TraversalState();
+  idx_ = 0;
 
   while (hasToken()) {
     root_->children.push_back(parseTopLevel());
@@ -103,7 +119,7 @@ std::unique_ptr<Parser::Node> Parser::parseFunctionSignature() {
 }
 
 std::unique_ptr<Parser::Node> Parser::parseStruct() {
-//  auto node = nodeFromToken(Node::FUNCTION, tokens_[state_.idx++]);
+//  auto node = nodeFromToken(Node::FUNCTION, tokens_[idx_++]);
   return std::unique_ptr<Parser::Node>();
 }
 
@@ -137,21 +153,57 @@ std::unique_ptr<Parser::Node> Parser::parseStatement() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::parseExpression() {
+std::unique_ptr<Parser::Node> Parser::parseExpression(int last_precedence) {
+  auto node = std::make_unique<Node>();
+  while (1) {
+    auto token = curToken();
+    if (token.type == Token::SEMICOLON || token.type == Token::RPAREN)
+      break;
+
+    switch (token.type) {
+      case Token::LITERAL:
+        node = parseLiteral();
+        continue;
+      case Token::LPAREN:
+        nextToken();
+        node = parseExpression();
+        expect_token(Token::RPAREN, "expected closing paren");
+        continue;
+      default:
+        break;
+    }
+
+    auto iter = OPMAP.find(token.type);
+    if (iter != OPMAP.end()) {
+      auto type = iter->second;
+      auto precedence = PRECEDENCE[type];
+
+      // If current precedence isn't high enough to keep going, stop parsing here.
+      if (precedence <= last_precedence)
+        break;
+
+      nextToken();
+      auto child = nodeFromToken(type, token);
+      std::swap(child, node);
+      node->children.push_back(std::move(child));
+      node->children.push_back(parseExpression(precedence));
+      continue;
+    }
+
+    token_error(false, token, "unexpected token");
+  }
+
+  return node;
+}
+
+std::unique_ptr<Parser::Node> Parser::parseLiteral() {
   auto token = nextToken();
   auto node = std::make_unique<Node>();
-  switch (token.type) {
-    case Token::LITERAL: {
-      int lit = parseInt(contents_->getSpan(token.loc, token.size));
-      if (lit != INT_MIN) {
-        node = nodeFromToken(Node::INTEGER_LITERAL, token);
-      } else {
-        token_error(false, token, "expected integer literal");
-      }
-      break;
-    }
-    default:
-      token_error(false, token, "unexpected token");
+  int lit = parseInt(contents_->getSpan(token.loc, token.size));
+  if (lit != INT_MIN) {
+    node = nodeFromToken(Node::INTEGER_LITERAL, token);
+  } else {
+    node = nodeFromToken(Node::IDENT, token);
   }
   return node;
 }
@@ -188,10 +240,10 @@ void Parser::astToStringInternal(const Parser::Node* const root, std::string& ou
 
 const Token& Parser::nextToken() {
   token_error(hasToken(), tokens_.back(), "unexpected end of file");
-  return tokens_[state_.idx++];
+  return tokens_[idx_++];
 }
 
 const Token& Parser::curToken() {
   token_error(hasToken(), tokens_.back(), "unexpected end of file");
-  return tokens_[state_.idx];
+  return tokens_[idx_];
 }
