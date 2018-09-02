@@ -7,7 +7,7 @@ constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t?,:";
 
 const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
   {"interface", Token::INTERFACE}, {"struct", Token::STRUCT}, {"func", Token::FUNCTION}, {"for", Token::FOR},
-  {"while", Token::WHILE}, {"return", Token::RETURN},
+  {"while", Token::WHILE}, {"return", Token::RETURN}, {"if", Token::IF},
   {"+", Token::PLUS}, {"-", Token::MINUS}, {"*", Token::ASTERISK}, {"/", Token::FSLASH},
   {"'", Token::QUOTE}, {"(", Token::LPAREN}, {")", Token::RPAREN}, {"{", Token::LBRACE}, {"}", Token::RBRACE},
   {"<", Token::LANGLE}, {">", Token::RANGLE}, {"[", Token::LSQUARE}, {"]", Token::RSQUARE}, {";", Token::SEMICOLON},
