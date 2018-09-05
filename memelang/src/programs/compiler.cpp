@@ -1,4 +1,5 @@
-#include <parser.h>
+#include "parser.h"
+#include "compile.h"
 
 int main(int argc, char* argv[]) {
   verify_expr(argc == 2, "need filename");
@@ -11,4 +12,6 @@ int main(int argc, char* argv[]) {
   Parser parser(&contents, tokens);
   parser.parse();
   printf("AST:\n%s\n", parser.astToString(parser.root()).c_str());
+  Compile gen(&contents, parser.root());
+  printf("Compile: %s\n", gen.generateCode().c_str());
 }
