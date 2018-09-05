@@ -147,11 +147,9 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
     peek_token(token);
     if (token->type == Token::RPAREN) break;
 
-    expect_parse(type, [this] { return tryType(); });
-    expect_parse(identifier, [this] { return tryIdentifier(); });
+    expect_parse(var, [this] { return tryVariableDeclaration(); });
 
-    node->children.push_back(std::move(type));
-    node->children.push_back(std::move(identifier));
+    node->children.push_back(std::move(var));
 
     peek_token(comma_token);
     if (comma_token->type == Token::COMMA)
