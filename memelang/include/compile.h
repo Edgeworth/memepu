@@ -15,6 +15,7 @@ public:
   struct Type {
     std::string name;
     bool pointer;
+    std::vector<Type> templates;
   };
 
   struct Variable {
@@ -22,23 +23,29 @@ public:
     std::string name;
   };
 
-  struct Func {
+  struct FuncSig {
     std::string name;
+    std::vector<std::string> templates;
     std::vector<Variable> params;
-    std::vector<Type> templates;
     bool is_static;
+  };
+
+  struct Func {
+    FuncSig sig;
     const Parser::Node* defn;
   };
 
   struct Struct {
     std::string name;
+    std::vector<std::string> templates;
     std::vector<Func> funcs;
     std::vector<Variable> vars;
   };
 
   struct Interface {
     std::string name;
-    std::vector<Func> funcs;
+    std::vector<std::string> templates;
+    std::vector<FuncSig> funcs;
   };
 
 private:
@@ -52,11 +59,15 @@ private:
   void generateCodeInternal(const Parser::Node* node);
   void extractSymbols(const Parser::Node* node);
 
-  Func extractFunction(const Parser::Node* node);
+  FuncSig extractFunctionSignature(const Parser::Node* node);
+  Func extractFunctionDefinition(const Parser::Node* node);
   Struct extractStruct(const Parser::Node* node);
   Interface extractInterface(const Parser::Node* node);
   Type extractType(const Parser::Node* node);
   Variable extractVariable(const Parser::Node* node);
+  std::string extractIdentifier(const Parser::Node* node);
+  std::vector<Type> extractTemplateDefinition(const Parser::Node* node);
+  std::vector<std::string> extractTemplateDeclaration(const Parser::Node* node);
 
   template<typename T>
   using FuncType = T (Compile::*)(const Parser::Node*);

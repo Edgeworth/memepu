@@ -49,9 +49,9 @@ private:
   std::unique_ptr<Node> tryIdentifier();
   std::unique_ptr<Node> tryType();
   std::unique_ptr<Node> tryBlock();
-  std::unique_ptr<Parser::Node> tryTemplateDeclaration();
+  std::unique_ptr<Parser::Node> tryTemplateList(bool is_definition);
   std::unique_ptr<Parser::Node> tryStaticQualifier();
-  void maybeAddTemplateDeclaration(Node* root);
+  void maybeAddTemplateList(Node* root, bool is_definition);
 
   // Struct possibilities:
   std::unique_ptr<Node> tryStruct();
