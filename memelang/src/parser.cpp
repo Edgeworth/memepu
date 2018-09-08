@@ -2,7 +2,6 @@
 
 #include <sstream>
 #include <unordered_map>
-#include <parser.h>
 
 #define compile_error(msg) \
   do { \
@@ -31,7 +30,7 @@
 #define consume_token(name, expected_type, note) \
   const auto* name = nextToken(); \
   if (!name) return nullptr; \
-  token_error(name->type == expected_type, name, "expecting " note);
+  token_error(name->type == (expected_type), name, "expecting " note);
 
 #define expect_token(expected_type, note) \
   do { \
@@ -59,33 +58,33 @@ int parseInt(const std::string& str) {
 }
 
 std::unordered_map<Token::Type, Parser::Node::Type> OPMAP = {
-    {Token::Type::PLUS, Parser::Node::ADD},
-    {Token::Type::MINUS, Parser::Node::SUB},
+    {Token::Type::PLUS,     Parser::Node::ADD},
+    {Token::Type::MINUS,    Parser::Node::SUB},
     {Token::Type::ASTERISK, Parser::Node::MUL},
-    {Token::Type::FSLASH, Parser::Node::DIV},
-    {Token::Type::EQUAL, Parser::Node::ASSIGN},
-    {Token::Type::DEQUAL, Parser::Node::EQUALS},
-    {Token::Type::NEQUAL, Parser::Node::NOT_EQUALS},
-    {Token::Type::DOT, Parser::Node::ACCESS},
-    {Token::Type::LANGLE, Parser::Node::LESS_THAN},
-    {Token::Type::RANGLE, Parser::Node::GREATER_THAN},
-    {Token::Type::LTEQUAL, Parser::Node::LESS_THAN_EQUAL},
-    {Token::Type::GTEQUAL, Parser::Node::GREATER_THAN_EQUAL},
+    {Token::Type::FSLASH,   Parser::Node::DIV},
+    {Token::Type::EQUAL,    Parser::Node::ASSIGN},
+    {Token::Type::DEQUAL,   Parser::Node::EQUALS},
+    {Token::Type::NEQUAL,   Parser::Node::NOT_EQUALS},
+    {Token::Type::DOT,      Parser::Node::ACCESS},
+    {Token::Type::LANGLE,   Parser::Node::LESS_THAN},
+    {Token::Type::RANGLE,   Parser::Node::GREATER_THAN},
+    {Token::Type::LTEQUAL,  Parser::Node::LESS_THAN_EQUAL},
+    {Token::Type::GTEQUAL,  Parser::Node::GREATER_THAN_EQUAL},
 };
 
 std::unordered_map<Parser::Node::Type, int> PRECEDENCE = {
-    {Parser::Node::ACCESS, 4},
-    {Parser::Node::MUL, 3},
-    {Parser::Node::DIV, 3},
-    {Parser::Node::ADD, 2},
-    {Parser::Node::SUB, 2},
-    {Parser::Node::LESS_THAN, 1},
-    {Parser::Node::GREATER_THAN, 1},
-    {Parser::Node::LESS_THAN_EQUAL, 1},
+    {Parser::Node::ACCESS,             4},
+    {Parser::Node::MUL,                3},
+    {Parser::Node::DIV,                3},
+    {Parser::Node::ADD,                2},
+    {Parser::Node::SUB,                2},
+    {Parser::Node::LESS_THAN,          1},
+    {Parser::Node::GREATER_THAN,       1},
+    {Parser::Node::LESS_THAN_EQUAL,    1},
     {Parser::Node::GREATER_THAN_EQUAL, 1},
-    {Parser::Node::EQUALS, 1},
-    {Parser::Node::NOT_EQUALS, 1},
-    {Parser::Node::ASSIGN, 0},
+    {Parser::Node::EQUALS,             1},
+    {Parser::Node::NOT_EQUALS,         1},
+    {Parser::Node::ASSIGN,             0},
 };
 
 }  // namespace
@@ -129,7 +128,7 @@ std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
 
 // Building blocks:
 std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
-  consume_token(function_token, Token::FUNCTION, "function declaraton");
+  consume_token(function_token, Token::FUNCTION, "function declaration");
   auto node = nodeFromToken(Node::FUNCTION, function_token);
 
   auto static_node = tri([this] { return tryStaticQualifier(); });
@@ -322,8 +321,8 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDeclaration(bool allow_template
 std::unique_ptr<Parser::Node> Parser::tryStatement() {
   peek_token(token);
   expect_parse(node, [this] { return tryVariableDefinition(); },
-      [this] { return tryExpression(); }, [this] { return tryReturn(); },
-      [this] { return tryIf(); }, [this] { return tryFor(); });
+               [this] { return tryExpression(); }, [this] { return tryReturn(); },
+               [this] { return tryIf(); }, [this] { return tryFor(); });
   if (node->type != Node::IF && node->type != Node::FOR)
     expect_token(Token::SEMICOLON, "semicolon");
   return node;
@@ -417,7 +416,7 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
       case Token::LITERAL: {
         // Parse literal last - it might be an index,  function call, or struct initialiser.
         expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryIndex(); },
-            [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); });
+                     [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); });
         node = std::move(literal);
         continue;
       }
