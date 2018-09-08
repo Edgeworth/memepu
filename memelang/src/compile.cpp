@@ -1,6 +1,4 @@
 #include "compile.h"
-#include <algorithm>
-#include <compile.h>
 
 
 #define compile_error(expr, node, ...) \
@@ -51,23 +49,24 @@ void Compile::extractSymbols(const Parser::Node* node) {
 }
 
 Compile::FuncSig Compile::extractFunctionSignature(const Parser::Node* node) {
-  return FuncSig {
+  return FuncSig{
       extractIdentifier(node), // name
-      map(findAll(findOne(node, Parser::Node::TEMPLATE), Parser::Node::IDENT), &Compile::extractIdentifier), // templates
+      map(findAll(findOne(node, Parser::Node::TEMPLATE), Parser::Node::IDENT),
+          &Compile::extractIdentifier), // templates
       map(findAll(node, Parser::Node::VARIABLE_DECLARATION), &Compile::extractVariable), // params
       !findAll(node, Parser::Node::STATIC).empty(), // is_static
   };
 }
 
 Compile::Func Compile::extractFunctionDefinition(const Parser::Node* node) {
-  return Func {
+  return Func{
       extractFunctionSignature(node), // signature
       findOne(node, Parser::Node::BLOCK), // body
   };
 }
 
 Compile::Struct Compile::extractStruct(const Parser::Node* node) {
-  return Struct {
+  return Struct{
       extractIdentifier(node), // name
       extractTemplateDeclaration(node), // templates
       map(findAll(node, Parser::Node::FUNCTION), &Compile::extractFunctionDefinition), // funcs
@@ -76,7 +75,7 @@ Compile::Struct Compile::extractStruct(const Parser::Node* node) {
 }
 
 Compile::Interface Compile::extractInterface(const Parser::Node* node) {
-  return Interface {
+  return Interface{
       extractIdentifier(node), // name
       extractTemplateDeclaration(node), // templates
       map(findAll(node, Parser::Node::FUNCTION), &Compile::extractFunctionSignature), // funcs
@@ -84,7 +83,7 @@ Compile::Interface Compile::extractInterface(const Parser::Node* node) {
 }
 
 Compile::Type Compile::extractType(const Parser::Node* node) {
-  return Type {
+  return Type{
       extractIdentifier(node), // name
       !findAll(node, Parser::Node::POINTER).empty(), // pointer
       extractTemplateDefinition(node), // templates

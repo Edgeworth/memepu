@@ -2,7 +2,7 @@
 
 namespace {
 
-char READ_BUF[1<<16];
+char READ_BUF[1 << 16];
 
 }  // namespace
 
