@@ -6,13 +6,37 @@ namespace {
 constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t?,:.=";
 
 const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
-  {"interface", Token::INTERFACE}, {"struct", Token::STRUCT}, {"func", Token::FUNCTION}, {"for", Token::FOR},
-  {"while", Token::WHILE}, {"return", Token::RETURN}, {"if", Token::IF},
-  {"+", Token::PLUS}, {"-", Token::MINUS}, {"*", Token::ASTERISK}, {"/", Token::FSLASH},
-  {"'", Token::QUOTE}, {"(", Token::LPAREN}, {")", Token::RPAREN}, {"{", Token::LBRACE}, {"}", Token::RBRACE},
-  {"<", Token::LANGLE}, {">", Token::RANGLE}, {"[", Token::LSQUARE}, {"]", Token::RSQUARE}, {";", Token::SEMICOLON},
-  {"?", Token::QUESTION}, {",", Token::COMMA}, {":", Token::COLON}, {"=", Token::EQUAL}, {"==", Token::DEQUAL},
-  {"!=", Token::NEQUAL}, {".", Token::DOT}, {"static", Token::STATIC}, {"<=", Token::LTEQUAL}, {">=", Token::GTEQUAL}
+    {"interface", Token::INTERFACE},
+    {"struct",    Token::STRUCT},
+    {"func",      Token::FUNCTION},
+    {"for",       Token::FOR},
+    {"while",     Token::WHILE},
+    {"return",    Token::RETURN},
+    {"if",        Token::IF},
+    {"+",         Token::PLUS},
+    {"-",         Token::MINUS},
+    {"*",         Token::ASTERISK},
+    {"/",         Token::FSLASH},
+    {"'",         Token::QUOTE},
+    {"(",         Token::LPAREN},
+    {")",         Token::RPAREN},
+    {"{",         Token::LBRACE},
+    {"}",         Token::RBRACE},
+    {"<",         Token::LANGLE},
+    {">",         Token::RANGLE},
+    {"[",         Token::LSQUARE},
+    {"]",         Token::RSQUARE},
+    {";",         Token::SEMICOLON},
+    {"?",         Token::QUESTION},
+    {",",         Token::COMMA},
+    {":",         Token::COLON},
+    {"=",         Token::EQUAL},
+    {"==",        Token::DEQUAL},
+    {"!=",        Token::NEQUAL},
+    {".",         Token::DOT},
+    {"static",    Token::STATIC},
+    {"<=",        Token::LTEQUAL},
+    {">=",        Token::GTEQUAL}
 };
 
 }  // anonymous
@@ -23,7 +47,7 @@ std::vector<Token> Tokeniser::tokenise() {
   for (idx_ = 0; idx_ < data.size(); ++idx_) {
     char c = data[idx_];
     verify_expr(isprint(c) || c == '\n', "unprintable character '%c' at %d:%d",
-        c, contents_->getLineNumber(idx_), contents_->getColNumber(idx_));
+                c, contents_->getLineNumber(idx_), contents_->getColNumber(idx_));
 
     if (atCompleteToken() || startsNewToken(c)) {
       pushCurrentToken();

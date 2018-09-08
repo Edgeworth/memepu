@@ -1,8 +1,7 @@
 #include "file_contents.h"
 
-#include <algorithm>
-
-FileContents::FileContents(std::string filename, std::string data) : filename_(std::move(filename)), data_(std::move(data)) {
+FileContents::FileContents(std::string filename, std::string data) : filename_(std::move(filename)),
+                                                                     data_(std::move(data)) {
   newlines_.push_back(0);
   for (int i = 0; i < data_.size(); ++i) {
     if (data_[i] == '\n') {
