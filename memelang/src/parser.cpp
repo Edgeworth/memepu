@@ -140,7 +140,7 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
   node->children.push_back(nodeFromToken(Node::IDENT, name_token));
 
   if (allow_template)
-    maybeAddTemplateDeclaration(node.get());
+    maybeAddTemplateList(node.get(), false);
 
   expect_token(Token::LPAREN, "opening paren");
   while (true) {
@@ -184,7 +184,8 @@ std::unique_ptr<Parser::Node> Parser::tryIdentifier() {
 
 std::unique_ptr<Parser::Node> Parser::tryType() {
   expect_parse(node, [this] { return tryIdentifier(); });
-  maybeAddTemplateDeclaration(node.get());
+  node->type = Node::TYPE;  // Actually this is a type.
+  maybeAddTemplateList(node.get(), true);
   peek_token(pointer_token);
   if (pointer_token->type == Token::ASTERISK) {
     node->children.push_back(nodeFromToken(Node::POINTER, pointer_token));
@@ -209,12 +210,17 @@ std::unique_ptr<Parser::Node> Parser::tryBlock() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryTemplateDeclaration() {
+std::unique_ptr<Parser::Node> Parser::tryTemplateList(bool is_definition) {
   consume_token(template_token, Token::LANGLE, "left angle bracket");
   auto node = nodeFromToken(Node::TEMPLATE, template_token);
   while (true) {
-    expect_parse(type, [this] { return tryIdentifier(); });
-    node->children.push_back(std::move(type));
+    if (is_definition) {  // For instantiations.
+      expect_parse(type, [this] { return tryType(); });
+      node->children.push_back(std::move(type));
+    } else { // For declarations.
+      expect_parse(ident, [this] { return tryIdentifier(); });
+      node->children.push_back(std::move(ident));
+    }
 
     peek_token(token);
     if (token->type == Token::RANGLE) break;
@@ -228,8 +234,8 @@ std::unique_ptr<Parser::Node> Parser::tryTemplateDeclaration() {
   return node;
 }
 
-void Parser::maybeAddTemplateDeclaration(Parser::Node* root) {
-  auto template_declaration = tri([this] { return tryTemplateDeclaration(); });
+void Parser::maybeAddTemplateList(Parser::Node* root, bool is_definition) {
+  auto template_declaration = tri([=] { return tryTemplateList(is_definition); });
   if (template_declaration)
     root->children.push_back(std::move(template_declaration));
 }
@@ -244,7 +250,7 @@ std::unique_ptr<Parser::Node> Parser::tryStruct() {
   expect_token(Token::STRUCT, "struct");
   expect_parse(node, [this] { return tryIdentifier(); });
 
-  maybeAddTemplateDeclaration(node.get());
+  maybeAddTemplateList(node.get(), false);
 
   expect_token(Token::LBRACE, "left brace");
   while (true) {
@@ -290,7 +296,7 @@ std::unique_ptr<Parser::Node> Parser::tryInterface() {
   auto node = tri([this] { return tryIdentifier(); });
   node->type = Node::INTERFACE;  // This is actually an interface.
 
-  maybeAddTemplateDeclaration(node.get());
+  maybeAddTemplateList(node.get(), false);
 
   expect_token(Token::LBRACE, "left brace");
   while (true) {
