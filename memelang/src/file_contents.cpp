@@ -1,5 +1,9 @@
 #include "file_contents.h"
 
+#include <algorithm>
+
+namespace meme {
+
 FileContents::FileContents(std::string filename, std::string data) : filename_(std::move(filename)),
                                                                      data_(std::move(data)) {
   newlines_.push_back(0);
@@ -21,3 +25,5 @@ int FileContents::getColNumber(int loc) const {
 std::string FileContents::getSpan(int loc, int size) const {
   return data_.substr(loc, size);
 }
+
+}  // namespace meme

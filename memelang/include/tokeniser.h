@@ -10,6 +10,8 @@
 #include <utility>
 #include <memory>
 
+namespace meme {
+
 struct Token {
   enum Type {
     INTERFACE, STRUCT, FUNCTION, PLUS, MINUS, ASTERISK, FSLASH, QUOTE, FOR, WHILE, LPAREN, RPAREN, LBRACE, RBRACE,
@@ -43,5 +45,7 @@ private:
 
   bool atCompleteToken();
 };
+
+}  // namespace meme
 
 #endif //MEMELANG_TOKENISER_H
