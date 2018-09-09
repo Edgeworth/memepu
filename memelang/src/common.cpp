@@ -9,6 +9,7 @@ char READ_BUF[1 << 16];
 std::string readFile(const std::string& filename) {
   std::string data;
   FILE* f = fopen(filename.c_str(), "rb");
+  verify_expr(f, "non-existent file %s", filename.c_str());
   size_t ret = 0;
   do {
     ret = fread(READ_BUF, 1, sizeof(READ_BUF), f);

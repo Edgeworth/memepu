@@ -10,6 +10,8 @@
 #include <memory>
 #include <unordered_set>
 
+namespace meme {
+
 class Parser {
 public:
   struct Node {
@@ -97,5 +99,7 @@ private:
 
   void astToStringInternal(const Parser::Node* const root, std::string& out, int indent);
 };
+
+}  // namespace meme
 
 #endif //MEMELANG_PARSER_H
