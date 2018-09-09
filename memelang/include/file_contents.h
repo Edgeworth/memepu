@@ -4,6 +4,8 @@
 #include "common.h"
 #include <vector>
 
+namespace meme {
+
 class FileContents {
 public:
   FileContents(std::string filename, std::string data);
@@ -19,5 +21,7 @@ private:
   std::string data_;
   std::vector<int> newlines_;
 };
+
+}  // namespace meme
 
 #endif //MEMELANG_FILE_CONTENTS_H

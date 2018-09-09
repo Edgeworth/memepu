@@ -1,6 +1,8 @@
 #include "tokeniser.h"
 #include <unordered_map>
 
+namespace meme {
+
 namespace {
 
 constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t?,:.=";
@@ -39,7 +41,7 @@ const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
     {">=",        Token::GTEQUAL}
 };
 
-}  // anonymous
+}  // namespace
 
 std::vector<Token> Tokeniser::tokenise() {
   tokens_.clear();
@@ -97,3 +99,5 @@ bool Tokeniser::atCompleteToken() {
     return std::string(SEPARATORS).find(curtok_[0]) != std::string::npos;
   return false;
 }
+
+}  // namespace meme

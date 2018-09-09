@@ -1,5 +1,6 @@
 #include "parser.h"
 
+#include <climits>
 #include <sstream>
 #include <unordered_map>
 
@@ -40,6 +41,8 @@
 #define expect_parse(name, ...) \
   auto name = tri(__VA_ARGS__); \
   if (!name) return nullptr;
+
+namespace meme {
 
 namespace {
 
@@ -135,8 +138,8 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
   if (static_node)
     node->children.push_back(std::move(static_node));
 
-  consume_token(name_token, Token::LITERAL, "function name");
-  node->children.push_back(nodeFromToken(Node::IDENT, name_token));
+  expect_parse(name_token, [this] { return tryIdentifier(); });
+  node->children.push_back(std::move(name_token));
 
   if (allow_template)
     maybeAddTemplateList(node.get(), false);
@@ -248,6 +251,7 @@ std::unique_ptr<Parser::Node> Parser::tryStaticQualifier() {
 std::unique_ptr<Parser::Node> Parser::tryStruct() {
   expect_token(Token::STRUCT, "struct");
   expect_parse(node, [this] { return tryIdentifier(); });
+  node->type = Node::STRUCT;  // Actually this is a struct.
 
   maybeAddTemplateList(node.get(), false);
 
@@ -292,7 +296,7 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template)
 std::unique_ptr<Parser::Node> Parser::tryInterface() {
   expect_token(Token::INTERFACE, "interface");
 
-  auto node = tri([this] { return tryIdentifier(); });
+  expect_parse(node, [this] { return tryIdentifier(); });
   node->type = Node::INTERFACE;  // This is actually an interface.
 
   maybeAddTemplateList(node.get(), false);
@@ -377,7 +381,6 @@ std::unique_ptr<Parser::Node> Parser::tryFor() {
 
   return node;
 }
-
 
 // Expression possibilities:
 std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
@@ -537,3 +540,5 @@ void Parser::compileError() {
   fprintf(stderr, "Compile error:\n%s\n", error_.empty() ? "unknown error" : error_.c_str());
   exit(1);
 }
+
+}  // namespace meme

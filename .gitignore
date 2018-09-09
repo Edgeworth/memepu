@@ -1,5 +1,6 @@
 .idea/
 cmake-build-*/
+build/
 *.000
 *.bak
 *.bck
