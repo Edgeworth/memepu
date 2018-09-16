@@ -1,0 +1,144 @@
+### Registers
+####General purpose: 
+- A, B
+
+####Memory address:
+May be clobbered by the system for e.g. loads
+- M0, M1, M2 
+
+####Stack pointe: 
+- S0, S1, S2
+
+#### Status/Control SC register
+
+Need to be able to set individiual bits somehow.
+- Interrupt enable (initial 0) - jk flipflop
+
+#### Interrupt register - 
+Level triggered, but latched on each falling clock, each device will assert until ack comes and it decides to stop asserting.
+Note this means devices need to assert the line until they get serviced (level triggered). Latch on the falling clock so that the control logic can start reacting to interrupt changes as soon as possible.
+- Timer
+- Software (e.g. syscall)
+- Keyboard
+- Mouse
+- Network
+- Storage?
+
+#### Program counter
+Actually made out of 4 bit binary counters.
+- PC0, PC1, PC2
+Initial: 0
+
+#### DISP - Display output and mode - write only
+- DISP, DISP_MODE
+
+#### Internal MMU registers for loading - write only
+- MMU0, MMU1, MMU2
+
+#### Task register - rw
+Stores id of current task
+- TASK
+
+#### Opcode register - write only
+Needs to be counter
+- OPCODE0, OPCODE1 (4 bit), optional
+
+### Not registers, but need control signals
+#### MMU
+Need boot eeprom mapped into memory. Memory protection. Both read and write permissions?
+
+- MMU_IN - write into memory, checks permissions unless task id is 0?
+- MMU_CONTROL_IN - write into memory protection memory
+- MMU_OUT - get data from memory / eeprom / whatever
+- MMU_CONTROL_OUT
+
+#### MLU
+Two byte ops: add, sub, div, mod, mul, single, alu status, nand
+One byte ops: NOT, POPCOUNT, math functions?
+
+- MLU out
+- 3 bits for operation select
+- Wired to A, B
+
+### Control signals
+5 + 5 + 4 + 2 MLU select + 8 bus (1 overloaded for MLU) = 24 bits
+
+#### Bus related
+IN plane:
+	NONE
+	A, B, 
+	M0, M1, M2, 
+	S0, S1, S2
+	PC0, PC1, PC2, 
+	MMU0, MMU1, MMU2, 
+	MMU, MMU_CONTROL, 
+	DISP, DISP_MODE
+	TASK, 
+	OPCODE0, OPCODE1,
+	INT0, INT1, INT2, INT3, INT4, INT5, INT6, INT7
+
+OUT plane: 
+	NONE
+	A, B, 
+	M0, M1, M2, 
+	S0, S1, S2
+	PC0, PC1, PC2,
+	STATUS, 
+	INTERRUPT, - needs to be read for ISR to know which devices to talk to.
+	MMU, MMU_CONTROL, 
+	TASK, 
+	MLU, 
+	CTRLLOGIC
+	INT0, INT1, INT2, INT3, INT4, INT5, INT6, INT7
+
+#### Control plane
+16 line decoder may be sufficient - 4 bits:
+- RESET: NCLK
+- Reset uop counter: NCLK
+- Set interrupt enable synchronos: NCLK
+- Unset interrupt enable synchronos: NCLK
+
+### MLU operation select / BUS output
+- MLU - 3 bit operation select
+- Bus output. First bit is also wired to last bit of MLU op select.
+
+#### Input
+- 4 lower data bus bits into binary counter then fed into EEPROM
+- 4 micro-op counter bits
+- 8 opcode bits
+- 1 interrupt bit
+- 1 page fault bit
+- 1 spare
+
+### Instructions
+- To fill out.
+
+### Module notes:
+#### MMU
+Need to also interface into EEPROM for boot
+
+#### Reset
+Need to make sure everything is properly reset.
+
+- TASK reg set to 0
+
+#### Clock
+Pierce oscillator. Add frequency dividers using JK flipflops. 12 MHz with frequency dividers
+
+### Peripherals
+
+#### Board-To-Board connector
+PINS:
+- CLK, ~CLK, VCC, GND, LED_VCC, LED_GND
+- BUS0, BUS1, BUS2, BUS3, BUS4, BUS5, BUS6, BUS7
+- INT0, INT1, INT2, INT3, INT4,INT5, INT6, INT7
+- ~INT0_OUT_NCLK, ~INT1_OUT_NCLK, ~INT2_OUT_NCLK, ~INT3_OUT_NCLK, ~INT4_OUT_NCLK, ~INT5_OUT_NCLK, ~INT6_OUT_NCLK, ~INT7_OUT_NCLK
+- INT0_IN_CLK, INT1_IN_CLK, INT2_IN_CLK, INT3_IN_CLK, INT4_IN ,INT5_IN_CLK, INT6_IN_CLK, INT7_IN_CLK
+
+#### Keyboard
+#### Mouse
+#### VGA
+#### Ethernet
+#### USB mass storage/SDCard/MMC - MMC may be simpler
+#### Timer
+#### RS232

@@ -16,13 +16,21 @@ class Parser {
 public:
   struct Node {
     enum Type {
-      BLOCK, FUNCTION, RETURN, INTERFACE, FOR, WHILE, TYPE, TEMPLATE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-      DIV, MOD, VARIABLE_DECLARATION, FUNCTION_CALL, POINTER, STRUCT, IF, EQUALS, NOT_EQUALS, ACCESS, ASSIGN, STATIC,
+      // Top level constructs:
+      FUNCTION, INTERFACE, STRUCT,
+      // Statements:
+      FOR, WHILE, RETURN, VARIABLE_DECLARATION, BLOCK, IF,
+      // Qualifiers:
+      TEMPLATE, STATIC,
+      // Expressions:
+      TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
+      DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
       STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
     } type;
     std::vector<std::unique_ptr<Node>> children;
     int loc;
     int size;
+    int intdata;
   };
 
   Parser(const FileContents* contents, std::vector<Token> tokens) : contents_(contents), tokens_(std::move(tokens)) {}

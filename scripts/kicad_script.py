@@ -4,66 +4,39 @@ import subprocess
 in_labels = [
 'A_IN_CLK',
 'B_IN_CLK',
+'SP_IN_CLK',
+'PC_IN_CLK',
+'ALU0_IN_CLK',
+'ALU1_IN_CLK',
+'ADDR_IN_CLK',
+'MMU_IN_CLK',
+'M_IN_CLK',
 'M0_IN_CLK',
 'M1_IN_CLK',
 'M2_IN_CLK',
-'S0_IN_CLK',
-'S1_IN_CLK',
-'S2_IN_CLK',
-'PC0_IN_CLK',
-'PC1_IN_CLK',
-'PC2_IN_CLK',
-'MMU0_IN_CLK',
-'MMU1_IN_CLK',
-'MMU2_IN_CLK',
-'MMU_IN_CLK',
-'MMU_CONTROL_IN_CLK',
-'DISP_IN_CLK',
-'DISP_MODE_IN_CLK',
-'TASK_IN_CLK',
+'M3_IN_CLK',
+'PAGE_IN_CLK',
 'OPCODE0_IN_CLK',
 'OPCODE1_IN_CLK',
-'INT0_IN_CLK',
-'INT1_IN_CLK',
-'INT2_IN_CLK',
-'INT3_IN_CLK',
-'INT4_IN_CLK',
-'INT5_IN_CLK',
-'INT6_IN_CLK',
-'INT7_IN_CLK',
 ]
-
-# Out of in_labels, when we make CLK versions, these ones should be
-# local rather than hierarchical labels.
-in_local_labels = ['OPCODE0_IN_CLK', 'OPCODE1_IN_CLK']
 
 out_labels = [
 '~A_OUT_NCLK',
 '~B_OUT_NCLK',
-'~M0_OUT_NCLK',
-'~M1_OUT_NCLK',
-'~M2_OUT_NCLK',
-'~S0_OUT_NCLK',
-'~S1_OUT_NCLK',
-'~S2_OUT_NCLK',
-'~PC0_OUT_NCLK',
-'~PC1_OUT_NCLK',
-'~PC2_OUT_NCLK',
-'~STATUS_OUT_NCLK',
-'~INT_OUT_NCLK',
+'~SP_OUT_NCLK',
+'~PC_OUT_NCLK',
+'~SUM_OUT_NCLK',
+'~NAND_OUT_NCLK',
 '~MMU_OUT_NCLK',
-'~MMU_CONTROL_OUT_NCLK',
-'~TASK_OUT_NCLK',
-'~MLU_OUT_NCLK',
-'~CTRLLOGIC_OUT_NCLK',
-'~INT0_OUT_NCLK',
-'~INT1_OUT_NCLK',
-'~INT2_OUT_NCLK',
-'~INT3_OUT_NCLK',
-'~INT4_OUT_NCLK',
-'~INT5_OUT_NCLK',
-'~INT6_OUT_NCLK',
-'~INT7_OUT_NCLK',
+'~INT_OUT_NCLK',
+'~STATUS_OUT_NCLK',
+'~EEPROM_OUT_NCLK',
+'~M_OUT_NCLK',
+'~PAGE_OUT_NCLK',
+'~BUS0_OUT_NCLK',
+'~BUS1_OUT_NCLK',
+'~BUS2_OUT_NCLK',
+'~BUS3_OUT_NCLK',
 ]
 
 ctrl_labels = [
@@ -78,8 +51,6 @@ misc_labels = [
 'MICROOP1',
 'MICROOP2',
 'MICROOP3',
-'MMU_READ_FAULT',
-'MMU_WRITE_FAULT',
 'INT0_LATCH',
 'INT1_LATCH',
 'INT2_LATCH',
@@ -158,6 +129,10 @@ def import_hierarchical_labels(num):
 	for i in range(num):
 		run_xdotool_key(*nav('2E2D'))
 
+def delete_hierarchical_labels(num):
+	for i in range(num):
+		run_xdotool_key('Delete', *nav('2DE2D'))
+
 def shuffle_pins_down(num_pins, num_move):
 	for i in range(num_pins):
 		run_xdotool_key(*nav('LmDEURmDE' * num_move * 2))
@@ -171,14 +146,6 @@ def shuffle_pins_up(num_pins, num_move):
 def generate_labels(labels, t='l', rot=0):
 	for l in labels:
 		run_xdotool_key(t, *tr(l), *nav('E' + str(rot) + 'r' + 'EDD'))
-
-def generate_control_logic_leds(labels, diode_labels):
-	for l, d in zip(labels, diode_labels):
-		run_xdotool_key(*nav('h'), *tr(l), *nav('EECRv'), *tr(d), *nav('ECL4D'))
-
-def change_resistor_values(num):
-	for i in range(num):
-		run_xdotool_key(*nav('v'), *tr('2.2K'), *nav('E4D'))
 
 def sgn(x):
 	return -1 if x < 0 else 1
@@ -207,24 +174,10 @@ def pcbnew_rotate_leds_after(num):
 	for i in range(num):
 		run_xdotool_key(*nav('EmErrEm5DECR5U'))
 
-# pcbnew_rotate_strip_270(7)
-# pcbnew_rotate_leds_after(5)
 
-# generate_nclk_notters(in_labels)
+# shuffle_pins_down(7, 1)
 
-# in_labels_pos = replace(in_labels, '~', '')
-# generate_clk_anders(in_labels_pos, replace(in_labels_pos, 'NCLK', 'CLK'), in_local_labels)
+# import_hierarchical_labels(8)
 
-# ctrl_labels_clk_pos = replace(ctrl_labels_clk, '~', '')
-# generate_clk_anders(ctrl_labels_clk_pos, replace(ctrl_labels_clk_pos, 'NCLK', 'CLK'), ctrl_local_lables)
-
-# import_hierarchical_labels(len(misc_labels))
-
-# shuffle_pins_down(8, 1)
-
-# generate_labels(test)
-
-shuffle_pins_up(12, 8)
-
-# labels = replace(ctrl_labels + misc_labels, '_NCLK', '')
-# generate_control_logic_leds(labels, replace(labels, '~', ''))
+for label in out_labels[:20]:
+	run_xdotool_key(*nav('l'), *tr(label), *nav('EE2D'))
