@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 2 30
+Sheet 2 20
 Title ""
 Date ""
 Rev ""
@@ -1812,12 +1812,6 @@ F 3 "" H 14600 5300 50  0001 C CNN
 $EndComp
 NoConn ~ 11700 1750
 NoConn ~ 11700 1850
-Text HLabel 11700 2150 2    50   Input ~ 0
-47KHZ_CLK
-Text HLabel 11700 2050 2    50   Input ~ 0
-94KHZ_CLK
-Text HLabel 3400 5200 0    50   Input ~ 0
-47KHZ_CLK
 $Comp
 L 74xx:74HC04 U5
 U 4 1 5B6FF1C0
@@ -1932,4 +1926,10 @@ F 3 "" H 15000 6200 50  0001 C CNN
 	1    15000 6200
 	0    1    1    0   
 $EndComp
+Text Label 11700 2050 0    50   ~ 0
+94_KHZ_CLK
+Text Label 11700 2150 0    50   ~ 0
+47_KHZ_CLK
+Text Label 3400 5200 2    50   ~ 0
+47_KHZ_CLK
 $EndSCHEMATC
