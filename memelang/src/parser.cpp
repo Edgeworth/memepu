@@ -4,12 +4,6 @@
 #include <sstream>
 #include <unordered_map>
 
-#define compile_error(msg) \
-  do { \
-    error_ = msg; \
-    return nullptr; \
-  } while (0)
-
 #define token_error(expr, token, ...) \
   do { \
     if (!(expr)) { \
@@ -17,7 +11,8 @@
       snprintf(buf0, sizeof(buf0), "%s:%d: compile error at %s - ", __func__, \
                __LINE__, (token)->toString(contents_).c_str()); \
       snprintf(buf1, sizeof(buf1), __VA_ARGS__); \
-      compile_error(std::string(buf0) + std::string(buf1) + "\n") ; \
+      error_ = std::string(buf0) + std::string(buf1) + "\n"; \
+      return nullptr; \
     } \
   } while (0)
 
@@ -171,6 +166,7 @@ std::unique_ptr<Parser::Node> Parser::tryLiteral() {
   int lit = parseInt(contents_->getSpan(token->loc, token->size));
   if (lit != INT_MIN) {
     node = nodeFromToken(Node::INTEGER_LITERAL, token);
+    node->intdata = lit;
   } else {
     node = nodeFromToken(Node::IDENT, token);
   }

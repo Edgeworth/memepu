@@ -11,31 +11,13 @@
 - connect up reset to MICRO_OP RESET as well? - can solve this by having opcode 0 just reset micro-op counter for each micro-op
 - power on reset
 - make status bit for booted or not? use that to decide if have permissions to run opcodes.
+- add special MLU registers? - if do, do we make them savable using a bus transceiver? If not, then they could be changed when an interrupt happens, meaning that conditional jumps can't rely on the MLU output being the same after setting MLU0, MLU1 over multiple instructions.
+- have registers in sets of three to enable potential microcode based 3 byte words.
+- rename a, b to a0, a1, a2, b0, b1, b2?
 - don't set interrupt flag asynchronously?
  - adds 1 gate delay to not do it asynchronously, since need to compute AND(INT_FLAG, ENABLED).
+- instead of user controllable clock select, select via register?
 - micro usb footprint is completely wrong
-- change to 32 bit words
-- use memory mapped IO not port IO
-- remove existing paging mechanism, use proper paging.
-- Remove display module? - maybe use logic analyser instead until can have shell interface.
-- Read interrupt register into opcode 1 reg or into ALU and check interrupts that way, instead of using dedicated hardware logic? Not possible if users expect flags to hang around. Make it so can't expect that.
-- Add special OUT control signal for eeprom, copy into memory at beginning.
-- Put entire data bus on peripheral bus? Also need to put 24 bit address bus on there too...
-- Need to save output of alu (carry, etc) somehow.
-- Still need some way to check if all bits are zero, even if we have NAND inside ALU?
-- Increase clock rate, wait multiple cycles for memory access / ALU, etc. Need to characterise propagation delays on a bunch of things:
- - Reading a register, writing a register, reading from SRAM (70ns), writing to SRAM (70ns), ALU computation, NAND computation. Basically every control signal.
-
-Move to 32-bit, memory mapped IO, paging
-- Remove task register. Per task paging etc. Need register with memory location of page directory
-- Need flag for which byte bus output outputs to? How to set PC etc byte by byte? Need one register which is loaded byte by byte?
-- Page entry bits: Dirty, R/W, Present, User/Privileged
-- Status bits: Interrupts on/off, Paging on/off, Privileged(?), Carry, Zero
-- Need to re-add ALU
-- Can remove MLU? Can do a bunch of operations byte-by-byte though, like bitwise, popcount. Maybe keep MLU. How to load into MLU, if it only takes 1 byte each?
-- How to do conditional jump? A > B?
-- Can remove page-fault bit. Extra microop or opcode bit.
-- Need to deal with alignment. Need 4 SRAM chips on one bus.
 
 Software changes:
 - add protection for instructions ? need task register to be set to zero on boot not via an instruction but preset via reset line or something. Then privileged instructions can just check task reg by comparing to zero. If not have task register set to be zero on reset then application code can call boot opcode / microop counter setup opcode. this effectively reboots the machine. Alternatively, can have booted flag which boot instruction checks then sets.
