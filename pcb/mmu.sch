@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 4 20
+Sheet 3 20
 Title ""
 Date ""
 Rev ""
@@ -89,44 +89,6 @@ F 3 "" H 4750 750 50  0001 C CNN
 	1    4750 750 
 	-1   0    0    1   
 $EndComp
-Text Label 1150 4250 2    50   ~ 0
-M0
-Text Label 1150 4350 2    50   ~ 0
-M1
-Text Label 1150 4450 2    50   ~ 0
-M2
-Text Label 1150 4550 2    50   ~ 0
-M3
-Text Label 1150 4650 2    50   ~ 0
-M4
-Text Label 1150 4750 2    50   ~ 0
-M5
-Text Label 1150 4850 2    50   ~ 0
-M6
-Text Label 1150 4950 2    50   ~ 0
-M7
-Text Label 1150 5050 2    50   ~ 0
-M8
-Text Label 1150 5150 2    50   ~ 0
-M9
-Text Label 1150 5250 2    50   ~ 0
-M10
-Text Label 1150 5350 2    50   ~ 0
-M11
-Text Label 1150 5450 2    50   ~ 0
-M12
-Text Label 1150 5550 2    50   ~ 0
-M13
-Text Label 1150 5650 2    50   ~ 0
-M14
-Text Label 1150 5750 2    50   ~ 0
-M15
-Text Label 1150 5850 2    50   ~ 0
-M16
-Text Label 1150 5950 2    50   ~ 0
-M17
-Text Label 1150 6050 2    50   ~ 0
-M18
 $Comp
 L power:VCC #PWR0296
 U 1 1 5B09A2B5
@@ -183,12 +145,12 @@ $EndComp
 $Comp
 L power:GND #PWR0298
 U 1 1 5B09B0B1
-P 6600 750
-F 0 "#PWR0298" H 6600 500 50  0001 C CNN
-F 1 "GND" H 6605 577 50  0000 C CNN
-F 2 "" H 6600 750 50  0001 C CNN
-F 3 "" H 6600 750 50  0001 C CNN
-	1    6600 750 
+P 7100 750
+F 0 "#PWR0298" H 7100 500 50  0001 C CNN
+F 1 "GND" H 7105 577 50  0000 C CNN
+F 2 "" H 7100 750 50  0001 C CNN
+F 3 "" H 7100 750 50  0001 C CNN
+	1    7100 750 
 	-1   0    0    1   
 $EndComp
 $Comp
@@ -658,4 +620,42 @@ F 3 "" H 1500 3200 50  0001 C CNN
 	1    1500 3200
 	0    -1   -1   0   
 $EndComp
+Text HLabel 1150 4250 0    50   Input ~ 0
+ADDR0
+Text HLabel 1150 4350 0    50   Input ~ 0
+ADDR1
+Text HLabel 1150 4450 0    50   Input ~ 0
+ADDR2
+Text HLabel 1150 4550 0    50   Input ~ 0
+ADDR3
+Text HLabel 1150 4650 0    50   Input ~ 0
+ADDR4
+Text HLabel 1150 4750 0    50   Input ~ 0
+ADDR5
+Text HLabel 1150 4850 0    50   Input ~ 0
+ADDR6
+Text HLabel 1150 4950 0    50   Input ~ 0
+ADDR7
+Text HLabel 1150 5050 0    50   Input ~ 0
+ADDR8
+Text HLabel 1150 5150 0    50   Input ~ 0
+ADDR9
+Text HLabel 1150 5250 0    50   Input ~ 0
+ADDR10
+Text HLabel 1150 5350 0    50   Input ~ 0
+ADDR11
+Text HLabel 1150 5450 0    50   Input ~ 0
+ADDR12
+Text HLabel 1150 5550 0    50   Input ~ 0
+ADDR13
+Text HLabel 1150 5650 0    50   Input ~ 0
+ADDR14
+Text HLabel 1150 5750 0    50   Input ~ 0
+ADDR15
+Text HLabel 1150 5850 0    50   Input ~ 0
+ADDR16
+Text HLabel 1150 5950 0    50   Input ~ 0
+ADDR17
+Text HLabel 1150 6050 0    50   Input ~ 0
+ADDR18
 $EndSCHEMATC

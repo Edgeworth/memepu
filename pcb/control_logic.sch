@@ -4,7 +4,7 @@ EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
 encoding utf-8
-Sheet 7 20
+Sheet 6 20
 Title ""
 Date ""
 Rev ""
@@ -131,7 +131,7 @@ F 3 "" H 4250 1400 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Wire Notes Line
-	6900 3300 6900 1050
+	13150 3250 13150 1000
 Text Notes 2650 1250 0    50   ~ 0
 Control word latch
 $Comp
@@ -365,9 +365,9 @@ CTRL14
 Text Label 3400 2400 2    50   ~ 0
 CTRL15
 Wire Wire Line
-	7950 1700 8150 1700
-NoConn ~ 9100 1200
-Text Notes 9200 1200 0    50   ~ 0
+	6050 8100 6250 8100
+NoConn ~ 7200 7600
+Text Notes 7300 7600 0    50   ~ 0
 (none)
 $Comp
 L power:GND #PWR0372
@@ -417,10 +417,6 @@ Text Notes 9150 4400 0    50   ~ 0
 (none)
 Text HLabel 9050 4500 2    50   Input ~ 0
 ~RESET_NCLK
-Text HLabel 9050 4700 2    50   Input ~ 0
-~SET_INT_ENABLE_ASYNC
-Text HLabel 9050 4800 2    50   Input ~ 0
-~UNSET_INT_ENABLE_ASYNC
 Text Label 2800 8250 0    50   ~ 0
 OP0
 Text Label 2800 8350 0    50   ~ 0
@@ -494,25 +490,25 @@ OP10
 Text Label 3400 5200 2    50   ~ 0
 OP11
 $Sheet
-S 12700 1150 550  600 
+S 15650 1450 550  600 
 U 5B0D9D66
 F0 "Micro Op Counter" 50
 F1 "microop_counter.sch" 50
-F2 "~RESET" I L 12700 1250 50 
-F3 "CLK" I L 12700 1350 50 
-F4 "O0" I R 13250 1250 50 
-F5 "O1" I R 13250 1350 50 
-F6 "O2" I R 13250 1450 50 
-F7 "O3" I R 13250 1550 50 
-F8 "O4" I R 13250 1650 50 
+F2 "~RESET" I L 15650 1550 50 
+F3 "CLK" I L 15650 1650 50 
+F4 "O0" I R 16200 1550 50 
+F5 "O1" I R 16200 1650 50 
+F6 "O2" I R 16200 1750 50 
+F7 "O3" I R 16200 1850 50 
+F8 "O4" I R 16200 1950 50 
 $EndSheet
-Text Label 13250 1250 0    50   ~ 0
+Text Label 16200 1550 0    50   ~ 0
 MICROOP0
-Text Label 13250 1350 0    50   ~ 0
+Text Label 16200 1650 0    50   ~ 0
 MICROOP1
-Text Label 13250 1450 0    50   ~ 0
+Text Label 16200 1750 0    50   ~ 0
 MICROOP2
-Text Label 13250 1550 0    50   ~ 0
+Text Label 16200 1850 0    50   ~ 0
 MICROOP3
 Text Label 1600 5500 2    50   ~ 0
 MICROOP0
@@ -530,8 +526,6 @@ Text Label 3400 5700 2    50   ~ 0
 MICROOP2
 Text Label 3400 5800 2    50   ~ 0
 MICROOP3
-Text Label 19300 2950 0    50   ~ 0
-INT_FLAG
 $Comp
 L power:VCC #PWR0371
 U 1 1 5B10FF24
@@ -746,17 +740,17 @@ Text Label 4400 2000 0    50   ~ 0
 CTRL_OUT3
 Text Label 4400 2100 0    50   ~ 0
 CTRL_OUT4
-Text Label 8150 1200 2    50   ~ 0
+Text Label 6250 7600 2    50   ~ 0
 CTRL_OUT0
-Text Label 8150 1300 2    50   ~ 0
+Text Label 6250 7700 2    50   ~ 0
 CTRL_OUT1
-Text Label 8150 1400 2    50   ~ 0
+Text Label 6250 7800 2    50   ~ 0
 CTRL_OUT2
-Text Label 8150 1500 2    50   ~ 0
+Text Label 6250 7900 2    50   ~ 0
 CTRL_OUT3
-Text Label 8150 1600 2    50   ~ 0
+Text Label 6250 8000 2    50   ~ 0
 CTRL_OUT4
-Text Label 7350 1700 1    50   ~ 0
+Text Label 5450 8100 1    50   ~ 0
 CTRL_OUT4
 Text Label 8650 6050 2    50   ~ 0
 CTRL_IN0
@@ -821,7 +815,7 @@ F 3 "" H 1400 2700 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text Label 5450 2700 2    50   ~ 0
-~CTRLLOGIC_OUT_NCLK
+~BUS0_OUT_NCLK
 Text HLabel 6450 1700 2    50   Input ~ 0
 BUS0
 Text HLabel 6450 1800 2    50   Input ~ 0
@@ -862,12 +856,12 @@ $EndComp
 $Comp
 L 74xx:74HC04 U114
 U 4 1 5B131C80
-P 7650 1700
-F 0 "U114" H 7650 1700 50  0000 C CNN
-F 1 "74HC04" H 7800 1600 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 7650 1700 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 7650 1700 50  0001 C CNN
-	4    7650 1700
+P 5750 8100
+F 0 "U114" H 5750 8100 50  0000 C CNN
+F 1 "74HC04" H 5900 8000 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 5750 8100 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 5750 8100 50  0001 C CNN
+	4    5750 8100
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -969,152 +963,61 @@ Wire Notes Line
 	21000 4050 18300 4050
 Wire Notes Line
 	18300 4050 18300 1300
-$Comp
-L 74xx:74LS08 U117
-U 1 1 5B1CD68C
-P 19000 2950
-F 0 "U117" H 19000 3275 50  0000 C CNN
-F 1 "74LS08" H 19000 3184 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 19000 2950 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 19000 2950 50  0001 C CNN
-	1    19000 2950
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74LS08 U117
-U 2 1 5B1CD7DD
-P 20400 2500
-F 0 "U117" H 20400 2825 50  0000 C CNN
-F 1 "74LS08" H 20400 2734 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 20400 2500 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 20400 2500 50  0001 C CNN
-	2    20400 2500
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74LS08 U117
-U 3 1 5B1CD8EF
-P 19400 2100
-F 0 "U117" H 19400 2425 50  0000 C CNN
-F 1 "74LS08" H 19400 2334 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 19400 2100 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 19400 2100 50  0001 C CNN
-	3    19400 2100
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74LS08 U117
-U 5 1 5B1CDB22
-P 14650 5500
-F 0 "U117" H 14880 5546 50  0000 L CNN
-F 1 "74LS08" H 14880 5455 50  0000 L CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 14650 5500 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 14650 5500 50  0001 C CNN
-	5    14650 5500
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0455
-U 1 1 5B1CED2B
-P 14650 5000
-F 0 "#PWR0455" H 14650 4850 50  0001 C CNN
-F 1 "VCC" H 14667 5173 50  0000 C CNN
-F 2 "" H 14650 5000 50  0001 C CNN
-F 3 "" H 14650 5000 50  0001 C CNN
-	1    14650 5000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C_Small C128
-U 1 1 5B1CED31
-P 15000 5000
-F 0 "C128" V 14771 5000 50  0000 C CNN
-F 1 "0.1uF" V 14862 5000 50  0000 C CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 15000 5000 50  0001 C CNN
-F 3 "~" H 15000 5000 50  0001 C CNN
-	1    15000 5000
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0456
-U 1 1 5B1CED38
-P 15100 5000
-F 0 "#PWR0456" H 15100 4750 50  0001 C CNN
-F 1 "GND" V 15105 4872 50  0000 R CNN
-F 2 "" H 15100 5000 50  0001 C CNN
-F 3 "" H 15100 5000 50  0001 C CNN
-	1    15100 5000
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	14650 5000 14900 5000
-Connection ~ 14650 5000
 Text Notes 19050 1600 0    50   ~ 0
 SPARE AVAILABLE
 $Sheet
-S 8150 1100 950  2300
+S 6250 7500 950  2300
 U 5B0CC7A2
 F0 "OUT plane decoder" 50
 F1 "5_32_decoder.sch" 50
-F2 "S0" I L 8150 1200 50 
-F3 "S1" I L 8150 1300 50 
-F4 "S2" I L 8150 1400 50 
-F5 "S3" I L 8150 1500 50 
-F6 "O0" I R 9100 1200 50 
-F7 "O1" I R 9100 1300 50 
-F8 "O2" I R 9100 1400 50 
-F9 "O3" I R 9100 1500 50 
-F10 "O4" I R 9100 1600 50 
-F11 "O5" I R 9100 1700 50 
-F12 "O6" I R 9100 1800 50 
-F13 "O7" I R 9100 1900 50 
-F14 "O8" I R 9100 2000 50 
-F15 "O9" I R 9100 2100 50 
-F16 "O10" I R 9100 2200 50 
-F17 "O11" I R 9100 2300 50 
-F18 "O12" I R 9100 2400 50 
-F19 "O13" I R 9100 2500 50 
-F20 "O14" I R 9100 2600 50 
-F21 "O15" I R 9100 2700 50 
-F22 "O16" I R 9100 2800 50 
-F23 "O17" I R 9100 2900 50 
-F24 "O18" I R 9100 3000 50 
-F25 "O19" I R 9100 3100 50 
-F26 "O20" I R 9100 3200 50 
-F27 "O21" I R 9100 3300 50 
-F28 "O22" I L 8150 2400 50 
-F29 "O23" I L 8150 2500 50 
-F30 "O24" I L 8150 2600 50 
-F31 "O25" I L 8150 2700 50 
-F32 "O26" I L 8150 2800 50 
-F33 "O27" I L 8150 2900 50 
-F34 "O28" I L 8150 3000 50 
-F35 "O29" I L 8150 3100 50 
-F36 "O30" I L 8150 3200 50 
-F37 "O31" I L 8150 3300 50 
-F38 "S4" I L 8150 1600 50 
-F39 "~S4" I L 8150 1700 50 
+F2 "S0" I L 6250 7600 50 
+F3 "S1" I L 6250 7700 50 
+F4 "S2" I L 6250 7800 50 
+F5 "S3" I L 6250 7900 50 
+F6 "O0" I R 7200 7600 50 
+F7 "O1" I R 7200 7700 50 
+F8 "O2" I R 7200 7800 50 
+F9 "O3" I R 7200 7900 50 
+F10 "O4" I R 7200 8000 50 
+F11 "O5" I R 7200 8100 50 
+F12 "O6" I R 7200 8200 50 
+F13 "O7" I R 7200 8300 50 
+F14 "O8" I R 7200 8400 50 
+F15 "O9" I R 7200 8500 50 
+F16 "O10" I R 7200 8600 50 
+F17 "O11" I R 7200 8700 50 
+F18 "O12" I R 7200 8800 50 
+F19 "O13" I R 7200 8900 50 
+F20 "O14" I R 7200 9000 50 
+F21 "O15" I R 7200 9100 50 
+F22 "O16" I R 7200 9200 50 
+F23 "O17" I R 7200 9300 50 
+F24 "O18" I R 7200 9400 50 
+F25 "O19" I R 7200 9500 50 
+F26 "O20" I R 7200 9600 50 
+F27 "O21" I R 7200 9700 50 
+F28 "O22" I L 6250 8800 50 
+F29 "O23" I L 6250 8900 50 
+F30 "O24" I L 6250 9000 50 
+F31 "O25" I L 6250 9100 50 
+F32 "O26" I L 6250 9200 50 
+F33 "O27" I L 6250 9300 50 
+F34 "O28" I L 6250 9400 50 
+F35 "O29" I L 6250 9500 50 
+F36 "O30" I L 6250 9600 50 
+F37 "O31" I L 6250 9700 50 
+F38 "S4" I L 6250 8000 50 
+F39 "~S4" I L 6250 8100 50 
 $EndSheet
-$Comp
-L power:GND #PWR061
-U 1 1 5B243822
-P 14650 6000
-F 0 "#PWR061" H 14650 5750 50  0001 C CNN
-F 1 "GND" V 14655 5872 50  0000 R CNN
-F 2 "" H 14650 6000 50  0001 C CNN
-F 3 "" H 14650 6000 50  0001 C CNN
-	1    14650 6000
-	1    0    0    -1  
-$EndComp
 Text HLabel 12000 6150 2    50   Input ~ 0
 ~MMU_IN_CLK
 Text Label 9050 4600 0    50   ~ 0
 ~RESET_UOP_COUNT_NCLK
-Text Label 12700 1250 2    50   ~ 0
+Text Label 15650 1550 2    50   ~ 0
 ~RESET_UOP_COUNT_NCLK
-Text Notes 12150 1000 0    50   ~ 0
+Text Notes 15100 1300 0    50   ~ 0
 Update the micro-op counter on the rising edge so\nwe have enough time to latch the control word on\nthe falling edge (not trying to simultaneously \nupdate the micro op counter).
-Text Label 12700 1350 2    50   ~ 0
+Text Label 15650 1650 2    50   ~ 0
 CLK
 $Comp
 L Memory_Flash:SST39SF040 U113
@@ -1152,65 +1055,6 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 2200 5600 50 
 $EndComp
 Connection ~ 2200 4000
 $Comp
-L power:GND #PWR0217
-U 1 1 5B5AB50A
-P 19100 2000
-F 0 "#PWR0217" H 19100 1750 50  0001 C CNN
-F 1 "GND" V 19105 1872 50  0000 R CNN
-F 2 "" H 19100 2000 50  0001 C CNN
-F 3 "" H 19100 2000 50  0001 C CNN
-	1    19100 2000
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0218
-U 1 1 5B5AB5AF
-P 19100 2200
-F 0 "#PWR0218" H 19100 1950 50  0001 C CNN
-F 1 "GND" V 19105 2072 50  0000 R CNN
-F 2 "" H 19100 2200 50  0001 C CNN
-F 3 "" H 19100 2200 50  0001 C CNN
-	1    19100 2200
-	0    1    1    0   
-$EndComp
-NoConn ~ 19700 2100
-$Comp
-L power:GND #PWR0141
-U 1 1 5B7989AB
-P 20100 2400
-F 0 "#PWR0141" H 20100 2150 50  0001 C CNN
-F 1 "GND" V 20105 2272 50  0000 R CNN
-F 2 "" H 20100 2400 50  0001 C CNN
-F 3 "" H 20100 2400 50  0001 C CNN
-	1    20100 2400
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0144
-U 1 1 5B7989B1
-P 20100 2600
-F 0 "#PWR0144" H 20100 2350 50  0001 C CNN
-F 1 "GND" V 20105 2472 50  0000 R CNN
-F 2 "" H 20100 2600 50  0001 C CNN
-F 3 "" H 20100 2600 50  0001 C CNN
-	1    20100 2600
-	0    1    1    0   
-$EndComp
-NoConn ~ 20700 2500
-$Comp
-L 74xx:74LS08 U117
-U 4 1 5B715A18
-P 20400 1750
-AR Path="/5B0C6DCD/5B715A18" Ref="U117"  Part="4" 
-AR Path="/5ADF0E03/5B715A18" Ref="U?"  Part="4" 
-F 0 "U117" H 20400 2075 50  0000 C CNN
-F 1 "74LS08" H 20400 1984 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 20400 1750 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 20400 1750 50  0001 C CNN
-	4    20400 1750
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:GND #PWR056
 U 1 1 5B723C76
 P 19950 3450
@@ -1222,29 +1066,6 @@ F 3 "" H 19950 3450 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 NoConn ~ 20550 3450
-$Comp
-L power:GND #PWR057
-U 1 1 5B7263CA
-P 20100 1650
-F 0 "#PWR057" H 20100 1400 50  0001 C CNN
-F 1 "GND" V 20105 1522 50  0000 R CNN
-F 2 "" H 20100 1650 50  0001 C CNN
-F 3 "" H 20100 1650 50  0001 C CNN
-	1    20100 1650
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR058
-U 1 1 5B726451
-P 20100 1850
-F 0 "#PWR058" H 20100 1600 50  0001 C CNN
-F 1 "GND" V 20105 1722 50  0000 R CNN
-F 2 "" H 20100 1850 50  0001 C CNN
-F 3 "" H 20100 1850 50  0001 C CNN
-	1    20100 1850
-	0    1    1    0   
-$EndComp
-NoConn ~ 20700 1750
 $Comp
 L 74xx:74LS273 U13
 U 1 1 5B74EE1E
@@ -1511,7 +1332,7 @@ Wire Notes Line
 	7100 6850 7100 3400
 Wire Notes Line
 	7100 3400 800  3400
-Text Label 13250 1650 0    50   ~ 0
+Text Label 16200 1950 0    50   ~ 0
 MICROOP4
 Text Label 5350 5850 2    50   ~ 0
 MICROOP4
@@ -1519,7 +1340,7 @@ Text Label 3400 5900 2    50   ~ 0
 MICROOP4
 Text Label 1600 5900 2    50   ~ 0
 MICROOP4
-Text Notes 12350 2150 0    50   ~ 0
+Text Notes 15300 2450 0    50   ~ 0
 TODO: Change micro-op counter back \nto other version? - that has preset.\nNot sure if useful.
 Text Notes -900 5450 0    50   ~ 0
 TODO: Go back to only 16 micro-ops?\nOpcode1 can be 7 bit. Otherwise\n32 micro-ops, Opcode1 is 6 bit.
@@ -1564,37 +1385,37 @@ Text Label 5350 5250 2    50   ~ 0
 OP12
 Text Label 5350 5350 2    50   ~ 0
 OP13
-Text HLabel 9100 1300 2    50   Input ~ 0
+Text HLabel 7200 7700 2    50   Input ~ 0
 ~A_OUT_NCLK
-Text HLabel 9100 1400 2    50   Input ~ 0
+Text HLabel 7200 7800 2    50   Input ~ 0
 ~B_OUT_NCLK
-Text HLabel 9100 1500 2    50   Input ~ 0
+Text HLabel 7200 7900 2    50   Input ~ 0
 ~SP_OUT_NCLK
-Text HLabel 9100 1600 2    50   Input ~ 0
+Text HLabel 7200 8000 2    50   Input ~ 0
 ~PC_OUT_NCLK
-Text HLabel 9100 1700 2    50   Input ~ 0
+Text HLabel 7200 8100 2    50   Input ~ 0
 ~SUM_OUT_NCLK
-Text HLabel 9100 1800 2    50   Input ~ 0
+Text HLabel 7200 8200 2    50   Input ~ 0
 ~NAND_OUT_NCLK
-Text HLabel 9100 1900 2    50   Input ~ 0
+Text HLabel 7200 8300 2    50   Input ~ 0
 ~MMU_OUT_NCLK
-Text HLabel 9100 2000 2    50   Input ~ 0
+Text HLabel 7200 8400 2    50   Input ~ 0
 ~INT_OUT_NCLK
-Text HLabel 9100 2100 2    50   Input ~ 0
+Text HLabel 7200 8500 2    50   Input ~ 0
 ~STATUS_OUT_NCLK
-Text HLabel 9100 2200 2    50   Input ~ 0
+Text HLabel 7200 8600 2    50   Input ~ 0
 ~EEPROM_OUT_NCLK
-Text HLabel 9100 2300 2    50   Input ~ 0
+Text HLabel 7200 8700 2    50   Input ~ 0
 ~M_OUT_NCLK
-Text Notes 5400 900  0    50   ~ 0
-TODO: depends on value of OUT plane \nwhich part of bus this goes to
-Text Label 9100 2500 0    50   ~ 0
+Text Notes 2800 900  0    50   ~ 0
+TODO: Can reduce # of eeproms here?
+Text Label 7200 9000 0    50   ~ 0
 ~BUS0_OUT_NCLK
-Text Label 9100 2600 0    50   ~ 0
+Text Label 7200 9100 0    50   ~ 0
 ~BUS1_OUT_NCLK
-Text Label 9100 2700 0    50   ~ 0
+Text Label 7200 9200 0    50   ~ 0
 ~BUS2_OUT_NCLK
-Text Label 9100 2800 0    50   ~ 0
+Text Label 7200 9300 0    50   ~ 0
 ~BUS3_OUT_NCLK
 Text HLabel 9550 6150 2    50   Input ~ 0
 A_IN_CLK
@@ -1614,8 +1435,6 @@ Text HLabel 9550 6950 2    50   Input ~ 0
 M_IN_CLK
 Text Label 9550 6850 0    50   ~ 0
 MMU_IN_CLK
-NoConn ~ 9550 7750
-NoConn ~ 9550 7850
 NoConn ~ 9550 7950
 NoConn ~ 8650 6850
 NoConn ~ 8650 6950
@@ -1629,18 +1448,18 @@ NoConn ~ 8650 7650
 NoConn ~ 8650 7750
 NoConn ~ 8650 7850
 NoConn ~ 8650 7950
-NoConn ~ 9100 3200
-NoConn ~ 9100 3300
-NoConn ~ 8150 2400
-NoConn ~ 8150 2500
-NoConn ~ 8150 2600
-NoConn ~ 8150 2700
-NoConn ~ 8150 2800
-NoConn ~ 8150 2900
-NoConn ~ 8150 3000
-NoConn ~ 8150 3100
-NoConn ~ 8150 3200
-NoConn ~ 8150 3300
+NoConn ~ 7200 9600
+NoConn ~ 7200 9700
+NoConn ~ 6250 8800
+NoConn ~ 6250 8900
+NoConn ~ 6250 9000
+NoConn ~ 6250 9100
+NoConn ~ 6250 9200
+NoConn ~ 6250 9300
+NoConn ~ 6250 9400
+NoConn ~ 6250 9500
+NoConn ~ 6250 9600
+NoConn ~ 6250 9700
 Text HLabel 9550 7350 2    50   Input ~ 0
 M3_IN_CLK
 Text HLabel 9550 7250 2    50   Input ~ 0
@@ -1649,15 +1468,336 @@ Text HLabel 9550 7150 2    50   Input ~ 0
 M1_IN_CLK
 Text HLabel 9550 7050 2    50   Input ~ 0
 M0_IN_CLK
-NoConn ~ 9100 3100
-NoConn ~ 9100 3000
-NoConn ~ 9100 2900
-Text HLabel 9100 2400 2    50   Input ~ 0
+NoConn ~ 7200 9500
+NoConn ~ 7200 9400
+Text HLabel 7200 8800 2    50   Input ~ 0
 ~PAGE_OUT_NCLK
 Text HLabel 9550 7450 2    50   Input ~ 0
 PAGE_IN_CLK
-Text Label 9550 7550 0    50   ~ 0
+Text Label 9550 7750 0    50   ~ 0
 OPCODE0_IN_CLK
-Text Label 9550 7650 0    50   ~ 0
+Text Label 9550 7850 0    50   ~ 0
 OPCODE1_IN_CLK
+$Comp
+L 74xx:74LS574 U7
+U 1 1 5B9F3E30
+P 7950 2200
+F 0 "U7" H 7950 2000 50  0000 C CNN
+F 1 "74LS574" H 8000 1900 50  0000 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 7950 2200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS574" H 7950 2200 50  0001 C CNN
+	1    7950 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR044
+U 1 1 5B9F3E37
+P 7950 1400
+F 0 "#PWR044" H 7950 1250 50  0001 C CNN
+F 1 "VCC" H 7967 1573 50  0000 C CNN
+F 2 "" H 7950 1400 50  0001 C CNN
+F 3 "" H 7950 1400 50  0001 C CNN
+	1    7950 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR045
+U 1 1 5B9F3E3D
+P 7950 3000
+F 0 "#PWR045" H 7950 2750 50  0001 C CNN
+F 1 "GND" H 7955 2827 50  0000 C CNN
+F 2 "" H 7950 3000 50  0001 C CNN
+F 3 "" H 7950 3000 50  0001 C CNN
+	1    7950 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C46
+U 1 1 5B9F3E43
+P 8200 1400
+F 0 "C46" V 7971 1400 50  0000 C CNN
+F 1 "0.1uF" V 8062 1400 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 8200 1400 50  0001 C CNN
+F 3 "~" H 8200 1400 50  0001 C CNN
+	1    8200 1400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7950 1400 8100 1400
+Connection ~ 7950 1400
+$Comp
+L power:GND #PWR073
+U 1 1 5B9F3E4C
+P 8300 1400
+F 0 "#PWR073" H 8300 1150 50  0001 C CNN
+F 1 "GND" V 8305 1272 50  0000 R CNN
+F 2 "" H 8300 1400 50  0001 C CNN
+F 3 "" H 8300 1400 50  0001 C CNN
+	1    8300 1400
+	0    -1   -1   0   
+$EndComp
+Text Label 7450 1700 2    50   ~ 0
+CTRL16
+Text Label 7450 1800 2    50   ~ 0
+CTRL17
+Text Label 7450 1900 2    50   ~ 0
+CTRL18
+Text Label 7450 2000 2    50   ~ 0
+CTRL19
+Text Label 7450 2100 2    50   ~ 0
+CTRL20
+Text Label 7450 2200 2    50   ~ 0
+CTRL21
+Text Label 7450 2300 2    50   ~ 0
+CTRL22
+Text Label 7450 2400 2    50   ~ 0
+CTRL23
+Text HLabel 7450 2600 0    50   Input ~ 0
+~CLK
+Text Label 7450 2700 2    50   ~ 0
+~BUS1_OUT_NCLK
+$Comp
+L 74xx:74LS574 U38
+U 1 1 5B9F4107
+P 9950 2200
+F 0 "U38" H 9950 2000 50  0000 C CNN
+F 1 "74LS574" H 10000 1900 50  0000 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 9950 2200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS574" H 9950 2200 50  0001 C CNN
+	1    9950 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR075
+U 1 1 5B9F410E
+P 9950 1400
+F 0 "#PWR075" H 9950 1250 50  0001 C CNN
+F 1 "VCC" H 9967 1573 50  0000 C CNN
+F 2 "" H 9950 1400 50  0001 C CNN
+F 3 "" H 9950 1400 50  0001 C CNN
+	1    9950 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR076
+U 1 1 5B9F4114
+P 9950 3000
+F 0 "#PWR076" H 9950 2750 50  0001 C CNN
+F 1 "GND" H 9955 2827 50  0000 C CNN
+F 2 "" H 9950 3000 50  0001 C CNN
+F 3 "" H 9950 3000 50  0001 C CNN
+	1    9950 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C92
+U 1 1 5B9F411A
+P 10200 1400
+F 0 "C92" V 9971 1400 50  0000 C CNN
+F 1 "0.1uF" V 10062 1400 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 10200 1400 50  0001 C CNN
+F 3 "~" H 10200 1400 50  0001 C CNN
+	1    10200 1400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9950 1400 10100 1400
+Connection ~ 9950 1400
+$Comp
+L power:GND #PWR077
+U 1 1 5B9F4123
+P 10300 1400
+F 0 "#PWR077" H 10300 1150 50  0001 C CNN
+F 1 "GND" V 10305 1272 50  0000 R CNN
+F 2 "" H 10300 1400 50  0001 C CNN
+F 3 "" H 10300 1400 50  0001 C CNN
+	1    10300 1400
+	0    -1   -1   0   
+$EndComp
+Text Label 9450 1700 2    50   ~ 0
+CTRL16
+Text Label 9450 1800 2    50   ~ 0
+CTRL17
+Text Label 9450 1900 2    50   ~ 0
+CTRL18
+Text Label 9450 2000 2    50   ~ 0
+CTRL19
+Text Label 9450 2100 2    50   ~ 0
+CTRL20
+Text Label 9450 2200 2    50   ~ 0
+CTRL21
+Text Label 9450 2300 2    50   ~ 0
+CTRL22
+Text Label 9450 2400 2    50   ~ 0
+CTRL23
+Text HLabel 9450 2600 0    50   Input ~ 0
+~CLK
+Text Label 9450 2700 2    50   ~ 0
+~BUS2_OUT_NCLK
+$Comp
+L 74xx:74LS574 U84
+U 1 1 5B9F531F
+P 11950 2200
+F 0 "U84" H 11950 2000 50  0000 C CNN
+F 1 "74LS574" H 12000 1900 50  0000 C CNN
+F 2 "Package_DIP:DIP-20_W7.62mm_Socket" H 11950 2200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS574" H 11950 2200 50  0001 C CNN
+	1    11950 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR078
+U 1 1 5B9F5326
+P 11950 1400
+F 0 "#PWR078" H 11950 1250 50  0001 C CNN
+F 1 "VCC" H 11967 1573 50  0000 C CNN
+F 2 "" H 11950 1400 50  0001 C CNN
+F 3 "" H 11950 1400 50  0001 C CNN
+	1    11950 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR079
+U 1 1 5B9F532C
+P 11950 3000
+F 0 "#PWR079" H 11950 2750 50  0001 C CNN
+F 1 "GND" H 11955 2827 50  0000 C CNN
+F 2 "" H 11950 3000 50  0001 C CNN
+F 3 "" H 11950 3000 50  0001 C CNN
+	1    11950 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C93
+U 1 1 5B9F5332
+P 12200 1400
+F 0 "C93" V 11971 1400 50  0000 C CNN
+F 1 "0.1uF" V 12062 1400 50  0000 C CNN
+F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 12200 1400 50  0001 C CNN
+F 3 "~" H 12200 1400 50  0001 C CNN
+	1    12200 1400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	11950 1400 12100 1400
+Connection ~ 11950 1400
+$Comp
+L power:GND #PWR080
+U 1 1 5B9F533B
+P 12300 1400
+F 0 "#PWR080" H 12300 1150 50  0001 C CNN
+F 1 "GND" V 12305 1272 50  0000 R CNN
+F 2 "" H 12300 1400 50  0001 C CNN
+F 3 "" H 12300 1400 50  0001 C CNN
+	1    12300 1400
+	0    -1   -1   0   
+$EndComp
+Text Label 11450 1700 2    50   ~ 0
+CTRL16
+Text Label 11450 1800 2    50   ~ 0
+CTRL17
+Text Label 11450 1900 2    50   ~ 0
+CTRL18
+Text Label 11450 2000 2    50   ~ 0
+CTRL19
+Text Label 11450 2100 2    50   ~ 0
+CTRL20
+Text Label 11450 2200 2    50   ~ 0
+CTRL21
+Text Label 11450 2300 2    50   ~ 0
+CTRL22
+Text Label 11450 2400 2    50   ~ 0
+CTRL23
+Text HLabel 11450 2600 0    50   Input ~ 0
+~CLK
+Text Label 11450 2700 2    50   ~ 0
+~BUS3_OUT_NCLK
+Text HLabel 8450 1700 2    50   Input ~ 0
+BUS8
+Text HLabel 8450 1800 2    50   Input ~ 0
+BUS9
+Text HLabel 8450 1900 2    50   Input ~ 0
+BUS10
+Text HLabel 8450 2000 2    50   Input ~ 0
+BUS11
+Text HLabel 8450 2100 2    50   Input ~ 0
+BUS12
+Text HLabel 8450 2200 2    50   Input ~ 0
+BUS13
+Text HLabel 8450 2300 2    50   Input ~ 0
+BUS14
+Text HLabel 8450 2400 2    50   Input ~ 0
+BUS15
+Text HLabel 10450 1700 2    50   Input ~ 0
+BUS16
+Text HLabel 10450 1800 2    50   Input ~ 0
+BUS17
+Text HLabel 10450 1900 2    50   Input ~ 0
+BUS18
+Text HLabel 10450 2000 2    50   Input ~ 0
+BUS19
+Text HLabel 10450 2100 2    50   Input ~ 0
+BUS20
+Text HLabel 10450 2200 2    50   Input ~ 0
+BUS21
+Text HLabel 10450 2300 2    50   Input ~ 0
+BUS22
+Text HLabel 10450 2400 2    50   Input ~ 0
+BUS23
+Text HLabel 12450 1700 2    50   Input ~ 0
+BUS24
+Text HLabel 12450 1800 2    50   Input ~ 0
+BUS25
+Text HLabel 12450 1900 2    50   Input ~ 0
+BUS26
+Text HLabel 12450 2000 2    50   Input ~ 0
+BUS27
+Text HLabel 12450 2100 2    50   Input ~ 0
+BUS28
+Text HLabel 12450 2200 2    50   Input ~ 0
+BUS29
+Text HLabel 12450 2300 2    50   Input ~ 0
+BUS30
+Text HLabel 12450 2400 2    50   Input ~ 0
+BUS31
+Text HLabel 9550 7550 2    50   Input ~ 0
+STATUS_IN_CLK
+$Comp
+L power:GND #PWR0141
+U 1 1 5BA39F34
+P 19350 3850
+F 0 "#PWR0141" H 19350 3600 50  0001 C CNN
+F 1 "GND" V 19355 3722 50  0000 R CNN
+F 2 "" H 19350 3850 50  0001 C CNN
+F 3 "" H 19350 3850 50  0001 C CNN
+	1    19350 3850
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0144
+U 1 1 5BA39F7F
+P 18650 3450
+F 0 "#PWR0144" H 18650 3200 50  0001 C CNN
+F 1 "GND" V 18655 3322 50  0000 R CNN
+F 2 "" H 18650 3450 50  0001 C CNN
+F 3 "" H 18650 3450 50  0001 C CNN
+	1    18650 3450
+	0    1    1    0   
+$EndComp
+NoConn ~ 19250 3450
+NoConn ~ 19950 3850
+NoConn ~ 9050 4800
+Text Notes 10200 4500 0    50   ~ 0
+TODO: All reset does is set opcode = 0,\ncan remove this control signal?
+NoConn ~ 4400 2200
+NoConn ~ 4400 2300
+NoConn ~ 4400 2400
+Text Notes 5950 10150 0    50   ~ 0
+TODO: Can reduce this to 4-16 decoder?
+Text HLabel 9050 4700 2    50   Input ~ 0
+CARRY_IN
+Text HLabel 9550 7650 2    50   Input ~ 0
+INT_IN_CLK
+Text HLabel 7200 8900 2    50   Input ~ 0
+~ALU_STATUS_OUT_NCLK
 $EndSCHEMATC
