@@ -16,6 +16,8 @@ in_labels = [
 'M2_IN_CLK',
 'M3_IN_CLK',
 'PAGE_IN_CLK',
+'STATUS_IN_CLK',
+'INT_IN_CLK',
 'OPCODE0_IN_CLK',
 'OPCODE1_IN_CLK',
 ]
@@ -32,6 +34,7 @@ out_labels = [
 '~STATUS_OUT_NCLK',
 '~EEPROM_OUT_NCLK',
 '~M_OUT_NCLK',
+'~ALU_STATUS_OUT_NCLK',
 '~PAGE_OUT_NCLK',
 '~BUS0_OUT_NCLK',
 '~BUS1_OUT_NCLK',
@@ -175,9 +178,9 @@ def pcbnew_rotate_leds_after(num):
 		run_xdotool_key(*nav('EmErrEm5DECR5U'))
 
 
-# shuffle_pins_down(7, 1)
+# shuffle_pins_up(8, 8)
 
-# import_hierarchical_labels(8)
+import_hierarchical_labels(8)
 
-for label in out_labels[:20]:
-	run_xdotool_key(*nav('l'), *tr(label), *nav('EE2D'))
+# for label in out_labels[:20]:
+# 	run_xdotool_key(*nav('l'), *tr(label), *nav('EE2D'))
