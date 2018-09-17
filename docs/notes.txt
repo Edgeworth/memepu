@@ -23,8 +23,9 @@
 - Put entire data bus on peripheral bus? Also need to put 24 bit address bus on there too...
 - Need to save output of alu (carry, etc) somehow.
 - Still need some way to check if all bits are zero, even if we have NAND inside ALU?
-- Increase clock rate, wait multiple cycles for memory access / ALU, etc. Need to characterise propagation delays on a bunch of things:
+- Increase clock rate, wait multiple cycles for memory access / ALU, etc. Need to characterise propagation delays on a bunch of things. NOTE: would need to put bus buffer on MLU so SRAM chips can be enabled until they stabilise.
  - Reading a register, writing a register, reading from SRAM (70ns), writing to SRAM (70ns), ALU computation, NAND computation. Basically every control signal.
+- No need to change interrupt flag asynchronously anymore since it doesn't feed back into the control logic. Will be read as a regular register. Maybe it's more convenient to set it asynchronously since we don't have to provide clock signal (?).
 
 Move to 32-bit, memory mapped IO, paging
 - Remove task register. Per task paging etc. Need register with memory location of page directory

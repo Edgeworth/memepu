@@ -9,7 +9,8 @@ MMU register
 Page directory address: PAGE
 
 #### Status/Control SC register
-Interrupts Off/On, Paging Off/On, Privileged, Carry, Zero
+Interrupts Off/On, Paging Off/On, Privileged.
+ALU STATUS: Carry, Zero - no need to save in actual status reg.
 
 #### Interrupt register -
 Level triggered, but latched on each falling clock, each device will assert until ack comes and it decides to stop asserting.
@@ -27,7 +28,7 @@ Needs to be counter
 
 ### ALU:
 Contains NAND and SUM with carry-in. Use 8 74hc283s.
-Cin to Cout propagation time:
+Cin to Cout propagation time: ...
 
 ### Physical memory map:
 Top 2 bits chooses a bank. 24 bit physical address space.
@@ -41,7 +42,7 @@ IN plane:
 	NONE
 	A, B, SP, PC, ADDR, MMU, ALU0, ALU1
 	M, M0, M1, M2, M3,
-	PAGE
+	PAGE, STATUS, INTERRUPT
 	OPCODE0, OPCODE1,
 
 OUT plane:
@@ -49,8 +50,9 @@ OUT plane:
 	A, B, SP, PC, SUM, NAND, M, MMU,
 	EEPROM
 	STATUS,
-	INTERRUPT, - needs to be read for ISR to know which devices
+	INTERRUPT,
 	PAGE,
+	ALU_STATUS
 	BUS0, BUS1, BUS2, BUS3
 
 MULTI:
