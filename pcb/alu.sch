@@ -2,7 +2,7 @@ EESchema Schematic File Version 4
 LIBS:cpu-cache
 EELAYER 26 0
 EELAYER END
-$Descr A3 16535 11693
+$Descr A2 23386 16535
 encoding utf-8
 Sheet 10 20
 Title ""
