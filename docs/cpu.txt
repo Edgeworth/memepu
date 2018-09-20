@@ -9,7 +9,7 @@ MMU register
 Page directory address: PAGE
 
 #### Status/Control SC register
-Interrupts Off/On, Paging Off/On, Privileged.
+Interrupts Off/On, Paging Off/On, Privileged/Unprivileged, Secure/Not secure
 ALU STATUS: Carry, Zero - no need to save in actual status reg.
 
 #### Interrupt register -
