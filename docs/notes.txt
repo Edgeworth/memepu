@@ -2,12 +2,6 @@
 - see cpu.txt
 
 #### Notes for next version / problems that came up
-- Takes some time for the clock source to be selected on startup for some reason
- - so 12 MHz from the beginning, but it's not properly started up yet
- - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
- - solutions: make it so button clock from the beginning. increase reset timer
-- power on reset
-- micro usb footprint is completely wrong
 - Increase clock rate, wait multiple cycles for memory access / ALU, etc. Need to characterise propagation delays on a bunch of things. NOTE: would need to put bus buffer on MLU so SRAM chips can be enabled until they stabilise.
  - Reading a register, writing a register, reading from SRAM (70ns), writing to SRAM (70ns), ALU computation, NAND computation. Basically every control signal.
  - For MMU, need some way to signal read is finished?
@@ -73,6 +67,13 @@ Move to 32-bit, memory mapped IO, paging
  - Made VCC/GND 0.3mm wide, 0.2mm clearance
  - Made CLK tracks 0.2mm wide, 0.5mm clearance
  - Made signal tracks 0.1mm wide, 0.1mm clearance
+- micro usb footprint is completely wrong
+- Takes some time for the clock source to be selected on startup for some reason
+ - so 12 MHz from the beginning, but it's not properly started up yet
+ - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
+ - solutions: make it so button clock from the beginning. increase reset timer
+- power on reset
+
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
 -b = ~b + 1

@@ -55,6 +55,6 @@ def undo_label_change():
         if ref_text.startswith('U'):
             m.SetReference(ref_text.split('-')[0])
 
-snap_modules()
-# position_labels()
+# snap_modules()
+position_labels()
 # undo_label_change()
