@@ -1340,8 +1340,6 @@ Text Label 3400 5900 2    50   ~ 0
 MICROOP4
 Text Label 1600 5900 2    50   ~ 0
 MICROOP4
-Text Notes 15300 2450 0    50   ~ 0
-TODO: Change micro-op counter back \nto other version? - that has preset.\nNot sure if useful.
 Text Notes -900 5450 0    50   ~ 0
 TODO: Go back to only 16 micro-ops?\nOpcode1 can be 7 bit. Otherwise\n32 micro-ops, Opcode1 is 6 bit.
 $Comp
