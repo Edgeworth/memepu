@@ -3,7 +3,6 @@
 
 #### Notes for next version / problems that came up
 - Use longer resistor footprints.
-- Use wider tracks... current tracks are kind of weak
 - Takes some time for the clock source to be selected on startup for some reason
  - so 12 MHz from the beginning, but it's not properly started up yet
  - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
@@ -72,7 +71,10 @@ Move to 32-bit, memory mapped IO, paging
 - Put entire data bus on peripheral bus? Also need to put 24 bit address bus on there too. Yes.
 - Need to save output of alu (carry, etc) somehow. ALU_STATUS_OUT, can read into AUX or save.
 - Still need some way to check if all bits are zero, even if we have NAND inside ALU? Yes. Diode logic to simplify.
-
+- Use wider tracks... current tracks are kind of weak
+ - Made VCC/GND 0.3mm wide, 0.2mm clearance
+ - Made CLK tracks 0.2mm wide, 0.5mm clearance
+ - Made signal tracks 0.1mm wide, 0.1mm clearance
 #### ALU
 Use 4-bit binary counters for add. For subtract, using 2's complement, so:
 -b = ~b + 1
