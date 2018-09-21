@@ -361,7 +361,7 @@ Text Label 1650 1050 2    50   ~ 0
 Text Label 1650 1150 2    50   ~ 0
 CLK
 Text Notes 12000 8200 0    50   ~ 0
-Spare parts:\n74hc04: Clock, Control Logic\n74hc08: Control Logic (3), Clock (2) - TODO: can optimise?\n74hc14: Clock\n74hc107: Clock\n74hc74: Status/Control Register
+Spare parts:\n74hc04: Clock, Control Logic\n74hc08: Clock (2) - TODO: can optimise?\n74hc14: Clock\n74hc107: Clock
 Text Label 10450 1700 2    50   ~ 0
 ~RESET_NCLK
 Text Label 1650 1250 2    50   ~ 0
@@ -370,22 +370,6 @@ Text Label 14800 3250 2    50   ~ 0
 CLK
 Text Label 14800 3350 2    50   ~ 0
 ~CLK
-Text Label 14800 4450 2    50   ~ 0
-BUS0
-Text Label 14800 4550 2    50   ~ 0
-BUS1
-Text Label 14800 4650 2    50   ~ 0
-BUS2
-Text Label 14800 4750 2    50   ~ 0
-BUS3
-Text Label 14800 4850 2    50   ~ 0
-BUS4
-Text Label 14800 4950 2    50   ~ 0
-BUS5
-Text Label 15300 3050 0    50   ~ 0
-BUS6
-Text Label 15300 3150 0    50   ~ 0
-BUS7
 Text Label 14800 3050 2    50   ~ 0
 VCC
 $Comp
@@ -418,22 +402,8 @@ Wire Wire Line
 	14300 750  14300 950 
 Connection ~ 14300 950 
 NoConn ~ 15300 1250
-Text Label 14800 3750 2    50   ~ 0
-INT1
-Text Label 14800 3850 2    50   ~ 0
-INT2
-Text Label 14800 3950 2    50   ~ 0
-INT3
-Text Label 14800 4050 2    50   ~ 0
-INT4
-Text Label 14800 4150 2    50   ~ 0
-INT5
-Text Label 14800 4250 2    50   ~ 0
-INT6
-Text Label 14800 4350 2    50   ~ 0
-INT7
 Text Notes 14350 7850 0    50   ~ 0
-Used spares:\n74hc04: 1 in MMU from Control Logic
+Used spares:\n74hc04: 1 in ALU from Clock
 $Sheet
 S 1650 950  2050 6450
 U 5B0C6DCD
@@ -522,8 +492,6 @@ Text Label 13000 2550 0    50   ~ 0
 INT6
 Text Label 13000 2650 0    50   ~ 0
 INT7
-Text Label 14800 3650 2    50   ~ 0
-INT0
 $Comp
 L Device:R_Network08 RN1
 U 1 1 5B786556
@@ -714,113 +682,17 @@ F 3 "~" H 15000 3950 50  0001 C CNN
 $EndComp
 Text Label 14800 3150 2    50   ~ 0
 GND
-Text Label 15300 3250 0    50   ~ 0
-BUS8
-Text Label 15300 3350 0    50   ~ 0
-BUS9
-Text Label 15300 3450 0    50   ~ 0
-BUS10
-Text Label 15300 3550 0    50   ~ 0
-BUS11
-Text Label 15300 3650 0    50   ~ 0
-BUS12
-Text Label 15300 3750 0    50   ~ 0
-BUS13
-Text Label 15300 3850 0    50   ~ 0
-BUS14
-Text Label 15300 3950 0    50   ~ 0
-BUS15
-Text Label 15300 4050 0    50   ~ 0
-BUS16
-Text Label 15300 4150 0    50   ~ 0
-BUS17
-Text Label 15300 4250 0    50   ~ 0
-BUS18
-Text Label 15300 4350 0    50   ~ 0
-BUS19
-Text Label 15300 4450 0    50   ~ 0
-BUS20
-Text Label 15300 4550 0    50   ~ 0
-BUS21
-Text Label 15300 4650 0    50   ~ 0
-BUS22
-Text Label 15300 4750 0    50   ~ 0
-BUS23
-Text Label 15300 4850 0    50   ~ 0
-BUS24
-Text Label 15300 4950 0    50   ~ 0
-BUS25
-Text Label 14800 5300 2    50   ~ 0
-BUS26
-Text Label 14800 5400 2    50   ~ 0
-BUS27
 $Comp
 L Connector_Generic:Conn_02x20_Odd_Even J4
 U 1 1 5BA02487
-P 15000 6200
-F 0 "J4" H 15050 7317 50  0000 C CNN
-F 1 "Conn_02x20_Odd_Even" H 15050 7226 50  0000 C CNN
-F 2 "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical" H 15000 6200 50  0001 C CNN
-F 3 "~" H 15000 6200 50  0001 C CNN
-	1    15000 6200
+P 15000 6000
+F 0 "J4" H 15050 6000 50  0000 C CNN
+F 1 "Conn_02x20_Odd_Even" H 15050 4850 50  0000 C CNN
+F 2 "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical" H 15000 6000 50  0001 C CNN
+F 3 "~" H 15000 6000 50  0001 C CNN
+	1    15000 6000
 	1    0    0    -1  
 $EndComp
-Text Label 14800 5500 2    50   ~ 0
-BUS28
-Text Label 14800 5600 2    50   ~ 0
-BUS29
-Text Label 14800 5700 2    50   ~ 0
-BUS30
-Text Label 14800 5800 2    50   ~ 0
-BUS31
-Text Label 14800 5900 2    50   ~ 0
-ADDR0
-Text Label 14800 6000 2    50   ~ 0
-ADDR1
-Text Label 14800 6100 2    50   ~ 0
-ADDR2
-Text Label 14800 6200 2    50   ~ 0
-ADDR3
-Text Label 14800 6300 2    50   ~ 0
-ADDR4
-Text Label 14800 6400 2    50   ~ 0
-ADDR5
-Text Label 14800 6500 2    50   ~ 0
-ADDR6
-Text Label 14800 6600 2    50   ~ 0
-ADDR7
-Text Label 14800 6700 2    50   ~ 0
-ADDR8
-Text Label 14800 6800 2    50   ~ 0
-ADDR9
-Text Label 14800 6900 2    50   ~ 0
-ADDR10
-Text Label 14800 7000 2    50   ~ 0
-ADDR11
-Text Label 14800 7100 2    50   ~ 0
-ADDR12
-Text Label 14800 7200 2    50   ~ 0
-ADDR13
-Text Label 15300 5300 0    50   ~ 0
-ADDR14
-Text Label 15300 5400 0    50   ~ 0
-ADDR15
-Text Label 15300 5500 0    50   ~ 0
-ADDR16
-Text Label 15300 5600 0    50   ~ 0
-ADDR17
-Text Label 15300 5700 0    50   ~ 0
-ADDR18
-Text Label 15300 5800 0    50   ~ 0
-ADDR19
-Text Label 15300 5900 0    50   ~ 0
-ADDR20
-Text Label 15300 6000 0    50   ~ 0
-ADDR21
-Text Label 15300 6100 0    50   ~ 0
-ADDR22
-Text Label 15300 6200 0    50   ~ 0
-ADDR23
 Text Label 14800 3450 2    50   ~ 0
 ~MMU_IN_CLK
 Text Label 14800 3550 2    50   ~ 0
@@ -1025,8 +897,6 @@ NoConn ~ 15300 6700
 NoConn ~ 15300 6800
 NoConn ~ 15300 6900
 NoConn ~ 15300 7000
-NoConn ~ 15300 7100
-NoConn ~ 15300 7200
 Text Label 7850 3550 2    50   ~ 0
 ~STATUS_OUT_NCLK
 Text Label 8900 2650 0    50   ~ 0
@@ -1394,4 +1264,134 @@ Text Label 8100 4700 2    50   ~ 0
 ~ALU_STATUS_OUT_NCLK
 Text Label 3700 2650 0    50   ~ 0
 ~ALU_STATUS_OUT_NCLK
+NoConn ~ 14800 6900
+NoConn ~ 14800 7000
+Text Label 14800 3650 2    50   ~ 0
+INT0
+Text Label 14800 3750 2    50   ~ 0
+INT1
+Text Label 14800 3850 2    50   ~ 0
+INT2
+Text Label 14800 3950 2    50   ~ 0
+INT3
+Text Label 14800 4050 2    50   ~ 0
+INT4
+Text Label 14800 4150 2    50   ~ 0
+INT5
+Text Label 14800 4250 2    50   ~ 0
+INT6
+Text Label 14800 4350 2    50   ~ 0
+INT7
+Text Label 14800 4450 2    50   ~ 0
+ADDR0
+Text Label 14800 4550 2    50   ~ 0
+ADDR1
+Text Label 14800 4650 2    50   ~ 0
+ADDR2
+Text Label 14800 4750 2    50   ~ 0
+ADDR3
+Text Label 14800 4850 2    50   ~ 0
+ADDR4
+Text Label 14800 4950 2    50   ~ 0
+ADDR5
+Text Label 14800 5100 2    50   ~ 0
+ADDR6
+Text Label 14800 5200 2    50   ~ 0
+ADDR7
+Text Label 14800 5300 2    50   ~ 0
+ADDR8
+Text Label 14800 5400 2    50   ~ 0
+ADDR9
+Text Label 14800 5500 2    50   ~ 0
+ADDR10
+Text Label 14800 5600 2    50   ~ 0
+ADDR11
+Text Label 14800 5700 2    50   ~ 0
+ADDR12
+Text Label 14800 5800 2    50   ~ 0
+ADDR13
+Text Label 14800 5900 2    50   ~ 0
+ADDR14
+Text Label 14800 6000 2    50   ~ 0
+ADDR15
+Text Label 14800 6100 2    50   ~ 0
+ADDR16
+Text Label 14800 6200 2    50   ~ 0
+ADDR17
+Text Label 14800 6300 2    50   ~ 0
+ADDR18
+Text Label 14800 6400 2    50   ~ 0
+ADDR19
+Text Label 14800 6500 2    50   ~ 0
+ADDR20
+Text Label 14800 6600 2    50   ~ 0
+ADDR21
+Text Label 14800 6700 2    50   ~ 0
+ADDR22
+Text Label 14800 6800 2    50   ~ 0
+ADDR23
+Text Label 15300 3050 0    50   ~ 0
+BUS0
+Text Label 15300 3150 0    50   ~ 0
+BUS1
+Text Label 15300 3250 0    50   ~ 0
+BUS2
+Text Label 15300 3350 0    50   ~ 0
+BUS3
+Text Label 15300 3450 0    50   ~ 0
+BUS4
+Text Label 15300 3550 0    50   ~ 0
+BUS5
+Text Label 15300 3650 0    50   ~ 0
+BUS6
+Text Label 15300 3750 0    50   ~ 0
+BUS7
+Text Label 15300 3850 0    50   ~ 0
+BUS8
+Text Label 15300 3950 0    50   ~ 0
+BUS9
+Text Label 15300 4050 0    50   ~ 0
+BUS10
+Text Label 15300 4150 0    50   ~ 0
+BUS11
+Text Label 15300 4250 0    50   ~ 0
+BUS12
+Text Label 15300 4350 0    50   ~ 0
+BUS13
+Text Label 15300 4450 0    50   ~ 0
+BUS14
+Text Label 15300 4550 0    50   ~ 0
+BUS15
+Text Label 15300 4650 0    50   ~ 0
+BUS16
+Text Label 15300 4750 0    50   ~ 0
+BUS17
+Text Label 15300 4850 0    50   ~ 0
+BUS18
+Text Label 15300 4950 0    50   ~ 0
+BUS19
+Text Label 15300 5100 0    50   ~ 0
+BUS20
+Text Label 15300 5200 0    50   ~ 0
+BUS21
+Text Label 15300 5300 0    50   ~ 0
+BUS22
+Text Label 15300 5400 0    50   ~ 0
+BUS23
+Text Label 15300 5500 0    50   ~ 0
+BUS24
+Text Label 15300 5600 0    50   ~ 0
+BUS25
+Text Label 15300 5700 0    50   ~ 0
+BUS26
+Text Label 15300 5800 0    50   ~ 0
+BUS27
+Text Label 15300 5900 0    50   ~ 0
+BUS28
+Text Label 15300 6000 0    50   ~ 0
+BUS29
+Text Label 15300 6100 0    50   ~ 0
+BUS30
+Text Label 15300 6200 0    50   ~ 0
+BUS31
 $EndSCHEMATC
