@@ -2,12 +2,10 @@
 - see cpu.txt
 
 #### Notes for next version / problems that came up
-- Use longer resistor footprints.
 - Takes some time for the clock source to be selected on startup for some reason
  - so 12 MHz from the beginning, but it's not properly started up yet
  - seems like 74hc154 chip is selecting 12 MHz (all high) - i guess switches waiting for caps to charge
  - solutions: make it so button clock from the beginning. increase reset timer
-- connect up reset to MICRO_OP RESET as well? - can solve this by having opcode 0 just reset micro-op counter for each micro-op
 - power on reset
 - micro usb footprint is completely wrong
 - Increase clock rate, wait multiple cycles for memory access / ALU, etc. Need to characterise propagation delays on a bunch of things. NOTE: would need to put bus buffer on MLU so SRAM chips can be enabled until they stabilise.

@@ -130,8 +130,6 @@ F 3 "" H 4250 1400 50  0001 C CNN
 	1    4250 1400
 	0    -1   -1   0   
 $EndComp
-Wire Notes Line
-	13150 3250 13150 1000
 Text Notes 2650 1250 0    50   ~ 0
 Control word latch
 $Comp
@@ -364,8 +362,6 @@ Text Label 3400 2300 2    50   ~ 0
 CTRL14
 Text Label 3400 2400 2    50   ~ 0
 CTRL15
-Wire Wire Line
-	6050 8100 6250 8100
 NoConn ~ 7200 7600
 Text Notes 7300 7600 0    50   ~ 0
 (none)
@@ -527,136 +523,6 @@ MICROOP2
 Text Label 3400 5800 2    50   ~ 0
 MICROOP3
 $Comp
-L power:VCC #PWR0371
-U 1 1 5B10FF24
-P 5950 3950
-F 0 "#PWR0371" H 5950 3800 50  0001 C CNN
-F 1 "VCC" H 5967 4123 50  0000 C CNN
-F 2 "" H 5950 3950 50  0001 C CNN
-F 3 "" H 5950 3950 50  0001 C CNN
-	1    5950 3950
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C_Small C124
-U 1 1 5B10FF2A
-P 6250 3750
-F 0 "C124" V 6021 3750 50  0000 C CNN
-F 1 "0.1uF" V 6112 3750 50  0000 C CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 6250 3750 50  0001 C CNN
-F 3 "~" H 6250 3750 50  0001 C CNN
-	1    6250 3750
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0417
-U 1 1 5B10FF31
-P 6350 3750
-F 0 "#PWR0417" H 6350 3500 50  0001 C CNN
-F 1 "GND" V 6355 3622 50  0000 R CNN
-F 2 "" H 6350 3750 50  0001 C CNN
-F 3 "" H 6350 3750 50  0001 C CNN
-	1    6350 3750
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	5950 3950 6150 3950
-Wire Wire Line
-	6150 3950 6150 3750
-Connection ~ 5950 3950
-$Comp
-L power:GND #PWR0418
-U 1 1 5B10FF3A
-P 5950 6450
-F 0 "#PWR0418" H 5950 6200 50  0001 C CNN
-F 1 "GND" H 5955 6277 50  0000 C CNN
-F 2 "" H 5950 6450 50  0001 C CNN
-F 3 "" H 5950 6450 50  0001 C CNN
-	1    5950 6450
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0419
-U 1 1 5B10FF40
-P 5350 6050
-F 0 "#PWR0419" H 5350 5900 50  0001 C CNN
-F 1 "VCC" V 5368 6177 50  0000 L CNN
-F 2 "" H 5350 6050 50  0001 C CNN
-F 3 "" H 5350 6050 50  0001 C CNN
-	1    5350 6050
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:GND #PWR0420
-U 1 1 5B10FF46
-P 5350 6250
-F 0 "#PWR0420" H 5350 6000 50  0001 C CNN
-F 1 "GND" V 5355 6122 50  0000 R CNN
-F 2 "" H 5350 6250 50  0001 C CNN
-F 3 "" H 5350 6250 50  0001 C CNN
-	1    5350 6250
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0421
-U 1 1 5B10FF4C
-P 5350 6350
-F 0 "#PWR0421" H 5350 6100 50  0001 C CNN
-F 1 "GND" V 5355 6222 50  0000 R CNN
-F 2 "" H 5350 6350 50  0001 C CNN
-F 3 "" H 5350 6350 50  0001 C CNN
-	1    5350 6350
-	0    1    1    0   
-$EndComp
-Text Label 5350 4050 2    50   ~ 0
-OP0
-Text Label 5350 4150 2    50   ~ 0
-OP1
-Text Label 5350 4250 2    50   ~ 0
-OP2
-Text Label 5350 4350 2    50   ~ 0
-OP3
-Text Label 5350 4450 2    50   ~ 0
-OP4
-Text Label 5350 4550 2    50   ~ 0
-OP5
-Text Label 5350 4650 2    50   ~ 0
-OP6
-Text Label 5350 4750 2    50   ~ 0
-OP7
-Text Label 5350 4850 2    50   ~ 0
-OP8
-Text Label 5350 4950 2    50   ~ 0
-OP9
-Text Label 5350 5050 2    50   ~ 0
-OP10
-Text Label 5350 5150 2    50   ~ 0
-OP11
-Text Label 5350 5450 2    50   ~ 0
-MICROOP0
-Text Label 5350 5550 2    50   ~ 0
-MICROOP1
-Text Label 5350 5650 2    50   ~ 0
-MICROOP2
-Text Label 5350 5750 2    50   ~ 0
-MICROOP3
-Text Label 6550 4050 0    50   ~ 0
-CTRL16
-Text Label 6550 4150 0    50   ~ 0
-CTRL17
-Text Label 6550 4250 0    50   ~ 0
-CTRL18
-Text Label 6550 4350 0    50   ~ 0
-CTRL19
-Text Label 6550 4450 0    50   ~ 0
-CTRL20
-Text Label 6550 4550 0    50   ~ 0
-CTRL21
-Text Label 6550 4650 0    50   ~ 0
-CTRL22
-Text Label 6550 4750 0    50   ~ 0
-CTRL23
-$Comp
 L 74xx:74LS574 U112
 U 1 1 5B1107FE
 P 5950 2200
@@ -714,22 +580,6 @@ F 3 "" H 6300 1400 50  0001 C CNN
 	1    6300 1400
 	0    -1   -1   0   
 $EndComp
-Text Label 5450 1700 2    50   ~ 0
-CTRL16
-Text Label 5450 1800 2    50   ~ 0
-CTRL17
-Text Label 5450 1900 2    50   ~ 0
-CTRL18
-Text Label 5450 2000 2    50   ~ 0
-CTRL19
-Text Label 5450 2100 2    50   ~ 0
-CTRL20
-Text Label 5450 2200 2    50   ~ 0
-CTRL21
-Text Label 5450 2300 2    50   ~ 0
-CTRL22
-Text Label 5450 2400 2    50   ~ 0
-CTRL23
 Text Label 4400 1700 0    50   ~ 0
 CTRL_OUT0
 Text Label 4400 1800 0    50   ~ 0
@@ -738,8 +588,6 @@ Text Label 4400 1900 0    50   ~ 0
 CTRL_OUT2
 Text Label 4400 2000 0    50   ~ 0
 CTRL_OUT3
-Text Label 4400 2100 0    50   ~ 0
-CTRL_OUT4
 Text Label 6250 7600 2    50   ~ 0
 CTRL_OUT0
 Text Label 6250 7700 2    50   ~ 0
@@ -748,10 +596,6 @@ Text Label 6250 7800 2    50   ~ 0
 CTRL_OUT2
 Text Label 6250 7900 2    50   ~ 0
 CTRL_OUT3
-Text Label 6250 8000 2    50   ~ 0
-CTRL_OUT4
-Text Label 5450 8100 1    50   ~ 0
-CTRL_OUT4
 Text Label 8650 6050 2    50   ~ 0
 CTRL_IN0
 Text Label 8650 6150 2    50   ~ 0
@@ -842,173 +686,6 @@ Wire Notes Line
 	850  1050 6900 1050
 Wire Notes Line
 	850  3300 6900 3300
-$Comp
-L 74xx:74HC04 U114
-U 3 1 5B131C79
-P 20250 3450
-F 0 "U114" H 20250 3450 50  0000 C CNN
-F 1 "74HC04" H 20400 3350 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 20250 3450 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 20250 3450 50  0001 C CNN
-	3    20250 3450
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74HC04 U114
-U 4 1 5B131C80
-P 5750 8100
-F 0 "U114" H 5750 8100 50  0000 C CNN
-F 1 "74HC04" H 5900 8000 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 5750 8100 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 5750 8100 50  0001 C CNN
-	4    5750 8100
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74HC04 U114
-U 7 1 5B1323FA
-P 13650 5500
-F 0 "U114" H 13880 5546 50  0000 L CNN
-F 1 "74HC04" H 13880 5455 50  0000 L CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 13650 5500 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 13650 5500 50  0001 C CNN
-	7    13650 5500
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0445
-U 1 1 5B132401
-P 13650 5000
-F 0 "#PWR0445" H 13650 4850 50  0001 C CNN
-F 1 "VCC" H 13667 5173 50  0000 C CNN
-F 2 "" H 13650 5000 50  0001 C CNN
-F 3 "" H 13650 5000 50  0001 C CNN
-	1    13650 5000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C_Small C125
-U 1 1 5B132407
-P 14000 5000
-F 0 "C125" V 13771 5000 50  0000 C CNN
-F 1 "0.1uF" V 13862 5000 50  0000 C CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 14000 5000 50  0001 C CNN
-F 3 "~" H 14000 5000 50  0001 C CNN
-	1    14000 5000
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0446
-U 1 1 5B13240E
-P 14100 5000
-F 0 "#PWR0446" H 14100 4750 50  0001 C CNN
-F 1 "GND" V 14105 4872 50  0000 R CNN
-F 2 "" H 14100 5000 50  0001 C CNN
-F 3 "" H 14100 5000 50  0001 C CNN
-	1    14100 5000
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	13650 5000 13900 5000
-Connection ~ 13650 5000
-$Comp
-L power:GND #PWR0447
-U 1 1 5B132416
-P 13650 6000
-F 0 "#PWR0447" H 13650 5750 50  0001 C CNN
-F 1 "GND" V 13655 5872 50  0000 R CNN
-F 2 "" H 13650 6000 50  0001 C CNN
-F 3 "" H 13650 6000 50  0001 C CNN
-	1    13650 6000
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74HC04 U114
-U 1 1 5B141E1A
-P 11700 6150
-F 0 "U114" H 11700 6150 50  0000 C CNN
-F 1 "74HC04" H 11850 6050 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 11700 6150 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 11700 6150 50  0001 C CNN
-	1    11700 6150
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74HC04 U114
-U 2 1 5B141E21
-P 19650 3850
-F 0 "U114" H 19650 3850 50  0000 C CNN
-F 1 "74HC04" H 19800 3750 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 19650 3850 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 19650 3850 50  0001 C CNN
-	2    19650 3850
-	1    0    0    -1  
-$EndComp
-$Comp
-L 74xx:74HC04 U114
-U 5 1 5B141E36
-P 8000 6550
-F 0 "U114" H 8000 6550 50  0000 C CNN
-F 1 "74HC04" H 8150 6450 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8000 6550 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8000 6550 50  0001 C CNN
-	5    8000 6550
-	1    0    0    -1  
-$EndComp
-Wire Notes Line
-	18300 1300 21000 1300
-Wire Notes Line
-	21000 1300 21000 4050
-Wire Notes Line
-	21000 4050 18300 4050
-Wire Notes Line
-	18300 4050 18300 1300
-Text Notes 19050 1600 0    50   ~ 0
-SPARE AVAILABLE
-$Sheet
-S 6250 7500 950  2300
-U 5B0CC7A2
-F0 "OUT plane decoder" 50
-F1 "5_32_decoder.sch" 50
-F2 "S0" I L 6250 7600 50 
-F3 "S1" I L 6250 7700 50 
-F4 "S2" I L 6250 7800 50 
-F5 "S3" I L 6250 7900 50 
-F6 "O0" I R 7200 7600 50 
-F7 "O1" I R 7200 7700 50 
-F8 "O2" I R 7200 7800 50 
-F9 "O3" I R 7200 7900 50 
-F10 "O4" I R 7200 8000 50 
-F11 "O5" I R 7200 8100 50 
-F12 "O6" I R 7200 8200 50 
-F13 "O7" I R 7200 8300 50 
-F14 "O8" I R 7200 8400 50 
-F15 "O9" I R 7200 8500 50 
-F16 "O10" I R 7200 8600 50 
-F17 "O11" I R 7200 8700 50 
-F18 "O12" I R 7200 8800 50 
-F19 "O13" I R 7200 8900 50 
-F20 "O14" I R 7200 9000 50 
-F21 "O15" I R 7200 9100 50 
-F22 "O16" I R 7200 9200 50 
-F23 "O17" I R 7200 9300 50 
-F24 "O18" I R 7200 9400 50 
-F25 "O19" I R 7200 9500 50 
-F26 "O20" I R 7200 9600 50 
-F27 "O21" I R 7200 9700 50 
-F28 "O22" I L 6250 8800 50 
-F29 "O23" I L 6250 8900 50 
-F30 "O24" I L 6250 9000 50 
-F31 "O25" I L 6250 9100 50 
-F32 "O26" I L 6250 9200 50 
-F33 "O27" I L 6250 9300 50 
-F34 "O28" I L 6250 9400 50 
-F35 "O29" I L 6250 9500 50 
-F36 "O30" I L 6250 9600 50 
-F37 "O31" I L 6250 9700 50 
-F38 "S4" I L 6250 8000 50 
-F39 "~S4" I L 6250 8100 50 
-$EndSheet
 Text HLabel 12000 6150 2    50   Input ~ 0
 ~MMU_IN_CLK
 Text Label 9050 4600 0    50   ~ 0
@@ -1019,17 +696,6 @@ Text Notes 15100 1300 0    50   ~ 0
 Update the micro-op counter on the rising edge so\nwe have enough time to latch the control word on\nthe falling edge (not trying to simultaneously \nupdate the micro op counter).
 Text Label 15650 1650 2    50   ~ 0
 CLK
-$Comp
-L Memory_Flash:SST39SF040 U113
-U 1 1 5B5502C3
-P 5950 5250
-F 0 "U113" H 5950 5350 50  0000 C CNN
-F 1 "SST39SF040" H 6000 5200 50  0000 C CNN
-F 2 "Package_DIP:DIP-32_W15.24mm_Socket" H 5950 5550 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 5950 5550 50  0001 C CNN
-	1    5950 5250
-	1    0    0    -1  
-$EndComp
 $Comp
 L Memory_Flash:SST39SF040 U90
 U 1 1 5B5526B8
@@ -1054,18 +720,6 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/25022B.pdf" H 2200 5600 50 
 	1    0    0    -1  
 $EndComp
 Connection ~ 2200 4000
-$Comp
-L power:GND #PWR056
-U 1 1 5B723C76
-P 19950 3450
-F 0 "#PWR056" H 19950 3200 50  0001 C CNN
-F 1 "GND" V 19955 3322 50  0000 R CNN
-F 2 "" H 19950 3450 50  0001 C CNN
-F 3 "" H 19950 3450 50  0001 C CNN
-	1    19950 3450
-	0    1    1    0   
-$EndComp
-NoConn ~ 20550 3450
 $Comp
 L 74xx:74LS273 U13
 U 1 1 5B74EE1E
@@ -1292,9 +946,6 @@ Wire Wire Line
 	8800 4100 8550 4100
 Connection ~ 8550 4100
 NoConn ~ 9050 4400
-NoConn ~ 9050 4900
-NoConn ~ 9050 5000
-NoConn ~ 9050 5100
 $Comp
 L power:GND #PWR0135
 U 1 1 5B6EFF03
@@ -1334,27 +985,10 @@ Wire Notes Line
 	7100 3400 800  3400
 Text Label 16200 1950 0    50   ~ 0
 MICROOP4
-Text Label 5350 5850 2    50   ~ 0
-MICROOP4
 Text Label 3400 5900 2    50   ~ 0
 MICROOP4
 Text Label 1600 5900 2    50   ~ 0
 MICROOP4
-Text Notes -900 5450 0    50   ~ 0
-TODO: Go back to only 16 micro-ops?\nOpcode1 can be 7 bit. Otherwise\n32 micro-ops, Opcode1 is 6 bit.
-$Comp
-L 74xx:74HC04 U114
-U 6 1 5B9F7CFA
-P 18950 3450
-AR Path="/5B0C6DCD/5B9F7CFA" Ref="U114"  Part="6" 
-AR Path="/5B09632F/5B9F7CFA" Ref="U?"  Part="6" 
-F 0 "U114" H 18950 3450 50  0000 C CNN
-F 1 "74HC04" H 19100 3350 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 18950 3450 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 18950 3450 50  0001 C CNN
-	6    18950 3450
-	1    0    0    -1  
-$EndComp
 Connection ~ 4000 7950
 $Comp
 L 74xx:74LS273 U15
@@ -1379,10 +1013,6 @@ Text Label 3400 5300 2    50   ~ 0
 OP12
 Text Label 3400 5400 2    50   ~ 0
 OP13
-Text Label 5350 5250 2    50   ~ 0
-OP12
-Text Label 5350 5350 2    50   ~ 0
-OP13
 Text HLabel 7200 7700 2    50   Input ~ 0
 ~A_OUT_NCLK
 Text HLabel 7200 7800 2    50   Input ~ 0
@@ -1405,15 +1035,13 @@ Text HLabel 7200 8600 2    50   Input ~ 0
 ~EEPROM_OUT_NCLK
 Text HLabel 7200 8700 2    50   Input ~ 0
 ~M_OUT_NCLK
-Text Notes 2800 900  0    50   ~ 0
-TODO: Can reduce # of eeproms here?
-Text Label 7200 9000 0    50   ~ 0
+Text Label 9050 4800 0    50   ~ 0
 ~BUS0_OUT_NCLK
-Text Label 7200 9100 0    50   ~ 0
+Text Label 9050 4900 0    50   ~ 0
 ~BUS1_OUT_NCLK
-Text Label 7200 9200 0    50   ~ 0
+Text Label 9050 5000 0    50   ~ 0
 ~BUS2_OUT_NCLK
-Text Label 7200 9300 0    50   ~ 0
+Text Label 9050 5100 0    50   ~ 0
 ~BUS3_OUT_NCLK
 Text HLabel 9550 6150 2    50   Input ~ 0
 A_IN_CLK
@@ -1446,18 +1074,6 @@ NoConn ~ 8650 7650
 NoConn ~ 8650 7750
 NoConn ~ 8650 7850
 NoConn ~ 8650 7950
-NoConn ~ 7200 9600
-NoConn ~ 7200 9700
-NoConn ~ 6250 8800
-NoConn ~ 6250 8900
-NoConn ~ 6250 9000
-NoConn ~ 6250 9100
-NoConn ~ 6250 9200
-NoConn ~ 6250 9300
-NoConn ~ 6250 9400
-NoConn ~ 6250 9500
-NoConn ~ 6250 9600
-NoConn ~ 6250 9700
 Text HLabel 9550 7350 2    50   Input ~ 0
 M3_IN_CLK
 Text HLabel 9550 7250 2    50   Input ~ 0
@@ -1466,8 +1082,6 @@ Text HLabel 9550 7150 2    50   Input ~ 0
 M1_IN_CLK
 Text HLabel 9550 7050 2    50   Input ~ 0
 M0_IN_CLK
-NoConn ~ 7200 9500
-NoConn ~ 7200 9400
 Text HLabel 7200 8800 2    50   Input ~ 0
 ~PAGE_OUT_NCLK
 Text HLabel 9550 7450 2    50   Input ~ 0
@@ -1534,22 +1148,6 @@ F 3 "" H 8300 1400 50  0001 C CNN
 	1    8300 1400
 	0    -1   -1   0   
 $EndComp
-Text Label 7450 1700 2    50   ~ 0
-CTRL16
-Text Label 7450 1800 2    50   ~ 0
-CTRL17
-Text Label 7450 1900 2    50   ~ 0
-CTRL18
-Text Label 7450 2000 2    50   ~ 0
-CTRL19
-Text Label 7450 2100 2    50   ~ 0
-CTRL20
-Text Label 7450 2200 2    50   ~ 0
-CTRL21
-Text Label 7450 2300 2    50   ~ 0
-CTRL22
-Text Label 7450 2400 2    50   ~ 0
-CTRL23
 Text HLabel 7450 2600 0    50   Input ~ 0
 ~CLK
 Text Label 7450 2700 2    50   ~ 0
@@ -1612,22 +1210,6 @@ F 3 "" H 10300 1400 50  0001 C CNN
 	1    10300 1400
 	0    -1   -1   0   
 $EndComp
-Text Label 9450 1700 2    50   ~ 0
-CTRL16
-Text Label 9450 1800 2    50   ~ 0
-CTRL17
-Text Label 9450 1900 2    50   ~ 0
-CTRL18
-Text Label 9450 2000 2    50   ~ 0
-CTRL19
-Text Label 9450 2100 2    50   ~ 0
-CTRL20
-Text Label 9450 2200 2    50   ~ 0
-CTRL21
-Text Label 9450 2300 2    50   ~ 0
-CTRL22
-Text Label 9450 2400 2    50   ~ 0
-CTRL23
 Text HLabel 9450 2600 0    50   Input ~ 0
 ~CLK
 Text Label 9450 2700 2    50   ~ 0
@@ -1690,22 +1272,6 @@ F 3 "" H 12300 1400 50  0001 C CNN
 	1    12300 1400
 	0    -1   -1   0   
 $EndComp
-Text Label 11450 1700 2    50   ~ 0
-CTRL16
-Text Label 11450 1800 2    50   ~ 0
-CTRL17
-Text Label 11450 1900 2    50   ~ 0
-CTRL18
-Text Label 11450 2000 2    50   ~ 0
-CTRL19
-Text Label 11450 2100 2    50   ~ 0
-CTRL20
-Text Label 11450 2200 2    50   ~ 0
-CTRL21
-Text Label 11450 2300 2    50   ~ 0
-CTRL22
-Text Label 11450 2400 2    50   ~ 0
-CTRL23
 Text HLabel 11450 2600 0    50   Input ~ 0
 ~CLK
 Text Label 11450 2700 2    50   ~ 0
@@ -1760,42 +1326,142 @@ Text HLabel 12450 2400 2    50   Input ~ 0
 BUS31
 Text HLabel 9550 7550 2    50   Input ~ 0
 STATUS_IN_CLK
-$Comp
-L power:GND #PWR0141
-U 1 1 5BA39F34
-P 19350 3850
-F 0 "#PWR0141" H 19350 3600 50  0001 C CNN
-F 1 "GND" V 19355 3722 50  0000 R CNN
-F 2 "" H 19350 3850 50  0001 C CNN
-F 3 "" H 19350 3850 50  0001 C CNN
-	1    19350 3850
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0144
-U 1 1 5BA39F7F
-P 18650 3450
-F 0 "#PWR0144" H 18650 3200 50  0001 C CNN
-F 1 "GND" V 18655 3322 50  0000 R CNN
-F 2 "" H 18650 3450 50  0001 C CNN
-F 3 "" H 18650 3450 50  0001 C CNN
-	1    18650 3450
-	0    1    1    0   
-$EndComp
-NoConn ~ 19250 3450
-NoConn ~ 19950 3850
-NoConn ~ 9050 4800
 Text Notes 10200 4500 0    50   ~ 0
 TODO: All reset does is set opcode = 0,\ncan remove this control signal?
-NoConn ~ 4400 2200
-NoConn ~ 4400 2300
-NoConn ~ 4400 2400
-Text Notes 5950 10150 0    50   ~ 0
-TODO: Can reduce this to 4-16 decoder?
 Text HLabel 9050 4700 2    50   Input ~ 0
 CARRY_IN
 Text HLabel 9550 7650 2    50   Input ~ 0
 INT_IN_CLK
 Text HLabel 7200 8900 2    50   Input ~ 0
 ~ALU_STATUS_OUT_NCLK
+$Sheet
+S 6250 7450 950  2200
+U 5BA5265B
+F0 "OUT Plane Decoder" 50
+F1 "out_plane_decoder.sch" 50
+F2 "S0" I L 6250 7600 50 
+F3 "S1" I L 6250 7700 50 
+F4 "S2" I L 6250 7800 50 
+F5 "S3" I L 6250 7900 50 
+F6 "O0" I R 7200 7600 50 
+F7 "O1" I R 7200 7700 50 
+F8 "O2" I R 7200 7800 50 
+F9 "O3" I R 7200 7900 50 
+F10 "O4" I R 7200 8000 50 
+F11 "O5" I R 7200 8100 50 
+F12 "O6" I R 7200 8200 50 
+F13 "O7" I R 7200 8300 50 
+F14 "O8" I R 7200 8400 50 
+F15 "O9" I R 7200 8500 50 
+F16 "O10" I R 7200 8600 50 
+F17 "O11" I R 7200 8700 50 
+F18 "O12" I R 7200 8800 50 
+F19 "O13" I R 7200 8900 50 
+F20 "O14" I R 7200 9000 50 
+F21 "O15" I R 7200 9100 50 
+F22 "~ENABLE" I L 6250 8000 50 
+$EndSheet
+Text Label 5450 1700 2    50   ~ 0
+CTRL8
+Text Label 5450 1800 2    50   ~ 0
+CTRL9
+Text Label 5450 1900 2    50   ~ 0
+CTRL10
+Text Label 5450 2000 2    50   ~ 0
+CTRL11
+Text Label 5450 2100 2    50   ~ 0
+CTRL12
+Text Label 5450 2200 2    50   ~ 0
+CTRL13
+Text Label 5450 2300 2    50   ~ 0
+CTRL14
+Text Label 5450 2400 2    50   ~ 0
+CTRL15
+Text Label 7450 1700 2    50   ~ 0
+CTRL8
+Text Label 7450 1800 2    50   ~ 0
+CTRL9
+Text Label 7450 1900 2    50   ~ 0
+CTRL10
+Text Label 7450 2000 2    50   ~ 0
+CTRL11
+Text Label 7450 2100 2    50   ~ 0
+CTRL12
+Text Label 7450 2200 2    50   ~ 0
+CTRL13
+Text Label 7450 2300 2    50   ~ 0
+CTRL14
+Text Label 7450 2400 2    50   ~ 0
+CTRL15
+Text Label 9450 1700 2    50   ~ 0
+CTRL8
+Text Label 9450 1800 2    50   ~ 0
+CTRL9
+Text Label 9450 1900 2    50   ~ 0
+CTRL10
+Text Label 9450 2000 2    50   ~ 0
+CTRL11
+Text Label 9450 2100 2    50   ~ 0
+CTRL12
+Text Label 9450 2200 2    50   ~ 0
+CTRL13
+Text Label 9450 2300 2    50   ~ 0
+CTRL14
+Text Label 9450 2400 2    50   ~ 0
+CTRL15
+Text Label 11450 1700 2    50   ~ 0
+CTRL8
+Text Label 11450 1800 2    50   ~ 0
+CTRL9
+Text Label 11450 1900 2    50   ~ 0
+CTRL10
+Text Label 11450 2000 2    50   ~ 0
+CTRL11
+Text Label 11450 2100 2    50   ~ 0
+CTRL12
+Text Label 11450 2200 2    50   ~ 0
+CTRL13
+Text Label 11450 2300 2    50   ~ 0
+CTRL14
+Text Label 11450 2400 2    50   ~ 0
+CTRL15
+NoConn ~ 7200 9000
+NoConn ~ 7200 9100
+Text Label 6250 8000 2    50   ~ 0
+CTRL_MULTI2
+Text Notes 5050 8250 0    50   ~ 0
+MULTI2 high means bus output\nso disable if it's high.
+NoConn ~ 4400 2100
+NoConn ~ 4400 2200
+NoConn ~ 4400 2300
+NoConn ~ 4400 2400
+$Comp
+L 74xx:74HC04 U?
+U 4 1 5BA7358D
+P 11700 6150
+AR Path="/5ADF0E03/5BA7358D" Ref="U?"  Part="4" 
+AR Path="/5BA7358D" Ref="U?"  Part="4" 
+AR Path="/5B0C6DCD/5BA7358D" Ref="U5"  Part="4" 
+AR Path="/5B9E2640/5BA7358D" Ref="U?"  Part="4" 
+F 0 "U5" H 11650 6150 50  0000 C CNN
+F 1 "74HC04" H 11850 6050 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 11700 6150 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 11700 6150 50  0001 C CNN
+	4    11700 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74HC04 U?
+U 5 1 5BA828D4
+P 8000 6550
+AR Path="/5ADF0E03/5BA828D4" Ref="U?"  Part="5" 
+AR Path="/5BA828D4" Ref="U?"  Part="5" 
+AR Path="/5B0C6DCD/5BA828D4" Ref="U5"  Part="5" 
+F 0 "U5" H 8000 6867 50  0000 C CNN
+F 1 "74HC04" H 8000 6776 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 8000 6550 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 8000 6550 50  0001 C CNN
+	5    8000 6550
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

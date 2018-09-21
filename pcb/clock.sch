@@ -936,17 +936,6 @@ Text Label 5550 5050 2    50   ~ 0
 SEL1
 Text Label 5550 5350 2    50   ~ 0
 SEL2
-$Comp
-L 74xx:74HC14 U2
-U 4 1 5B15778B
-P 13400 5250
-F 0 "U2" H 13350 5250 50  0000 C CNN
-F 1 "74HC14" H 13400 5050 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 13400 5250 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 13400 5250 50  0001 C CNN
-	4    13400 5250
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6800 5200 6850 5200
 Wire Wire Line
@@ -1406,18 +1395,6 @@ F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 5850 5450 50  0001 C CNN
 	4    5850 5450
 	1    0    0    -1  
 $EndComp
-NoConn ~ 13700 5250
-$Comp
-L power:GND #PWR074
-U 1 1 5B022397
-P 13100 5250
-F 0 "#PWR074" H 13100 5000 50  0001 C CNN
-F 1 "GND" H 13105 5077 50  0000 C CNN
-F 2 "" H 13100 5250 50  0001 C CNN
-F 3 "" H 13100 5250 50  0001 C CNN
-	1    13100 5250
-	0    1    1    0   
-$EndComp
 $Comp
 L power:VCC #PWR068
 U 1 1 5B02331A
@@ -1626,32 +1603,6 @@ F 3 "" H 5600 7050 50  0001 C CNN
 	1    5600 6850
 	0    -1   -1   0   
 $EndComp
-$Comp
-L 74xx:74HC04 U5
-U 5 1 5B6B88E1
-P 14300 5750
-AR Path="/5ADF0E03/5B6B88E1" Ref="U5"  Part="5" 
-AR Path="/5B6B88E1" Ref="U?"  Part="5" 
-AR Path="/5B0C6DCD/5B6B88E1" Ref="U?"  Part="5" 
-F 0 "U5" H 14300 6067 50  0000 C CNN
-F 1 "74HC04" H 14300 5976 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 14300 5750 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 14300 5750 50  0001 C CNN
-	5    14300 5750
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR0459
-U 1 1 5B6BDB28
-P 14000 5750
-F 0 "#PWR0459" H 14000 5500 50  0001 C CNN
-F 1 "GND" H 14005 5577 50  0000 C CNN
-F 2 "" H 14000 5750 50  0001 C CNN
-F 3 "" H 14000 5750 50  0001 C CNN
-	1    14000 5750
-	0    1    1    0   
-$EndComp
-NoConn ~ 14600 5750
 Wire Wire Line
 	2750 1850 2500 1850
 Wire Wire Line

@@ -3398,23 +3398,8 @@ Text Label 11550 4050 2    50   ~ 0
 A30
 Text Label 11550 4150 2    50   ~ 0
 A31
-$Comp
-L 74xx:74HC04 U?
-U 4 1 5BA86083
-P 12150 2550
-AR Path="/5ADF0E03/5BA86083" Ref="U?"  Part="4" 
-AR Path="/5BA86083" Ref="U?"  Part="4" 
-AR Path="/5B0C6DCD/5BA86083" Ref="U?"  Part="4" 
-AR Path="/5B9E2640/5BA86083" Ref="U5"  Part="4" 
-F 0 "U5" H 12100 2550 50  0000 C CNN
-F 1 "74HC04" H 12300 2450 50  0000 C CNN
-F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 12150 2550 50  0001 C CNN
-F 3 "http://www.nxp.com/documents/data_sheet/74HC_HCT04.pdf" H 12150 2550 50  0001 C CNN
-	4    12150 2550
-	1    0    0    -1  
-$EndComp
 Text Notes 11950 2350 0    50   ~ 0
-SPARE TAKEN: 74HC04 from Clock
+SPARE TAKEN: 74HC14 from Clock
 Wire Wire Line
 	11850 1050 11850 1150
 Wire Wire Line
@@ -3672,4 +3657,17 @@ Text HLabel 13650 5900 2    50   Input ~ 0
 BUS6
 Text HLabel 13650 6000 2    50   Input ~ 0
 BUS7
+$Comp
+L 74xx:74HC14 U?
+U 4 1 5BA70D29
+P 12150 2550
+AR Path="/5ADF0E03/5BA70D29" Ref="U?"  Part="4" 
+AR Path="/5B9E2640/5BA70D29" Ref="U2"  Part="4" 
+F 0 "U2" H 12100 2550 50  0000 C CNN
+F 1 "74HC14" H 12150 2350 50  0000 C CNN
+F 2 "Package_DIP:DIP-14_W7.62mm_Socket" H 12150 2550 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC14" H 12150 2550 50  0001 C CNN
+	4    12150 2550
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
