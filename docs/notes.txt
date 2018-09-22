@@ -2,10 +2,20 @@
 - see cpu.txt
 
 #### Notes for next version / problems that came up
+- Switch to SMD components?
+  Registers: 16 bit registers exist. 74xyz16374
+  EEPROMs: 16 bit output one exists.
+  SRAM: 16 bit output ones exist
+  ADDERs: ?
+  Gates: ?
+  ALU: 74hc181 combined chip?
+  May be able to switch to 3.3V ?
+  
 - Increase clock rate, wait multiple cycles for memory access / ALU, etc. Need to characterise propagation delays on a bunch of things. NOTE: would need to put bus buffer on MLU so SRAM chips can be enabled until they stabilise.
  - Reading a register, writing a register, reading from SRAM (70ns), writing to SRAM (70ns), ALU computation, NAND computation. Basically every control signal.
  - For MMU, need some way to signal read is finished?
  - Need to check if it's really worth it. Compare lowest propagation delay with highest.
+ - EEPROM needs to be fast enough - actual clock rate limited by EEPROM in current design
 
 Interesting issues:
 - bodge wires getting crushed and shorting stuff?
