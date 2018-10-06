@@ -1,71 +1,8 @@
-in_labels = [
-'A_IN_CLK',
-'B_IN_CLK',
-'SP_IN_CLK',
-'PC_IN_CLK',
-'ALU0_IN_CLK',
-'ALU1_IN_CLK',
-'ADDR_IN_CLK',
-'MMU_IN_CLK',
-'M_IN_CLK',
-'M0_IN_CLK',
-'M1_IN_CLK',
-'M2_IN_CLK',
-'M3_IN_CLK',
-'PAGE_IN_CLK',
-'STATUS_IN_CLK',
-'INT_IN_CLK',
-'OPCODE0_IN_CLK',
-'OPCODE1_IN_CLK',
-]
-
-out_labels = [
-'~A_OUT_NCLK',
-'~B_OUT_NCLK',
-'~SP_OUT_NCLK',
-'~PC_OUT_NCLK',
-'~SUM_OUT_NCLK',
-'~NAND_OUT_NCLK',
-'~MMU_OUT_NCLK',
-'~INT_OUT_NCLK',
-'~STATUS_OUT_NCLK',
-'~EEPROM_OUT_NCLK',
-'~M_OUT_NCLK',
-'~ALU_STATUS_OUT_NCLK',
-'~PAGE_OUT_NCLK',
-'~BUS0_OUT_NCLK',
-'~BUS1_OUT_NCLK',
-'~BUS2_OUT_NCLK',
-'~BUS3_OUT_NCLK',
-]
-
-ctrl_labels = [
-'~RESET_NCLK',
-'~RESET_UOP_COUNT_NCLK',
-'~SET_INT_ENABLE_ASYNC',
-'~UNSET_INT_ENABLE_ASYNC',
-]
-
-misc_labels = [
-'MICROOP0',
-'MICROOP1',
-'MICROOP2',
-'MICROOP3',
-'INT0_LATCH',
-'INT1_LATCH',
-'INT2_LATCH',
-'INT3_LATCH',
-'INT4_LATCH',
-'INT5_LATCH',
-'INT6_LATCH',
-'INT7_LATCH',
-]
-
 data_71V632 = {
-  'io': [],
-  'vcc': [],
-  'gnd': [],
-  'addr': [],
-  'nc': [1, 14, 16, 30, 38, 39, 42, 43, 50, 51, 66, 80],
-  'num_pins': 100
+    'io': [],
+    'vcc': [],
+    'gnd': [],
+    'addr': [],
+    'nc': [1, 14, 16, 30, 38, 39, 42, 43, 50, 51, 66, 80],
+    'num_pins': 100
 }
