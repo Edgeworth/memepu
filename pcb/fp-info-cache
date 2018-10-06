@@ -1,4 +1,4 @@
-15410025959911812
+15413101136985286
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (http://www.bulgin.com/media/bulgin/data/Battery_holders.pdf)
@@ -42559,6 +42559,20 @@ DCDC-Converter TRACO TSR-1
 0
 3
 3
+cpu
+Akizuki-Denshi Potentiometer
+
+
+0
+3
+3
+cpu
+KCD4 Rocker Switch - DPST
+
+
+0
+4
+4
 Crystal
 Crystal_AT310_D3.0mm_L10.0mm_Horizontal
 Crystal THT AT310 10.0mm-10.5mm length 3.0mm diameter

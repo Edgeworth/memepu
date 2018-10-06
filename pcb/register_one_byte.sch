@@ -102,7 +102,7 @@ AR Path="/5B0FEA60/5AFCD0FB" Ref="C132"  Part="1"
 AR Path="/5BA101FE/5AFCD0FB" Ref="C94"  Part="1" 
 F 0 "C94" H 792 1896 50  0000 L CNN
 F 1 "0.1uF" H 792 1805 50  0000 L CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 700 1850 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 700 1850 50  0001 C CNN
 F 3 "~" H 700 1850 50  0001 C CNN
 	1    700  1850
 	1    0    0    -1  
