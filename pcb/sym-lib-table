@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name SN74LVC16374DL)(type Legacy)(uri ${KIPRJMOD}/symbols/SN74LVC16374DL.lib)(options "")(descr ""))
+  (lib (name cpu)(type Legacy)(uri ${KIPRJMOD}/symbols/cpu.lib)(options "")(descr ""))
+)
