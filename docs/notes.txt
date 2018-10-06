@@ -2,15 +2,32 @@
 - see cpu.txt
 
 #### Notes for next version / problems that came up
+- Ram for registers: 71V632S5PFG8 - 64k x 32
+ - Issue with having a lot of registers is saving it - e.g. on interrupt
+ - could somehow put registers in regular ram? - nah
+ - quad port ram: can output both regs to alu at the same time, costs a lot: $50 for 8 bits, times 4 is $200
+ - dual port ram: can output both regs to alu, but can't save. 1 cycle alu from srcs to tmp, 1 cycle to tmp -
+ - single port ram: 1 cycle reg to tmp, 1 cycle reg and tmp to alu to tmp, 1 cycle tmp to reg. - $3
+ - use single register chips, for 16 reg is 32 chips - 74xyz16374, $3 * 16 * 2 = $96
+ - Decision: Use two tmp regs, take the hit for transferring back and forth into reg file.
+- Ram for control logic
+ - Reduce control logic size?
+- Use linear voltage regulator
+- Use SDRAM?
+- 16 bit compressed instructions? use SRAM to convert to 32 - use register file SRAM lel?
+- Should add shifter then?
+- PCI-e connectors for peripheral connect
+- ALU: use propagate+generate stuff, loaded from eeprom data?
+ - can also implement mul/divide high and low word?
+- 64 bit binary counter for ticks?
+- Maybe just ram for everything? - load control logic from EEPROM into ram
+- Switch to 3.3/3.6V
 - Switch to SMD components?
-  Registers: 16 bit registers exist. 74xyz16374
+  Registers: 16 bit registers exist. . Just use SRAM for registers?
+  Have reg source and dest operand? if use multi-port ram
   EEPROMs: 16 bit output one exists.
   SRAM: 16 bit output ones exist
-  ADDERs: ?
-  Gates: ?
-  ALU: 74hc181 combined chip?
-  May be able to switch to 3.3V ?
-  
+- Remove ALU status reg stuff?
 - Increase clock rate, wait multiple cycles for memory access / ALU, etc. Need to characterise propagation delays on a bunch of things. NOTE: would need to put bus buffer on MLU so SRAM chips can be enabled until they stabilise.
  - Reading a register, writing a register, reading from SRAM (70ns), writing to SRAM (70ns), ALU computation, NAND computation. Basically every control signal.
  - For MMU, need some way to signal read is finished?

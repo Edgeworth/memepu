@@ -1,4 +1,5 @@
 ### Registers
+DEPRECATED:
 General purpose: A, B
 ALU reg: ALU0, ALU1
 System: M, M0, M1, M2, M3
@@ -10,8 +11,7 @@ Page directory address: PAGE
 
 #### Status/Control SC register
 Interrupts Off/On, Paging Off/On, Privileged/Unprivileged, Secure/Not secure
-ALU STATUS: Carry, Zero - no need to save in actual status reg.
-
+ALU STATUS: Carry, Zero, Negative - no need to save in actual status reg.
 #### Interrupt register -
 Level triggered, but latched on each falling clock, each device will assert until ack comes and it decides to stop asserting.
 Note this means devices need to assert the line until they get serviced (level triggered). Latch on the falling clock so that the control logic can start reacting to interrupt changes as soon as possible.
@@ -23,27 +23,20 @@ Note this means devices need to assert the line until they get serviced (level t
 - Storage?
 
 #### Opcode register - write only
-Needs to be counter
-- OPCODE0, OPCODE1 (4 bit), optional
+
 
 ### ALU:
-Contains NAND and SUM with carry-in. Use 8 74hc283s.
-Cin to Cout propagation time: ...
-
-### Physical memory map:
-Top 2 bits chooses a bank. 24 bit physical address space.
-0x800000 - 0x87fffff: 512 KiB RAM
-0x900000 - 0x97fffff: Mirror: 512 KiB RAM
-0xa00000 - 0xa7fffff: Mirror: 512 KiB RAM
-0xb00000 - 0xb7fffff: Mirror: 512 KiB RAM
 
 ### Control signals
+DEPRECATED:
 IN plane:
 	NONE
 	A, B, SP, PC, ADDR, MMU, ALU0, ALU1
 	M, M0, M1, M2, M3,
 	PAGE, STATUS, INTERRUPT
 	OPCODE0, OPCODE1,
+
+REG plane: 16
 
 OUT plane:
 	NONE
@@ -61,6 +54,129 @@ MULTI:
   Set interrupt enable synchronos: NCLK
   Unset interrupt enable synchronos: NCLK
   CARRY_IN
+
+### Instructions
+
+General purpose regs:
+- TODO: Need some kind of check on these, e.g. if include page or w/e in them? Or make those special regs?
+r0: Stack pointer
+r1: Page pointer
+r2: Program counter
+r3: Control
+
+Maximum instruction set:
+49 instructions currently
+[Opcode 6][Immediate 26]
+	PUSH I - pushes signext(I) onto the stack - TODO: Remove?
+	PUSHU I - pushes zeroext(I) onto the stack
+[Opcode 6][rD 5][immediate 21]
+	LUI rD, I - load upper immediate, set lower bits to 0
+	PUSH rD - pushes rD onto the stack - TODO: different sizes?
+	POP rD - pops rD from the stack
+[Opcode 6][rD 5][rS 5][Offset 16]
+	LBU rD, [rS + Offset sign ext] - load byte zero extend - TODO: alignment?
+	LBS rD, [rS + Offset sign ext] - load byte sign extend
+	LHU rD, [rS + Offset sign ext] - load 16-bit zero extend
+	LHS rD, [rS + Offset sign ext] - load 16-bit sign extend
+	LW rD, [rS + Offset sign ext] - load 32-bit
+	Offset is useful when loading stuff from structs, etc
+[Opcode 6][rD 5][rS 5][Offset 16]
+	SB [rD + Offset sign ext], rS - store 8-bit
+	SH [rD + Offset sign ext], rS - store 16-bit
+	SW [rD + Offset sign ext], rS - store 32-bit
+	ADD rD,rS,I - rD = rS + signext(I)
+	SUB rD,rS,I - rD = rS - signext(I)
+	AND rD,rS,I - rD = rS & signext(I)
+	OR rD,rS,I - rD = rS | signext(I)
+	XOR rD,rS,I - rD = rS ^ signext(I)
+	SLL rD,rS,I - rD = rS << (I & 0x0F)
+	SRL rD,rS,I - rD = rS >> (I & 0x0F)
+	SRA rD,rS,I - rD = rS >>> (I & 0x0F)
+	BEQ rA,rB,I - if rA == rB: r31 = r31 + signext(I)
+	BNE rA,rB,I - if rA != rB: r31 = r31 + signext(I)
+	BLT rA,rB,I - if rA < rB: r31 = r31 + signext(I)
+	BLTU rA,rB,I - if unsigned rA < rB: r31 = r31 + signext(I)
+	BGE rA,rB,I - if rA >= rB: r31 = r31 + signext(I)
+	BGEU rA,rB,I - if unsigned rA >= rB: r31 = r31 + signext(I)
+[Opcode 6][rD 5][rA 5][rB 5][Unused 11]
+	ADD rD,rA,rB - rD = rA + rB
+	SUB rD,rA,rB - rD = rA - rB
+	AND rD,rA,rB - rD = rA & rB
+	OR rD,rA,rB - rD = rA | rB
+	XOR rD,rA,rB - rD = rA ^ rB
+	SLL rD,rA,rB - rD = rA << (rB & 0x0F)
+	SRL rD,rA,rB - rD = rA >> (rB & 0x0F)
+	SRA rD,rA,rB - rD = rA >>> (rB & 0x0F)
+
+
+	SCALL
+	SRET
+	CALL
+	RET
+	
+	POP
+	RDTICK - or mmapped?
+
+	MICROOPRESET
+	FETCH
+	BOOT: 
+		zero control word
+		set up alu
+		set up instruction compression data
+
+
+TODO: Need to enforce privileged mode for subset of registers.
+TODO: Use remaining register file contents as TLB somehow?
+
+Microcode snippets:
+Fetch:
+	# Check interrupt flag
+	[Virtual memory lookup]
+	# Check compressed instruction
+	# Increment PC
+	# Load into opcode reg
+
+Virtual memory lookup from addr stored in reg0 into tmp0 (or whatever):
+0	out(REG) | reg(reg0) | in(TMP0) | flag(paging) # Check paging flag. Appears on next cycle to control logic
+	paging off: 
+2		out(MMU) | in(TMP0) | flag(paging) | finish
+	paging on: - TODO: can optimise this? TODO: Doesn't check if page reg is 4 KiB aligned
+1		out(BUS) | bus(22) | in(TMP1) | flag(paging) # Prepare to shift top 10 bits of addr
+2		out(SHIFT) | shift(SRL) | in(TMP1) | flag(paging) # TMP1 = reg0 >> 22
+3		out(REG) | reg(regBus) | regSel(r1) | in(TMP0) | flag(paging) # TMP0 = page reg
+4		out(ALU) | alu(ADD) | in(TMP0) | flag(paging) # TMP0 = page + (reg0 >> 22)
+5		out(MMU) | in(TMP0) # page directory entry here
+6		# TODO check present bit
+7		out(BUS) | bus(12) | in(TMP1) | flag(paging)
+8		out(SHIFT) | shift(SLL) | in(TMP1) | flag(paging) # TMP1 = pagedirent << 12; addr of page table
+9		
+		
+
+### Virtual memory
+Page entry bits: Dirty, R/W, Present, User/Privileged, Secure/Not secure bit
+struct PageDirectory {
+	PageDirectoryEntry entry[1024];
+}
+struct PageDirectoryEntry {
+	uint20 addr; // 4KiB aligned;
+	uint1 present;
+	uint11 reserved;  // Can have extra stuff like big pages?
+}
+struct PageTable {
+	PageEntry entry[1024];
+}
+struct PageEntry {
+	uint20 addr; // Location of page in physical mem
+	uint1 dirty;
+	uint1 rw;
+	uint1 present;
+	uint1 privileged;
+	uint1 secure; // ?
+	uint7 unused;
+}
+
+
+
 
 ### Peripherals
 #### Keyboard
