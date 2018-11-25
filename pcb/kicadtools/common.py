@@ -7,7 +7,7 @@ def chunks(l, n):
 
 def tr(s):
     m = str.maketrans({'_': 'underscore', '~': 'asciitilde', '.': 'period'})
-    return [c.translate(m) for c in s]
+    return [c.translate(m) for c in str(s)]
 
 
 def replace(l, fr, to):
@@ -15,7 +15,7 @@ def replace(l, fr, to):
 
 
 def run_xdotool_key(*keys):
-    cmd = ['xdotool', 'key', '--delay', '20'] + list(keys)
+    cmd = ['xdotool', 'key', '--delay', '50'] + list(keys)
     subprocess.call(['echo'] + cmd)
     subprocess.call(cmd)
 
@@ -34,6 +34,8 @@ def nav(s):
                 cur += int(c)
         elif c == 'C':
             mod = 'Control_L+'
+        elif c == 'A':
+            mod = 'Alt_L+'
         else:
             code = mod + d.get(c, c)
             mod = ''
@@ -59,3 +61,9 @@ def x_to_navstr(x):
     if big != 0: s += str(abs(big)) + 'C' + c
     if small != 0: s += str(abs(small)) + c
     return s
+
+
+def listify(a):
+    if isinstance(a, list):
+        return a[:]
+    return [a]
