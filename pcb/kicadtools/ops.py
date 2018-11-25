@@ -1,3 +1,5 @@
+import time
+
 from common import *
 
 
@@ -49,9 +51,16 @@ def shuffle_pins_up(num_pins, num_move):
         run_xdotool_key(*nav('2D' + str(num_move * 2) + 'D'))
 
 
-def generate_labels(labels, t='l', rot=0):
+def insert_labels(labels, t='l', rot=0):
     for l in labels:
-        run_xdotool_key(t, *tr(l), *nav('E' + str(rot) + 'r' + 'EDD'))
+        if l == 'GND':
+            run_xdotool_key('p')
+            time.sleep(0.2)  # wait a bit for the dialog to appear
+            run_xdotool_key(*tr('GND'), *nav('E'))
+            time.sleep(0.2)  # wait a bit for the dialog to disappear
+            run_xdotool_key(*nav(str((rot + 3) % 4) + 'r' + 'EDD'))
+        else:
+            run_xdotool_key(t, *tr(l), *nav('E' + str(rot) + 'r' + 'EDD'))
 
 
 def pcbnew_rotate_strip_270(num):
@@ -69,3 +78,4 @@ def pcbnew_rotate_strip_270(num):
 def pcbnew_rotate_leds_after(num):
     for i in range(num):
         run_xdotool_key(*nav('EmErrEm5DECR5U'))
+

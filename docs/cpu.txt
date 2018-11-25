@@ -1,13 +1,4 @@
 ### Registers
-DEPRECATED:
-General purpose: A, B
-ALU reg: ALU0, ALU1
-System: M, M0, M1, M2, M3
-Stack: SP
-Address: ADDR - only 3 byte, 24 bit physical address space, 32 bit virtual.
-Instruction pointer: PC - initially 0
-MMU register
-Page directory address: PAGE
 
 #### Status/Control SC register
 Interrupts Off/On, Paging Off/On, Privileged/Unprivileged, Secure/Not secure
@@ -24,48 +15,40 @@ Note this means devices need to assert the line until they get serviced (level t
 
 #### Opcode register - write only
 
-
 ### ALU:
+Functional:
+
+Shifter:
 
 ### Control signals
-DEPRECATED:
 IN plane:
 	NONE
-	A, B, SP, PC, ADDR, MMU, ALU0, ALU1
-	M, M0, M1, M2, M3,
-	PAGE, STATUS, INTERRUPT
-	OPCODE0, OPCODE1,
 
-REG plane: 16
+REG plane:
 
 OUT plane:
 	NONE
-	A, B, SP, PC, SUM, NAND, M, MMU,
-	EEPROM
-	STATUS,
-	INTERRUPT,
-	PAGE,
-	ALU_STATUS
-	BUS0, BUS1, BUS2, BUS3
 
 MULTI:
   RESET: NCLK
   Reset uop counter: NCLK
-  Set interrupt enable synchronos: NCLK
-  Unset interrupt enable synchronos: NCLK
   CARRY_IN
+
+### TLB:
+5 bits of TLB stored in compressed instr / register,
+
+### Timer:
+74VHC161 x 14 for 56 bits of timer.
 
 ### Instructions
 
 General purpose regs:
 - TODO: Need some kind of check on these, e.g. if include page or w/e in them? Or make those special regs?
 r0: Stack pointer
-r1: Page pointer
-r2: Program counter
-r3: Control
+r1: Program counter
 
 Maximum instruction set:
-49 instructions currently
+53 instructions currently
 [Opcode 6][Immediate 26]
 	PUSH I - pushes signext(I) onto the stack - TODO: Remove?
 	PUSHU I - pushes zeroext(I) onto the stack
@@ -113,13 +96,17 @@ Maximum instruction set:
 	SRET
 	CALL
 	RET
-	
+
 	POP
-	RDTICK - or mmapped?
+	RDTICK A, B
+	RDINT - read current interrupts
+	WTPAGE - write page register
+	SETCTRL - set control bits
+	CLRCTRL - clear control bits
 
 	MICROOPRESET
 	FETCH
-	BOOT: 
+	BOOT:
 		zero control word
 		set up alu
 		set up instruction compression data
@@ -130,15 +117,16 @@ TODO: Use remaining register file contents as TLB somehow?
 
 Microcode snippets:
 Fetch:
-	# Check interrupt flag
+	# Check interrupt flags
 	[Virtual memory lookup]
 	# Check compressed instruction
 	# Increment PC
 	# Load into opcode reg
 
 Virtual memory lookup from addr stored in reg0 into tmp0 (or whatever):
+# TODO: Check TLB, write TLB, write page dirty flag
 0	out(REG) | reg(reg0) | in(TMP0) | flag(paging) # Check paging flag. Appears on next cycle to control logic
-	paging off: 
+	paging off:
 2		out(MMU) | in(TMP0) | flag(paging) | finish
 	paging on: - TODO: can optimise this? TODO: Doesn't check if page reg is 4 KiB aligned
 1		out(BUS) | bus(22) | in(TMP1) | flag(paging) # Prepare to shift top 10 bits of addr
@@ -149,8 +137,8 @@ Virtual memory lookup from addr stored in reg0 into tmp0 (or whatever):
 6		# TODO check present bit
 7		out(BUS) | bus(12) | in(TMP1) | flag(paging)
 8		out(SHIFT) | shift(SLL) | in(TMP1) | flag(paging) # TMP1 = pagedirent << 12; addr of page table
-9		
-		
+9
+
 
 ### Virtual memory
 Page entry bits: Dirty, R/W, Present, User/Privileged, Secure/Not secure bit
@@ -158,27 +146,28 @@ struct PageDirectory {
 	PageDirectoryEntry entry[1024];
 }
 struct PageDirectoryEntry {
-	uint20 addr; // 4KiB aligned;
 	uint1 present;
-	uint11 reserved;  // Can have extra stuff like big pages?
+	uint11 reserved;
+	uint20 addr; // 4KiB aligned;
 }
 struct PageTable {
 	PageEntry entry[1024];
 }
 struct PageEntry {
-	uint20 addr; // Location of page in physical mem
-	uint1 dirty;
-	uint1 rw;
 	uint1 present;
+	uint1 rw;
+	uint1 dirty;
 	uint1 privileged;
-	uint1 secure; // ?
+	uint1 secure;
 	uint7 unused;
+	uint20 addr; // Location of page in physical mem, 4KiB aligned
 }
 
 
 
 
 ### Peripherals
+- if just implement USB, then keyboard, mouse,
 #### Keyboard
 #### Mouse
 #### VGA

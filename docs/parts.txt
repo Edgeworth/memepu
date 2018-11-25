@@ -20,6 +20,53 @@
 74HC574 - 8 bit register
 74HC595 - 8 bit shift register
 
+Digikey costs:
+x8 SRAM cost per MiB, minimum quantity 1 order, <= 10ns access time:
+  32 KiB: $41.6
+  128 KiB: $13.44
+  256 KiB: $18.32
+  512 KiB: $6.4 *
+  1 MiB: $13.49
+  2 MiB: $11.09
+
+x16 SRAM cost per MiB, minimum quantity 1 order, <= 10ns access time:
+  128 KiB: $14.72
+  256 KiB: $11.96
+  512 KiB: $5.98 *
+  1 MiB: $13.14
+  2 MiB: $7.87
+  4 MiB: $6.375
+  8 MiB: $26.75
+
+x32 SRAM cost per MiB, minimum quantity 1 order, <= 10ns access time:
+  256 KiB: $27.68
+  512 MiB: $11.74
+  1 MiB: $8.90 *
+  2 MiB: $8.95
+  4 MiB: $15
+  8 MiB: $19
+
+SDRAM: Can just buy SDRAM module off ebay?
+x8 SDRAM cost per MiB, minimum quantity 1 order:
+  16 MiB: $0.16
+  32 MiB: $0.113
+  64 MiB: $0.217
+
+x16 SDRAM cost per MiB, minimum quantity 1 order:
+  16 MiB: $0.12
+  32 MiB: $0.076 *
+  64 MiB: $0.20
+
+x32 SDRAM cost per MiB, minimum quantity 1 order:
+  16 MiB: $0.15
+  32 MiB: $0.22
+  64 MiB: $0.312
+
+
+Voltage translation ICs:
+GTL2003, GTL2010, GTL2000: 8 bit, 10 bit, 22 bit bi-directional translator
+TXS0108: (TXB is not open-drain) 8 bit
+
 Notes:
 Arduino Nano notes:
 Digital pins 0, 1 used for USB - can't use them at the same time
@@ -45,7 +92,7 @@ Control voltage: Can modify the 2/3 * Vcc threshold value. Usually connected to 
 
 74HC161 - 4 bit synchronous counter
 CEP: count enable - both CEP and CET need to be true to count
-CET: input for chaining, TC => CET 
+CET: input for chaining, TC => CET
 TC: output for chaining. True if at highest count and about to roll-over, AND CET is high.
 ~PE: parallel enable input - for pre-setting values
 ~MR: resets all to 0, asynchronous
@@ -71,6 +118,6 @@ TC: unconnected
 ~MR: For resetting micro op counter
 
 Control EEPROM #2:
-Input: Opcode(8), Microop counter(4) 
+Input: Opcode(8), Microop counter(4)
 4 pins: OUT control plane
 4 pins: IN control plane
