@@ -23,5 +23,5 @@ _autosave-*
 *.net
 *.dsn
 *.ses
-datasheets/
+pdfs/
 *.bin

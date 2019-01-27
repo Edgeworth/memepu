@@ -958,17 +958,6 @@ F 3 "" H 950 4850 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L power:+1V8 #PWR0167
-U 1 1 5BFBA710
-P 950 8950
-F 0 "#PWR0167" H 950 8800 50  0001 C CNN
-F 1 "+1V8" V 965 9078 50  0000 L CNN
-F 2 "" H 950 8950 50  0001 C CNN
-F 3 "" H 950 8950 50  0001 C CNN
-	1    950  8950
-	0    -1   -1   0   
-$EndComp
-$Comp
 L power:+1V8 #PWR0168
 U 1 1 5BFBB7DF
 P 2350 3050
@@ -1036,17 +1025,6 @@ F 3 "" H 2350 4850 50  0001 C CNN
 $EndComp
 NoConn ~ 8300 1500
 NoConn ~ 8300 1600
-$Comp
-L power:+3.3V #PWR0174
-U 1 1 5BFC1628
-P 7900 1100
-F 0 "#PWR0174" H 7900 950 50  0001 C CNN
-F 1 "+3.3V" H 7915 1273 50  0000 C CNN
-F 2 "" H 7900 1100 50  0001 C CNN
-F 3 "" H 7900 1100 50  0001 C CNN
-	1    7900 1100
-	1    0    0    -1  
-$EndComp
 NoConn ~ 7700 1100
 $Comp
 L 74xx:74LS299 U7
@@ -1826,8 +1804,6 @@ Text Label 7300 2100 2    50   ~ 0
 ~SHIFT_OE
 Text Label 7300 2200 2    50   ~ 0
 SHIFT_CLK
-Text Notes 8700 800  0    50   ~ 0
-TODO: Need to hold some lines while inputting on the others
 $Comp
 L 74xx:74HC04 U1
 U 1 1 5C03FA4C
@@ -1964,33 +1940,7 @@ Text Label 1850 10750 0    50   ~ 0
 ~PRECK0
 Text Label 1850 11250 0    50   ~ 0
 ~PRECK1
-NoConn ~ 950  5150
-NoConn ~ 950  5250
-NoConn ~ 950  5750
-NoConn ~ 950  5850
-NoConn ~ 950  6050
-NoConn ~ 950  6150
-NoConn ~ 950  6550
-NoConn ~ 950  6650
-NoConn ~ 950  6850
-NoConn ~ 950  6950
-NoConn ~ 950  7650
-NoConn ~ 950  7750
-NoConn ~ 950  7950
-NoConn ~ 950  8050
-NoConn ~ 950  8450
-NoConn ~ 950  8550
-NoConn ~ 2350 8550
-NoConn ~ 2350 8650
-NoConn ~ 2350 7950
-NoConn ~ 2350 8050
-NoConn ~ 2350 7650
-NoConn ~ 2350 7750
-NoConn ~ 2350 6850
-NoConn ~ 2350 6950
-NoConn ~ 2350 6550
-NoConn ~ 2350 6650
-Text Label 4100 1100 2    50   ~ 0
+Text Label 3700 900  0    50   ~ 0
 VREF
 Text Label 3550 4900 2    50   ~ 0
 DQ0
@@ -2056,8 +2006,6 @@ Text Label 6650 5700 2    50   ~ 0
 DQ30
 Text Label 6650 5800 2    50   ~ 0
 DQ31
-Text Notes 1100 9400 0    50   ~ 0
-TODO: How to do termination?
 Text Label 4550 4900 0    50   ~ 0
 PREDQ0
 Text Label 4550 5000 0    50   ~ 0
@@ -2588,7 +2536,7 @@ Text Label 4550 9100 0    50   ~ 0
 ~PRECK0
 Text Label 4550 9300 0    50   ~ 0
 ~PRECK1
-Text Notes 3400 8000 0    50   ~ 0
+Text Notes 5300 10200 1    50   ~ 0
 No need to pull up output only from Arduino
 Text Label 11200 4350 0    50   ~ 0
 PREDQS0
@@ -2813,50 +2761,6 @@ Text Label 3550 8700 2    50   ~ 0
 ~DQS6
 Text Label 3550 8900 2    50   ~ 0
 ~DQS7
-$Comp
-L power:+1V8 #PWR0235
-U 1 1 5C0585F2
-P 950 6350
-F 0 "#PWR0235" H 950 6200 50  0001 C CNN
-F 1 "+1V8" V 965 6478 50  0000 L CNN
-F 2 "" H 950 6350 50  0001 C CNN
-F 3 "" H 950 6350 50  0001 C CNN
-	1    950  6350
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:+1V8 #PWR0236
-U 1 1 5C0596D9
-P 2350 7450
-F 0 "#PWR0236" H 2350 7300 50  0001 C CNN
-F 1 "+1V8" V 2365 7578 50  0000 L CNN
-F 2 "" H 2350 7450 50  0001 C CNN
-F 3 "" H 2350 7450 50  0001 C CNN
-	1    2350 7450
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+1V8 #PWR0237
-U 1 1 5C05A8B3
-P 950 8250
-F 0 "#PWR0237" H 950 8100 50  0001 C CNN
-F 1 "+1V8" V 965 8378 50  0000 L CNN
-F 2 "" H 950 8250 50  0001 C CNN
-F 3 "" H 950 8250 50  0001 C CNN
-	1    950  8250
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:+1V8 #PWR0238
-U 1 1 5C05BA26
-P 2350 5450
-F 0 "#PWR0238" H 2350 5300 50  0001 C CNN
-F 1 "+1V8" V 2365 5578 50  0000 L CNN
-F 2 "" H 2350 5450 50  0001 C CNN
-F 3 "" H 2350 5450 50  0001 C CNN
-	1    2350 5450
-	0    1    1    0   
-$EndComp
 Text Label 13200 4350 0    50   ~ 0
 PREDM0
 Text Label 13200 4450 0    50   ~ 0
@@ -3212,8 +3116,6 @@ Text Label 7750 8750 0    50   ~ 0
 PREA12
 Text Label 7750 8850 0    50   ~ 0
 PREA13
-Text Notes 12500 3300 0    50   ~ 0
-TODO: these ones don't need to read back, can use serial => parallel out register we already have?
 Text Label 17200 4550 0    50   ~ 0
 PREBA0
 Text Label 17200 4650 0    50   ~ 0
@@ -3276,20 +3178,14 @@ F 3 "" H 1100 9850 50  0001 C CNN
 	1    1100 9850
 	1    0    0    -1  
 $EndComp
-Text Label 8300 2300 0    50   ~ 0
+Text Label 6750 9750 2    50   ~ 0
 SDA
-Text Label 8300 2400 0    50   ~ 0
+Text Label 6750 9850 2    50   ~ 0
 SCL
-Text Label 8300 2500 0    50   ~ 0
+Text Label 6750 9950 2    50   ~ 0
 SA0
-Text Label 8300 2600 0    50   ~ 0
+Text Label 6750 10050 2    50   ~ 0
 SA1
-NoConn ~ 2350 5950
-NoConn ~ 2350 6050
-NoConn ~ 2350 5750
-NoConn ~ 2350 5650
-NoConn ~ 2350 5250
-NoConn ~ 2350 5150
 $Comp
 L power:GND #PWR0247
 U 1 1 5C0ACA7F
@@ -3301,12 +3197,6 @@ F 3 "" H 8150 8050 50  0001 C CNN
 	1    8150 8050
 	0    -1   -1   0   
 $EndComp
-NoConn ~ 6750 9750
-NoConn ~ 6750 9850
-NoConn ~ 6750 9950
-NoConn ~ 6750 10050
-NoConn ~ 6750 10150
-NoConn ~ 6750 10250
 NoConn ~ 6750 10350
 NoConn ~ 6750 10450
 NoConn ~ 6750 10550
@@ -3316,16 +3206,463 @@ NoConn ~ 7750 10550
 NoConn ~ 7750 10450
 NoConn ~ 7750 10350
 NoConn ~ 7750 10250
-NoConn ~ 7750 10150
-NoConn ~ 7750 10050
-NoConn ~ 7750 9950
-NoConn ~ 7750 9850
-NoConn ~ 7750 9750
 NoConn ~ 17200 5050
 NoConn ~ 1250 15750
 NoConn ~ 1850 15750
 NoConn ~ 1250 16250
 NoConn ~ 1850 16250
-Text Notes 6150 700  0    50   ~ 0
-TODO: 1.8 V source
+NoConn ~ 7900 1100
+$Comp
+L Regulator_Linear:LM1117-3.3 U15
+U 1 1 5C150FEA
+P 10850 7100
+F 0 "U15" H 10850 7342 50  0000 C CNN
+F 1 "LM1117-3.3" H 10850 7251 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 10850 7100 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lm1117.pdf" H 10850 7100 50  0001 C CNN
+	1    10850 7100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:LM1117-1.8 U16
+U 1 1 5C15240C
+P 10850 7900
+F 0 "U16" H 10850 8142 50  0000 C CNN
+F 1 "LM1117-1.8" H 10850 8051 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 10850 7900 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lm1117.pdf" H 10850 7900 50  0001 C CNN
+	1    10850 7900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0167
+U 1 1 5C153294
+P 10550 7100
+F 0 "#PWR0167" H 10550 6950 50  0001 C CNN
+F 1 "VCC" V 10568 7227 50  0000 L CNN
+F 2 "" H 10550 7100 50  0001 C CNN
+F 3 "" H 10550 7100 50  0001 C CNN
+	1    10550 7100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+3.3V #PWR0174
+U 1 1 5C153409
+P 11150 7100
+F 0 "#PWR0174" H 11150 6950 50  0001 C CNN
+F 1 "+3.3V" V 11165 7228 50  0000 L CNN
+F 2 "" H 11150 7100 50  0001 C CNN
+F 3 "" H 11150 7100 50  0001 C CNN
+	1    11150 7100
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+3.3V #PWR0235
+U 1 1 5C1534C3
+P 10550 7900
+F 0 "#PWR0235" H 10550 7750 50  0001 C CNN
+F 1 "+3.3V" V 10565 8028 50  0000 L CNN
+F 2 "" H 10550 7900 50  0001 C CNN
+F 3 "" H 10550 7900 50  0001 C CNN
+	1    10550 7900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0236
+U 1 1 5C155B18
+P 10850 7400
+F 0 "#PWR0236" H 10850 7150 50  0001 C CNN
+F 1 "GND" H 10855 7227 50  0000 C CNN
+F 2 "" H 10850 7400 50  0001 C CNN
+F 3 "" H 10850 7400 50  0001 C CNN
+	1    10850 7400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0237
+U 1 1 5C155D65
+P 10850 8200
+F 0 "#PWR0237" H 10850 7950 50  0001 C CNN
+F 1 "GND" H 10855 8027 50  0000 C CNN
+F 2 "" H 10850 8200 50  0001 C CNN
+F 3 "" H 10850 8200 50  0001 C CNN
+	1    10850 8200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+1V8 #PWR0238
+U 1 1 5C1561CB
+P 11150 7900
+F 0 "#PWR0238" H 11150 7750 50  0001 C CNN
+F 1 "+1V8" V 11165 8028 50  0000 L CNN
+F 2 "" H 11150 7900 50  0001 C CNN
+F 3 "" H 11150 7900 50  0001 C CNN
+	1    11150 7900
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0248
+U 1 1 5C16446E
+P 4950 8100
+F 0 "#PWR0248" H 4950 7850 50  0001 C CNN
+F 1 "GND" V 4955 7972 50  0000 R CNN
+F 2 "" H 4950 8100 50  0001 C CNN
+F 3 "" H 4950 8100 50  0001 C CNN
+	1    4950 8100
+	0    -1   -1   0   
+$EndComp
+Text Notes 10550 8850 0    50   ~ 0
+TODO: probably need some capacitors for these regulators
+Text Label 950  5150 2    50   ~ 0
+DQ32
+Text Label 950  5250 2    50   ~ 0
+DQ33
+Text Label -1100 4000 2    50   ~ 0
+DQ34
+Text Label -1100 4100 2    50   ~ 0
+DQ35
+Text Label -1100 4200 2    50   ~ 0
+DQ36
+Text Label -1100 4300 2    50   ~ 0
+DQ37
+Text Label -1100 4400 2    50   ~ 0
+DQ38
+Text Label -1100 4500 2    50   ~ 0
+DQ39
+Text Label -1100 4600 2    50   ~ 0
+DQ40
+Text Label -1100 4700 2    50   ~ 0
+DQ41
+Text Label -1100 4800 2    50   ~ 0
+DQ42
+Text Label -1100 4900 2    50   ~ 0
+DQ43
+Text Label -1100 5000 2    50   ~ 0
+DQ44
+Text Label -1100 5100 2    50   ~ 0
+DQ45
+Text Label -1100 5200 2    50   ~ 0
+DQ46
+Text Label -1100 5300 2    50   ~ 0
+DQ47
+Text Label -1100 5400 2    50   ~ 0
+DQ48
+Text Label -1100 5500 2    50   ~ 0
+DQ49
+Text Label -1100 5600 2    50   ~ 0
+DQ50
+Text Label -1100 5700 2    50   ~ 0
+DQ51
+Text Label -1100 5800 2    50   ~ 0
+DQ52
+Text Label -1100 5900 2    50   ~ 0
+DQ53
+Text Label -1100 6000 2    50   ~ 0
+DQ54
+Text Label -1100 6100 2    50   ~ 0
+DQ55
+Text Label -1100 6200 2    50   ~ 0
+DQ56
+Text Label -1100 6300 2    50   ~ 0
+DQ57
+Text Label -1100 6400 2    50   ~ 0
+DQ58
+Text Label -1100 6500 2    50   ~ 0
+DQ59
+Text Label -1100 6600 2    50   ~ 0
+DQ60
+Text Label -1100 6700 2    50   ~ 0
+DQ61
+Text Label -1100 6800 2    50   ~ 0
+DQ62
+Text Label -1100 6900 2    50   ~ 0
+DQ63
+Text Label -1100 3800 2    50   ~ 0
+DQ32
+Text Label -1100 3900 2    50   ~ 0
+DQ33
+NoConn ~ -1100 3800
+NoConn ~ -1100 3900
+NoConn ~ -1100 4000
+Text Label 950  5850 2    50   ~ 0
+DQ35
+Text Label 2350 5150 0    50   ~ 0
+DQ36
+Text Label 2350 5250 0    50   ~ 0
+DQ37
+Text Label 2350 5650 0    50   ~ 0
+DQ38
+Text Label 2350 5750 0    50   ~ 0
+DQ39
+Text Label 950  6050 2    50   ~ 0
+DQ40
+Text Label 950  6150 2    50   ~ 0
+DQ41
+Text Label 950  6550 2    50   ~ 0
+DQ42
+Text Label 950  6650 2    50   ~ 0
+DQ43
+Text Label 2350 5950 0    50   ~ 0
+DQ44
+Text Label 2350 6050 0    50   ~ 0
+DQ45
+Text Label 2350 6550 0    50   ~ 0
+DQ46
+Text Label 2350 6650 0    50   ~ 0
+DQ47
+Text Label 950  6850 2    50   ~ 0
+DQ48
+Text Label 950  6950 2    50   ~ 0
+DQ49
+Text Label 950  7650 2    50   ~ 0
+DQ50
+Text Label 950  7750 2    50   ~ 0
+DQ51
+Text Label 2350 6850 0    50   ~ 0
+DQ52
+Text Label 2350 6950 0    50   ~ 0
+DQ53
+Text Label 2350 7650 0    50   ~ 0
+DQ54
+Text Label 2350 7750 0    50   ~ 0
+DQ55
+Text Label 950  7950 2    50   ~ 0
+DQ56
+Text Label 950  8050 2    50   ~ 0
+DQ57
+Text Label 950  8450 2    50   ~ 0
+DQ58
+Text Label 950  8550 2    50   ~ 0
+DQ59
+Text Label 2350 7950 0    50   ~ 0
+DQ60
+Text Label 2350 8050 0    50   ~ 0
+DQ61
+Text Label 2350 8550 0    50   ~ 0
+DQ62
+Text Label 2350 8650 0    50   ~ 0
+DQ63
+NoConn ~ -1100 4100
+NoConn ~ -1100 4200
+NoConn ~ -1100 4300
+NoConn ~ -1100 4400
+NoConn ~ -1100 4500
+NoConn ~ -1100 4600
+NoConn ~ -1100 4700
+NoConn ~ -1100 4800
+NoConn ~ -1100 4900
+NoConn ~ -1100 5000
+NoConn ~ -1100 5100
+NoConn ~ -1100 5200
+NoConn ~ -1100 5300
+NoConn ~ -1100 5400
+NoConn ~ -1100 5500
+NoConn ~ -1100 5600
+NoConn ~ -1100 5700
+NoConn ~ -1100 5800
+NoConn ~ -1100 5900
+NoConn ~ -1100 6000
+NoConn ~ -1100 6100
+NoConn ~ -1100 6200
+NoConn ~ -1100 6300
+NoConn ~ -1100 6400
+NoConn ~ -1100 6500
+NoConn ~ -1100 6600
+NoConn ~ -1100 6700
+NoConn ~ -1100 6800
+NoConn ~ -1100 6900
+Text Label 950  5750 2    50   ~ 0
+DQ34
+Text Notes -1600 3650 0    50   ~ 0
+Not connected:
+Text Label 950  6350 2    50   ~ 0
+DM5
+Text Label 2350 7450 0    50   ~ 0
+DM6
+Text Label 950  8250 2    50   ~ 0
+DM7
+Text Label 950  8950 2    50   ~ 0
+VDDSPD
+$Comp
+L power:+1V8 #PWR0249
+U 1 1 5C199955
+P 12200 7150
+F 0 "#PWR0249" H 12200 7000 50  0001 C CNN
+F 1 "+1V8" V 12215 7278 50  0000 L CNN
+F 2 "" H 12200 7150 50  0001 C CNN
+F 3 "" H 12200 7150 50  0001 C CNN
+	1    12200 7150
+	0    -1   -1   0   
+$EndComp
+Text Label 12200 7150 0    50   ~ 0
+VDDSPD
+Text Label 2350 5450 0    50   ~ 0
+DM4
+Text Label -700 3800 2    50   ~ 0
+DM4
+Text Label -700 3900 2    50   ~ 0
+DM5
+Text Label -700 4000 2    50   ~ 0
+DM6
+Text Label -700 4100 2    50   ~ 0
+DM7
+NoConn ~ -700 3800
+NoConn ~ -700 3900
+NoConn ~ -700 4000
+NoConn ~ -700 4100
+NoConn ~ 7300 2700
+Text Label -700 4250 2    50   ~ 0
+~EVENT
+NoConn ~ -700 4250
+$Comp
+L Device:R R9
+U 1 1 5C1AE7CC
+P 3500 750
+F 0 "R9" H 3570 796 50  0000 L CNN
+F 1 "10K" H 3570 705 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 3430 750 50  0001 C CNN
+F 3 "~" H 3500 750 50  0001 C CNN
+	1    3500 750 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+1V8 #PWR0250
+U 1 1 5C1AF67D
+P 3500 600
+F 0 "#PWR0250" H 3500 450 50  0001 C CNN
+F 1 "+1V8" V 3515 728 50  0000 L CNN
+F 2 "" H 3500 600 50  0001 C CNN
+F 3 "" H 3500 600 50  0001 C CNN
+	1    3500 600 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R10
+U 1 1 5C1B06B0
+P 3500 1050
+F 0 "R10" H 3570 1096 50  0000 L CNN
+F 1 "10K" H 3570 1005 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 3430 1050 50  0001 C CNN
+F 3 "~" H 3500 1050 50  0001 C CNN
+	1    3500 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0251
+U 1 1 5C1B0CD1
+P 3500 1200
+F 0 "#PWR0251" H 3500 950 50  0001 C CNN
+F 1 "GND" V 3505 1072 50  0000 R CNN
+F 2 "" H 3500 1200 50  0001 C CNN
+F 3 "" H 3500 1200 50  0001 C CNN
+	1    3500 1200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 900  3500 900 
+Connection ~ 3500 900 
+Text Label 4100 1100 2    50   ~ 0
+VREF
+$Comp
+L power:GND #PWR0252
+U 1 1 5C1B85B2
+P 18300 1600
+F 0 "#PWR0252" H 18300 1350 50  0001 C CNN
+F 1 "GND" H 18305 1427 50  0000 C CNN
+F 2 "" H 18300 1600 50  0001 C CNN
+F 3 "" H 18300 1600 50  0001 C CNN
+	1    18300 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 5C1B8D46
+P 18300 1600
+F 0 "#FLG0101" H 18300 1675 50  0001 C CNN
+F 1 "PWR_FLAG" H 18300 1773 50  0000 C CNN
+F 2 "" H 18300 1600 50  0001 C CNN
+F 3 "~" H 18300 1600 50  0001 C CNN
+	1    18300 1600
+	1    0    0    -1  
+$EndComp
+Text Notes 1300 9900 0    50   ~ 0
+Keep CLK enabled all the time.\nDeactivating initiates Self Refresh or\nPower Down
+Text Notes 3300 4200 0    50   ~ 0
+Data-sheet recommended pull-up
+Wire Wire Line
+	950  8750 250  8750
+Wire Wire Line
+	250  8750 250  8600
+$Comp
+L Device:R R11
+U 1 1 5C4E6AD0
+P 250 8450
+F 0 "R11" H 320 8496 50  0000 L CNN
+F 1 "10K" H 320 8405 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 180 8450 50  0001 C CNN
+F 3 "~" H 250 8450 50  0001 C CNN
+	1    250  8450
+	1    0    0    -1  
+$EndComp
+Text Label 250  8300 1    50   ~ 0
+VDDSPD
+Text Notes -1150 8350 0    50   ~ 0
+SDA pin is bi-directional data\nfrom SPD EEPROM. Needs pull-up\naccording to data-sheet.
+Text Notes 11850 7300 0    50   ~ 0
+VDDSPD can be 1.8V, 2.5V, or 3.3V.
+Text Notes 2450 650  0    50   ~ 0
+VREF should be 1.8/2 V\nFor SSTL18 inputs
+Text Label 8300 2300 0    50   ~ 0
+PRESDA
+Text Label 8300 2400 0    50   ~ 0
+PRESCL
+Text Label 8300 2500 0    50   ~ 0
+PRESA0
+Text Label 8300 2600 0    50   ~ 0
+PRESA1
+Text Label 8750 8500 2    50   ~ 0
+PRESDA
+Text Label 7750 9850 0    50   ~ 0
+PRESCL
+Text Label 7750 9950 0    50   ~ 0
+PRESA0
+Text Label 7750 10050 0    50   ~ 0
+PRESA1
+$Comp
+L power:VCC #PWR01
+U 1 1 5C4FB4DD
+P 9050 8500
+F 0 "#PWR01" H 9050 8350 50  0001 C CNN
+F 1 "VCC" H 9067 8673 50  0000 C CNN
+F 2 "" H 9050 8500 50  0001 C CNN
+F 3 "" H 9050 8500 50  0001 C CNN
+	1    9050 8500
+	0    1    1    0   
+$EndComp
+Text Label 7750 9750 0    50   ~ 0
+PRESDA
+Text Label 7300 2600 2    50   ~ 0
+PREODT
+Text Label 6400 10150 2    50   ~ 0
+ODT0
+Text Label 6400 10250 2    50   ~ 0
+ODT1
+NoConn ~ 6750 10250
+Text Label 7750 10150 0    50   ~ 0
+PREODT
+Wire Wire Line
+	6750 10150 6400 10150
+Wire Wire Line
+	6400 10250 6400 10150
+$Comp
+L Device:R R12
+U 1 1 5C514F25
+P 8900 8500
+F 0 "R12" V 8693 8500 50  0000 C CNN
+F 1 "100K" V 8784 8500 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 8830 8500 50  0001 C CNN
+F 3 "~" H 8900 8500 50  0001 C CNN
+	1    8900 8500
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
