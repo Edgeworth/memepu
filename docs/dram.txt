@@ -1,0 +1,41 @@
+#### DRAM notes:
+Several different topologies, e.g. ranks - where bank addresses aren't enough
+so duplicate signals (e.g. CK => CK0, CK1). Can be faster though.
+Different underlying dram chip types (e.g. 16 bit, 8 bit).
+S0, S1 selects rank
+
+Power consumption: ~3 W per stick. need ~2A 
+
+Pinout - IN means 'into dram', OUT means 'output from DRAM'
+VDD: 1.8 V
+VREF: 1.8 / 2 V
+DQxx: [0, 64) data in/out - IN/OUT
+DQSx, ~DQSx: [0, 8) data strobes - IN/OUT
+ On write to DRAM chip: Need to send this, DRAM chip uses this to latch data
+ On read, DRAM chip sends this to signal data (writes 1s to these at the same time as writing the actual data)
+DMx: [0, 8) data mask - IN
+  On write to DRAM chip, lets byte x be written if low, otherwise ignores.
+  No effect on read.
+Ax: [0, 13); A10 additionally autoprecharge; Optional extra A14, A15 - IN
+BA0, BA1, BA2: bank address - IN
+CK0,~CK0,CK1,~CK1: Clocks - IN
+~CAS, ~RAS: column select, row select - IN
+~WE: Write enable - IN
+~S0, ~S1: Chip selects; selects rank - IN
+CKE0,CKE1: Clock enables - IN
+
+SPD:
+VDDSPD: Can be 1.8V ~ 3.3V
+SDA: Needs pullup to VDDSPD. - IN/OUT
+SCL: SPD clock. - IN
+SA0, SA1: SPD and TS address - IN
+
+MISC:
+ODT0, ODT1: On die termination - IN
+~EVENT: Temperature stuff? not really relevant
+
+Signal groups - should be wired to have same loading + routing:
+CK, ~CK
+DQ, DM, DQS, ~DQS
+~S, CKE, ODT
+A, BA, ~RAS, ~CAS, ~WE
