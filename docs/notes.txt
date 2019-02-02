@@ -1,3 +1,4 @@
 - Do everything at 1.8 V? Avoids translation of voltages + needing regulators.
   May be too hard to find chips that run at 1.8 V.
 - Simulate using verilog somehow?
+  make each 74 series (etc) chip in verilog. maybe can even generate schematics from it
