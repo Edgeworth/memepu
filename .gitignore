@@ -25,3 +25,4 @@ _autosave-*
 *.ses
 pdfs/
 *.bin
+obj_dir/
