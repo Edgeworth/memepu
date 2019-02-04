@@ -22,7 +22,7 @@ public:
   }
 
 private:
-  void generate(int i) {
+  void generate(std::size_t i) {
     if (i == ranges_.size()) {
       product_.push_back(cur_);
       return;

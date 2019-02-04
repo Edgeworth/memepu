@@ -41,4 +41,4 @@ target_link_libraries(memepu_verilog_utils PUBLIC gtest memepu_verilator)
 target_link_libraries(main PRIVATE memepu_verilog_utils)
 target_link_libraries(tests PRIVATE memepu_verilog_utils)
 
-gtest_discover_tests(tests)
+# gtest_discover_tests is slow for a large number of tests, so it's not used here.
