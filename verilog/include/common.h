@@ -15,7 +15,7 @@ void writeFile(const std::string& filename, const std::string& data);
 template<typename T, int N>
 class CartesianProduct {
 public:
-  explicit CartesianProduct(std::array<T, N> ranges) : ranges_(std::move(ranges)) {}
+  explicit CartesianProduct(const std::array<int, N>& ranges) : ranges_(std::move(ranges)) {}
 
   std::vector<std::array<T, N>> get() {
     generate(0);
@@ -23,19 +23,19 @@ public:
   }
 
 private:
-  void generate(std::size_t i) {
-    if (i == ranges_.size()) {
+  void generate(int i) {
+    if (i == int(ranges_.size())) {
       product_.push_back(cur_);
       return;
     }
 
     for (int j = 0; j < ranges_[i]; ++j) {
-      cur_[i] = j;
+      cur_[i] = T(j);
       generate(i + 1);
     }
   }
 
-  std::array<T, N> ranges_;
+  std::array<int, N> ranges_;
   std::array<T, N> cur_;
   std::vector<std::array<T, N>> product_;
 };

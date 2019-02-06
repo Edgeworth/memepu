@@ -7,7 +7,9 @@ module chip74299(
     input             CP,
     inout logic [7:0] IO,
     output            Q0,
-    output            Q7
+    output            Q7,
+    // Testing
+    output ERR
 );
     logic [7:0] shift_reg;
 
@@ -19,7 +21,7 @@ module chip74299(
     always_comb begin
         Q0 = shift_reg[0];  // Expose shift reg MSB and LSB for chaining.
         Q7 = shift_reg[7];
-        if (N_OE == 'b11)
+        if (N_OE == 'b00)
             IO = shift_reg;
         else
             IO = 8'bZ;
@@ -40,9 +42,17 @@ module chip74299(
                     shift_reg <= shift_reg >> 1;
                     shift_reg[7] <= DSR;
                 end
-                2'b00: ;
+                2'b00: ;  // Hold
             endcase
         end
+    end
+
+    // Testing
+    always_comb begin
+        ERR = 0;
+        // Consider outputting while trying to load an error.
+        if (N_OE == 'b00 && S == 2'b11)
+            ERR = 1;
     end
 
 endmodule
