@@ -71,7 +71,7 @@ std::string Led::getBinaryData() {
   std::string bindata;
   for (uint16_t i = 0; i < 8192; ++i) {
     const uint8_t data = buildDataByte(i);
-    const int8_t data_signed = *reinterpret_cast<const int8_t *>(&data);
+    const int8_t data_signed = *reinterpret_cast<const int8_t*>(&data);
     const uint8_t seg = buildSegByte(i);
     const uint8_t mode = buildModeByte(i);
     const bool sign = static_cast<const bool>(mode & 1);
