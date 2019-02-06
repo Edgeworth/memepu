@@ -9,29 +9,29 @@ struct OpcodeData {
 };
 
 std::map<std::string, OpcodeData> OPCODE_DATA = {
-    {"LDA", {Opcode::LDA_IMM, 1, 0}},
-    {"LDB", {Opcode::LDB_IMM, 1, 0}},
-    {"LDM0", {Opcode::LDM0_IMM, 1, 0}},
-    {"ADD", {Opcode::ADD, 0, 0}},
-    {"SUB", {Opcode::SUB, 0, 0}},
-    {"JMP", {Opcode::JUMP, 0, 1}},
-    {"DSP", {Opcode::DISPLAY, 0, 0}},
-    {"SWP", {Opcode::SWAP, 0, 0}},
-    {"LDINT", {Opcode::LDA_INT, 0, 0}},
-    {"DMP", {Opcode::DUMP, 0, 0}},
-    {"RFI", {Opcode::RETURN_FROM_ISR, 0, 0}},
-    {"EINT", {Opcode::ENABLE_INTERRUPTS, 0, 0}},
-    {"DINT", {Opcode::DISABLE_INTERRUPTS, 0, 0}},
-    {"IN0", {Opcode::IN_DEV_0, 0, 0}},
-    {"OUT0", {Opcode::OUT_IMM_DEV_0, 1, 0}},
-    {"CMP", {Opcode::COMPARE, 0, 0}},
+    {"LDA",     {Opcode::LDA_IMM,             1, 0}},
+    {"LDB",     {Opcode::LDB_IMM,             1, 0}},
+    {"LDM0",    {Opcode::LDM0_IMM,            1, 0}},
+    {"ADD",     {Opcode::ADD,                 0, 0}},
+    {"SUB",     {Opcode::SUB,                 0, 0}},
+    {"JMP",     {Opcode::JUMP,                0, 1}},
+    {"DSP",     {Opcode::DISPLAY,             0, 0}},
+    {"SWP",     {Opcode::SWAP,                0, 0}},
+    {"LDINT",   {Opcode::LDA_INT,             0, 0}},
+    {"DMP",     {Opcode::DUMP,                0, 0}},
+    {"RFI",     {Opcode::RETURN_FROM_ISR,     0, 0}},
+    {"EINT",    {Opcode::ENABLE_INTERRUPTS,   0, 0}},
+    {"DINT",    {Opcode::DISABLE_INTERRUPTS,  0, 0}},
+    {"IN0",     {Opcode::IN_DEV_0,            0, 0}},
+    {"OUT0",    {Opcode::OUT_IMM_DEV_0,       1, 0}},
+    {"CMP",     {Opcode::COMPARE,             0, 0}},
 //    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}},  TODO: Currently broken.
-    {"JZH", {Opcode::JUMP_IF_ZERO_HACKED, 0, 1}},
-    {"STA", {Opcode::STA_ADDR, 0, 1}},
-    {"LDAADDR", {Opcode::LDA_ADDR, 0, 1}},
-    {"SYSCALL", {Opcode::SYSCALL, 0, 0}},
-    {"RFS", {Opcode::RETURN_FROM_SYSCALL, 0, 0}},
-    {"TASK", {Opcode::START_TASK, 0, 1}},
+    {"JZH",     {Opcode::JUMP_IF_ZERO_HACKED, 0, 1}},
+    {"STA",     {Opcode::STA_ADDR,            0, 1}},
+    {"LDAADDR", {Opcode::LDA_ADDR,            0, 1}},
+    {"SYSCALL", {Opcode::SYSCALL,             0, 0}},
+    {"RFS",     {Opcode::RETURN_FROM_SYSCALL, 0, 0}},
+    {"TASK",    {Opcode::START_TASK,          0, 1}},
 };
 
 int parseHexInt(const std::string& s) {
@@ -64,7 +64,8 @@ void Asm::parseLabelOrOffset(std::string token, bool first_pass) {
   if (offset >= 0) {
     cur_extent_ = offset;
   } else {
-    verify_expr(!first_pass || labels_.find(label) == labels_.end(), "redefinition of label %s", label.c_str());
+    verify_expr(!first_pass || labels_.find(label) == labels_.end(), "redefinition of label %s",
+        label.c_str());
     labels_[label] = uint32_t(extents_[cur_extent_].size()) + cur_extent_ + START_OFFSET;
   }
 }
