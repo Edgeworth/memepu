@@ -1,7 +1,4 @@
 #include <llvm.h>
-#include "parser.h"
-#include "compile.h"
-#include "file_contents.h"
 
 int main(int argc, char* argv[]) {
   verify_expr(argc == 2, "need filename");
