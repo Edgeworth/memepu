@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(memepu_verilog)
+project(verymeme)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
@@ -31,14 +31,12 @@ include(GoogleTest)
 find_package(Verilator REQUIRED)
 add_subdirectory(verilog)
 
-add_library(memepu_verilog_utils src/common.cpp include/common.h)
-add_executable(main src/programs/main.cpp)
+add_library(verymeme_library src/common.cpp include/common.h)
 add_executable(tests src/programs/tests.cpp)
 
-target_include_directories(memepu_verilog_utils PUBLIC ${VERILATOR_INCLUDE_DIRS} include)
+target_include_directories(verymeme_library PUBLIC ${VERILATOR_INCLUDE_DIRS} include)
 
-target_link_libraries(memepu_verilog_utils PUBLIC gtest memepu_verilator)
-target_link_libraries(main PRIVATE memepu_verilog_utils)
-target_link_libraries(tests PRIVATE memepu_verilog_utils)
+target_link_libraries(verymeme_library PUBLIC gtest verymeme_verilated)
+target_link_libraries(tests PRIVATE verymeme_library)
 
 # gtest_discover_tests is slow for a large number of tests, so it's not used here.
