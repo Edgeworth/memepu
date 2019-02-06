@@ -38,6 +38,6 @@ add_verilog_module(chip74299.v)
 
 message(${ALL_VERILATOR_OUTPUTS})
 
-add_library(memepu_verilator ${ALL_VERILATOR_OUTPUTS})
-target_include_directories(memepu_verilator PUBLIC ${VERILATOR_INCLUDE_DIRS} ${VERILATOR_OUTPUT_DIR})
-target_link_libraries(memepu_verilator PUBLIC verilator)
+add_library(verymeme_verilated ${ALL_VERILATOR_OUTPUTS})
+target_include_directories(verymeme_verilated PUBLIC ${VERILATOR_INCLUDE_DIRS} ${VERILATOR_OUTPUT_DIR})
+target_link_libraries(verymeme_verilated PUBLIC verilator)
