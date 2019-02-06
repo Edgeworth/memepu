@@ -256,7 +256,8 @@ std::unique_ptr<Parser::Node> Parser::tryStruct() {
     peek_token(token);
     if (token->type == Token::RBRACE) break;
 
-    expect_parse(child, [this] { return tryVariableDeclaration(); }, [this] { return tryFunctionDefinition(false); });
+    expect_parse(child, [this] { return tryVariableDeclaration(); },
+        [this] { return tryFunctionDefinition(false); });
 
     if (child->type != Node::FUNCTION)
       expect_token(Token::SEMICOLON, "semicolon");
@@ -321,8 +322,8 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDeclaration(bool allow_template
 std::unique_ptr<Parser::Node> Parser::tryStatement() {
   peek_token(token);
   expect_parse(node, [this] { return tryVariableDefinition(); },
-               [this] { return tryExpression(); }, [this] { return tryReturn(); },
-               [this] { return tryIf(); }, [this] { return tryFor(); });
+      [this] { return tryExpression(); }, [this] { return tryReturn(); },
+      [this] { return tryIf(); }, [this] { return tryFor(); });
   if (node->type != Node::IF && node->type != Node::FOR)
     expect_token(Token::SEMICOLON, "semicolon");
   return node;
@@ -386,7 +387,8 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
     // Stop parsing at the end of a statement, sub-expression, start of a block (e.g. if statement),
     // end of an indexing, or part of a list (comma).
     if (token->type == Token::SEMICOLON || token->type == Token::RPAREN ||
-        token->type == Token::LBRACE || token->type == Token::RSQUARE || token->type == Token::COMMA)
+        token->type == Token::LBRACE || token->type == Token::RSQUARE ||
+        token->type == Token::COMMA)
       break;
 
     auto iter = OPMAP.find(token->type);
@@ -415,7 +417,7 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
       case Token::LITERAL: {
         // Parse literal last - it might be an index,  function call, or struct initialiser.
         expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryIndex(); },
-                     [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); });
+            [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); });
         node = std::move(literal);
         continue;
       }
