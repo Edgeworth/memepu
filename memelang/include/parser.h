@@ -17,13 +17,13 @@ public:
   struct Node {
     enum Type {
       // Top level constructs:
-      FUNCTION, INTERFACE, STRUCT,
+          FUNCTION, INTERFACE, STRUCT,
       // Statements:
-      FOR, WHILE, RETURN, VARIABLE_DECLARATION, BLOCK, IF,
+          FOR, WHILE, RETURN, VARIABLE_DECLARATION, BLOCK, IF,
       // Qualifiers:
-      TEMPLATE, STATIC,
+          TEMPLATE, STATIC,
       // Expressions:
-      TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
+          TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
       DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
       STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
     } type;
@@ -33,7 +33,8 @@ public:
     int intdata;
   };
 
-  Parser(const FileContents* contents, std::vector<Token> tokens) : contents_(contents), tokens_(std::move(tokens)) {}
+  Parser(const FileContents* contents, std::vector<Token> tokens) : contents_(contents),
+                                                                    tokens_(std::move(tokens)) {}
 
   void parse();
   const Node* root() { return root_.get(); }

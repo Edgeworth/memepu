@@ -14,16 +14,17 @@ namespace meme {
 
 struct Token {
   enum Type {
-    INTERFACE, STRUCT, FUNCTION, PLUS, MINUS, ASTERISK, FSLASH, QUOTE, FOR, WHILE, LPAREN, RPAREN, LBRACE, RBRACE,
-    LANGLE, RANGLE, LSQUARE, RSQUARE, SEMICOLON, LITERAL, QUESTION, COMMA, COLON, RETURN, EQUAL, IF, DEQUAL, NEQUAL,
-    DOT, STATIC, DPLUS, DMINUS, LTEQUAL, GTEQUAL
+    INTERFACE, STRUCT, FUNCTION, PLUS, MINUS, ASTERISK, FSLASH, QUOTE, FOR, WHILE, LPAREN, RPAREN,
+    LBRACE, RBRACE, LANGLE, RANGLE, LSQUARE, RSQUARE, SEMICOLON, LITERAL, QUESTION, COMMA, COLON,
+    RETURN, EQUAL, IF, DEQUAL, NEQUAL, DOT, STATIC, DPLUS, DMINUS, LTEQUAL, GTEQUAL
   } type;
   int loc;
   int size;
 
   std::string toString(const FileContents* contents) const {
     std::string str;
-    format_str(str, "Token('%s', %d:%d)", contents->getSpan(loc, size).c_str(), contents->getLineNumber(loc), contents->getColNumber(loc));
+    format_str(str, "Token('%s', %d:%d)", contents->getSpan(loc, size).c_str(),
+        contents->getLineNumber(loc), contents->getColNumber(loc));
     return str;
   }
 };

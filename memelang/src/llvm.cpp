@@ -1,31 +1,19 @@
 
 #include <llvm.h>
 
-#include "llvm.h"
-
-#include "types.h"
-
-#include "llvm/ADT/APFloat.h"
-#include "llvm/ADT/STLExtras.h"
-#include "llvm/IR/BasicBlock.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/Function.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Type.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/Verifier.h"
-#include "llvm/Target/TargetOptions.h"
 #include "llvm/Support/FileSystem.h"
-#include "llvm/Support/Host.h"
-#include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/TargetRegistry.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Transforms/Utils/Cloning.h"
 
 namespace meme {
 
-LlvmCodegen::LlvmCodegen(FileContents* contents, const Compile& compile) : contents_(contents), compile_(compile), ctx_(), builder_(ctx_), module_("module", ctx_) {
+LlvmCodegen::LlvmCodegen(FileContents* contents, const Compile& compile) : contents_(contents),
+                                                                           compile_(compile),
+                                                                           ctx_(), builder_(ctx_),
+                                                                           module_("module", ctx_) {
   typemap_[INT8] = llvm::Type::getInt8Ty(ctx_);
   typemap_[INT16] = llvm::Type::getInt16Ty(ctx_);
   typemap_[UINT8] = llvm::Type::getInt8Ty(ctx_);
@@ -40,7 +28,8 @@ LlvmCodegen::LlvmCodegen(FileContents* contents, const Compile& compile) : conte
   std::string err;
   auto* target = llvm::TargetRegistry::lookupTarget(triple, err);
   verify_expr(target, "error with llvm target %s: %s", triple.c_str(), err.c_str());
-  machine_ = target->createTargetMachine(triple, "generic", "", llvm::TargetOptions(), llvm::Optional<llvm::Reloc::Model>());
+  machine_ = target->createTargetMachine(triple, "generic", "", llvm::TargetOptions(),
+      llvm::Optional<llvm::Reloc::Model>());
   module_.setDataLayout(machine_->createDataLayout());
   module_.setTargetTriple(triple);
 
@@ -59,11 +48,13 @@ void LlvmCodegen::codegen() {
   outputLlvmFile("a.o", llvm::TargetMachine::CGFT_ObjectFile);
 }
 
-llvm::Function *LlvmCodegen::generateFunction(const Func& func) {
+llvm::Function* LlvmCodegen::generateFunction(const Func& func) {
   auto* return_type = getLlvmType(func.sig.return_type);
-  auto param_types = map(map(func.sig.params, &LlvmCodegen::typeFromVariable), &LlvmCodegen::getLlvmType);
+  auto param_types = map(map(func.sig.params, &LlvmCodegen::typeFromVariable),
+      &LlvmCodegen::getLlvmType);
   auto* llvm_func_type = llvm::FunctionType::get(return_type, param_types, false);
-  auto* llvm_func = llvm::Function::Create(llvm_func_type, llvm::Function::ExternalLinkage, func.sig.name, &module_);
+  auto* llvm_func = llvm::Function::Create(llvm_func_type, llvm::Function::ExternalLinkage,
+      func.sig.name, &module_);
 
   int idx = 0;
   for (auto& arg : llvm_func->args())
@@ -117,13 +108,15 @@ llvm::Type* LlvmCodegen::getLlvmType(const Type& type) {
   return iter->second;
 }
 
-void LlvmCodegen::outputLlvmFile(const std::string& name, llvm::TargetMachine::CodeGenFileType type) {
+void
+LlvmCodegen::outputLlvmFile(const std::string& name, llvm::TargetMachine::CodeGenFileType type) {
   std::error_code error_code;
   llvm::raw_fd_ostream file(name, error_code, llvm::sys::fs::F_None);
-  verify_expr(!error_code, "could not open llvm file for writing: %s", error_code.message().c_str());
+  verify_expr(!error_code, "could not open llvm file for writing: %s",
+      error_code.message().c_str());
 
   llvm::legacy::PassManager pass;
-  verify_expr(!machine_->addPassesToEmitFile(pass, file, type),  "could not write llvm file");
+  verify_expr(!machine_->addPassesToEmitFile(pass, file, type), "could not write llvm file");
 
   auto module = llvm::CloneModule(&module_);
   pass.run(*module);
