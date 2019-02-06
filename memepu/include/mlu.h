@@ -15,7 +15,8 @@ private:
   std::string data_;
 
   void put(uint32_t addr, uint8_t output) {
-    verify_expr((addr & 0x07FFFF) == addr && addr < SIZE, "only 19 bits for address");  // 19th bit not currently used.
+    verify_expr((addr & 0x07FFFF) == addr && addr < SIZE,
+        "only 19 bits for address");  // 19th bit not currently used.
     data_[addr] = output;
   }
 };

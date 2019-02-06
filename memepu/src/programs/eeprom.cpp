@@ -2,7 +2,7 @@
 #include "control.h"
 #include "mlu.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
   for (int i = 0; i < 3; ++i) {
     ControlLogic logic(i);
