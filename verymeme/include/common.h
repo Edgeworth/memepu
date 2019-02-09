@@ -1,5 +1,5 @@
-#ifndef MEMEPU_COMMON_H_
-#define MEMEPU_COMMON_H_
+#ifndef VERYMEME_COMMON_H
+#define VERYMEME_COMMON_H
 
 #include <cstdio>
 #include <cstdint>
@@ -51,4 +51,4 @@ private:
   } while (0)
 
 
-#endif  // MEMEPU_COMMON_H_
+#endif  // VERYMEME_COMMON_H

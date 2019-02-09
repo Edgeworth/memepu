@@ -1,15 +1,15 @@
 module chip74299(
-    input logic [1:0] S,
-    input logic [1:0] N_OE,
-    input             N_MR,
-    input             DSR,
-    input             DSL,
-    input             CP,
-    inout logic [7:0] IO,
-    output            Q0,
-    output            Q7,
-    // Testing
-    output ERR
+    input [1:0] S,
+    input [1:0] N_OE,
+    input       N_MR,
+    input       DSR,
+    input       DSL,
+    input       CP,
+    inout [7:0] IO,
+    output      Q0,
+    output      Q7,
+    // Testing. TODO: Replace with assertions or?
+    output      ERR
 );
     logic [7:0] shift_reg;
 
@@ -42,12 +42,12 @@ module chip74299(
                     shift_reg <= shift_reg >> 1;
                     shift_reg[7] <= DSR;
                 end
-                2'b00: ;  // Hold
+                2'b00:;  // Hold
             endcase
         end
     end
 
-    // Testing
+        // Testing
     always_comb begin
         ERR = 0;
         // Consider outputting while trying to load an error.
