@@ -1,15 +1,15 @@
-#include <utility>
+#include <array>
 
-#include "gtest/gtest.h"
+#include "common.h"
 #include "Vchip7400.h"
 #include "Vchip7404.h"
+#include "Vchip7408.h"
+#include "Vchip7432.h"
+#include "Vchip7486.h"
 #include "Vchip74299.h"
-#include "common.h"
+#include "Vfull_adder.h"
 
 namespace {
-
-// TODO: fix below. Run optimize imports; format code; on this, memelang, and memepu. Update
-// max line length to 100 col.
 
 template<typename ...Ts>
 constexpr auto bitRanges(Ts... ts) {
@@ -32,7 +32,7 @@ TEST_P(Chip7400Test, Exhaustive) {
   ASSERT_EQ(~(A & B) & 0x0F, chip.Y);
 }
 
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7400Test, bitRanges(1, 1));
+INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7400Test, bitRanges(4, 4));
 
 class Chip7404Test : public ::testing::TestWithParam<std::array<uint32_t, 1>> {
 protected:
@@ -46,7 +46,52 @@ TEST_P(Chip7404Test, Exhaustive) {
   ASSERT_EQ(~A & 0x3F, chip.Y);
 }
 
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7404Test, bitRanges(1));
+INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7404Test, bitRanges(6));
+
+class Chip7408Test : public ::testing::TestWithParam<std::array<uint32_t, 2>> {
+protected:
+  Vchip7408 chip;
+};
+
+TEST_P(Chip7408Test, Exhaustive) {
+  const auto[A, B] = GetParam();
+  chip.A = uint8_t(A);
+  chip.B = uint8_t(B);
+  chip.eval();
+  ASSERT_EQ(A & B, chip.Y);
+}
+
+INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7408Test, bitRanges(4, 4));
+
+class Chip7432Test : public ::testing::TestWithParam<std::array<uint32_t, 2>> {
+protected:
+  Vchip7432 chip;
+};
+
+TEST_P(Chip7432Test, Exhaustive) {
+  const auto[A, B] = GetParam();
+  chip.A = uint8_t(A);
+  chip.B = uint8_t(B);
+  chip.eval();
+  ASSERT_EQ(A | B, chip.Y);
+}
+
+INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7432Test, bitRanges(4, 4));
+
+class Chip7486Test : public ::testing::TestWithParam<std::array<uint32_t, 2>> {
+protected:
+  Vchip7486 chip;
+};
+
+TEST_P(Chip7486Test, Exhaustive) {
+  const auto[A, B] = GetParam();
+  chip.A = uint8_t(A);
+  chip.B = uint8_t(B);
+  chip.eval();
+  ASSERT_EQ(A ^ B, chip.Y);
+}
+
+INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7486Test, bitRanges(4, 4));
 
 class Chip74299Test : public ::testing::TestWithParam<std::array<uint32_t, 6>> {
 protected:
@@ -73,6 +118,7 @@ TEST_P(Chip74299Test, Exhaustive) {
   ASSERT_EQ(IO & 1, chip.Q0);
   ASSERT_EQ((IO >> 7) & 1, chip.Q7);
 
+// Now apply operation to loaded data.
   chip.CP = 0;
   chip.eval();
 
@@ -95,13 +141,22 @@ TEST_P(Chip74299Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip74299Test, bitRanges(2, 2, 1, 1, 1, 8));
 
+class FullAdderTest : public ::testing::TestWithParam<std::array<uint32_t, 3>> {
+protected:
+  Vfull_adder chip;
+};
+
+TEST_P(FullAdderTest, Exhaustive) {
+  const auto[A, B, C_IN] = GetParam();
+  chip.A = uint8_t(A);
+  chip.B = uint8_t(B);
+  chip.C_IN = uint8_t(C_IN);
+  chip.eval();
+  const uint32_t result = A + B + C_IN;
+  ASSERT_EQ(uint8_t(result), chip.Y);
+  ASSERT_EQ((result & 0x100) >> 8, chip.C_OUT);
+}
+
+INSTANTIATE_TEST_SUITE_P(Exhaustive, FullAdderTest, bitRanges(8, 8, 1));
 
 }  // anonymous
-
-int main(int argc, char** argv) {
-  Verilated::commandArgs(argc, argv);
-  Verilated::randReset(2);  // Randomize all bits.
-
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
