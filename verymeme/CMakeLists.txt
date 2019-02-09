@@ -36,6 +36,7 @@ add_subdirectory(verilog)
 add_library(verymeme_library
     src/common.cpp include/common.h src/test_printer.cpp include/test_printer.h)
 add_executable(tests src/tests/tests.cpp src/programs/test_harness.cpp)
+add_executable(memecad src/programs/memecad.cpp)
 
 target_include_directories(verymeme_library PUBLIC
     ${VERILATOR_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} include)
@@ -43,5 +44,6 @@ target_link_directories(verymeme_library PUBLIC ${Boost_LIBRARY_DIRS})
 
 target_link_libraries(verymeme_library PUBLIC ${Boost_LIBRARIES} gtest verymeme_verilated)
 target_link_libraries(tests PRIVATE verymeme_library)
+target_link_libraries(memecad PRIVATE verymeme_library)
 
 # gtest_discover_tests is slow for a large number of tests, so it's not used here.

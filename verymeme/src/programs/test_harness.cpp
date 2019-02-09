@@ -7,7 +7,7 @@
 
 namespace po = boost::program_options;
 
-int main(int argc, char** argv) {
+int main(int argc, char* argv[]) {
   Verilated::commandArgs(argc, argv);
   Verilated::randReset(2);  // Randomize all bits.
   Verilated::debug(2);
@@ -32,8 +32,7 @@ int main(int argc, char** argv) {
     }
 
     print_individual_tests = vm["print_individual_tests"].as<bool>();
-  }
-  catch (const po::error& ex) {
+  } catch (const po::error& ex) {
     std::cerr << ex.what() << '\n';
   }
 
