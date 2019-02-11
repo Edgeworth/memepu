@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:full_adder-cache
 EELAYER 29 0
 EELAYER END
 $Descr A3 16535 11693
@@ -1341,4 +1342,6 @@ Text Label 14200 5000 0    50   ~ 0
 C6
 Text Label 14200 5650 0    50   ~ 0
 C_OUT
+Text Notes 1700 6650 0    50   ~ 0
+Multiline\ntest\nstring
 $EndSCHEMATC
