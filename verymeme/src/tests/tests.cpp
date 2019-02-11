@@ -118,7 +118,7 @@ TEST_P(Chip74299Test, Exhaustive) {
   ASSERT_EQ(IO & 1, chip.Q0);
   ASSERT_EQ((IO >> 7) & 1, chip.Q7);
 
-// Now apply operation to loaded data.
+  // Now apply operation to loaded data.
   chip.CP = 0;
   chip.eval();
 

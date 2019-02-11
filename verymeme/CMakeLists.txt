@@ -29,12 +29,14 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 # Build the rest.
 include(GoogleTest)
 
-find_package(Boost REQUIRED program_options)
+find_package(Boost REQUIRED program_options stacktrace_backtrace)
 find_package(Verilator REQUIRED)
 add_subdirectory(verilog)
 
 add_library(verymeme_library
-    src/common.cpp include/common.h src/test_printer.cpp include/test_printer.h)
+    src/common.cpp include/common.h
+    src/test_printer.cpp include/test_printer.h
+    src/kicad_parser.cpp include/kicad_parser.h)
 add_executable(tests src/tests/tests.cpp src/programs/test_harness.cpp)
 add_executable(memecad src/programs/memecad.cpp)
 
