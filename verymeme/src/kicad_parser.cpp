@@ -243,6 +243,21 @@ private:
   }
 };
 
+class KicadWriter {
+public:
+  std::string writeSheet(const sheet_t& sheet) {
+    std::string data;
+    data += "EESchema Schematic File Version 4\n";
+    data += "$Descr A3 0 0\nencoding utf-8\nSheet 1 1\nTitle \"";
+    data += sheet.title;
+    data += "\"\nDate \"\"\nRev \"\"\n";
+    data += "Comp \"\"\nComment1 \"\"\nComment2 \"\"\nComment3 \"\"\nComment4 \"\"$EndDescr\n";
+    for (const auto& component : sheet.components) {
+      // TODO
+    }
+  }
+};
+
 }  // namespace
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o) {
@@ -328,6 +343,11 @@ std::istream& operator>>(std::istream& str, UnitSwappable& o) {
 sheet_t parseSheet(const std::string& filename) {
   return KicadParser(::split(readFile(filename, false /* binary */), '\n')).parseSheet();
 }
+
+void writeSheet(const sheet_t& sheet, const std::string& filename) {
+  writeFile(filename, KicadWriter().writeSheet(sheet), false /* binary */);
+}
+
 
 library_t parseLibrary(const std::string& filename) {
   return KicadParser(::split(readFile(filename, false /* binary */), '\n')).parseLibrary();
