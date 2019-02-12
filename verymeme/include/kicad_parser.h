@@ -96,6 +96,7 @@ struct library_t {
 };
 
 sheet_t parseSheet(const std::string& filename);
+void writeSheet(const sheet_t& sheet, const std::string& filename);
 
 library_t parseLibrary(const std::string& filename);
 
