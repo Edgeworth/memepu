@@ -1,10 +1,14 @@
 module chip7486(
-    input  [3:0] A,
-    input  [3:0] B,
-    output [3:0] Y
+    input /*u*/ wire [3:0] A,
+    input /*u*/ wire [3:0] B,
+    output /*u*/ wire [3:0] Y
 );
 
+    assign Y = A ^ B;
+
+    `ifdef FORMAL
     always_comb begin
-        Y = A ^ B;
+        assert (Y == (A ^ B));
     end
+    `endif
 endmodule

@@ -4,3 +4,9 @@
   make each 74 series (etc) chip in verilog. maybe can even generate schematics from it
   also put in timing information
   maybe even voltage information + high impedance information?
+
+
+ Verilog notes:
+ 	wire, variable
+ 	uwire
+ 	tri, wire, tri0, tri1 (pulldown, pullup), net types

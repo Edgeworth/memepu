@@ -1,15 +1,17 @@
 /* verilator lint_off UNOPTFLAT */
 module full_adder(
-    input  [7:0] A,
-    input  [7:0] B,
-    input        C_IN,
-    output [7:0] Y,
-    output       C_OUT
+    input /*u*/ wire [7:0] A,
+    input /*u*/ wire [7:0] B,
+    input /*u*/ wire C_IN,
+    output /*u*/ wire [7:0] Y,
+    output /*u*/ wire C_OUT
 );
     logic [7:0] A_XOR_B;
     logic [7:0] A_AND_B;
     logic [7:0] C_AND_AB;
     logic [7:0] C;
+
+    assign C_OUT = C[7];
 
     chip7486 xor0_low(
         .A(A[3:0]),
@@ -66,7 +68,13 @@ module full_adder(
         .Y(C[7:4])
     );
 
+    `ifdef FORMAL
+    logic [8:0] sum;
+
     always_comb begin
-        C_OUT = C[7];
+        sum = A+B+C_IN;
+        assert (Y == sum[7:0]);
+        assert (C_OUT == sum[8]);
     end
+    `endif
 endmodule

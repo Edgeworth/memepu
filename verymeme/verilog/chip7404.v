@@ -1,10 +1,13 @@
 module chip7404(
-    input  [5:0] A,
-    output [5:0] Y
+    input /*u*/ wire [5:0] A,
+    output /*u*/ wire [5:0] Y
 );
 
-    always_comb begin
-        Y = ~A;
-    end
+    assign Y = ~A;
 
+    `ifdef FORMAL
+    always_comb begin
+        assert (Y == ~A);
+    end
+    `endif
 endmodule

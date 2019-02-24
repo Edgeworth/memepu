@@ -1,7 +1,4 @@
 package common;
-
-    typedef enum logic [1:0]{
-        OFF, ON
-    } testenum /* verilator public */;
-
+    // Define formal for syntax highlighting + formatting to work for formal sections.
+    `define FORMAL
 endpackage
