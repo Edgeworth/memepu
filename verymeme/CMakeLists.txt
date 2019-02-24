@@ -6,6 +6,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -O3")
 
+# Set-up icecc if it exists
+find_program(ICECC icecc)
+if(ICECC)
+  foreach(LANG C CXX)
+    message(STATUS "Using icecc for ${LANG}")
+    set(CMAKE_${LANG}_COMPILER_LAUNCHER ${ICECC})
+  endforeach()
+endif()
+
 #add_definitions(-DVL_DEBUG)
 
 # Download and unpack googletest at configure time

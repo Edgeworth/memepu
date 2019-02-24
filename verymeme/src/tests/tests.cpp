@@ -136,7 +136,6 @@ TEST_P(Chip74299Test, Exhaustive) {
   ASSERT_EQ(N_MR && N_OE == 0b00 ? result : 0, chip.IO);
   ASSERT_EQ(N_MR ? result & 1 : 0, chip.Q0);
   ASSERT_EQ(N_MR ? (result >> 7) & 1 : 0, chip.Q7);
-  ASSERT_EQ(!N_OE && S == 0b11, chip.ERR);  // Err if outputting and trying to read.
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip74299Test, bitRanges(2, 2, 1, 1, 1, 8));

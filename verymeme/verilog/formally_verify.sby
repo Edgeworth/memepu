@@ -1,0 +1,38 @@
+[options]
+mode prove
+depth 10
+
+[engines]
+smtbmc
+
+[tasks]
+full_adder
+chip7400
+chip7404
+chip7408
+chip7432
+chip7486
+chip74299
+chip7416374
+
+[script]
+# Read all in direcetory.
+read -formal *.v
+full_adder: prep -top full_adder
+chip7400: prep -top chip7400
+chip7404: prep -top chip7404
+chip7408: prep -top chip7408
+chip7432: prep -top chip7432
+chip7486: prep -top chip7486
+chip74299: prep -top chip74299
+chip7416374: prep -top chip7416374
+
+[files]
+full_adder.v
+chip7400.v
+chip7404.v
+chip7408.v
+chip7432.v
+chip7486.v
+chip74299.v
+chip7416374.v
