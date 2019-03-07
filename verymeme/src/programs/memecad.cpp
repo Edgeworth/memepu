@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
     library_filename = vm["chip-library"].as<std::string>();
   } catch (const po::error& ex) {
     std::cerr << ex.what() << '\n';
+    return 1;
   }
 
 //  pt::ptree ptree;
