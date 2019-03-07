@@ -5,8 +5,12 @@
   also put in timing information
   maybe even voltage information + high impedance information?
 
+- simulate delays and stuff in verilog - ensure timing requirements are held?
+- work out maximum clock rate in verilog - e.g. could bsearch on assertions on frequency (combine with above)
 
  Verilog notes:
  	wire, variable
  	uwire
  	tri, wire, tri0, tri1 (pulldown, pullup), net types
+
+
