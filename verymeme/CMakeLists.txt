@@ -8,12 +8,12 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -O3")
 
 # Set-up icecc if it exists
 find_program(ICECC icecc)
-if(ICECC)
-  foreach(LANG C CXX)
+if (ICECC)
+  foreach (LANG C CXX)
     message(STATUS "Using icecc for ${LANG}")
     set(CMAKE_${LANG}_COMPILER_LAUNCHER ${ICECC})
-  endforeach()
-endif()
+  endforeach ()
+endif ()
 
 #add_definitions(-DVL_DEBUG)
 
@@ -48,6 +48,7 @@ add_library(verymeme_library
     src/kicad_parser.cpp include/kicad_parser.h)
 add_executable(tests src/tests/tests.cpp src/programs/test_harness.cpp)
 add_executable(memecad src/programs/memecad.cpp)
+add_executable(generate_firmware src/programs/generate_firmware.cpp)
 
 target_include_directories(verymeme_library PUBLIC
     ${VERILATOR_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} include)
@@ -56,5 +57,6 @@ target_link_directories(verymeme_library PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(verymeme_library PUBLIC ${Boost_LIBRARIES} gtest verymeme_verilated)
 target_link_libraries(tests PRIVATE verymeme_library)
 target_link_libraries(memecad PRIVATE verymeme_library)
+target_link_libraries(generate_firmware PRIVATE verymeme_library)
 
 # gtest_discover_tests is slow for a large number of tests, so it's not used here.

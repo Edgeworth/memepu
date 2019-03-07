@@ -1,12 +1,16 @@
 [options]
 mode prove
-depth 10
+depth 3
+multiclock on
 
 [engines]
-smtbmc
+smtbmc --progress
+#aiger suprove # suprove supports multithreaded
+#abc pdr
 
 [tasks]
-full_adder
+alu
+alu_slice
 chip7400
 chip7404
 chip7408
@@ -14,11 +18,16 @@ chip7432
 chip7486
 chip74299
 chip7416374
+full_adder
+sram
 
 [script]
-# Read all in direcetory.
-read -formal *.v
-full_adder: prep -top full_adder
+alu: read -formal -D CONTRACT=assume alu.v
+alu: read -formal -D CONTRACT=assert alu_slice.v sram.v chip7408.v
+alu: prep -top alu
+alu_slice: read -formal -D CONTRACT=assume alu_slice.v
+alu_slice: read -formal -D CONTRACT=assert sram.v
+alu_slice: prep -top alu_slice
 chip7400: prep -top chip7400
 chip7404: prep -top chip7404
 chip7408: prep -top chip7408
@@ -26,9 +35,13 @@ chip7432: prep -top chip7432
 chip7486: prep -top chip7486
 chip74299: prep -top chip74299
 chip7416374: prep -top chip7416374
+full_adder: prep -top full_adder
+sram: read -formal -D CONTRACT=assume sram.v
+sram: prep -top sram
 
 [files]
-full_adder.v
+alu.v
+alu_slice.v
 chip7400.v
 chip7404.v
 chip7408.v
@@ -36,3 +49,8 @@ chip7432.v
 chip7486.v
 chip74299.v
 chip7416374.v
+common.v
+full_adder.v
+sram.v
+alu_slice.hex
+alu_lookahead.hex
