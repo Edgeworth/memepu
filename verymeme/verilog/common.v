@@ -4,17 +4,7 @@ package common;
   // Must explicitly specify net types:
   `default_nettype none
   // Load hex files into SRAMs using readmemh.
-//  `define HEXFILE
-
-  // Define FORMAL macro for syntax highlighting
-  `ifndef VERILATOR
-  `define FORMAL
-  `endif
-
-  // Normally will be defined for SymbiYosys, but define it here for syntax highlighting purposes.
-  `ifndef CONTRACT
-  `define CONTRACT assume
-  `endif
+  `define HEXFILE
 
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248
   localparam ALU_ADD = 0;
