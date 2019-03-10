@@ -7,6 +7,8 @@ namespace kicad {
 void printPin(pin_t& pin, int i);
 namespace {
 
+// TODO don't use regex + metaprogramming stuff; Read in all fields.
+
 // Sheet regexes
 const std::regex SHEET(R"(^Sheet\s+(\S+))");
 const std::regex TITLE(R"_(^Title\s+"([^"]*)")_");
@@ -158,6 +160,7 @@ private:
   std::vector<std::string> lines_;
   int idx_ = 0;
 
+  // TODO grab electrical type.
   lib_component_t parseLibraryComponent() {
     lib_component_t component = {};
     for (; idx_ < int(lines_.size()) && !peek(DEF_END); ++idx_) {
@@ -171,6 +174,7 @@ private:
             grab<std::string, std::string, int, UnitSwappable>(DEF, "invalid library component");
       } else if (peek(LIB_IGNORE)) continue;
       else if (peek(LIB_FPLIST)) {
+        // Skip footprint list.
         while (idx_ < int(lines_.size()) && !peek(LIB_ENDFPLIST)) idx_++;
       } else {
         verify_expr(false, "unrecognised line in library component: %s", lines_[idx_].c_str());
@@ -345,10 +349,9 @@ sheet_t parseSheet(const std::string& filename) {
   return KicadParser(::split(readFile(filename, false /* binary */), '\n')).parseSheet();
 }
 
-void writeSheet(const sheet_t& sheet, const std::string& filename) {
-  writeFile(filename, KicadWriter().writeSheet(sheet), false /* binary */);
+std::string writeSheet(const sheet_t& sheet) {
+  return KicadWriter().writeSheet(sheet);
 }
-
 
 library_t parseLibrary(const std::string& filename) {
   return KicadParser(::split(readFile(filename, false /* binary */), '\n')).parseLibrary();
