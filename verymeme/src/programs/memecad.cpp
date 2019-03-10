@@ -3,7 +3,7 @@
 #include <boost/property_tree/xml_parser.hpp>
 #include <iostream>
 
-#include "kicad_parser.h"
+#include "memecad/parser.h"
 
 namespace po = boost::program_options;
 namespace pt = boost::property_tree;
@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
 //  pt::ptree ptree;
 //  pt::read_xml(filename, ptree);
 //  std::cout << ptree.get<std::string>("verilator_xml.files.file.<xmlattr>.filename") << "\n";
-//  kicad::sheet_t sheet = kicad::parseSheet(filename);
-  kicad::library_t lib = kicad::parseLibrary(library_filename);
+  memecad::sheet_t sheet = memecad::parseSheet(readFile(filename, false /* binary */));
+  printf("%s", memecad::writeSheet(sheet).c_str());
+//  memecad::library_t lib = memecad::parseLibrary(library_filename);
 }

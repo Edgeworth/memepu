@@ -48,7 +48,8 @@ void TestPrinter::OnTestEnd(const TestInfo& test_info) {
           now - start_time_).count();
       const double remaining_time =
           total_test_count_ * elapsed_time / cur_test_count_ - elapsed_time;
-      printf("\r  %s [run %d/%d tests, %.2fs elapsed, ~%.2fs remaining]", test_info.test_case_name(),
+      printf("\r  %s [run %d/%d tests, %.2fs elapsed, ~%.2fs remaining]",
+          test_info.test_case_name(),
           cur_test_count_, total_test_count_, elapsed_time, remaining_time);
       needs_newline_ = true;
     }
