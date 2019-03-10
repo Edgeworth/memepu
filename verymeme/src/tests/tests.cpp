@@ -8,6 +8,8 @@
 #include "Vchip7486.h"
 #include "Vchip74299.h"
 #include "Vfull_adder.h"
+#include "Valu.h"
+#include "firmware_constants.h"
 
 namespace {
 
@@ -29,7 +31,7 @@ TEST_P(Chip7400Test, Exhaustive) {
   chip.A = uint8_t(A);
   chip.B = uint8_t(B);
   chip.eval();
-  ASSERT_EQ(~(A & B) & 0x0F, chip.Y);
+  EXPECT_EQ(~(A & B) & 0x0F, chip.Y);
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7400Test, bitRanges(4, 4));
@@ -43,7 +45,7 @@ TEST_P(Chip7404Test, Exhaustive) {
   const auto[A] = GetParam();
   chip.A = uint8_t(A);
   chip.eval();
-  ASSERT_EQ(~A & 0x3F, chip.Y);
+  EXPECT_EQ(~A & 0x3F, chip.Y);
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7404Test, bitRanges(6));
@@ -58,7 +60,7 @@ TEST_P(Chip7408Test, Exhaustive) {
   chip.A = uint8_t(A);
   chip.B = uint8_t(B);
   chip.eval();
-  ASSERT_EQ(A & B, chip.Y);
+  EXPECT_EQ(A & B, chip.Y);
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7408Test, bitRanges(4, 4));
@@ -73,7 +75,7 @@ TEST_P(Chip7432Test, Exhaustive) {
   chip.A = uint8_t(A);
   chip.B = uint8_t(B);
   chip.eval();
-  ASSERT_EQ(A | B, chip.Y);
+  EXPECT_EQ(A | B, chip.Y);
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7432Test, bitRanges(4, 4));
@@ -88,7 +90,7 @@ TEST_P(Chip7486Test, Exhaustive) {
   chip.A = uint8_t(A);
   chip.B = uint8_t(B);
   chip.eval();
-  ASSERT_EQ(A ^ B, chip.Y);
+  EXPECT_EQ(A ^ B, chip.Y);
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7486Test, bitRanges(4, 4));
@@ -114,9 +116,9 @@ TEST_P(Chip74299Test, Exhaustive) {
 
   chip.N_OE = 0b00;  // Output and check.
   chip.eval();
-  ASSERT_EQ(IO, chip.IO);
-  ASSERT_EQ(IO & 1, chip.Q0);
-  ASSERT_EQ((IO >> 7) & 1, chip.Q7);
+  EXPECT_EQ(IO, chip.IO);
+  EXPECT_EQ(IO & 1, chip.Q0);
+  EXPECT_EQ((IO >> 7) & 1, chip.Q7);
 
   // Now apply operation to loaded data.
   chip.CP = 0;
@@ -133,9 +135,9 @@ TEST_P(Chip74299Test, Exhaustive) {
   uint32_t result = IO;
   if (S == 0b01) result = uint8_t((result << 1) | DSL);
   else if (S == 0b10) result = uint8_t((result >> 1) | (DSR << 7));
-  ASSERT_EQ(N_MR && N_OE == 0b00 ? result : 0, chip.IO);
-  ASSERT_EQ(N_MR ? result & 1 : 0, chip.Q0);
-  ASSERT_EQ(N_MR ? (result >> 7) & 1 : 0, chip.Q7);
+  EXPECT_EQ(N_MR && N_OE == 0b00 ? result : 0, chip.IO);
+  EXPECT_EQ(N_MR ? result & 1 : 0, chip.Q0);
+  EXPECT_EQ(N_MR ? (result >> 7) & 1 : 0, chip.Q7);
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip74299Test, bitRanges(2, 2, 1, 1, 1, 8));
@@ -152,10 +154,68 @@ TEST_P(FullAdderTest, Exhaustive) {
   chip.C_IN = uint8_t(C_IN);
   chip.eval();
   const uint32_t result = A + B + C_IN;
-  ASSERT_EQ(uint8_t(result), chip.Y);
-  ASSERT_EQ((result & 0x100) >> 8, chip.C_OUT);
+  EXPECT_EQ(uint8_t(result), chip.Y);
+  EXPECT_EQ((result & 0x100) >> 8, chip.C_OUT);
 }
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, FullAdderTest, bitRanges(8, 8, 1));
+
+#define TEST_ALU_OP(result) \
+  EXPECT_EQ(uint32_t(result), alu.OUT); \
+  EXPECT_EQ(((result) & 0x100000000LL) >> 32, alu.C); \
+  EXPECT_EQ(uint32_t(result) ? 0 : 1, alu.Z); \
+  EXPECT_EQ((result) & 0x80000000 ? 1 : 0, alu.N); \
+
+void testAluOps(uint64_t a, uint64_t b, uint64_t c_in) {
+  Valu alu;
+  alu.A = uint32_t(a);
+  alu.B = uint32_t(b);
+  alu.C_IN = uint8_t(c_in);
+
+  alu.OP = Alu::ADD;
+  alu.eval();
+  TEST_ALU_OP(a + b + c_in);
+
+  alu.OP = Alu::AND;
+  alu.eval();
+  TEST_ALU_OP(a & b);
+
+  alu.OP = Alu::OR;
+  alu.eval();
+  TEST_ALU_OP(a | b);
+
+  alu.OP = Alu::XOR;
+  alu.eval();
+  TEST_ALU_OP(a ^ b);
+
+  alu.OP = Alu::NOT;
+  alu.eval();
+  TEST_ALU_OP((~a) & 0xFFFFFFFF);
+
+  alu.C_IN = 1;  // SUB only valid for C_IN == 1.
+  alu.OP = Alu::SUB;
+  alu.eval();
+  TEST_ALU_OP(a + ((~b) & 0xFFFFFFFF) + 1);
+}
+
+class SemiExhaustiveAluTest : public ::testing::TestWithParam<std::array<uint32_t, 3>> {};
+
+TEST_P(SemiExhaustiveAluTest, Basic) {
+  const auto[A, B, C_IN] = GetParam();
+  testAluOps(A, B, C_IN);
+}
+
+INSTANTIATE_TEST_SUITE_P(Exhaustive, SemiExhaustiveAluTest, bitRanges(8, 8, 1));
+
+class AluTest : public ::testing::TestWithParam<std::tuple<uint32_t, uint32_t, uint32_t>> {};
+
+TEST_P(AluTest, Exhaustive) {
+  const auto[A, B, C_IN] = GetParam();
+  testAluOps(A, B, C_IN);
+}
+
+INSTANTIATE_TEST_SUITE_P(Basic, AluTest,
+    testing::Values(std::make_tuple(1, 2, 0), std::make_tuple(1, 1, 1),
+        std::make_tuple(3364619464, 3637411669, 0)));
 
 }  // anonymous

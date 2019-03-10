@@ -1,8 +1,9 @@
 #ifndef VERYMEME_TEST_PRINTER_H
 #define VERYMEME_TEST_PRINTER_H
 
-#include "common.h"
+#include <chrono>
 
+#include "common.h"
 #include "gtest/gtest.h"
 
 class TestPrinter : public ::testing::EmptyTestEventListener {
@@ -22,6 +23,11 @@ public:
 
 private:
   bool print_individual_tests_ = false;
+  std::chrono::steady_clock::time_point last_time_;
+  std::chrono::steady_clock::time_point start_time_;
+  int total_test_count_;
+  int cur_test_count_;
+  bool needs_newline_ = false;
 };
 
 #endif  // VERYMEME_TEST_PRINTER_H

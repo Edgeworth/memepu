@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "common.h"
+#include "firmware_constants.h"
 
 namespace po = boost::program_options;
 
@@ -19,23 +20,19 @@ uint8_t generateGeneralOutput(uint32_t result) {
 }
 
 std::vector<uint8_t> generateAluSliceFirmware() {
-  enum {
-    ADD, SUB, AND, OR, XOR, NOT, NOP0, NOP1
-  };
-
   std::vector<uint8_t> data(1 << 12);
   for (uint32_t a = 0; a < (1 << 4); ++a) {
     for (uint32_t b = 0; b < (1 << 4); ++b) {
       for (uint32_t c_in = 0; c_in < 2; ++c_in) {
         uint32_t addr = a | (b << 4) | (c_in << 8);
-        data[(ADD << 9) | addr] = generateSumOutput(a + b, c_in);
-        data[(SUB << 9) | addr] = generateSumOutput(a + ((~b) & 0x0F), 1);
-        data[(AND << 9) | addr] = generateGeneralOutput(a & b);
-        data[(OR << 9) | addr] = generateGeneralOutput(a | b);
-        data[(XOR << 9) | addr] = generateGeneralOutput(a ^ b);
-        data[(NOT << 9) | addr] = generateGeneralOutput(~a);
-        data[(NOP0 << 9) | addr] = generateGeneralOutput(0);
-        data[(NOP1 << 9) | addr] = generateGeneralOutput(0);
+        data[(Alu::ADD << 9) | addr] = generateSumOutput(a + b, c_in);
+        data[(Alu::SUB << 9) | addr] = generateSumOutput(a + ((~b) & 0x0F), c_in);
+        data[(Alu::AND << 9) | addr] = generateGeneralOutput(a & b);
+        data[(Alu::OR << 9) | addr] = generateGeneralOutput(a | b);
+        data[(Alu::XOR << 9) | addr] = generateGeneralOutput(a ^ b);
+        data[(Alu::NOT << 9) | addr] = generateGeneralOutput(~a);
+        data[(Alu::NOP0 << 9) | addr] = generateGeneralOutput(0);
+        data[(Alu::NOP1 << 9) | addr] = generateGeneralOutput(0);
       }
     }
   }
@@ -53,8 +50,7 @@ std::vector<uint8_t> generateAluLookaheadFirmware() {
         int prev_carry = c_in;
         for (int i = 0; i < 8; ++i) {
           const int carry = (prev_carry && (p & (1 << i))) || (g & (1 << i)) ? 1 : 0;
-          carrys <<= 1;
-          carrys |= carry;
+          carrys |= (carry << i);
           prev_carry = carry;
         }
         data[addr] = carrys;
@@ -69,7 +65,7 @@ std::string convertToHex(const std::vector<uint8_t>& input) {
   int count = 0;
   for (auto c : input) {
     stream << std::hex << std::setw(2) << std::setfill('0') << int(c);
-    if (count++ == 40) {
+    if (++count == 40) {
       stream << "\n";
       count = 0;
     } else {
