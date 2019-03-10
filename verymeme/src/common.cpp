@@ -10,6 +10,7 @@ char READ_BUF[1 << 16];
 std::string readFile(const std::string& filename, bool binary) {
   std::string data;
   FILE* f = fopen(filename.c_str(), binary ? "rb" : "r");
+  verify_expr(f != nullptr, "can't open file '%s'", filename.c_str());
   size_t ret = 0;
   do {
     ret = fread(READ_BUF, 1, sizeof(READ_BUF), f);
@@ -22,19 +23,8 @@ std::string readFile(const std::string& filename, bool binary) {
 
 void writeFile(const std::string& filename, const std::string& data, bool binary) {
   FILE* f = fopen(filename.c_str(), binary ? "wb" : "w");
+  verify_expr(f != nullptr, "can't open file '%s'", filename.c_str());
   size_t ret = fwrite(data.c_str(), data.size(), 1, f);
   verify_expr(ret == 1, "failed to write data - ferror=%d", ferror(f));
   fclose(f);
-}
-std::vector<std::string> split(const std::string& data, char delim) {
-  std::vector<std::string> splits;
-  std::string tmp;
-  for (char c : data) {
-    if (c == delim && !tmp.empty()) {
-      splits.emplace_back(std::move(tmp));
-      tmp.clear();
-    }
-    if (c != delim) tmp += c;
-  }
-  return splits;
 }

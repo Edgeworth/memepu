@@ -1,40 +1,28 @@
-#ifndef VERYMEME_KICAD_PARSER_H
-#define VERYMEME_KICAD_PARSER_H
+#ifndef VERYMEME_MEMECAD_TYPES_H
+#define VERYMEME_MEMECAD_TYPES_H
 
+#include <vector>
 #include <string>
 
 #include "common.h"
 
-namespace kicad {
+namespace memecad {
 
 enum class Orientation {
   HORIZONTAL, VERTICAL
 };
 
-std::ostream& operator<<(std::ostream& str, const Orientation& o);
-std::istream& operator>>(std::istream& str, Orientation& o);
-
 enum class Label {
   GLOBAL, HIERARCHICAL, LOCAL, NOTES
 };
-
-std::ostream& operator<<(std::ostream& str, const Label& o);
-std::istream& operator>>(std::istream& str, Label& o);
 
 enum class Direction {
   LEFT, RIGHT, UP, DOWN
 };
 
-std::ostream& operator<<(std::ostream& str, const Direction& o);
-std::istream& operator>>(std::istream& str, Direction& o);
-
 enum class UnitSwappable {
   SWAPPABLE, UNSWAPPABLE
 };
-
-std::ostream& operator<<(std::ostream& str, const UnitSwappable& o);
-std::istream& operator>>(std::istream& str, UnitSwappable& o);
-
 
 struct label_t {
   Label type;
@@ -44,6 +32,8 @@ struct label_t {
   int dimension;
   std::string shape;
   std::string text;
+
+  std::string toString(int indent = 0);
 };
 
 struct field_t {
@@ -53,9 +43,11 @@ struct field_t {
   int x;
   int y;
   int size;
-  int flags;
+  std::string flags;
   std::string justification;
   std::string style;
+
+  std::string toString(int indent = 0);
 };
 
 struct component_t {
@@ -66,13 +58,20 @@ struct component_t {
   int x;
   int y;
   std::vector<field_t> fields;
+  std::string footer;
+
+  std::string toString(int indent = 0);
 };
 
 struct sheet_t {
+  std::string header1;
   int id;
   std::string title;
+  std::string header2;
   std::vector<component_t> components;
   std::vector<label_t> labels;
+
+  std::string toString(int indent = 0);
 };
 
 struct pin_t {
@@ -81,6 +80,8 @@ struct pin_t {
   int y;
   Direction direction;
   int unit_number;
+
+  std::string toString(int indent = 0);
 };
 
 struct lib_component_t {
@@ -89,17 +90,28 @@ struct lib_component_t {
   int unit_count;
   UnitSwappable unit_swappable;
   std::vector<pin_t> pins;
+
+  std::string toString(int indent = 0);
 };
 
 struct library_t {
   std::vector<lib_component_t> components;
+
+  std::string toString(int indent = 0);
 };
 
-sheet_t parseSheet(const std::string& filename);
-std::string writeSheet(const sheet_t& sheet);
+std::ostream& operator<<(std::ostream& str, const Orientation& o);
+std::istream& operator>>(std::istream& str, Orientation& o);
 
-library_t parseLibrary(const std::string& filename);
+std::ostream& operator<<(std::ostream& str, const Label& o);
+std::istream& operator>>(std::istream& str, Label& o);
 
-}  // kicad
+std::ostream& operator<<(std::ostream& str, const Direction& o);
+std::istream& operator>>(std::istream& str, Direction& o);
 
-#endif  // VERYMEME_KICAD_PARSER_H
+std::ostream& operator<<(std::ostream& str, const UnitSwappable& o);
+std::istream& operator>>(std::istream& str, UnitSwappable& o);
+
+}  // memecad
+
+#endif  // VERYMEME_MEMECAD_TYPES_H
