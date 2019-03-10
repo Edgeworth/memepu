@@ -5,7 +5,7 @@ EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
-Title ""
+Title "My title with spaces in it"
 Date ""
 Rev ""
 Comp ""
