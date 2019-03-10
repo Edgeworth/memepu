@@ -9,6 +9,7 @@
 #include <boost/any.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/stacktrace/stacktrace.hpp>
+#include <bitset>
 
 #include "gtest/gtest.h"
 
@@ -30,6 +31,14 @@ std::string readFile(const std::string& filename, bool binary);
 void writeFile(const std::string& filename, const std::string& data, bool binary);
 
 std::vector<std::string> split(const std::string& data, char delim);
+
+template<typename T>
+std::string toBinary(T value) {
+  std::stringstream s;
+  std::bitset<sizeof(value) * 8> bset(value);
+  s << bset;
+  return s.str();
+}
 
 template<template<typename...> typename C, int N, typename T, typename... Ts>
 struct sized_pack_t {

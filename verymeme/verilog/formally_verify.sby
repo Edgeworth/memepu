@@ -35,6 +35,8 @@ chip7432: prep -top chip7432
 chip7486: prep -top chip7486
 chip74299: prep -top chip74299
 chip7416374: prep -top chip7416374
+full_adder: read -formal -D CONTRACT=assume full_adder.v
+full_adder: read -formal -D CONTRACT=assert chip7486.v chip7408.v chip7432.v
 full_adder: prep -top full_adder
 sram: read -formal -D CONTRACT=assume sram.v
 sram: prep -top sram

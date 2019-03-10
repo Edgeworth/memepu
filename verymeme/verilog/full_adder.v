@@ -74,7 +74,7 @@ module full_adder(
   logic [8:0] sum;
 
   always_comb begin
-    sum = A+B+{7'b0, C_IN};
+    sum = A+B+{8'b0, C_IN};
     assert (Y == sum[7:0]);
     assert (C_OUT == sum[8]);
   end
