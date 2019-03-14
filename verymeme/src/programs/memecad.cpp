@@ -1,21 +1,20 @@
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-#include <iostream>
 
+#include "memecad/mapper.h"
 #include "memecad/parser.h"
 
 namespace po = boost::program_options;
-namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[]) {
   std::string filename;
   std::string library_filename;
+  std::string memecad_map_filename;
   try {
     po::options_description desc{"Options"};
     desc.add_options()
         ("help,h", "Help screen")
         ("file,f", po::value<std::string>()->required())
+        ("memecad-map,k", po::value<std::string>()->required())
         ("chip-library,c", po::value<std::string>()->required());
 
     po::variables_map vm;
@@ -29,15 +28,17 @@ int main(int argc, char* argv[]) {
 
     filename = vm["file"].as<std::string>();
     library_filename = vm["chip-library"].as<std::string>();
+    memecad_map_filename = vm["memecad-map"].as<std::string>();
   } catch (const po::error& ex) {
     std::cerr << ex.what() << '\n';
     return 1;
   }
 
-//  pt::ptree ptree;
-//  pt::read_xml(filename, ptree);
-//  std::cout << ptree.get<std::string>("verilator_xml.files.file.<xmlattr>.filename") << "\n";
-  memecad::sheet_t sheet = memecad::parseSheet(readFile(filename, false /* binary */));
-  printf("%s", memecad::writeSheet(sheet).c_str());
-//  memecad::library_t lib = memecad::parseLibrary(library_filename);
+
+//  memecad::sheet_t sheet = memecad::parseSheet(readFile(filename, false /* binary */));
+//  printf("%s", memecad::writeSheet(sheet).c_str());
+  memecad::lib_t lib = memecad::parseLibrary(library_filename);
+//  printf("Component: %s\n", lib.findComponent("628128_TSOP32").toString().c_str());
+  memecad::Mapper mapper(readFile(memecad_map_filename, false /* binary */), lib);
+  printf("%s\n", mapper.mapComponents().c_str());
 }

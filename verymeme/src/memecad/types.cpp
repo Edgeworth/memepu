@@ -2,6 +2,7 @@
 
 #include <boost/lexical_cast.hpp>
 
+
 namespace memecad {
 
 #define PRINT_FIELD(f) \
@@ -33,7 +34,7 @@ std::string field_t::toString(int indent) {
   return s.str();
 }
 
-std::string component_t::toString(int indent) {
+std::string sheet_component_t::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(name);
   PRINT_FIELD(ref);
@@ -63,19 +64,18 @@ std::string sheet_t::toString(int indent) {
   return s.str();
 }
 
-std::string pin_t::toString(int indent) {
+std::string lib_pin_t::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(name);
   PRINT_FIELD(x);
   PRINT_FIELD(y);
   PRINT_FIELD(direction);
-  PRINT_FIELD(unit_number);
   return s.str();
 }
 
 std::string lib_component_t::toString(int indent) {
   std::stringstream s;
-  PRINT_FIELD(name);
+  PRINT_FIELD(names[0]);
   PRINT_FIELD(ref);
   PRINT_FIELD(unit_count);
   PRINT_FIELD(unit_swappable);
@@ -86,7 +86,7 @@ std::string lib_component_t::toString(int indent) {
   return s.str();
 }
 
-std::string library_t::toString(int indent) {
+std::string lib_t::toString(int indent) {
   std::stringstream s;
   for (int i = 0; i < int(components.size()); ++i) {
     s << std::string(indent, ' ') << "Library component #" << (i + 1) << "\n";
@@ -96,6 +96,18 @@ std::string library_t::toString(int indent) {
 }
 
 #undef PRINT_FIELD
+
+lib_component_t& lib_t::findComponent(const std::string& name) {
+  for (auto& comp : components) {
+    for (const auto& comp_name : comp.names) {
+      if (comp_name == name)
+        return comp;
+    }
+  }
+  verify_expr(false, "can't find component '%s'", name.c_str());
+}
+
+// TODO: Replace with general enum mapping stuff.
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o) {
   return str << (o == Orientation::HORIZONTAL ? "H" : "V");
@@ -176,5 +188,65 @@ std::istream& operator>>(std::istream& str, UnitSwappable& o) {
     verify_expr(false, "invalid orientation %s", v.c_str());
   return str;
 }
+
+std::ostream& operator<<(std::ostream& str, const ElectricalType& o) {
+  switch (o) {
+    case ElectricalType::INPUT:
+      return str << "I";
+    case ElectricalType::OUTPUT:
+      return str << "O";
+    case ElectricalType::BIDIRECTIONAL:
+      return str << "B";
+    case ElectricalType::TRISTATE:
+      return str << "T";
+    case ElectricalType::PASSIVE:
+      return str << "P";
+    case ElectricalType::UNSPECIFIED:
+      return str << "U";
+    case ElectricalType::POWER_IN:
+      return str << "W";
+    case ElectricalType::POWER_OUT:
+      return str << "w";
+    case ElectricalType::OPEN_COLLECTOR:
+      return str << "C";
+    case ElectricalType::OPEN_EMITTER:
+      return str << "E";
+    case ElectricalType::NOT_CONNECTED:
+      return str << "N";
+  }
+  verify_expr(false, "unknown electrical type");
+}
+
+std::istream& operator>>(std::istream& str, ElectricalType& o) {
+  std::string v;
+  str >> v;
+
+  if (v == "I")
+    o = ElectricalType::INPUT;
+  else if (v == "O")
+    o = ElectricalType::OUTPUT;
+  else if (v == "B")
+    o = ElectricalType::BIDIRECTIONAL;
+  else if (v == "T")
+    o = ElectricalType::TRISTATE;
+  else if (v == "P")
+    o = ElectricalType::PASSIVE;
+  else if (v == "U")
+    o = ElectricalType::UNSPECIFIED;
+  else if (v == "W")
+    o = ElectricalType::POWER_IN;
+  else if (v == "w")
+    o = ElectricalType::POWER_OUT;
+  else if (v == "C")
+    o = ElectricalType::OPEN_COLLECTOR;
+  else if (v == "E")
+    o = ElectricalType::OPEN_EMITTER;
+  else if (v == "N")
+    o = ElectricalType::NOT_CONNECTED;
+  else
+    verify_expr(false, "invalid direction type %s", v.c_str());
+  return str;
+}
+
 
 }  // memecad

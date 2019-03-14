@@ -31,7 +31,7 @@ public:
 
   sheet_t parseSheet() {
     sheet_t sheet = {};
-    sheet.header1 += getLines(6);
+    sheet.header1 = getLines(6);
     expect({"Sheet", "1"});
     sheet.id = next<int>();
     expect({"\n", "Title"});
@@ -59,9 +59,17 @@ public:
     return sheet;
   }
 
-  library_t parseLibrary() {
-    library_t lib = {};
-    printf("%s\n", lib.toString().c_str());
+  lib_t parseLibrary(const std::string& name) {
+    lib_t lib = {};
+    lib.name = name;
+    while (idx_ < int(toks_.size())) {
+      std::string tok = peek();
+      if (tok == "DEF") {
+        lib.components.push_back(parseLibraryComponent());
+      } else {
+        getLines(1);  // Skip
+      }
+    }
     return lib;
   }
 
@@ -69,8 +77,8 @@ private:
   std::vector<std::string> toks_;
   int idx_ = 0;
 
-  component_t parseComponent() {
-    component_t comp;
+  sheet_component_t parseComponent() {
+    sheet_component_t comp;
     expect({"\n", "L"});
     comp.name = next();
     comp.ref = next();
@@ -88,7 +96,7 @@ private:
         field_t& field = comp.fields.emplace_back();
         expect({"F"});
         field.num = next<int>();
-        field.text = next();
+        field.text = trim(next(), "\"");
         field.orientation = next<Orientation>();
         field.x = next<int>();
         field.y = next<int>();
@@ -129,20 +137,57 @@ private:
     }
   }
 
-  std::string getLines(int num_lines = 1) {
-    std::string lines;
-    while (num_lines > 0) {
-      const std::string tok = next();
-      if (!lines.empty() && lines.back() != '\n' && tok != "\n") lines += ' ';
-      lines += tok;
-      if (tok == "\n") num_lines--;
+  std::string getSubstr(int st, int en) {
+    std::string substr;
+    for (int i = st; i < en; ++i) {
+      if (!substr.empty() && substr.back() != '\n' && toks_[i] != "\n") substr += ' ';
+      substr += toks_[i];
     }
-    return lines;
+    return substr;
   }
 
-  // TODO grab electrical type.
+  std::string getLines(int num_lines = 1) {
+    const int start_idx = idx_;
+    while (num_lines > 0)
+      if (next() == "\n") num_lines--;
+    return getSubstr(start_idx, idx_);
+  }
+
   lib_component_t parseLibraryComponent() {
     lib_component_t component = {};
+    expect({"DEF"});
+    component.names.push_back(next());
+    component.ref = next();
+    expect({"0"});  // Unused.
+    next();
+    next();
+    next();  // Text offset, draw pin number, draw pin name.
+    component.unit_count = next<int>();
+    component.unit_swappable = next<UnitSwappable>();
+    getLines(1);  // Ignore rest.
+    while (true) {
+      std::string tok = next();
+      if (tok == "ENDDEF") break;
+      else if (tok == "ALIAS") {
+        for (std::string name = next(); name != "\n"; name = next())
+          component.names.push_back(name);
+      } else if (tok == "X") {
+        lib_pin_t& pin = component.pins.emplace_back();
+        pin.name = next();
+        next(); // Pin number.
+        pin.x = next<int>();
+        pin.y = next<int>();
+        next(); // Length
+        pin.direction = next<Direction>();
+        next();
+        next();  // Name text size, num text size.
+        pin.unit_number = next<int>();
+        next();  // convert
+        pin.type = next<ElectricalType>();
+        getLines(1); // Ignore rest.
+      }
+    }
+    expect({"\n"});
     return component;
   }
 };
@@ -161,9 +206,10 @@ public:
       data += "U " + tos(comp.subcomponent) + " 1 " + comp.timestamp + "\n";
       data += "P " + tos(comp.x) + " " + tos(comp.y) + "\n";
       for (const auto& f : comp.fields) {
-        data += "F " + tos(f.num) + " " + f.text + " " + tos(f.orientation) + " " + tos(f.x) + " " +
-                tos(f.y) + " " + tos(f.size) + " " + f.flags + " " + f.justification + " " +
-                f.style + "\n";
+        data +=
+            "F " + tos(f.num) + " \"" + f.text + "\" " + tos(f.orientation) + " " + tos(f.x) + " " +
+            tos(f.y) + " " + tos(f.size) + " " + f.flags + " " + f.justification + " " +
+            f.style + "\n";
       }
       data += comp.footer;
       data += "$EndComp\n";
@@ -179,6 +225,7 @@ public:
     data += "$EndSCHEMATC\n";
     return data;
   }
+
 private:
   template<typename T>
   std::string tos(const T& val) { return boost::lexical_cast<std::string>(val); }
@@ -194,8 +241,12 @@ std::string writeSheet(const sheet_t& sheet) {
   return KicadWriter().writeSheet(sheet);
 }
 
-library_t parseLibrary(const std::string& data) {
-  return KicadParser(data).parseLibrary();
+lib_t parseLibrary(const std::string& filename) {
+  return parseLibrary(readFile(filename, false /* binary */), stem(filename));
+}
+
+lib_t parseLibrary(const std::string& data, const std::string& name) {
+  return KicadParser(data).parseLibrary(name);
 }
 
 }  // memecad

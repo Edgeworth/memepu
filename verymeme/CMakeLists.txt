@@ -48,9 +48,9 @@ add_library(verymeme_library
     src/test_printer.cpp include/test_printer.h
     src/memecad/parser.cpp include/memecad/parser.h
     src/memecad/types.cpp include/memecad/types.h
-    include/firmware_constants.h)
+    include/firmware_constants.h src/memecad/mapper.cpp include/memecad/mapper.h)
 add_library(yosys_test SHARED src/programs/yosys_test.cpp)
-add_executable(tests src/tests/verilator_tests.cpp src/programs/test_harness.cpp src/tests/kicad_tests.cpp)
+add_executable(tests src/tests/verilator_tests.cpp src/programs/test_harness.cpp src/tests/kicad_tests.cpp src/tests/common_tests.cpp)
 add_executable(memecad src/programs/memecad.cpp)
 add_executable(generate_firmware src/programs/generate_firmware.cpp)
 

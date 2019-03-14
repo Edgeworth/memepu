@@ -29,7 +29,8 @@ module alu_slice(
         assert (gen == ({1'b0, A}+{1'b0, B} > 5'hF));
       end
       common::ALU_SUB: begin
-        assert (out == (A-B));
+        if (C_IN) assert (out == (A-B));
+        else assert (out == A-B-4'b1);
         assert (prop == (A+(~B) == 4'hF));
         assert (gen == ({1'b0, A}+{1'b0, ~B} > 5'hF));
       end
