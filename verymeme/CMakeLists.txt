@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.12)
-project(verymeme)
+
+option(USE_CLANG "build application with clang" OFF)
+if (USE_CLANG)
+  message(STATUS "Using clang...")
+  set(CMAKE_C_COMPILER clang)
+  set(CMAKE_CXX_COMPILER clang++)
+endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
@@ -10,11 +16,12 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -O3")
 find_program(ICECC icecc)
 if (ICECC)
   foreach (LANG C CXX)
-    message(STATUS "Using icecc for ${LANG}")
+    message(STATUS "Using icecc for ${LANG} launcher")
     set(CMAKE_${LANG}_COMPILER_LAUNCHER ${ICECC})
   endforeach ()
 endif ()
 
+project(verymeme)
 # Download and unpack googletest at configure time
 configure_file(cmake/DownloadGTest.cmake googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
