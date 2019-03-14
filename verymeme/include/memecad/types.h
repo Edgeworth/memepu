@@ -24,12 +24,17 @@ enum class UnitSwappable {
   SWAPPABLE, UNSWAPPABLE
 };
 
+enum class ElectricalType {
+  INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, UNSPECIFIED, POWER_IN, POWER_OUT, OPEN_COLLECTOR,
+  OPEN_EMITTER, NOT_CONNECTED
+};
+
 struct label_t {
   Label type;
-  int x;
-  int y;
-  int orientation;
-  int dimension;
+  int x = -1;
+  int y = -1;
+  int orientation = -1;
+  int dimension = -1;
   std::string shape;
   std::string text;
 
@@ -37,66 +42,83 @@ struct label_t {
 };
 
 struct field_t {
-  int num;
+  int num = -1;
   std::string text;
-  Orientation orientation;
-  int x;
-  int y;
-  int size;
-  std::string flags;
-  std::string justification;
-  std::string style;
+  Orientation orientation = Orientation::HORIZONTAL;
+  int x = -1;
+  int y = -1;
+  int size = 50;
+  std::string flags = "0000";
+  std::string justification = "C";
+  std::string style = "CNN";
 
   std::string toString(int indent = 0);
 };
 
-struct component_t {
+constexpr const char* DEFAULT_FOOTER = "\t1    2600 1750\n\t1    0    0    -1\n";
+
+struct sheet_component_t {
   std::string name;
   std::string ref;
-  int subcomponent;
+  int subcomponent = -1;
   std::string timestamp;
-  int x;
-  int y;
+  int x = -1;
+  int y = -1;
   std::vector<field_t> fields;
-  std::string footer;
+  std::string footer = DEFAULT_FOOTER;
 
   std::string toString(int indent = 0);
 };
 
+constexpr const char* DEFAULT_HEADER1 =
+    "EESchema Schematic File Version 4\nLIBS:full_adder-cache\n"
+    "EELAYER 29 0\nEELAYER END\n$Descr A3 16535 11693\nencoding utf-8\n";
+
+constexpr const char* DEFAULT_HEADER2 =
+    "Date \"\"\nRev \"\"\nComp \"\"\nComment1 \"\"\nComment2 \"\"\n"
+    "Comment3 \"\"\nComment4 \"\"\n$EndDescr\n";
+
 struct sheet_t {
-  std::string header1;
+  std::string header1 = DEFAULT_HEADER1;
   int id;
   std::string title;
-  std::string header2;
-  std::vector<component_t> components;
+  std::string header2 = DEFAULT_HEADER2;
+  std::vector<sheet_component_t> components;
   std::vector<label_t> labels;
 
   std::string toString(int indent = 0);
 };
 
-struct pin_t {
+struct lib_field_t {
+
+};
+
+struct lib_pin_t {
   std::string name;
-  int x;
-  int y;
+  int x = -1;
+  int y = -1;
   Direction direction;
-  int unit_number;
+  int unit_number = -1;
+  ElectricalType type;
 
   std::string toString(int indent = 0);
 };
 
 struct lib_component_t {
-  std::string name;
+  std::vector<std::string> names;
   std::string ref;
-  int unit_count;
+  int unit_count = -1;
   UnitSwappable unit_swappable;
-  std::vector<pin_t> pins;
+  std::vector<lib_pin_t> pins;
 
   std::string toString(int indent = 0);
 };
 
-struct library_t {
+struct lib_t {
+  std::string name;
   std::vector<lib_component_t> components;
 
+  lib_component_t& findComponent(const std::string& name);
   std::string toString(int indent = 0);
 };
 
@@ -111,6 +133,9 @@ std::istream& operator>>(std::istream& str, Direction& o);
 
 std::ostream& operator<<(std::ostream& str, const UnitSwappable& o);
 std::istream& operator>>(std::istream& str, UnitSwappable& o);
+
+std::ostream& operator<<(std::ostream& str, const ElectricalType& o);
+std::istream& operator>>(std::istream& str, ElectricalType& o);
 
 }  // memecad
 

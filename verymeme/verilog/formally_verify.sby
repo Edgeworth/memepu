@@ -1,6 +1,6 @@
 [options]
 mode prove
-depth 3
+depth 1
 multiclock on
 
 [engines]
