@@ -107,145 +107,71 @@ lib_component_t& lib_t::findComponent(const std::string& name) {
   verify_expr(false, "can't find component '%s'", name.c_str());
 }
 
-// TODO: Replace with general enum mapping stuff.
+template<typename T>
+std::ostream&
+outputEnum(std::ostream& str, const T& enumeration, const std::string (& mapping)[int(T::COUNT)]) {
+  return str << mapping[int(enumeration)];
+}
+
+template<typename T>
+std::istream&
+inputEnum(std::istream& str, T& enumeration, const std::string (& mapping)[int(T::COUNT)]) {
+  std::string v;
+  str >> v;
+  for (int i = 0; i < int(T::COUNT); ++i) {
+    if (mapping[i] == v) {
+      enumeration = T(i);
+      return str;
+    }
+  }
+  verify_expr(false, "unknown enum with string value '%s'", v.c_str());
+}
+
+const std::string ORIENTATION_MAPPING[] = {"H", "V"};
+const std::string LABEL_MAPPING[] = {"GLabel", "HLabel", "Label", "Notes"};
+const std::string DIRECTION_MAPPING[] = {"L", "R", "U", "D"};
+const std::string UNIT_SWAPPABLE_MAPPING[] = {"F", "L"};
+const std::string ELECTRICAL_TYPE_MAPPING[] = {"I", "O", "B", "T", "P", "U", "W", "w", "C", "E",
+                                               "N"};
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o) {
-  return str << (o == Orientation::HORIZONTAL ? "H" : "V");
+  return outputEnum(str, o, ORIENTATION_MAPPING);
 }
 
 std::istream& operator>>(std::istream& str, Orientation& o) {
-  std::string v;
-  str >> v;
-  if (v == "H") o = Orientation::HORIZONTAL;
-  else if (v == "V") o = Orientation::VERTICAL;
-  else
-    verify_expr(false, "invalid orientation %s", v.c_str());
-  return str;
+  return inputEnum(str, o, ORIENTATION_MAPPING);
 }
 
 std::ostream& operator<<(std::ostream& str, const Label& o) {
-  switch (o) {
-    case Label::GLOBAL:
-      return str << "GLabel";
-    case Label::HIERARCHICAL:
-      return str << "HLabel";
-    case Label::LOCAL:
-      return str << "Label";
-    case Label::NOTES:
-      return str << "Notes";
-  }
-  verify_expr(false, "unknown label");
+  return outputEnum(str, o, LABEL_MAPPING);
 }
 
 std::istream& operator>>(std::istream& str, Label& o) {
-  std::string v;
-  str >> v;
-  if (v == "HLabel") o = Label::HIERARCHICAL;
-  else if (v == "GLabel") o = Label::GLOBAL;
-  else if (v == "Label") o = Label::LOCAL;
-  else if (v == "Notes") o = Label::NOTES;
-  else
-    verify_expr(false, "invalid text label type %s", v.c_str());
-  return str;
+  return inputEnum(str, o, LABEL_MAPPING);
 }
 
 std::ostream& operator<<(std::ostream& str, const Direction& o) {
-  switch (o) {
-    case Direction::LEFT:
-      return str << "L";
-    case Direction::RIGHT:
-      return str << "R";
-    case Direction::UP:
-      return str << "U";
-    case Direction::DOWN:
-      return str << "D";
-  }
-  verify_expr(false, "unknown direction");
+  return outputEnum(str, o, DIRECTION_MAPPING);
 }
 
 std::istream& operator>>(std::istream& str, Direction& o) {
-  std::string v;
-  str >> v;
-  if (v == "L") o = Direction::LEFT;
-  else if (v == "R") o = Direction::RIGHT;
-  else if (v == "U") o = Direction::UP;
-  else if (v == "D") o = Direction::DOWN;
-  else
-    verify_expr(false, "invalid direction type %s", v.c_str());
-  return str;
+  return inputEnum(str, o, DIRECTION_MAPPING);
 }
 
 std::ostream& operator<<(std::ostream& str, const UnitSwappable& o) {
-  return str << (o == UnitSwappable::SWAPPABLE ? "F" : "L");
+  return outputEnum(str, o, UNIT_SWAPPABLE_MAPPING);
 }
 
 std::istream& operator>>(std::istream& str, UnitSwappable& o) {
-  std::string v;
-  str >> v;
-  if (v == "F") o = UnitSwappable::SWAPPABLE;
-  else if (v == "L") o = UnitSwappable::UNSWAPPABLE;
-  else
-    verify_expr(false, "invalid orientation %s", v.c_str());
-  return str;
+  return inputEnum(str, o, UNIT_SWAPPABLE_MAPPING);
 }
 
 std::ostream& operator<<(std::ostream& str, const ElectricalType& o) {
-  switch (o) {
-    case ElectricalType::INPUT:
-      return str << "I";
-    case ElectricalType::OUTPUT:
-      return str << "O";
-    case ElectricalType::BIDIRECTIONAL:
-      return str << "B";
-    case ElectricalType::TRISTATE:
-      return str << "T";
-    case ElectricalType::PASSIVE:
-      return str << "P";
-    case ElectricalType::UNSPECIFIED:
-      return str << "U";
-    case ElectricalType::POWER_IN:
-      return str << "W";
-    case ElectricalType::POWER_OUT:
-      return str << "w";
-    case ElectricalType::OPEN_COLLECTOR:
-      return str << "C";
-    case ElectricalType::OPEN_EMITTER:
-      return str << "E";
-    case ElectricalType::NOT_CONNECTED:
-      return str << "N";
-  }
-  verify_expr(false, "unknown electrical type");
+  return outputEnum(str, o, ELECTRICAL_TYPE_MAPPING);
 }
 
 std::istream& operator>>(std::istream& str, ElectricalType& o) {
-  std::string v;
-  str >> v;
-
-  if (v == "I")
-    o = ElectricalType::INPUT;
-  else if (v == "O")
-    o = ElectricalType::OUTPUT;
-  else if (v == "B")
-    o = ElectricalType::BIDIRECTIONAL;
-  else if (v == "T")
-    o = ElectricalType::TRISTATE;
-  else if (v == "P")
-    o = ElectricalType::PASSIVE;
-  else if (v == "U")
-    o = ElectricalType::UNSPECIFIED;
-  else if (v == "W")
-    o = ElectricalType::POWER_IN;
-  else if (v == "w")
-    o = ElectricalType::POWER_OUT;
-  else if (v == "C")
-    o = ElectricalType::OPEN_COLLECTOR;
-  else if (v == "E")
-    o = ElectricalType::OPEN_EMITTER;
-  else if (v == "N")
-    o = ElectricalType::NOT_CONNECTED;
-  else
-    verify_expr(false, "invalid direction type %s", v.c_str());
-  return str;
+  return inputEnum(str, o, ELECTRICAL_TYPE_MAPPING);
 }
 
 
