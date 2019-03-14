@@ -10,7 +10,8 @@ namespace memecad {
 
 sheet_t parseSheet(const std::string& data);
 std::string writeSheet(const sheet_t& sheet);
-library_t parseLibrary(const std::string& data);
+lib_t parseLibrary(const std::string& data, const std::string& name);
+lib_t parseLibrary(const std::string& filename);
 
 }  // memecad
 

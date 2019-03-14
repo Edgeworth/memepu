@@ -27,6 +27,10 @@ std::string readFile(const std::string& filename, bool binary);
 
 void writeFile(const std::string& filename, const std::string& data, bool binary);
 
+std::string basename(const std::string& filename);
+
+std::string stem(const std::string& filename);
+
 template<typename T, int N>
 class CartesianProduct {
 public:

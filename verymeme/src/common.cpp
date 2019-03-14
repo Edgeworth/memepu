@@ -28,3 +28,13 @@ void writeFile(const std::string& filename, const std::string& data, bool binary
   verify_expr(ret == 1, "failed to write data - ferror=%d", ferror(f));
   fclose(f);
 }
+
+std::string basename(const std::string& filename) {
+  return filename.substr(filename.rfind('/') + 1);
+}
+
+std::string stem(const std::string& filename) {
+  const std::string base = basename(filename);
+  if (base.empty() || base[0] == '.') return base;
+  return base.substr(0, base.find('.'));
+}

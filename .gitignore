@@ -26,3 +26,4 @@ _autosave-*
 pdfs/
 *.bin
 obj_dir/
+verymeme/verilog/result*
