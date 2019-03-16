@@ -9,7 +9,7 @@ namespace po = boost::program_options;
 
 int main(int argc, char* argv[]) {
   std::string filename;
-  std::string library_filename;
+  std::string kicad_library_filename;
   std::string memecad_map_filename;
   try {
     po::options_description desc{"Options"};
@@ -29,22 +29,14 @@ int main(int argc, char* argv[]) {
     }
 
     filename = vm["file"].as<std::string>();
-    library_filename = vm["chip-library"].as<std::string>();
+    kicad_library_filename = vm["chip-library"].as<std::string>();
     memecad_map_filename = vm["memecad-map"].as<std::string>();
   } catch (const po::error& ex) {
     std::cerr << ex.what() << '\n';
     return 1;
   }
 
-
-//  memecad::sheet_t sheet = memecad::parseSheet(readFile(filename, false /* binary */));
-//  printf("%s", memecad::writeSheet(sheet).c_str());
-//  memecad::lib_t lib = memecad::parseLibrary(library_filename);
-//  printf("Component: %s\n", lib.findComponent("628128_TSOP32").toString().c_str());
-//  memecad::Mapper mapper(readFile(memecad_map_filename, false /* binary */), lib);
-//  printf("%s\n", mapper.mapComponents().c_str());
-
-  memecad::TestPass test_pass;
+  memecad::TestPass test_pass(memecad_map_filename, kicad_library_filename);
 
   Yosys::log_streams.push_back(&std::cout);
   Yosys::log_error_stderr = true;
@@ -53,7 +45,7 @@ int main(int argc, char* argv[]) {
   Yosys::yosys_banner();
 
   Yosys::run_pass("read -sv full_adder.v chip7486.v chip7408.v chip7432.v");
-  Yosys::run_pass("asdf");
+  Yosys::run_pass("memecad");
 
   Yosys::yosys_shutdown();
 }

@@ -186,14 +186,14 @@ private:
       } else if (tok == "X") {
         lib_pin_t& pin = component.pins.emplace_back();
         pin.name = next();
-        next(); // Pin number.
+        pin.pin_number = next<int>();
         pin.x = next<int>();
         pin.y = next<int>();
         next(); // Length
         pin.direction = next<Direction>();
         next();
         next();  // Name text size, num text size.
-        pin.unit_number = next<int>();
+        pin.subcomponent = next<int>();
         next();  // convert
         pin.type = next<ElectricalType>();
         getLines(1); // Ignore rest.
