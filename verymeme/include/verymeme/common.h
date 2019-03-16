@@ -24,12 +24,18 @@
   } while (0)
 
 std::string readFile(const std::string& filename, bool binary);
-
 void writeFile(const std::string& filename, const std::string& data, bool binary);
-
 std::string basename(const std::string& filename);
-
 std::string stem(const std::string& filename);
+
+template<typename T>
+std::vector<T> reverse(std::vector<T>&& vec) {
+  std::vector<T> reversed;
+  reversed.reserve(vec.size());
+  for (int i = vec.size() - 1; i >= 0; --i)
+    reversed[i] = std::move(vec[i]);
+  return reversed;
+}
 
 template<typename T, int N>
 class CartesianProduct {

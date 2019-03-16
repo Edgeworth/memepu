@@ -1,0 +1,55 @@
+[
+  {
+    "verilog_name": "sram",
+    "kicad_name": "628128_TSOP32",
+    "verilog_to_kicad_map": {
+      "0": [
+        "A[16:13]",
+        "~CS1",
+        "GND"
+      ],
+      "1": [
+        "VCC",
+        "CS2"
+      ],
+      "ADDR": "A[12:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "chip7432",
+    "kicad_name": "74LS32",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "A": "12,9,4,1",
+      "B": "13,10,5,2",
+      "Y": "11,8,6,3"
+    }
+  },
+  {
+    "verilog_name": "chip7408",
+    "kicad_name": "74LS08",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "A": "12,9,4,1",
+      "B": "13,10,5,2",
+      "Y": "11,8,6,3"
+    }
+  },
+  {
+    "verilog_name": "chip7486",
+    "kicad_name": "74HC86",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "A": "12,9,4,1",
+      "B": "13,10,5,2",
+      "Y": "11,8,6,3"
+    }
+  }
+]
