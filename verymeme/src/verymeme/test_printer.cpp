@@ -1,10 +1,8 @@
-#include "test_printer.h"
+#include "verymeme/test_printer.h"
 
 namespace {
-
 constexpr std::chrono::milliseconds TEST_UPDATE_INTERVAL{200};
-
-}
+}  // namespace
 
 void TestPrinter::OnTestIterationStart(
     const UnitTest& unit_test, int iteration) {

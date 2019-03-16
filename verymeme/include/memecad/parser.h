@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "common.h"
+#include "verymeme/common.h"
 #include "memecad/types.h"
 
 namespace memecad {

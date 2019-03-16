@@ -3,7 +3,7 @@
 #include <boost/program_options.hpp>
 
 #include "gtest/gtest.h"
-#include "test_printer.h"
+#include "verymeme/test_printer.h"
 
 namespace po = boost::program_options;
 

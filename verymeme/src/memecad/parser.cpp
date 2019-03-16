@@ -168,7 +168,19 @@ private:
     while (true) {
       std::string tok = next();
       if (tok == "ENDDEF") break;
-      else if (tok == "ALIAS") {
+      else if (tok == "F0" || tok == "F1") {
+        // Record reference field.
+        lib_field_t& field = component.fields.emplace_back();
+        field.text = trim(next(), "\"");
+        field.x = next<int>();
+        field.y = next<int>();
+        field.text_size = next<int>();
+        field.text_orientation = next<Orientation>();
+        next();  // Skip visibility.
+        field.horizontal_justification = next();
+        field.vertical_justification = next();
+        expect({"\n"});
+      } else if (tok == "ALIAS") {
         for (std::string name = next(); name != "\n"; name = next())
           component.names.push_back(name);
       } else if (tok == "X") {

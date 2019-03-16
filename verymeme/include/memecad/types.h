@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "common.h"
+#include "verymeme/common.h"
 
 namespace memecad {
 
@@ -29,6 +29,47 @@ enum class ElectricalType {
   OPEN_EMITTER, NOT_CONNECTED, COUNT
 };
 
+struct lib_field_t {
+  std::string text;
+  int x = -1;
+  int y = -1;
+  int text_size = -1;
+  Orientation text_orientation;
+  std::string horizontal_justification = "C";
+  std::string vertical_justification = "CNN";
+};
+
+struct lib_pin_t {
+  std::string name;
+  int x = -1;
+  int y = -1;
+  Direction direction;
+  int unit_number = -1;
+  ElectricalType type;
+
+  std::string toString(int indent = 0);
+};
+
+struct lib_component_t {
+  std::vector<std::string> names;
+  std::string ref;
+  int unit_count = -1;
+  UnitSwappable unit_swappable;
+  std::vector<lib_pin_t> pins;
+  std::vector<lib_field_t> fields;
+
+  std::string toString(int indent = 0);
+};
+
+struct lib_t {
+  std::string name;
+  std::vector<lib_component_t> components;
+
+  lib_component_t& findComponent(const std::string& name);
+  std::string toString(int indent = 0);
+};
+
+
 struct label_t {
   Label type;
   int x = -1;
@@ -52,6 +93,9 @@ struct field_t {
   std::string justification = "C";
   std::string style = "CNN";
 
+  static field_t
+  fromLibraryField(const lib_field_t& lib_field, int num, const std::string& text, int offset_x,
+      int offset_y);
   std::string toString(int indent = 0);
 };
 
@@ -86,39 +130,6 @@ struct sheet_t {
   std::vector<sheet_component_t> components;
   std::vector<label_t> labels;
 
-  std::string toString(int indent = 0);
-};
-
-struct lib_field_t {
-
-};
-
-struct lib_pin_t {
-  std::string name;
-  int x = -1;
-  int y = -1;
-  Direction direction;
-  int unit_number = -1;
-  ElectricalType type;
-
-  std::string toString(int indent = 0);
-};
-
-struct lib_component_t {
-  std::vector<std::string> names;
-  std::string ref;
-  int unit_count = -1;
-  UnitSwappable unit_swappable;
-  std::vector<lib_pin_t> pins;
-
-  std::string toString(int indent = 0);
-};
-
-struct lib_t {
-  std::string name;
-  std::vector<lib_component_t> components;
-
-  lib_component_t& findComponent(const std::string& name);
   std::string toString(int indent = 0);
 };
 

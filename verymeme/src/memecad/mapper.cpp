@@ -3,7 +3,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-
 #include "memecad/parser.h"
 
 namespace memecad {
@@ -31,25 +30,20 @@ std::string Mapper::mapComponents() {
 void Mapper::addComponent(const std::string& kicad_name) {
   sheet_component_t component = {};
   auto& lib_component = lib_.findComponent(kicad_name);
+  verify_expr(2u == lib_component.fields.size(), "library component missing fields");
+  const auto& lib_ref_field = lib_component.fields[0];
+  const auto& lib_name_field = lib_component.fields[1];
+
   component.name = lib_.name + ":" + lib_component.names.front();
-  component.ref = "U?";
+  component.ref = lib_ref_field.text + "?";
   component.subcomponent = 1;
   component.timestamp = "5C5E9E2A";
+  // TODO need offset for field position? in wrong place?
   component.x = 1000;
   component.y = 1000;
   // F0: Reference, F1: Value, F2: Footprint, F3: Datasheet
-  field_t f0 = {};
-  f0.num = 0;
-  f0.text = "U?";
-  f0.x = 2000;
-  f0.y = 2000;
-  component.fields.push_back(f0);
-  field_t f1 = {};
-  f1.num = 1;
-  f1.text = kicad_name;
-  f1.x = 3000;
-  f1.y = 3000;
-  component.fields.push_back(f1);
+  component.fields.push_back(field_t::fromLibraryField(lib_ref_field, 0, component.ref, component.x, component.y));
+  component.fields.push_back(field_t::fromLibraryField(lib_name_field, 1, kicad_name, component.x, component.y));
   sheet_.components.push_back(component);
 }
 
