@@ -41,10 +41,11 @@ struct lib_field_t {
 
 struct lib_pin_t {
   std::string name;
+  int pin_number = -1;
   int x = -1;
   int y = -1;
   Direction direction;
-  int unit_number = -1;
+  int subcomponent = -1;
   ElectricalType type;
 
   std::string toString(int indent = 0);
@@ -69,16 +70,24 @@ struct lib_t {
   std::string toString(int indent = 0);
 };
 
-
 struct label_t {
   Label type;
   int x = -1;
   int y = -1;
-  int orientation = -1;
-  int dimension = -1;
-  std::string shape;
+  int orientation = 0;
+  int dimension = 50;
+  std::string shape = "~";
   std::string text;
 
+  static int labelOrientationFromPinDirection(Direction d) {
+    switch (d) {
+      case Direction::LEFT: return 0;
+      case Direction::UP: return 1;
+      case Direction::RIGHT: return 2;
+      case Direction::DOWN: return 3;
+      default: verify_expr(false, "unknown direction '%d'", int(d));
+    }
+  }
   std::string toString(int indent = 0);
 };
 
@@ -115,7 +124,7 @@ struct sheet_component_t {
 };
 
 constexpr const char* DEFAULT_HEADER1 =
-    "EESchema Schematic File Version 4\nLIBS:full_adder-cache\n"
+    "EESchema Schematic File Version 4\nLIBS:\n"
     "EELAYER 29 0\nEELAYER END\n$Descr A3 16535 11693\nencoding utf-8\n";
 
 constexpr const char* DEFAULT_HEADER2 =

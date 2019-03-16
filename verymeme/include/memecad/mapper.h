@@ -2,20 +2,27 @@
 #define VERYMEME_MAPPER_H
 
 #include "verymeme/common.h"
+#include <boost/property_tree/ptree.hpp>
+#include <kernel/rtlil.h>
 #include "memecad/types.h"
 
 namespace memecad {
 
+namespace pt = boost::property_tree;
+
 class Mapper {
 public:
-  Mapper(const std::string& data, lib_t& lib);
+  Mapper(const std::string& memecad_json, const lib_t& lib);
 
-  std::string mapComponents();
+  void writeHierarchy(const std::string& directory);
+  void addComponentFromCell(const Yosys::RTLIL::Cell& cell);
+
 private:
-  void addComponent(const std::string& kicad_name);
-
   sheet_t sheet_;
-  lib_t& lib_;
+  lib_t lib_;
+  pt::ptree root_;
+  int x_ = 1000;
+  int y_ = 1000;
 };
 
 }  // memecad
