@@ -1,6 +1,7 @@
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>
+#include <memecad/types.h>
 
 
 namespace memecad {
@@ -32,6 +33,19 @@ std::string field_t::toString(int indent) {
   PRINT_FIELD(justification);
   PRINT_FIELD(style);
   return s.str();
+}
+
+field_t field_t::fromLibraryField(const lib_field_t& lib_field, int num, const std::string& text,
+    int offset_x, int offset_y) {
+  field_t f = {};
+  f.num = num;
+  f.text = text;
+  f.x = lib_field.x + offset_x;
+  f.y = lib_field.y + offset_y;
+  f.size = lib_field.text_size;
+  f.justification = lib_field.horizontal_justification;
+  f.style = lib_field.vertical_justification;
+  return f;
 }
 
 std::string sheet_component_t::toString(int indent) {
@@ -131,8 +145,8 @@ const std::string ORIENTATION_MAPPING[] = {"H", "V"};
 const std::string LABEL_MAPPING[] = {"GLabel", "HLabel", "Label", "Notes"};
 const std::string DIRECTION_MAPPING[] = {"L", "R", "U", "D"};
 const std::string UNIT_SWAPPABLE_MAPPING[] = {"F", "L"};
-const std::string ELECTRICAL_TYPE_MAPPING[] = {"I", "O", "B", "T", "P", "U", "W", "w", "C", "E",
-                                               "N"};
+const std::string ELECTRICAL_TYPE_MAPPING[] =
+    {"I", "O", "B", "T", "P", "U", "W", "w", "C", "E", "N"};
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o) {
   return outputEnum(str, o, ORIENTATION_MAPPING);

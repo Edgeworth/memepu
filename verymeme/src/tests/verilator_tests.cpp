@@ -1,6 +1,6 @@
 #include <array>
 
-#include "common.h"
+#include "verymeme/common.h"
 #include "Vchip7400.h"
 #include "Vchip7404.h"
 #include "Vchip7408.h"
@@ -9,7 +9,7 @@
 #include "Vchip74299.h"
 #include "Vfull_adder.h"
 #include "Valu.h"
-#include "firmware_constants.h"
+#include "verymeme/firmware_constants.h"
 
 namespace {
 
