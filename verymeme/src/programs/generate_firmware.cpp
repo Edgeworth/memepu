@@ -1,8 +1,8 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 
-#include "common.h"
-#include "firmware_constants.h"
+#include "verymeme/common.h"
+#include "verymeme/firmware_constants.h"
 
 namespace po = boost::program_options;
 

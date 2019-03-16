@@ -1,7 +1,7 @@
 #ifndef VERYMEME_MAPPER_H
 #define VERYMEME_MAPPER_H
 
-#include "common.h"
+#include "verymeme/common.h"
 #include "memecad/types.h"
 
 namespace memecad {

@@ -17,6 +17,8 @@ endif ()
 find_package_handle_standard_args(Yosys DEFAULT_MSG
     YOSYS_OPTIONS YOSYS_LDFLAGS YOSYS_LIBRARIES)
 
+set(YOSYS_LIBRARIES "${YOSYS_LIBRARIES} -lyosys")
+
 separate_arguments(YOSYS_OPTIONS)
 separate_arguments(YOSYS_LDFLAGS)
 separate_arguments(YOSYS_LIBRARIES)

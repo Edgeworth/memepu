@@ -1,7 +1,9 @@
 #include <boost/program_options.hpp>
+#include <kernel/yosys.h>
 
 #include "memecad/mapper.h"
 #include "memecad/parser.h"
+#include "memecad/yosys_module.h"
 
 namespace po = boost::program_options;
 
@@ -37,8 +39,21 @@ int main(int argc, char* argv[]) {
 
 //  memecad::sheet_t sheet = memecad::parseSheet(readFile(filename, false /* binary */));
 //  printf("%s", memecad::writeSheet(sheet).c_str());
-  memecad::lib_t lib = memecad::parseLibrary(library_filename);
+//  memecad::lib_t lib = memecad::parseLibrary(library_filename);
 //  printf("Component: %s\n", lib.findComponent("628128_TSOP32").toString().c_str());
-  memecad::Mapper mapper(readFile(memecad_map_filename, false /* binary */), lib);
-  printf("%s\n", mapper.mapComponents().c_str());
+//  memecad::Mapper mapper(readFile(memecad_map_filename, false /* binary */), lib);
+//  printf("%s\n", mapper.mapComponents().c_str());
+
+  memecad::TestPass test_pass;
+
+  Yosys::log_streams.push_back(&std::cout);
+  Yosys::log_error_stderr = true;
+
+  Yosys::yosys_setup();
+  Yosys::yosys_banner();
+
+  Yosys::run_pass("read -sv full_adder.v chip7486.v chip7408.v chip7432.v");
+  Yosys::run_pass("asdf");
+
+  Yosys::yosys_shutdown();
 }
