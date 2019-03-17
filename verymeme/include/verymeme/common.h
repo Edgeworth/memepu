@@ -37,6 +37,20 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   return reversed;
 }
 
+struct rect_t {
+  int left = 0;
+  int top = 0;
+  int right = 0;
+  int bottom = 0;
+
+  void inset(int w, int h) {
+    left += w / 2;
+    top += h / 2;
+    right -= w / 2;
+    bottom -= h / 2;
+  }
+};
+
 template<typename T, int N>
 class CartesianProduct {
 public:

@@ -9,7 +9,7 @@ namespace memecad {
 #define PRINT_FIELD(f) \
   s << std::string(indent, ' ') <<  #f << ": " << boost::lexical_cast<std::string>(f) << "\n";
 
-std::string label_t::toString(int indent) {
+std::string sheet_label_t::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(type);
   PRINT_FIELD(x);
@@ -21,7 +21,17 @@ std::string label_t::toString(int indent) {
   return s.str();
 }
 
-std::string field_t::toString(int indent) {
+int sheet_label_t::labelOrientationFromPinDirection(Direction d) {
+  switch (d) {
+    case Direction::LEFT: return 0;
+    case Direction::UP: return 1;
+    case Direction::RIGHT: return 2;
+    case Direction::DOWN: return 3;
+    default: verify_expr(false, "unknown direction '%d'", int(d));
+  }
+}
+
+std::string sheet_field_t::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(num);
   PRINT_FIELD(text);
@@ -35,9 +45,9 @@ std::string field_t::toString(int indent) {
   return s.str();
 }
 
-field_t field_t::fromLibraryField(const lib_field_t& lib_field, int num, const std::string& text,
+sheet_field_t sheet_field_t::fromLibraryField(const lib_field_t& lib_field, int num, const std::string& text,
     int offset_x, int offset_y) {
-  field_t f = {};
+  sheet_field_t f = {};
   f.num = num;
   f.text = text;
   f.x = lib_field.x + offset_x;
@@ -61,6 +71,15 @@ std::string sheet_component_t::toString(int indent) {
     s << fields[i].toString(indent + 2);
   }
   return s.str();
+}
+
+void sheet_component_t::offset(int x_offset, int y_offset) {
+  x += x_offset;
+  y += y_offset;
+  for (auto& field : fields) {
+    field.x += x_offset;
+    field.y += y_offset;
+  }
 }
 
 std::string sheet_t::toString(int indent) {

@@ -43,7 +43,7 @@ public:
       if (tok == "$EndSCHEMATC") break;
       else if (tok == "$Comp") sheet.components.emplace_back(parseComponent());
       else if (tok == "Text") {
-        label_t& label = sheet.labels.emplace_back();
+        sheet_label_t& label = sheet.labels.emplace_back();
         label.type = next<Label>();
         label.x = next<int>();
         label.y = next<int>();
@@ -83,7 +83,7 @@ private:
     comp.name = next();
     comp.ref = next();
     expect({"\n", "U"});
-    comp.subcomponent = next<int>();
+    comp.subcomponent = next<int>() - 1;
     expect({"1"});
     comp.timestamp = next();
     expect({"\n", "P"});
@@ -93,7 +93,7 @@ private:
     while (true) {
       std::string tok = peek();
       if (tok == "F") {
-        field_t& field = comp.fields.emplace_back();
+        sheet_field_t& field = comp.fields.emplace_back();
         expect({"F"});
         field.num = next<int>();
         field.text = trim(next(), "\"");
@@ -193,7 +193,7 @@ private:
         pin.direction = next<Direction>();
         next();
         next();  // Name text size, num text size.
-        pin.subcomponent = next<int>();
+        pin.subcomponent = next<int>() - 1;
         next();  // convert
         pin.type = next<ElectricalType>();
         getLines(1); // Ignore rest.
@@ -215,7 +215,7 @@ public:
     for (const auto& comp : sheet.components) {
       data += "$Comp\n";
       data += "L " + comp.name + " " + comp.ref + "\n";
-      data += "U " + tos(comp.subcomponent) + " 1 " + comp.timestamp + "\n";
+      data += "U " + tos(comp.subcomponent + 1) + " 1 " + comp.timestamp + "\n";
       data += "P " + tos(comp.x) + " " + tos(comp.y) + "\n";
       for (const auto& f : comp.fields) {
         data +=
