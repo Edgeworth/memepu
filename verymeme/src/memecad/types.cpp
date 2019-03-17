@@ -1,7 +1,6 @@
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>
-#include <memecad/types.h>
 
 
 namespace memecad {
@@ -9,7 +8,7 @@ namespace memecad {
 #define PRINT_FIELD(f) \
   s << std::string(indent, ' ') <<  #f << ": " << boost::lexical_cast<std::string>(f) << "\n";
 
-std::string sheet_label_t::toString(int indent) {
+std::string Sheet::Label::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(type);
   PRINT_FIELD(x);
@@ -21,17 +20,22 @@ std::string sheet_label_t::toString(int indent) {
   return s.str();
 }
 
-int sheet_label_t::labelOrientationFromPinDirection(Direction d) {
+int Sheet::Label::labelOrientationFromPinDirection(Lib::Pin::Direction d) {
   switch (d) {
-    case Direction::LEFT: return 0;
-    case Direction::UP: return 1;
-    case Direction::RIGHT: return 2;
-    case Direction::DOWN: return 3;
-    default: verify_expr(false, "unknown direction '%d'", int(d));
+    case Lib::Pin::Direction::LEFT:
+      return 0;
+    case Lib::Pin::Direction::UP:
+      return 1;
+    case Lib::Pin::Direction::RIGHT:
+      return 2;
+    case Lib::Pin::Direction::DOWN:
+      return 3;
+    default:
+      verify_expr(false, "unknown direction '%d'", int(d));
   }
 }
 
-std::string sheet_field_t::toString(int indent) {
+std::string Sheet::Field::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(num);
   PRINT_FIELD(text);
@@ -45,9 +49,10 @@ std::string sheet_field_t::toString(int indent) {
   return s.str();
 }
 
-sheet_field_t sheet_field_t::fromLibraryField(const lib_field_t& lib_field, int num, const std::string& text,
+Sheet::Field
+Sheet::Field::fromLibraryField(const Lib::Field& lib_field, int num, const std::string& text,
     int offset_x, int offset_y) {
-  sheet_field_t f = {};
+  Field f = {};
   f.num = num;
   f.text = text;
   f.x = lib_field.x + offset_x;
@@ -58,7 +63,7 @@ sheet_field_t sheet_field_t::fromLibraryField(const lib_field_t& lib_field, int 
   return f;
 }
 
-std::string sheet_component_t::toString(int indent) {
+std::string Sheet::Component::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(name);
   PRINT_FIELD(ref);
@@ -73,7 +78,7 @@ std::string sheet_component_t::toString(int indent) {
   return s.str();
 }
 
-void sheet_component_t::offset(int x_offset, int y_offset) {
+void Sheet::Component::offset(int x_offset, int y_offset) {
   x += x_offset;
   y += y_offset;
   for (auto& field : fields) {
@@ -82,7 +87,7 @@ void sheet_component_t::offset(int x_offset, int y_offset) {
   }
 }
 
-std::string sheet_t::toString(int indent) {
+std::string Sheet::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(id);
   PRINT_FIELD(title);
@@ -97,7 +102,7 @@ std::string sheet_t::toString(int indent) {
   return s.str();
 }
 
-std::string lib_pin_t::toString(int indent) {
+std::string Lib::Pin::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(name);
   PRINT_FIELD(x);
@@ -106,7 +111,7 @@ std::string lib_pin_t::toString(int indent) {
   return s.str();
 }
 
-std::string lib_component_t::toString(int indent) {
+std::string Lib::Component::toString(int indent) {
   std::stringstream s;
   PRINT_FIELD(names[0]);
   PRINT_FIELD(ref);
@@ -119,7 +124,7 @@ std::string lib_component_t::toString(int indent) {
   return s.str();
 }
 
-std::string lib_t::toString(int indent) {
+std::string Lib::toString(int indent) {
   std::stringstream s;
   for (int i = 0; i < int(components.size()); ++i) {
     s << std::string(indent, ' ') << "Library component #" << (i + 1) << "\n";
@@ -130,7 +135,7 @@ std::string lib_t::toString(int indent) {
 
 #undef PRINT_FIELD
 
-lib_component_t& lib_t::findComponent(const std::string& name) {
+Lib::Component& Lib::findComponent(const std::string& name) {
   for (auto& comp : components) {
     for (const auto& comp_name : comp.names) {
       if (comp_name == name)
@@ -175,35 +180,35 @@ std::istream& operator>>(std::istream& str, Orientation& o) {
   return inputEnum(str, o, ORIENTATION_MAPPING);
 }
 
-std::ostream& operator<<(std::ostream& str, const Label& o) {
+std::ostream& operator<<(std::ostream& str, const Sheet::Label::Type& o) {
   return outputEnum(str, o, LABEL_MAPPING);
 }
 
-std::istream& operator>>(std::istream& str, Label& o) {
+std::istream& operator>>(std::istream& str, Sheet::Label::Type& o) {
   return inputEnum(str, o, LABEL_MAPPING);
 }
 
-std::ostream& operator<<(std::ostream& str, const Direction& o) {
+std::ostream& operator<<(std::ostream& str, const Lib::Pin::Direction& o) {
   return outputEnum(str, o, DIRECTION_MAPPING);
 }
 
-std::istream& operator>>(std::istream& str, Direction& o) {
+std::istream& operator>>(std::istream& str, Lib::Pin::Direction& o) {
   return inputEnum(str, o, DIRECTION_MAPPING);
 }
 
-std::ostream& operator<<(std::ostream& str, const UnitSwappable& o) {
+std::ostream& operator<<(std::ostream& str, const Lib::Component::UnitSwappable& o) {
   return outputEnum(str, o, UNIT_SWAPPABLE_MAPPING);
 }
 
-std::istream& operator>>(std::istream& str, UnitSwappable& o) {
+std::istream& operator>>(std::istream& str, Lib::Component::UnitSwappable& o) {
   return inputEnum(str, o, UNIT_SWAPPABLE_MAPPING);
 }
 
-std::ostream& operator<<(std::ostream& str, const ElectricalType& o) {
+std::ostream& operator<<(std::ostream& str, const Lib::Pin::ElectricalType& o) {
   return outputEnum(str, o, ELECTRICAL_TYPE_MAPPING);
 }
 
-std::istream& operator>>(std::istream& str, ElectricalType& o) {
+std::istream& operator>>(std::istream& str, Lib::Pin::ElectricalType& o) {
   return inputEnum(str, o, ELECTRICAL_TYPE_MAPPING);
 }
 

@@ -25,8 +25,8 @@ bool isInteger(const std::string& s) {
   return true;
 }
 
-const lib_pin_t*
-lookupPinByName(const std::string& pin_name, const lib_component_t& lib_component) {
+const Lib::Pin*
+lookupPinByName(const std::string& pin_name, const Lib::Component& lib_component) {
   for (const auto& pin : lib_component.pins) {
     if (pin.name == pin_name)
       return &pin;
@@ -34,7 +34,7 @@ lookupPinByName(const std::string& pin_name, const lib_component_t& lib_componen
   return nullptr;
 }
 
-const lib_pin_t* lookupPinByNumber(int pin_number, const lib_component_t& lib_component) {
+const Lib::Pin* lookupPinByNumber(int pin_number, const Lib::Component& lib_component) {
   for (const auto& pin : lib_component.pins) {
     if (pin.pin_number == pin_number)
       return &pin;
@@ -42,8 +42,8 @@ const lib_pin_t* lookupPinByNumber(int pin_number, const lib_component_t& lib_co
   return nullptr;
 }
 
-std::vector<const lib_pin_t*>
-parseKicadPinSpec(const std::string& pin_spec, const lib_component_t& lib_component) {
+std::vector<const Lib::Pin*>
+parseKicadPinSpec(const std::string& pin_spec, const Lib::Component& lib_component) {
   // Pin specifier is either: a pin number; a pin name; a pin base name and integer range.
   // If a pin name does not exist, try to resolve it to a pin range. If both exist, default to
   // the single pin.
@@ -62,7 +62,7 @@ parseKicadPinSpec(const std::string& pin_spec, const lib_component_t& lib_compon
     const std::string& pin_basename = sm[1];
     const int en = boost::lexical_cast<int>(sm[2]);
     const int st = boost::lexical_cast<int>(sm[3]);
-    std::vector<const lib_pin_t*> pins;
+    std::vector<const Lib::Pin*> pins;
     verify_expr(st <= en, "pin specs (currently) must be specified from MSB to LSB");
     for (int i = en; i >= st; --i) {
       const std::string pin_name = pin_basename + std::to_string(i);
@@ -78,7 +78,7 @@ parseKicadPinSpec(const std::string& pin_spec, const lib_component_t& lib_compon
   if (!pin) {
     // Check for implicit pins.
     int index = 0;
-    std::vector<const lib_pin_t*> pins;
+    std::vector<const Lib::Pin*> pins;
     while (true) {
       const std::string pin_name = pin_spec + std::to_string(index);
       const auto* ranged_pin = lookupPinByName(pin_name, lib_component);
@@ -95,11 +95,11 @@ parseKicadPinSpec(const std::string& pin_spec, const lib_component_t& lib_compon
   return {pin};
 }
 
-std::vector<const lib_pin_t*>
-parseKicadPinSpecs(std::string pin_specs, const lib_component_t& lib_component) {
+std::vector<const Lib::Pin*>
+parseKicadPinSpecs(std::string pin_specs, const Lib::Component& lib_component) {
   // Pin spec consists of a comma separated list of pin specs.
   std::string pin_spec;
-  std::vector<const lib_pin_t*> pins;
+  std::vector<const Lib::Pin*> pins;
   pin_specs += ',';  // Sentinel.
   for (auto c : pin_specs) {
     if (c == ',') {
@@ -136,9 +136,10 @@ parseVerilogPinSpec(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell)
   return labels;
 }
 
-rect_t getLibraryComponentBounds(const lib_component_t& lib_component, int subcomponent) {
+rect_t getLibraryComponentBounds(const Lib::Component& lib_component, int subcomponent) {
   rect_t bounds;
   for (const auto& pin : lib_component.pins) {
+    if (pin.subcomponent != subcomponent) continue;
     bounds.left = std::min(bounds.left, pin.x);
     bounds.right = std::max(bounds.right, pin.x);
     bounds.top = std::min(bounds.top, pin.y);
@@ -150,7 +151,7 @@ rect_t getLibraryComponentBounds(const lib_component_t& lib_component, int subco
 
 }
 
-Mapper::Mapper(const std::string& memecad_json, const lib_t& lib) : lib_(lib) {
+Mapper::Mapper(const std::string& memecad_json, const Lib& lib) : lib_(lib) {
   sheet_.id = 1;
   sheet_.title = "Test sheet";
 
@@ -171,11 +172,11 @@ void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
   verify_expr(2u == lib_component.fields.size(), "library component missing fields");
 
   // Add components to kicad sheet.
-  std::vector<sheet_component_t> subcomponents;
+  std::vector<Sheet::Component> subcomponents;
   int next_x = x_;
   y_ = 1000;
   for (int subcomponent = 0; subcomponent < lib_component.unit_count; ++subcomponent) {
-    sheet_component_t& component = subcomponents.emplace_back();
+    auto& component = subcomponents.emplace_back();
     const auto& lib_ref_field = lib_component.fields[0];
     const auto& lib_name_field = lib_component.fields[1];
     rect_t aabb = getLibraryComponentBounds(lib_component, subcomponent);
@@ -191,9 +192,9 @@ void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
 
     // F0: Reference, F1: Value, F2: Footprint, F3: Datasheet
     component.fields.push_back(
-        sheet_field_t::fromLibraryField(lib_ref_field, 0, component.ref, component.x, component.y));
+        Sheet::Field::fromLibraryField(lib_ref_field, 0, component.ref, component.x, component.y));
     component.fields.push_back(
-        sheet_field_t::fromLibraryField(lib_name_field, 1, kicad_name, component.x, component.y));
+        Sheet::Field::fromLibraryField(lib_name_field, 1, kicad_name, component.x, component.y));
 
     sheet_.components.push_back(component);  // Also add to sheet.
   }
@@ -219,11 +220,11 @@ void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
           kicad_pin_spec.c_str(), verilog_pin_spec.c_str());
       for (int i = 0; i < int(kicad_pins.size()); ++i) {
         const auto& pin = *kicad_pins[i];
-        sheet_label_t& label = sheet_.labels.emplace_back();
-        label.type = Label::LOCAL;  // TODO decide if hierarchical or local label.
+        auto& label = sheet_.labels.emplace_back();
+        label.type = Sheet::Label::Type::LOCAL;  // TODO decide if hierarchical or local label.
         label.x = subcomponents[pin.subcomponent].x + pin.x;
-        label.y = subcomponents[pin.subcomponent].y  + pin.y;
-        label.orientation = sheet_label_t::labelOrientationFromPinDirection(pin.direction);
+        label.y = subcomponents[pin.subcomponent].y + pin.y;
+        label.orientation = Sheet::Label::labelOrientationFromPinDirection(pin.direction);
         label.text = labels[i];
       }
     }

@@ -29,8 +29,8 @@ class KicadParser {
 public:
   explicit KicadParser(const std::string& data) : toks_(tokenize(data)) {}
 
-  sheet_t parseSheet() {
-    sheet_t sheet = {};
+  Sheet parseSheet() {
+    Sheet sheet = {};
     sheet.header1 = getLines(6);
     expect({"Sheet", "1"});
     sheet.id = next<int>();
@@ -43,8 +43,8 @@ public:
       if (tok == "$EndSCHEMATC") break;
       else if (tok == "$Comp") sheet.components.emplace_back(parseComponent());
       else if (tok == "Text") {
-        sheet_label_t& label = sheet.labels.emplace_back();
-        label.type = next<Label>();
+        auto& label = sheet.labels.emplace_back();
+        label.type = next<Sheet::Label::Type>();
         label.x = next<int>();
         label.y = next<int>();
         label.orientation = next<int>();
@@ -59,8 +59,8 @@ public:
     return sheet;
   }
 
-  lib_t parseLibrary(const std::string& name) {
-    lib_t lib = {};
+  Lib parseLibrary(const std::string& name) {
+    Lib lib = {};
     lib.name = name;
     while (idx_ < int(toks_.size())) {
       std::string tok = peek();
@@ -77,8 +77,8 @@ private:
   std::vector<std::string> toks_;
   int idx_ = 0;
 
-  sheet_component_t parseComponent() {
-    sheet_component_t comp;
+  Sheet::Component parseComponent() {
+    Sheet::Component comp;
     expect({"\n", "L"});
     comp.name = next();
     comp.ref = next();
@@ -93,7 +93,7 @@ private:
     while (true) {
       std::string tok = peek();
       if (tok == "F") {
-        sheet_field_t& field = comp.fields.emplace_back();
+        auto& field = comp.fields.emplace_back();
         expect({"F"});
         field.num = next<int>();
         field.text = trim(next(), "\"");
@@ -153,8 +153,8 @@ private:
     return getSubstr(start_idx, idx_);
   }
 
-  lib_component_t parseLibraryComponent() {
-    lib_component_t component = {};
+  Lib::Component parseLibraryComponent() {
+    Lib::Component component = {};
     expect({"DEF"});
     component.names.push_back(next());
     component.ref = next();
@@ -163,14 +163,14 @@ private:
     next();
     next();  // Text offset, draw pin number, draw pin name.
     component.unit_count = next<int>();
-    component.unit_swappable = next<UnitSwappable>();
+    component.unit_swappable = next<Lib::Component::UnitSwappable>();
     getLines(1);  // Ignore rest.
     while (true) {
       std::string tok = next();
       if (tok == "ENDDEF") break;
       else if (tok == "F0" || tok == "F1") {
         // Record reference field.
-        lib_field_t& field = component.fields.emplace_back();
+        auto& field = component.fields.emplace_back();
         field.text = trim(next(), "\"");
         field.x = next<int>();
         field.y = next<int>();
@@ -184,18 +184,18 @@ private:
         for (std::string name = next(); name != "\n"; name = next())
           component.names.push_back(name);
       } else if (tok == "X") {
-        lib_pin_t& pin = component.pins.emplace_back();
+        auto& pin = component.pins.emplace_back();
         pin.name = next();
         pin.pin_number = next<int>();
         pin.x = next<int>();
         pin.y = next<int>();
         next(); // Length
-        pin.direction = next<Direction>();
+        pin.direction = next<Lib::Pin::Direction>();
         next();
         next();  // Name text size, num text size.
         pin.subcomponent = next<int>() - 1;
         next();  // convert
-        pin.type = next<ElectricalType>();
+        pin.type = next<Lib::Pin::ElectricalType>();
         getLines(1); // Ignore rest.
       }
     }
@@ -206,7 +206,7 @@ private:
 
 class KicadWriter {
 public:
-  std::string writeSheet(const sheet_t& sheet) {
+  std::string writeSheet(const Sheet& sheet) {
     std::string data;
     data += sheet.header1;
     data += "Sheet 1 " + tos(sheet.id) + "\n";
@@ -245,19 +245,19 @@ private:
 
 }  // namespace
 
-sheet_t parseSheet(const std::string& data) {
+Sheet parseSheet(const std::string& data) {
   return KicadParser(data).parseSheet();
 }
 
-std::string writeSheet(const sheet_t& sheet) {
+std::string writeSheet(const Sheet& sheet) {
   return KicadWriter().writeSheet(sheet);
 }
 
-lib_t parseLibrary(const std::string& filename) {
+Lib parseLibrary(const std::string& filename) {
   return parseLibrary(readFile(filename, false /* binary */), stem(filename));
 }
 
-lib_t parseLibrary(const std::string& data, const std::string& name) {
+Lib parseLibrary(const std::string& data, const std::string& name) {
   return KicadParser(data).parseLibrary(name);
 }
 
