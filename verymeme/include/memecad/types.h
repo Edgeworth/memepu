@@ -12,143 +12,150 @@ enum class Orientation {
   HORIZONTAL, VERTICAL, COUNT
 };
 
-enum class Label {
-  GLOBAL, HIERARCHICAL, LOCAL, NOTES, COUNT
-};
+class Lib {
+public:
+  class Pin {
+  public:
+    enum class ElectricalType {
+      INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, UNSPECIFIED, POWER_IN, POWER_OUT,
+      OPEN_COLLECTOR, OPEN_EMITTER, NOT_CONNECTED, COUNT
+    };
+    enum class Direction {
+      LEFT, RIGHT, UP, DOWN, COUNT
+    };
 
-enum class Direction {
-  LEFT, RIGHT, UP, DOWN, COUNT
-};
+    std::string name;
+    int pin_number = -1;
+    int x = -1;
+    int y = -1;
+    Direction direction;
+    int subcomponent = -1;
+    ElectricalType type;
 
-enum class UnitSwappable {
-  SWAPPABLE, UNSWAPPABLE, COUNT
-};
+    std::string toString(int indent = 0);
+  };
 
-enum class ElectricalType {
-  INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, UNSPECIFIED, POWER_IN, POWER_OUT, OPEN_COLLECTOR,
-  OPEN_EMITTER, NOT_CONNECTED, COUNT
-};
+  class Field {
+  public:
+    std::string text;
+    int x = -1;
+    int y = -1;
+    int text_size = -1;
+    Orientation text_orientation;
+    std::string horizontal_justification = "C";
+    std::string vertical_justification = "CNN";
+  };
 
-struct lib_field_t {
-  std::string text;
-  int x = -1;
-  int y = -1;
-  int text_size = -1;
-  Orientation text_orientation;
-  std::string horizontal_justification = "C";
-  std::string vertical_justification = "CNN";
-};
+  class Component {
+  public:
+    enum class UnitSwappable {
+      SWAPPABLE, UNSWAPPABLE, COUNT
+    };
 
-struct lib_pin_t {
+    std::vector<std::string> names;
+    std::string ref;
+    int unit_count = -1;
+    UnitSwappable unit_swappable;
+    std::vector<Pin> pins;
+    std::vector<Field> fields;
+
+    std::string toString(int indent = 0);
+  };
+
   std::string name;
-  int pin_number = -1;
-  int x = -1;
-  int y = -1;
-  Direction direction;
-  int subcomponent = -1;
-  ElectricalType type;
+  std::vector<Component> components;
 
+  Component& findComponent(const std::string& name);
   std::string toString(int indent = 0);
 };
 
-struct lib_component_t {
-  std::vector<std::string> names;
-  std::string ref;
-  int unit_count = -1;
-  UnitSwappable unit_swappable;
-  std::vector<lib_pin_t> pins;
-  std::vector<lib_field_t> fields;
+class Sheet {
+public:
+  class Label {
+  public:
+    enum class Type {
+      GLOBAL, HIERARCHICAL, LOCAL, NOTES, COUNT
+    };
 
-  std::string toString(int indent = 0);
-};
+    Type type;
+    int x = -1;
+    int y = -1;
+    int orientation = 0;
+    int dimension = 50;
+    std::string shape = "~";
+    std::string text;
 
-struct lib_t {
-  std::string name;
-  std::vector<lib_component_t> components;
+    static int labelOrientationFromPinDirection(Lib::Pin::Direction d);
+    std::string toString(int indent = 0);
+  };
 
-  lib_component_t& findComponent(const std::string& name);
-  std::string toString(int indent = 0);
-};
+  class Field {
+  public:
+    int num = -1;
+    std::string text;
+    Orientation orientation = Orientation::HORIZONTAL;
+    int x = -1;
+    int y = -1;
+    int size = 50;
+    std::string flags = "0000";
+    std::string justification = "C";
+    std::string style = "CNN";
 
-struct sheet_label_t {
-  Label type;
-  int x = -1;
-  int y = -1;
-  int orientation = 0;
-  int dimension = 50;
-  std::string shape = "~";
-  std::string text;
+    static Field
+    fromLibraryField(const Lib::Field& lib_field, int num, const std::string& text, int offset_x,
+        int offset_y);
+    std::string toString(int indent = 0);
+  };
 
-  static int labelOrientationFromPinDirection(Direction d);
-  std::string toString(int indent = 0);
-};
+  class Component {
+  public:
+    std::string name;
+    std::string ref;
+    int subcomponent = -1;
+    std::string timestamp;
+    int x = -1;
+    int y = -1;
+    std::vector<Field> fields;
+    std::string footer = DEFAULT_FOOTER;
 
-struct sheet_field_t {
-  int num = -1;
-  std::string text;
-  Orientation orientation = Orientation::HORIZONTAL;
-  int x = -1;
-  int y = -1;
-  int size = 50;
-  std::string flags = "0000";
-  std::string justification = "C";
-  std::string style = "CNN";
+    void offset(int x_offset, int y_offset);
+    std::string toString(int indent = 0);
+  };
 
-  static sheet_field_t
-  fromLibraryField(const lib_field_t& lib_field, int num, const std::string& text, int offset_x,
-      int offset_y);
-  std::string toString(int indent = 0);
-};
-
-constexpr const char* DEFAULT_FOOTER = "\t1    2600 1750\n\t1    0    0    -1\n";
-
-struct sheet_component_t {
-  std::string name;
-  std::string ref;
-  int subcomponent = -1;
-  std::string timestamp;
-  int x = -1;
-  int y = -1;
-  std::vector<sheet_field_t> fields;
-  std::string footer = DEFAULT_FOOTER;
-
-  void offset(int x_offset, int y_offset);
-  std::string toString(int indent = 0);
-};
-
-constexpr const char* DEFAULT_HEADER1 =
-    "EESchema Schematic File Version 4\nLIBS:\n"
-    "EELAYER 29 0\nEELAYER END\n$Descr A3 16535 11693\nencoding utf-8\n";
-
-constexpr const char* DEFAULT_HEADER2 =
-    "Date \"\"\nRev \"\"\nComp \"\"\nComment1 \"\"\nComment2 \"\"\n"
-    "Comment3 \"\"\nComment4 \"\"\n$EndDescr\n";
-
-struct sheet_t {
   std::string header1 = DEFAULT_HEADER1;
   int id;
   std::string title;
   std::string header2 = DEFAULT_HEADER2;
-  std::vector<sheet_component_t> components;
-  std::vector<sheet_label_t> labels;
+  std::vector<Component> components;
+  std::vector<Label> labels;
 
   std::string toString(int indent = 0);
+
+private:
+  constexpr static const char* DEFAULT_HEADER1 =
+      "EESchema Schematic File Version 4\nLIBS:\n"
+      "EELAYER 29 0\nEELAYER END\n$Descr A3 16535 11693\nencoding utf-8\n";
+  constexpr static const char* DEFAULT_HEADER2 =
+      "Date \"\"\nRev \"\"\nComp \"\"\nComment1 \"\"\nComment2 \"\"\n"
+      "Comment3 \"\"\nComment4 \"\"\n$EndDescr\n";
+  constexpr static const char* DEFAULT_FOOTER = "\t1    2600 1750\n\t1    0    0    -1\n";
+
 };
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o);
 std::istream& operator>>(std::istream& str, Orientation& o);
 
-std::ostream& operator<<(std::ostream& str, const Label& o);
-std::istream& operator>>(std::istream& str, Label& o);
+std::ostream& operator<<(std::ostream& str, const Sheet::Label::Type& o);
+std::istream& operator>>(std::istream& str, Sheet::Label::Type& o);
 
-std::ostream& operator<<(std::ostream& str, const Direction& o);
-std::istream& operator>>(std::istream& str, Direction& o);
+std::ostream& operator<<(std::ostream& str, const Lib::Pin::Direction& o);
+std::istream& operator>>(std::istream& str, Lib::Pin::Direction& o);
 
-std::ostream& operator<<(std::ostream& str, const UnitSwappable& o);
-std::istream& operator>>(std::istream& str, UnitSwappable& o);
+std::ostream& operator<<(std::ostream& str, const Lib::Component::UnitSwappable& o);
+std::istream& operator>>(std::istream& str, Lib::Component::UnitSwappable& o);
 
-std::ostream& operator<<(std::ostream& str, const ElectricalType& o);
-std::istream& operator>>(std::istream& str, ElectricalType& o);
+std::ostream& operator<<(std::ostream& str, const Lib::Pin::ElectricalType& o);
+std::istream& operator>>(std::istream& str, Lib::Pin::ElectricalType& o);
 
 }  // memecad
 

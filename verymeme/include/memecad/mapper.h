@@ -12,14 +12,14 @@ namespace pt = boost::property_tree;
 
 class Mapper {
 public:
-  Mapper(const std::string& memecad_json, const lib_t& lib);
+  Mapper(const std::string& memecad_json, const Lib& lib);
 
   void writeHierarchy(const std::string& directory);
   void addComponentFromCell(const Yosys::RTLIL::Cell& cell);
 
 private:
-  sheet_t sheet_;
-  lib_t lib_;
+  Sheet sheet_;
+  Lib lib_;
   pt::ptree root_;
   int x_ = 1000;
   int y_ = 1000;
