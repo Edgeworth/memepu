@@ -37,6 +37,7 @@ public:
 
   class Field {
   public:
+    int num = -1;
     std::string text;
     int x = -1;
     int y = -1;
@@ -78,8 +79,8 @@ public:
     };
 
     Type type;
-    int x = -1;
-    int y = -1;
+    int x = 0;
+    int y = 0;
     int orientation = 0;
     int dimension = 50;
     std::string shape = "~";
@@ -94,16 +95,13 @@ public:
     int num = -1;
     std::string text;
     Orientation orientation = Orientation::HORIZONTAL;
-    int x = -1;
-    int y = -1;
+    int x = 0;
+    int y = 0;
     int size = 50;
     std::string flags = "0000";
     std::string justification = "C";
     std::string style = "CNN";
 
-    static Field
-    fromLibraryField(const Lib::Field& lib_field, int num, const std::string& text, int offset_x,
-        int offset_y);
     std::string toString(int indent = 0);
   };
 
@@ -112,13 +110,14 @@ public:
     std::string name;
     std::string ref;
     int subcomponent = -1;
-    std::string timestamp;
-    int x = -1;
-    int y = -1;
+    std::string timestamp = "DEADBEEF";
+    int x = 0;
+    int y = 0;
     std::vector<Field> fields;
     std::string footer = DEFAULT_FOOTER;
 
     void offset(int x_offset, int y_offset);
+    void addLibField(const Lib::Field& lib_field, const std::string& text);
     std::string toString(int indent = 0);
   };
 
