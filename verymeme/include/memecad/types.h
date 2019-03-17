@@ -70,7 +70,7 @@ struct lib_t {
   std::string toString(int indent = 0);
 };
 
-struct label_t {
+struct sheet_label_t {
   Label type;
   int x = -1;
   int y = -1;
@@ -79,19 +79,11 @@ struct label_t {
   std::string shape = "~";
   std::string text;
 
-  static int labelOrientationFromPinDirection(Direction d) {
-    switch (d) {
-      case Direction::LEFT: return 0;
-      case Direction::UP: return 1;
-      case Direction::RIGHT: return 2;
-      case Direction::DOWN: return 3;
-      default: verify_expr(false, "unknown direction '%d'", int(d));
-    }
-  }
+  static int labelOrientationFromPinDirection(Direction d);
   std::string toString(int indent = 0);
 };
 
-struct field_t {
+struct sheet_field_t {
   int num = -1;
   std::string text;
   Orientation orientation = Orientation::HORIZONTAL;
@@ -102,7 +94,7 @@ struct field_t {
   std::string justification = "C";
   std::string style = "CNN";
 
-  static field_t
+  static sheet_field_t
   fromLibraryField(const lib_field_t& lib_field, int num, const std::string& text, int offset_x,
       int offset_y);
   std::string toString(int indent = 0);
@@ -117,9 +109,10 @@ struct sheet_component_t {
   std::string timestamp;
   int x = -1;
   int y = -1;
-  std::vector<field_t> fields;
+  std::vector<sheet_field_t> fields;
   std::string footer = DEFAULT_FOOTER;
 
+  void offset(int x_offset, int y_offset);
   std::string toString(int indent = 0);
 };
 
@@ -137,7 +130,7 @@ struct sheet_t {
   std::string title;
   std::string header2 = DEFAULT_HEADER2;
   std::vector<sheet_component_t> components;
-  std::vector<label_t> labels;
+  std::vector<sheet_label_t> labels;
 
   std::string toString(int indent = 0);
 };
