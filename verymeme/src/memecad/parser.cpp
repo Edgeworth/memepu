@@ -169,8 +169,9 @@ private:
       std::string tok = next();
       if (tok == "ENDDEF") break;
       else if (tok == "F0" || tok == "F1") {
-        // Record reference field.
+        // Record reference and value fields.
         auto& field = component.fields.emplace_back();
+        field.num = boost::lexical_cast<int>(tok.substr(1));
         field.text = trim(next(), "\"");
         field.x = next<int>();
         field.y = next<int>();

@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
   Yosys::yosys_setup();
   Yosys::yosys_banner();
 
-  Yosys::run_pass("read -sv full_adder.v chip7486.v chip7408.v chip7432.v");
+  Yosys::run_pass("read -sv ./verilog/full_adder.v ./verilog/chip7486.v ./verilog/chip7408.v ./verilog/chip7432.v");
   Yosys::run_pass("memecad");
 
   Yosys::yosys_shutdown();
