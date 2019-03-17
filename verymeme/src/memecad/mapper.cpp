@@ -136,8 +136,8 @@ parseVerilogPinSpec(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell)
   return labels;
 }
 
-rect_t getLibraryComponentBounds(const Lib::Component& lib_component, int subcomponent) {
-  rect_t bounds;
+Rect getLibraryComponentBounds(const Lib::Component& lib_component, int subcomponent) {
+  Rect bounds;
   for (const auto& pin : lib_component.pins) {
     if (pin.subcomponent != subcomponent) continue;
     bounds.left = std::min(bounds.left, pin.x);
@@ -173,34 +173,21 @@ void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
 
   // Add components to kicad sheet.
   std::vector<Sheet::Component> subcomponents;
-  int next_x = x_;
-  y_ = 1000;
   for (int subcomponent = 0; subcomponent < lib_component.unit_count; ++subcomponent) {
     auto& component = subcomponents.emplace_back();
     const auto& lib_ref_field = lib_component.fields[0];
-    const auto& lib_name_field = lib_component.fields[1];
-    rect_t aabb = getLibraryComponentBounds(lib_component, subcomponent);
 
     component.name = lib_.name + ":" + lib_component.names.front();
     component.ref = lib_ref_field.text + "?";
     component.subcomponent = subcomponent;
     component.timestamp = "DEADBEEF";
-    component.x = x_ - aabb.left;
-    component.y = y_ - aabb.top;
-    y_ += aabb.bottom;
-    next_x = std::max(next_x, x_ + aabb.right);
-
     // F0: Reference, F1: Value, F2: Footprint, F3: Datasheet
-    component.fields.push_back(
-        Sheet::Field::fromLibraryField(lib_ref_field, 0, component.ref, component.x, component.y));
-    component.fields.push_back(
-        Sheet::Field::fromLibraryField(lib_name_field, 1, kicad_name, component.x, component.y));
-
-    sheet_.components.push_back(component);  // Also add to sheet.
+    component.addLibField(lib_ref_field, component.ref);
+    component.addLibField(lib_component.fields[1], kicad_name);
   }
-  x_ = next_x + 500;
 
   // Add labels for connecting each component.
+  std::multimap<int, Sheet::Label> component_labels;
   for (const auto& kv : map.get_child("verilog_to_kicad_map")) {
     const auto&[verilog_pin_spec, child_tree] = kv;
     std::vector<std::string> labels = parseVerilogPinSpec(verilog_pin_spec, cell);
@@ -220,16 +207,35 @@ void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
           kicad_pin_spec.c_str(), verilog_pin_spec.c_str());
       for (int i = 0; i < int(kicad_pins.size()); ++i) {
         const auto& pin = *kicad_pins[i];
-        auto& label = sheet_.labels.emplace_back();
+        auto& label = component_labels.emplace(pin.subcomponent, Sheet::Label())->second;
         label.type = Sheet::Label::Type::LOCAL;  // TODO decide if hierarchical or local label.
-        label.x = subcomponents[pin.subcomponent].x + pin.x;
-        label.y = subcomponents[pin.subcomponent].y + pin.y;
+        label.x = pin.x;
+        label.y = pin.y;
         label.orientation = Sheet::Label::labelOrientationFromPinDirection(pin.direction);
         label.text = labels[i];
       }
     }
   }
 
+  // Add finished components to sheet:
+  int next_x = x_;
+  y_ = 1000;
+  for (auto& component : subcomponents) {
+    Rect aabb = getLibraryComponentBounds(lib_component, component.subcomponent);
+    component.offset(x_ - aabb.left, y_ - aabb.top);
+    y_ += aabb.height();
+    next_x = std::max(next_x, x_ + aabb.width());
+    sheet_.components.push_back(component);
+  }
+  x_ = next_x + 500;
+
+  // Add finished labels to sheet:
+  for (auto& kv : component_labels) {
+    auto& [subcomponent, label] = kv;
+    label.x += subcomponents[subcomponent].x;
+    label.y += subcomponents[subcomponent].y;
+    sheet_.labels.push_back(label);
+  }
 }
 
 }  // memecad

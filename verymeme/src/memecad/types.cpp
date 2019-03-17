@@ -49,18 +49,15 @@ std::string Sheet::Field::toString(int indent) {
   return s.str();
 }
 
-Sheet::Field
-Sheet::Field::fromLibraryField(const Lib::Field& lib_field, int num, const std::string& text,
-    int offset_x, int offset_y) {
-  Field f = {};
-  f.num = num;
+void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::string& text) {
+  auto& f = fields.emplace_back();
+  f.num = lib_field.num;
   f.text = text;
-  f.x = lib_field.x + offset_x;
-  f.y = lib_field.y + offset_y;
+  f.x = lib_field.x;
+  f.y = lib_field.y;
   f.size = lib_field.text_size;
   f.justification = lib_field.horizontal_justification;
   f.style = lib_field.vertical_justification;
-  return f;
 }
 
 std::string Sheet::Component::toString(int indent) {

@@ -37,7 +37,7 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   return reversed;
 }
 
-struct rect_t {
+struct Rect {
   int left = 0;
   int top = 0;
   int right = 0;
@@ -49,6 +49,9 @@ struct rect_t {
     right -= w / 2;
     bottom -= h / 2;
   }
+
+  constexpr int width() const { return right - left; }
+  constexpr int height() const { return bottom - top; }
 };
 
 template<typename T, int N>
