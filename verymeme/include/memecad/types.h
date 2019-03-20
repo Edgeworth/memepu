@@ -12,31 +12,27 @@ enum class Orientation {
   HORIZONTAL, VERTICAL, COUNT
 };
 
-class Lib {
-public:
-  class Pin {
-  public:
-    enum class ElectricalType {
-      INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, UNSPECIFIED, POWER_IN, POWER_OUT,
-      OPEN_COLLECTOR, OPEN_EMITTER, NOT_CONNECTED, COUNT
-    };
-    enum class Direction {
-      LEFT, RIGHT, UP, DOWN, COUNT
-    };
+enum class PinType {
+  INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, UNSPECIFIED, POWER_IN, POWER_OUT,
+  OPEN_COLLECTOR, OPEN_EMITTER, NOT_CONNECTED, COUNT
+};
 
+enum class Direction {
+  LEFT, RIGHT, UP, DOWN, COUNT
+};
+
+struct Lib {
+  struct Pin {
     std::string name;
     int pin_number = -1;
     int x = -1;
     int y = -1;
     Direction direction;
     int subcomponent = -1;
-    ElectricalType type;
-
-    std::string toString(int indent = 0);
+    PinType type;
   };
 
-  class Field {
-  public:
+  struct Field {
     int num = -1;
     std::string text;
     int x = -1;
@@ -47,8 +43,7 @@ public:
     std::string vertical_justification = "CNN";
   };
 
-  class Component {
-  public:
+  struct Component {
     enum class UnitSwappable {
       SWAPPABLE, UNSWAPPABLE, COUNT
     };
@@ -59,23 +54,43 @@ public:
     UnitSwappable unit_swappable;
     std::vector<Pin> pins;
     std::vector<Field> fields;
-
-    std::string toString(int indent = 0);
   };
 
   std::string name;
   std::vector<Component> components;
 
   Component& findComponent(const std::string& name);
-  std::string toString(int indent = 0);
 };
 
-class Sheet {
-public:
-  class Label {
-  public:
+struct Sheet {
+  struct RefField {
+    constexpr static int HIERARCHICAL_REF_OFFSET = 2;
+    int num = 0;
+    std::string text;
+    PinType type;
+    Direction side;
+    int x;
+    int y;
+    int dimension = 50;
+  };
+
+  struct Ref {
+    std::string timestamp = "DEADBEEF";
+    std::string name;
+    std::string filename;
+    int x = 0;
+    int y = 0;
+    int width = 1000;
+    int height = 1000;
+    std::vector<RefField> fields;
+  };
+
+  struct Label {
     enum class Type {
       GLOBAL, HIERARCHICAL, LOCAL, NOTES, COUNT
+    };
+    enum class NetType {
+      INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, COUNT
     };
 
     Type type;
@@ -83,15 +98,15 @@ public:
     int y = 0;
     int orientation = 0;
     int dimension = 50;
-    std::string shape = "~";
+    NetType net_type;  // Only used for Global and Hierarchical labels.
+    bool italic = false;
+    bool bold = false;
     std::string text;
 
-    static int labelOrientationFromPinDirection(Lib::Pin::Direction d);
-    std::string toString(int indent = 0);
+    void connectToPin(const Lib::Pin& pin);
   };
 
-  class Field {
-  public:
+  struct Field {
     int num = -1;
     std::string text;
     Orientation orientation = Orientation::HORIZONTAL;
@@ -101,12 +116,9 @@ public:
     std::string flags = "0000";
     std::string justification = "C";
     std::string style = "CNN";
-
-    std::string toString(int indent = 0);
   };
 
-  class Component {
-  public:
+  struct Component {
     std::string name;
     std::string ref;
     int subcomponent = -1;
@@ -118,7 +130,6 @@ public:
 
     void offset(int x_offset, int y_offset);
     void addLibField(const Lib::Field& lib_field, const std::string& text);
-    std::string toString(int indent = 0);
   };
 
   std::string header1 = DEFAULT_HEADER1;
@@ -127,8 +138,7 @@ public:
   std::string header2 = DEFAULT_HEADER2;
   std::vector<Component> components;
   std::vector<Label> labels;
-
-  std::string toString(int indent = 0);
+  std::vector<Ref> refs;
 
 private:
   constexpr static const char* DEFAULT_HEADER1 =
@@ -141,20 +151,25 @@ private:
 
 };
 
+PinType netTypeToPinType(Sheet::Label::NetType net_type);
+
 std::ostream& operator<<(std::ostream& str, const Orientation& o);
 std::istream& operator>>(std::istream& str, Orientation& o);
 
 std::ostream& operator<<(std::ostream& str, const Sheet::Label::Type& o);
 std::istream& operator>>(std::istream& str, Sheet::Label::Type& o);
 
-std::ostream& operator<<(std::ostream& str, const Lib::Pin::Direction& o);
-std::istream& operator>>(std::istream& str, Lib::Pin::Direction& o);
+std::ostream& operator<<(std::ostream& str, const Direction& o);
+std::istream& operator>>(std::istream& str, Direction& o);
 
 std::ostream& operator<<(std::ostream& str, const Lib::Component::UnitSwappable& o);
 std::istream& operator>>(std::istream& str, Lib::Component::UnitSwappable& o);
 
-std::ostream& operator<<(std::ostream& str, const Lib::Pin::ElectricalType& o);
-std::istream& operator>>(std::istream& str, Lib::Pin::ElectricalType& o);
+std::ostream& operator<<(std::ostream& str, const PinType& o);
+std::istream& operator>>(std::istream& str, PinType& o);
+
+std::ostream& operator<<(std::ostream& str, const Sheet::Label::NetType& o);
+std::istream& operator>>(std::istream& str, Sheet::Label::NetType& o);
 
 }  // memecad
 

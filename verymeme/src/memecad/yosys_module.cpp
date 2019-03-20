@@ -41,7 +41,7 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
     log("  Looking at wires\n");
     for (auto& wire_iter : module->wires_) {
       const auto&[wire_id, wire] = wire_iter;
-      log("    Looking at wire %s\n", wire_id.c_str());
+      log("    Looking at wire %s, offset: %d, port id: %d\n", wire_id.c_str(), int(wire->start_offset), int(wire->port_id));
     }
     printf("\n");
 

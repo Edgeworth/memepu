@@ -18,11 +18,17 @@ public:
   void addComponentFromCell(const Yosys::RTLIL::Cell& cell);
 
 private:
-  Sheet sheet_;
+  struct SheetData {
+    Sheet sheet = {};
+    int pack_x = 1000;
+    int pack_y = 1000;
+  };
+
+  void addLeafComponent(const Yosys::RTLIL::Cell& cell);
+
+  std::unordered_map<std::string, SheetData> sheet_map_;
   Lib lib_;
   pt::ptree root_;
-  int x_ = 1000;
-  int y_ = 1000;
 };
 
 }  // memecad

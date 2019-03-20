@@ -9,6 +9,8 @@ namespace memecad {
 
 namespace {
 
+constexpr int PADDING = 500;
+
 const pt::ptree& lookupMappingByCell(const Yosys::RTLIL::Cell& cell, const pt::ptree& root) {
   const std::string module_name = cell.type.c_str() + 1;
   for (const auto& kv : root) {
@@ -113,13 +115,18 @@ parseKicadPinSpecs(std::string pin_specs, const Lib::Component& lib_component) {
   return pins;
 }
 
-std::vector<std::string>
+struct VerilogPinData {
+  std::string label;
+  const Yosys::RTLIL::SigBit* sigbit;
+};
+
+std::vector<VerilogPinData>
 parseVerilogPinSpec(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell) {
-  std::vector<std::string> labels;
+  std::vector<VerilogPinData> pin_data;
   if (pin_spec == "1") {
-    labels.emplace_back("VCC");
+    pin_data.push_back({"VCC", nullptr});
   } else if (pin_spec == "0") {
-    labels.emplace_back("GND");
+    pin_data.push_back({"GND", nullptr});
   } else {
     // Collect module connections.
     auto conn_iter = cell.connections().find("\\" + pin_spec);
@@ -130,10 +137,12 @@ parseVerilogPinSpec(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell)
     const auto& signal = sigmap(conn_iter->second);
     for (const auto& bit : signal.bits()) {
       verify_expr(bit.wire, "bit does not have associated wire");
-      labels.push_back(std::string(bit.wire->name.c_str() + 1) + std::to_string(bit.offset));
+      pin_data.push_back({
+          std::string(bit.wire->name.c_str() + 1) + std::to_string(bit.offset),
+          &bit});
     }
   }
-  return labels;
+  return pin_data;
 }
 
 Rect getLibraryComponentBounds(const Lib::Component& lib_component, int subcomponent) {
@@ -149,23 +158,70 @@ Rect getLibraryComponentBounds(const Lib::Component& lib_component, int subcompo
   return bounds;
 }
 
-}
+}  // namespace
 
 Mapper::Mapper(const std::string& memecad_json, const Lib& lib) : lib_(lib) {
-  sheet_.id = 1;
-  sheet_.title = "Test sheet";
-
   std::stringstream s(memecad_json);
   pt::read_json(s, root_);
 }
 
 void Mapper::writeHierarchy(const std::string& directory) {
-  const std::string sheet_filename = directory + "/sheet.sch";
-  writeFile(sheet_filename, writeSheet(sheet_), false /* binary */);
+  for (auto& kv : sheet_map_) {
+    auto&[sheet_name, sheet_data] =kv;
+    const std::string sheet_filename = directory + "/" + sheet_name + ".sch";
+    sheet_data.sheet.title = sheet_name;
+    sheet_data.sheet.id = 1;  // TODO sheet index.
+
+    // Plumb up hierarchical labels:
+    for (auto& ref : sheet_data.sheet.refs) {
+      // Remove .sch extension.
+      std::string module_name = ref.filename.substr(0, ref.filename.size() - 4);
+      verify_expr(sheet_map_.count(module_name), "BUG");
+      const auto& child_sheet = sheet_map_[module_name].sheet;
+
+      std::vector<const Sheet::Label*> hierarchical_labels;
+      for (const auto& child_label : child_sheet.labels)
+        if (child_label.type == Sheet::Label::Type::HIERARCHICAL)
+          hierarchical_labels.push_back(&child_label);
+
+        // TODO: Need to be able to connect labels onto hierarchical labels
+      int pack_y = ref.y + 100;
+      for (int i = 0; i < int(hierarchical_labels.size()); ++i) {
+        if (i == int(hierarchical_labels.size() / 2))
+          pack_y = ref.y + 100;
+        const bool left = i < int(hierarchical_labels.size() / 2);
+        Sheet::RefField& ref_field = ref.fields.emplace_back();
+        ref_field.num = i + Sheet::RefField::HIERARCHICAL_REF_OFFSET;
+        ref_field.text = hierarchical_labels[i]->text;
+        ref_field.type = netTypeToPinType(hierarchical_labels[i]->net_type);
+        ref_field.side = left ? Direction::RIGHT : Direction::LEFT;
+        ref_field.x = left ? ref.x : (ref.x + ref.width);
+        ref_field.y = pack_y;
+        pack_y += ref_field.dimension * 2;
+      }
+      ref.height = pack_y - ref.y;
+    }
+
+    writeFile(sheet_filename, writeSheet(sheet_data.sheet), false /* binary */);
+  }
 }
 
 void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
-  // TODO: bin pack based on size of component
+  auto iter = sheet_map_.find(cell.type.c_str() + 1);
+  if (iter == sheet_map_.end()) {
+    addLeafComponent(cell);
+  } else {
+    auto& data = sheet_map_[cell.module->name.c_str() + 1];
+    auto& ref = data.sheet.refs.emplace_back();
+    ref.name = cell.name.c_str() + 1;
+    ref.filename = std::string(cell.type.c_str() + 1) + ".sch";
+    ref.x = data.pack_x;
+    ref.y = data.pack_y;
+    data.pack_x += ref.width + PADDING;
+  }
+}
+
+void Mapper::addLeafComponent(const Yosys::RTLIL::Cell& cell) {
   const auto& map = lookupMappingByCell(cell, root_);
   const std::string kicad_name = map.get<std::string>("kicad_name");
   auto& lib_component = lib_.findComponent(kicad_name);
@@ -190,7 +246,7 @@ void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
   std::multimap<int, Sheet::Label> component_labels;
   for (const auto& kv : map.get_child("verilog_to_kicad_map")) {
     const auto&[verilog_pin_spec, child_tree] = kv;
-    std::vector<std::string> labels = parseVerilogPinSpec(verilog_pin_spec, cell);
+    auto verilog_pin_data = parseVerilogPinSpec(verilog_pin_spec, cell);
     std::vector<std::string> kicad_pin_specs;
     if (child_tree.empty()) {
       // Single pin spec.
@@ -202,39 +258,45 @@ void Mapper::addComponentFromCell(const Yosys::RTLIL::Cell& cell) {
     }
     for (const auto& kicad_pin_spec : kicad_pin_specs) {
       auto kicad_pins = parseKicadPinSpecs(kicad_pin_spec, lib_component);
-      verify_expr(kicad_pins.size() == labels.size(),
+      verify_expr(kicad_pins.size() == verilog_pin_data.size(),
           "bit-width of kicad pin-spec '%s' does not match bit-width of verilog signal '%s'",
           kicad_pin_spec.c_str(), verilog_pin_spec.c_str());
       for (int i = 0; i < int(kicad_pins.size()); ++i) {
         const auto& pin = *kicad_pins[i];
+        const auto& verilog_bit = verilog_pin_data[i].sigbit;
         auto& label = component_labels.emplace(pin.subcomponent, Sheet::Label())->second;
-        label.type = Sheet::Label::Type::LOCAL;  // TODO decide if hierarchical or local label.
-        label.x = pin.x;
-        label.y = pin.y;
-        label.orientation = Sheet::Label::labelOrientationFromPinDirection(pin.direction);
-        label.text = labels[i];
+        if (verilog_bit && verilog_bit->wire->port_id != 0) {
+          label.type = Sheet::Label::Type::HIERARCHICAL;
+          label.net_type = verilog_bit->wire->port_input ? Sheet::Label::NetType::INPUT
+                                                         : Sheet::Label::NetType::OUTPUT;
+        } else {
+          label.type = Sheet::Label::Type::LOCAL;
+        }
+        label.connectToPin(pin);
+        label.text = verilog_pin_data[i].label;
       }
     }
   }
 
   // Add finished components to sheet:
-  int next_x = x_;
-  y_ = 1000;
+  auto& data = sheet_map_[cell.module->name.c_str() + 1];
+  int next_x = data.pack_x;
+  int y = data.pack_y;
   for (auto& component : subcomponents) {
     Rect aabb = getLibraryComponentBounds(lib_component, component.subcomponent);
-    component.offset(x_ - aabb.left, y_ - aabb.top);
-    y_ += aabb.height();
-    next_x = std::max(next_x, x_ + aabb.width());
-    sheet_.components.push_back(component);
+    component.offset(data.pack_x - aabb.left, y - aabb.top);
+    y += aabb.height();
+    next_x = std::max(next_x, data.pack_x + aabb.width());
+    data.sheet.components.push_back(component);
   }
-  x_ = next_x + 500;
+  data.pack_x = next_x + PADDING;
 
   // Add finished labels to sheet:
   for (auto& kv : component_labels) {
-    auto& [subcomponent, label] = kv;
+    auto&[subcomponent, label] = kv;
     label.x += subcomponents[subcomponent].x;
     label.y += subcomponents[subcomponent].y;
-    sheet_.labels.push_back(label);
+    data.sheet.labels.push_back(label);
   }
 }
 
