@@ -454,90 +454,6 @@ F 3 "" H 6750 4850 50  0001 C CNN
 	1    6750 4850
 	1    0    0    -1  
 $EndComp
-Text Label 1400 1150 2    50   ~ 0
-A0
-Text Label 1400 1800 2    50   ~ 0
-A1
-Text Label 1400 2450 2    50   ~ 0
-A2
-Text Label 1400 3100 2    50   ~ 0
-A3
-Text Label 1400 3700 2    50   ~ 0
-A4
-Text Label 1400 4350 2    50   ~ 0
-A5
-Text Label 1400 5000 2    50   ~ 0
-A6
-Text Label 1400 5650 2    50   ~ 0
-A7
-Text Label 1400 1350 2    50   ~ 0
-B0
-Text Label 1400 2000 2    50   ~ 0
-B1
-Text Label 1400 2650 2    50   ~ 0
-B2
-Text Label 1400 3300 2    50   ~ 0
-B3
-Text Label 1400 3900 2    50   ~ 0
-B4
-Text Label 1400 4550 2    50   ~ 0
-B5
-Text Label 1400 5200 2    50   ~ 0
-B6
-Text Label 1400 5850 2    50   ~ 0
-B7
-Text Label 2000 1250 0    50   ~ 0
-A_XOR_B0
-Text Label 2000 1900 0    50   ~ 0
-A_XOR_B1
-Text Label 2000 2550 0    50   ~ 0
-A_XOR_B2
-Text Label 2000 3200 0    50   ~ 0
-A_XOR_B3
-Text Label 2000 3800 0    50   ~ 0
-A_XOR_B4
-Text Label 2000 4450 0    50   ~ 0
-A_XOR_B5
-Text Label 2000 5100 0    50   ~ 0
-A_XOR_B6
-Text Label 2000 5750 0    50   ~ 0
-A_XOR_B7
-Text Label 4900 1150 2    50   ~ 0
-A_XOR_B0
-Text Label 4900 1800 2    50   ~ 0
-A_XOR_B1
-Text Label 4900 2450 2    50   ~ 0
-A_XOR_B2
-Text Label 4900 3100 2    50   ~ 0
-A_XOR_B3
-Text Label 4900 3700 2    50   ~ 0
-A_XOR_B4
-Text Label 4900 4350 2    50   ~ 0
-A_XOR_B5
-Text Label 4900 5000 2    50   ~ 0
-A_XOR_B6
-Text Label 4900 5650 2    50   ~ 0
-A_XOR_B7
-Text Label 4050 2100 2    50   ~ 0
-A_XOR_B8
-Text Label 4900 1350 2    50   ~ 0
-C_IN
-Text Label 5500 1250 0    50   ~ 0
-Y0
-Text Label 5500 1900 0    50   ~ 0
-Y1
-Text Label 5500 2550 0    50   ~ 0
-Y2
-Text Label 5500 3200 0    50   ~ 0
-Y3
-Text Label 5500 3800 0    50   ~ 0
-Y4
-Text Label 5500 4450 0    50   ~ 0
-Y5
-Text Label 5500 5100 0    50   ~ 0
-Y6
-Text Label 5500 5750 0    50   ~ 0
-Y7
 $Comp
 L 74xx:74LS08 U5
 U 1 1 5C62AB8B
@@ -758,54 +674,6 @@ F 3 "" H 8950 5200 50  0001 C CNN
 	1    8950 5200
 	1    0    0    -1  
 $EndComp
-Text Label 7700 1200 2    50   ~ 0
-A0
-Text Label 7700 1850 2    50   ~ 0
-A1
-Text Label 7700 2500 2    50   ~ 0
-A2
-Text Label 7700 3150 2    50   ~ 0
-A3
-Text Label 7700 3750 2    50   ~ 0
-A4
-Text Label 7700 4400 2    50   ~ 0
-A5
-Text Label 7700 5050 2    50   ~ 0
-A6
-Text Label 7700 5700 2    50   ~ 0
-A7
-Text Label 7700 1400 2    50   ~ 0
-B0
-Text Label 7700 2050 2    50   ~ 0
-B1
-Text Label 7700 2700 2    50   ~ 0
-B2
-Text Label 7700 3350 2    50   ~ 0
-B3
-Text Label 7700 3950 2    50   ~ 0
-B4
-Text Label 7700 4600 2    50   ~ 0
-B5
-Text Label 7700 5250 2    50   ~ 0
-B6
-Text Label 7700 5900 2    50   ~ 0
-B7
-Text Label 8300 1300 0    50   ~ 0
-A_AND_B0
-Text Label 8300 1950 0    50   ~ 0
-A_AND_B1
-Text Label 8300 2600 0    50   ~ 0
-A_AND_B2
-Text Label 8300 3250 0    50   ~ 0
-A_AND_B3
-Text Label 8300 3850 0    50   ~ 0
-A_AND_B4
-Text Label 8300 4500 0    50   ~ 0
-A_AND_B5
-Text Label 8300 5150 0    50   ~ 0
-A_AND_B6
-Text Label 8300 5800 0    50   ~ 0
-A_AND_B7
 $Comp
 L 74xx:74LS08 U7
 U 1 1 5C667F1E
@@ -1026,38 +894,6 @@ F 3 "" H 12000 5200 50  0001 C CNN
 	1    12000 5200
 	1    0    0    -1  
 $EndComp
-Text Label 10750 1200 2    50   ~ 0
-A_XOR_B0
-Text Label 10750 1850 2    50   ~ 0
-A_XOR_B1
-Text Label 10750 2500 2    50   ~ 0
-A_XOR_B2
-Text Label 10750 3150 2    50   ~ 0
-A_XOR_B3
-Text Label 10750 3750 2    50   ~ 0
-A_XOR_B4
-Text Label 10750 4400 2    50   ~ 0
-A_XOR_B5
-Text Label 10750 5050 2    50   ~ 0
-A_XOR_B6
-Text Label 10750 5700 2    50   ~ 0
-A_XOR_B7
-Text Label 10750 1400 2    50   ~ 0
-C_IN
-Text Label 10750 2050 2    50   ~ 0
-C0
-Text Label 10750 2700 2    50   ~ 0
-C1
-Text Label 10750 3350 2    50   ~ 0
-C2
-Text Label 10750 3950 2    50   ~ 0
-C3
-Text Label 10750 4600 2    50   ~ 0
-C4
-Text Label 10750 5250 2    50   ~ 0
-C5
-Text Label 10750 5900 2    50   ~ 0
-C6
 $Comp
 L 74xx:74LS32 U9
 U 1 1 5C66F68E
@@ -1276,72 +1112,38 @@ F 1 "GND" H 14855 4927 50  0000 C CNN
 F 2 "" H 14850 5100 50  0001 C CNN
 F 3 "" H 14850 5100 50  0001 C CNN
 	1    14850 5100
-	1    0    0    -1  
+	1    0    0    -1
 $EndComp
 Text Label 13600 1150 2    50   ~ 0
 A_AND_B0
-Text Label 13600 1750 2    50   ~ 0
-A_AND_B1
-Text Label 13600 2400 2    50   ~ 0
-A_AND_B2
-Text Label 13600 3050 2    50   ~ 0
-A_AND_B3
-Text Label 13600 3650 2    50   ~ 0
-A_AND_B4
-Text Label 13600 4250 2    50   ~ 0
-A_AND_B5
-Text Label 13600 4900 2    50   ~ 0
-A_AND_B6
-Text Label 13600 5550 2    50   ~ 0
-A_AND_B7
-Text Label 11350 1300 0    50   ~ 0
-C_AND_AB0
-Text Label 11350 1950 0    50   ~ 0
-C_AND_AB1
-Text Label 11350 2600 0    50   ~ 0
-C_AND_AB2
-Text Label 11350 3250 0    50   ~ 0
-C_AND_AB3
-Text Label 11350 3850 0    50   ~ 0
-C_AND_AB4
-Text Label 11350 4500 0    50   ~ 0
-C_AND_AB5
-Text Label 11350 5150 0    50   ~ 0
-C_AND_AB6
-Text Label 11350 5800 0    50   ~ 0
-C_AND_AB7
-Text Label 13600 1350 2    50   ~ 0
-C_AND_AB0
-Text Label 13600 1950 2    50   ~ 0
-C_AND_AB1
-Text Label 13600 2600 2    50   ~ 0
-C_AND_AB2
-Text Label 13600 3250 2    50   ~ 0
-C_AND_AB3
-Text Label 13600 3850 2    50   ~ 0
-C_AND_AB4
-Text Label 13600 4450 2    50   ~ 0
-C_AND_AB5
-Text Label 13600 5100 2    50   ~ 0
-C_AND_AB6
-Text Label 13600 5750 2    50   ~ 0
-C_AND_AB7
-Text Label 14200 1250 0    50   ~ 0
-C0
-Text Label 14200 1850 0    50   ~ 0
-C1
-Text Label 14200 2500 0    50   ~ 0
-C2
-Text Label 14200 3150 0    50   ~ 0
-C3
-Text Label 14200 3750 0    50   ~ 0
-C4
-Text Label 14200 4350 0    50   ~ 0
-C5
-Text Label 14200 5000 0    50   ~ 0
-C6
-Text Label 14200 5650 0    50   ~ 0
-C_OUT
 Text Notes 1700 6650 0    50   ~ 0
 Multiline\ntest\nstring
+Text HLabel 1800 1000 0    50   Output ~ 0
+OUTPUT_TEST
+Text HLabel 2500 1200 1    50   Input Italic 10
+LABEL_TEST
+Text HLabel 1800 1400 0    50   BiDi ~ 0
+BIDIRECTIONAL_TEST
+Text HLabel 1800 1650 0    50   3State ~ 0
+TRISTATE_TEST
+Text HLabel 1750 1850 0    50   UnSpc ~ 0
+PASSIVE_TEST
+Text Notes 3300 2000 1    50   Italic 10
+TEXT TEST
+Text Label 2500 2900 1    50   Italic 10
+LABEL_TEST
+Text Label 3600 2750 2    50   ~ 0
+BASIC_LABEL_TEST
+Text Label 4100 2600 3    50   ~ 0
+BASIC_LABEL_TEST_ROTATED
+Text Label 4950 1750 0    50   ~ 10
+TEST_BOLD_LABEL
+$Sheet
+S 7350 4600 1250 1750
+U 5C91060F
+F0 "heirachical sheet name" 50
+F1 "hierarchical_1.sch" 50
+F2 "LABEL1" I R 8600 4850 50
+F3 "LABEL2" I L 7350 5200 50
+$EndSheet
 $EndSCHEMATC

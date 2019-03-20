@@ -1,52 +1,40 @@
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>
+#include <memecad/types.h>
 
 
 namespace memecad {
 
-#define PRINT_FIELD(f) \
-  s << std::string(indent, ' ') <<  #f << ": " << boost::lexical_cast<std::string>(f) << "\n";
+namespace {
 
-std::string Sheet::Label::toString(int indent) {
-  std::stringstream s;
-  PRINT_FIELD(type);
-  PRINT_FIELD(x);
-  PRINT_FIELD(y);
-  PRINT_FIELD(orientation);
-  PRINT_FIELD(dimension);
-  PRINT_FIELD(shape);
-  PRINT_FIELD(text);
-  return s.str();
-}
-
-int Sheet::Label::labelOrientationFromPinDirection(Lib::Pin::Direction d) {
+int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   switch (d) {
-    case Lib::Pin::Direction::LEFT:
-      return 0;
-    case Lib::Pin::Direction::UP:
-      return 1;
-    case Lib::Pin::Direction::RIGHT:
-      return 2;
-    case Lib::Pin::Direction::DOWN:
-      return 3;
-    default:
-      verify_expr(false, "unknown direction '%d'", int(d));
+    case Direction::LEFT: return label_type == Sheet::Label::Type::HIERARCHICAL ? 2 : 0;
+    case Direction::DOWN: return 1;
+    case Direction::RIGHT: return label_type == Sheet::Label::Type::HIERARCHICAL ? 0 : 2;
+    case Direction::UP: return 3;
+    default: verify_expr(false, "unknown direction '%d'", int(d));
   }
 }
 
-std::string Sheet::Field::toString(int indent) {
-  std::stringstream s;
-  PRINT_FIELD(num);
-  PRINT_FIELD(text);
-  PRINT_FIELD(orientation);
-  PRINT_FIELD(x);
-  PRINT_FIELD(y);
-  PRINT_FIELD(size);
-  PRINT_FIELD(flags);
-  PRINT_FIELD(justification);
-  PRINT_FIELD(style);
-  return s.str();
+}  // namespace
+
+PinType netTypeToPinType(Sheet::Label::NetType net_type) {
+  switch (net_type) {
+    case Sheet::Label::NetType::INPUT: return PinType::INPUT;
+    case Sheet::Label::NetType::OUTPUT: return PinType::OUTPUT;
+    case Sheet::Label::NetType::BIDIRECTIONAL: return PinType::BIDIRECTIONAL;
+    case Sheet::Label::NetType::TRISTATE: return PinType::TRISTATE;
+    case Sheet::Label::NetType::PASSIVE: return PinType::PASSIVE;
+    default: verify_expr(false, "Unknown net type '%d'", int(net_type));
+  }
+}
+
+void Sheet::Label::connectToPin(const Lib::Pin& pin) {
+  x = pin.x;
+  y = pin.y;
+  orientation = pinDirectionToLabelOrientation(pin.direction, type);
 }
 
 void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::string& text) {
@@ -60,21 +48,6 @@ void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::strin
   f.style = lib_field.vertical_justification;
 }
 
-std::string Sheet::Component::toString(int indent) {
-  std::stringstream s;
-  PRINT_FIELD(name);
-  PRINT_FIELD(ref);
-  PRINT_FIELD(subcomponent);
-  PRINT_FIELD(timestamp);
-  PRINT_FIELD(x);
-  PRINT_FIELD(y);
-  for (int i = 0; i < int(fields.size()); ++i) {
-    s << std::string(indent, ' ') << "Field #" << (i + 1) << "\n";
-    s << fields[i].toString(indent + 2);
-  }
-  return s.str();
-}
-
 void Sheet::Component::offset(int x_offset, int y_offset) {
   x += x_offset;
   y += y_offset;
@@ -83,54 +56,6 @@ void Sheet::Component::offset(int x_offset, int y_offset) {
     field.y += y_offset;
   }
 }
-
-std::string Sheet::toString(int indent) {
-  std::stringstream s;
-  PRINT_FIELD(id);
-  PRINT_FIELD(title);
-  for (int i = 0; i < int(components.size()); ++i) {
-    s << std::string(indent, ' ') << "Component #" << (i + 1) << "\n";
-    s << components[i].toString(indent + 2);
-  }
-  for (int i = 0; i < int(labels.size()); ++i) {
-    s << std::string(indent, ' ') << "Label #" << (i + 1) << "\n";
-    s << labels[i].toString(indent + 2);
-  }
-  return s.str();
-}
-
-std::string Lib::Pin::toString(int indent) {
-  std::stringstream s;
-  PRINT_FIELD(name);
-  PRINT_FIELD(x);
-  PRINT_FIELD(y);
-  PRINT_FIELD(direction);
-  return s.str();
-}
-
-std::string Lib::Component::toString(int indent) {
-  std::stringstream s;
-  PRINT_FIELD(names[0]);
-  PRINT_FIELD(ref);
-  PRINT_FIELD(unit_count);
-  PRINT_FIELD(unit_swappable);
-  for (int i = 0; i < int(pins.size()); ++i) {
-    s << std::string(indent, ' ') << "Pin #" << (i + 1) << "\n";
-    s << pins[i].toString(indent + 2);
-  }
-  return s.str();
-}
-
-std::string Lib::toString(int indent) {
-  std::stringstream s;
-  for (int i = 0; i < int(components.size()); ++i) {
-    s << std::string(indent, ' ') << "Library component #" << (i + 1) << "\n";
-    s << components[i].toString(indent + 2);
-  }
-  return s.str();
-}
-
-#undef PRINT_FIELD
 
 Lib::Component& Lib::findComponent(const std::string& name) {
   for (auto& comp : components) {
@@ -166,8 +91,11 @@ const std::string ORIENTATION_MAPPING[] = {"H", "V"};
 const std::string LABEL_MAPPING[] = {"GLabel", "HLabel", "Label", "Notes"};
 const std::string DIRECTION_MAPPING[] = {"L", "R", "U", "D"};
 const std::string UNIT_SWAPPABLE_MAPPING[] = {"F", "L"};
-const std::string ELECTRICAL_TYPE_MAPPING[] =
+const std::string PIN_TYPE_MAPPING[] =
     {"I", "O", "B", "T", "P", "U", "W", "w", "C", "E", "N"};
+const std::string NET_TYPE_MAPPING[] = {
+    "Input", "Output", "BiDi", "3State", "UnSpc"
+};
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o) {
   return outputEnum(str, o, ORIENTATION_MAPPING);
@@ -185,11 +113,11 @@ std::istream& operator>>(std::istream& str, Sheet::Label::Type& o) {
   return inputEnum(str, o, LABEL_MAPPING);
 }
 
-std::ostream& operator<<(std::ostream& str, const Lib::Pin::Direction& o) {
+std::ostream& operator<<(std::ostream& str, const Direction& o) {
   return outputEnum(str, o, DIRECTION_MAPPING);
 }
 
-std::istream& operator>>(std::istream& str, Lib::Pin::Direction& o) {
+std::istream& operator>>(std::istream& str, Direction& o) {
   return inputEnum(str, o, DIRECTION_MAPPING);
 }
 
@@ -201,13 +129,20 @@ std::istream& operator>>(std::istream& str, Lib::Component::UnitSwappable& o) {
   return inputEnum(str, o, UNIT_SWAPPABLE_MAPPING);
 }
 
-std::ostream& operator<<(std::ostream& str, const Lib::Pin::ElectricalType& o) {
-  return outputEnum(str, o, ELECTRICAL_TYPE_MAPPING);
+std::ostream& operator<<(std::ostream& str, const PinType& o) {
+  return outputEnum(str, o, PIN_TYPE_MAPPING);
 }
 
-std::istream& operator>>(std::istream& str, Lib::Pin::ElectricalType& o) {
-  return inputEnum(str, o, ELECTRICAL_TYPE_MAPPING);
+std::istream& operator>>(std::istream& str, PinType& o) {
+  return inputEnum(str, o, PIN_TYPE_MAPPING);
 }
 
+std::ostream& operator<<(std::ostream& str, const Sheet::Label::NetType& o) {
+  return outputEnum(str, o, NET_TYPE_MAPPING);
+}
+
+std::istream& operator>>(std::istream& str, Sheet::Label::NetType& o) {
+  return inputEnum(str, o, NET_TYPE_MAPPING);
+}
 
 }  // memecad
