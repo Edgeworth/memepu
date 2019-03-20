@@ -49,9 +49,15 @@ public:
         label.y = next<int>();
         label.orientation = next<int>();
         label.dimension = next<int>();
-        label.shape = next();
-        expect({"0", "\n"});
+        if (label.type == Sheet::Label::Type::HIERARCHICAL ||
+            label.type == Sheet::Label::Type::GLOBAL)
+          label.net_type = next<Sheet::Label::NetType>();
+        label.italic = next() == "Italic";
+        label.bold = next() != "0";
+        expect({"\n"});
         label.text = trim(getLines(1), "\\n");
+      } else if (tok == "$Sheet") {
+        sheet.refs.emplace_back(parseSheetRef());
       } else {
         verify_expr(false, "unexpected token '%s'", tok.c_str());
       }
@@ -116,6 +122,40 @@ private:
     return comp;
   }
 
+  Sheet::Ref parseSheetRef() {
+    Sheet::Ref ref;
+    expect({"\n", "S"});
+    ref.x = next<int>();
+    ref.y = next<int>();
+    ref.width = next<int>();
+    ref.height = next<int>();
+    expect({"\n", "U"});
+    ref.timestamp = next();
+    expect({"\n", "F0"});
+    ref.name = trim(next(), "\"");
+    next();  // Name dimension.
+    expect({"\n", "F1"});
+    ref.filename = trim(next(), "\"");
+    next();  // Filename dimension.
+    expect({"\n"});
+    while (true) {
+      std::string tok = next();
+      if (tok == "$EndSheet") break;
+
+      Sheet::RefField& field = ref.fields.emplace_back();
+      field.num = boost::lexical_cast<int>(tok.c_str() + 1);
+      field.text = trim(next(), "\"");
+      field.type = next<PinType>();
+      field.side = next<Direction>();
+      field.x = next<int>();
+      field.y = next<int>();
+      next();  // Label dimension.
+      expect({"\n"});
+    }
+    expect({"\n"});
+    return ref;
+  }
+
   template<typename T = std::string>
   T peek() {
     verify_expr(idx_ < int(toks_.size()), "expecting token");
@@ -174,7 +214,7 @@ private:
         field.num = boost::lexical_cast<int>(tok.substr(1));
         field.text = trim(next(), "\"");
         field.x = next<int>();
-        field.y = next<int>();
+        field.y = -next<int>();  // Seems like y-axis is inverted for libraries.
         field.text_size = next<int>();
         field.text_orientation = next<Orientation>();
         next();  // Skip visibility.
@@ -189,14 +229,14 @@ private:
         pin.name = next();
         pin.pin_number = next<int>();
         pin.x = next<int>();
-        pin.y = next<int>();
+        pin.y = -next<int>();   // Seems like y-axis is inverted for libraries.
         next(); // Length
-        pin.direction = next<Lib::Pin::Direction>();
+        pin.direction = next<Direction>();
         next();
         next();  // Name text size, num text size.
         pin.subcomponent = next<int>() - 1;
         next();  // convert
-        pin.type = next<Lib::Pin::ElectricalType>();
+        pin.type = next<PinType>();
         getLines(1); // Ignore rest.
       }
     }
@@ -219,20 +259,34 @@ public:
       data += "U " + tos(comp.subcomponent + 1) + " 1 " + comp.timestamp + "\n";
       data += "P " + tos(comp.x) + " " + tos(comp.y) + "\n";
       for (const auto& f : comp.fields) {
-        data +=
-            "F " + tos(f.num) + " \"" + f.text + "\" " + tos(f.orientation) + " " + tos(f.x) + " " +
-            tos(f.y) + " " + tos(f.size) + " " + f.flags + " " + f.justification + " " +
-            f.style + "\n";
+        data += "F " + tos(f.num) + " \"" + f.text + "\" " + tos(f.orientation) + " " + tos(f.x) +
+                " " + tos(f.y) + " " + tos(f.size) + " " + f.flags + " " + f.justification + " " +
+                f.style + "\n";
       }
       data += comp.footer;
       data += "$EndComp\n";
     }
 
     for (const auto& l : sheet.labels) {
-      data +=
-          "Text " + tos(l.type) + " " + tos(l.x) + " " + tos(l.y) + " " + tos(l.orientation) + " " +
-          tos(l.dimension) + " " + tos(l.shape) + " 0\n";
+      data += "Text " + tos(l.type) + " " + tos(l.x) + " " + tos(l.y) + " " + tos(l.orientation) +
+              " " + tos(l.dimension) + " ";
+      if (l.type == Sheet::Label::Type::HIERARCHICAL || l.type == Sheet::Label::Type::GLOBAL)
+        data += tos(l.net_type) + " ";
+      data += std::string(l.italic ? "Italic" : "~") + " " + (l.bold ? "10" : "0") + "\n";
       data += l.text + "\n";
+    }
+
+    for (const auto& r : sheet.refs) {
+      data += "$Sheet\n";
+      data += "S " + tos(r.x) + " " + tos(r.y) + " " + tos(r.width) + " " + tos(r.height) + "\n";
+      data += "U " + r.timestamp + "\n";
+      data += "F0 \"" + r.name + "\" 50\n";
+      data += "F1 \"" + r.filename + "\" 50\n";
+      for (const auto& f : r.fields) {
+        data += "F" + tos(f.num) + " \"" + f.text + "\" " + tos(f.type) + " " + tos(f.side) + " " +
+                tos(f.x) + " " + tos(f.y) + " 50\n";
+      }
+      data += "$EndSheet\n";
     }
 
     data += "$EndSCHEMATC\n";
@@ -246,7 +300,9 @@ private:
 
 }  // namespace
 
-Sheet parseSheet(const std::string& data) {
+Sheet
+
+parseSheet(const std::string& data) {
   return KicadParser(data).parseSheet();
 }
 

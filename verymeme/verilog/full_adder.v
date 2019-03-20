@@ -2,9 +2,9 @@
 
 /* verilator lint_off UNOPTFLAT */
 module full_adder(
-  input /*u*/ wire [7:0] A,
-  input /*u*/ wire [7:0] B,
-  input /*u*/ wire C_IN,
+  input wire [7:0] A,
+  input wire [7:0] B,
+  input wire C_IN,
   output /*u*/ wire [7:0] Y,
   output /*u*/ wire C_OUT
 );
