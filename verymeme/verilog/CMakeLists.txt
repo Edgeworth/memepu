@@ -17,7 +17,7 @@ add_library(verilator ${VERILATOR_SOURCES})
 set(VERILATOR_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/verilator)
 
 function(add_verilog_module VERILOG_MODULE)
-  set(VERILOG_SOURCES ${VERILOG_MODULE})
+  set(VERILOG_SOURCES ${VERILOG_MODULE} common.v)
   get_filename_component(MODULE_NAME ${VERILOG_MODULE} NAME_WE)
   set(VERILATOR_OUTPUTS ${VERILATOR_OUTPUTS} "V${MODULE_NAME}.cpp" "V${MODULE_NAME}.h"
     "V${MODULE_NAME}__Syms.cpp" "V${MODULE_NAME}__Syms.h")

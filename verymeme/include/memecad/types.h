@@ -104,6 +104,7 @@ struct Sheet {
     std::string text;
 
     void connectToPin(const Lib::Pin& pin);
+    bool operator<(const Label& o) const;
   };
 
   struct Field {
