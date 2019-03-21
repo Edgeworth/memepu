@@ -27,6 +27,7 @@ std::string readFile(const std::string& filename, bool binary);
 void writeFile(const std::string& filename, const std::string& data, bool binary);
 std::string basename(const std::string& filename);
 std::string stem(const std::string& filename);
+void checked_chdir(const std::string& path);
 
 template<typename T>
 std::vector<T> reverse(std::vector<T>&& vec) {

@@ -117,16 +117,16 @@ parseKicadPinSpecs(std::string pin_specs, const Lib::Component& lib_component) {
 
 struct VerilogPinData {
   std::string label;
-  const Yosys::RTLIL::SigBit* sigbit;
+  const Yosys::RTLIL::SigBit sigbit;
 };
 
 std::vector<VerilogPinData>
 parseVerilogPinSpec(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell) {
   std::vector<VerilogPinData> pin_data;
   if (pin_spec == "1") {
-    pin_data.push_back({"VCC", nullptr});
+    pin_data.push_back({"VCC", {}});
   } else if (pin_spec == "0") {
-    pin_data.push_back({"GND", nullptr});
+    pin_data.push_back({"GND", {}});
   } else {
     // Collect module connections.
     auto conn_iter = cell.connections().find("\\" + pin_spec);
@@ -138,8 +138,7 @@ parseVerilogPinSpec(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell)
     for (const auto& bit : signal.bits()) {
       verify_expr(bit.wire, "bit does not have associated wire");
       pin_data.push_back({
-          std::string(bit.wire->name.c_str() + 1) + std::to_string(bit.offset),
-          &bit});
+          std::string(bit.wire->name.c_str() + 1) + std::to_string(bit.offset), bit});
     }
   }
   return pin_data;
@@ -179,25 +178,27 @@ void Mapper::writeHierarchy(const std::string& directory) {
       verify_expr(sheet_map_.count(module_name), "BUG");
       const auto& child_sheet = sheet_map_[module_name].sheet;
 
-      std::vector<const Sheet::Label*> hierarchical_labels;
+      std::set<Sheet::Label> hierarchical_labels;
       for (const auto& child_label : child_sheet.labels)
         if (child_label.type == Sheet::Label::Type::HIERARCHICAL)
-          hierarchical_labels.push_back(&child_label);
+          hierarchical_labels.insert(child_label);
 
-        // TODO: Need to be able to connect labels onto hierarchical labels
+      // TODO: Need to be able to connect labels onto hierarchical labels
       int pack_y = ref.y + 100;
-      for (int i = 0; i < int(hierarchical_labels.size()); ++i) {
-        if (i == int(hierarchical_labels.size() / 2))
+      int idx = 0;
+      for (const auto& label : hierarchical_labels) {
+        if (idx == int(hierarchical_labels.size() / 2))  // Place on other side.
           pack_y = ref.y + 100;
-        const bool left = i < int(hierarchical_labels.size() / 2);
+        const bool left = idx < int(hierarchical_labels.size() / 2);
         Sheet::RefField& ref_field = ref.fields.emplace_back();
-        ref_field.num = i + Sheet::RefField::HIERARCHICAL_REF_OFFSET;
-        ref_field.text = hierarchical_labels[i]->text;
-        ref_field.type = netTypeToPinType(hierarchical_labels[i]->net_type);
+        ref_field.num = idx + Sheet::RefField::HIERARCHICAL_REF_OFFSET;
+        ref_field.text = label.text;
+        ref_field.type = netTypeToPinType(label.net_type);
         ref_field.side = left ? Direction::RIGHT : Direction::LEFT;
         ref_field.x = left ? ref.x : (ref.x + ref.width);
         ref_field.y = pack_y;
         pack_y += ref_field.dimension * 2;
+        idx++;
       }
       ref.height = pack_y - ref.y;
     }
@@ -247,6 +248,7 @@ void Mapper::addLeafComponent(const Yosys::RTLIL::Cell& cell) {
   for (const auto& kv : map.get_child("verilog_to_kicad_map")) {
     const auto&[verilog_pin_spec, child_tree] = kv;
     auto verilog_pin_data = parseVerilogPinSpec(verilog_pin_spec, cell);
+
     std::vector<std::string> kicad_pin_specs;
     if (child_tree.empty()) {
       // Single pin spec.
@@ -262,17 +264,17 @@ void Mapper::addLeafComponent(const Yosys::RTLIL::Cell& cell) {
           "bit-width of kicad pin-spec '%s' does not match bit-width of verilog signal '%s'",
           kicad_pin_spec.c_str(), verilog_pin_spec.c_str());
       for (int i = 0; i < int(kicad_pins.size()); ++i) {
-        const auto& pin = *kicad_pins[i];
+        const auto& kicad_pin = *kicad_pins[i];
         const auto& verilog_bit = verilog_pin_data[i].sigbit;
-        auto& label = component_labels.emplace(pin.subcomponent, Sheet::Label())->second;
-        if (verilog_bit && verilog_bit->wire->port_id != 0) {
+        auto& label = component_labels.emplace(kicad_pin.subcomponent, Sheet::Label())->second;
+        if (verilog_bit.wire && verilog_bit.wire->port_id != 0) {
           label.type = Sheet::Label::Type::HIERARCHICAL;
-          label.net_type = verilog_bit->wire->port_input ? Sheet::Label::NetType::INPUT
-                                                         : Sheet::Label::NetType::OUTPUT;
+          label.net_type = verilog_bit.wire->port_input ? Sheet::Label::NetType::INPUT
+                                                        : Sheet::Label::NetType::OUTPUT;
         } else {
           label.type = Sheet::Label::Type::LOCAL;
         }
-        label.connectToPin(pin);
+        label.connectToPin(kicad_pin);
         label.text = verilog_pin_data[i].label;
       }
     }
