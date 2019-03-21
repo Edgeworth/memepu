@@ -1,18 +1,17 @@
 cmake_minimum_required(VERSION 3.12)
 
-option(USE_CLANG "build application with clang" OFF)
-if (USE_CLANG)
-  message(STATUS "Using clang...")
-  set(CMAKE_C_COMPILER clang)
-  set(CMAKE_CXX_COMPILER clang++)
-endif ()
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -O3")
 
 project(verymeme)
+
+# Sanitizers via extra-cmake-modules.
+find_package(ECM REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_DIR})
+include(ECMEnableSanitizers)
+
 # Download and unpack googletest at configure time
 configure_file(cmake/DownloadGTest.cmake googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -34,6 +33,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 # Build the rest.
 include(GoogleTest)
 
+# Verilator debug option.
 #add_definitions(-DVL_DEBUG)
 
 find_package(Boost REQUIRED program_options stacktrace_backtrace)

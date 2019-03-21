@@ -37,6 +37,11 @@ void Sheet::Label::connectToPin(const Lib::Pin& pin) {
   orientation = pinDirectionToLabelOrientation(pin.direction, type);
 }
 
+bool Sheet::Label::operator<(const Sheet::Label& o) const {
+  // Consider labels uniquely defined by their text and net type. Put inputs before outputs.
+  return std::tie(net_type, text) < std::tie(o.net_type, o.text);
+}
+
 void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::string& text) {
   auto& f = fields.emplace_back();
   f.num = lib_field.num;

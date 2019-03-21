@@ -1,3 +1,6 @@
+
+#include <verymeme/common.h>
+
 #include "verymeme/common.h"
 
 namespace {
@@ -36,4 +39,7 @@ std::string stem(const std::string& filename) {
   const std::string base = basename(filename);
   if (base.empty() || base[0] == '.') return base;
   return base.substr(0, base.find('.'));
+}
+void checked_chdir(const std::string& path) {
+  verify_expr(chdir(path.c_str()) == 0, "could not change directory");
 }
