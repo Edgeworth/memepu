@@ -54,6 +54,10 @@ struct Lib {
     UnitSwappable unit_swappable;
     std::vector<Pin> pins;
     std::vector<Field> fields;
+
+    Rect getBoundingBox(int subcomponent);
+    const Lib::Pin* findPin(const std::string& pin_name) const;
+    const Lib::Pin* findPin(int pin_number) const;
   };
 
   std::string name;
@@ -64,6 +68,7 @@ struct Lib {
 
 struct Sheet {
   struct RefField {
+    // First two fields are for name and filename.
     constexpr static int HIERARCHICAL_REF_OFFSET = 2;
     int num = 0;
     std::string text;
@@ -104,6 +109,7 @@ struct Sheet {
     std::string text;
 
     void connectToPin(const Lib::Pin& pin);
+    void connectToRefField(const RefField& ref_field);
     bool operator<(const Label& o) const;
   };
 
