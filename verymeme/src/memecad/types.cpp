@@ -31,10 +31,55 @@ PinType netTypeToPinType(Sheet::Label::NetType net_type) {
   }
 }
 
+
+Rect Lib::Component::getBoundingBox(int subcomponent) {
+  Rect bounds;
+  for (const auto& pin : pins) {
+    if (pin.subcomponent != subcomponent) continue;
+    bounds.left = std::min(bounds.left, pin.x);
+    bounds.right = std::max(bounds.right, pin.x);
+    bounds.top = std::min(bounds.top, pin.y);
+    bounds.bottom = std::max(bounds.bottom, pin.y);
+  }
+  bounds.inset(-200, -200);
+  return bounds;
+}
+const Lib::Pin* Lib::Component::findPin(const std::string& pin_name) const {
+  for (const auto& pin : pins) {
+    if (pin.name == pin_name)
+      return &pin;
+  }
+  return nullptr;
+}
+
+const Lib::Pin* Lib::Component::findPin(int pin_number) const {
+  for (const auto& pin : pins) {
+    if (pin.pin_number == pin_number)
+      return &pin;
+  }
+  return nullptr;
+}
+
+Lib::Component& Lib::findComponent(const std::string& name) {
+  for (auto& comp : components) {
+    for (const auto& comp_name : comp.names) {
+      if (comp_name == name)
+        return comp;
+    }
+  }
+  verify_expr(false, "can't find component '%s'", name.c_str());
+}
+
 void Sheet::Label::connectToPin(const Lib::Pin& pin) {
   x = pin.x;
   y = pin.y;
   orientation = pinDirectionToLabelOrientation(pin.direction, type);
+}
+
+void Sheet::Label::connectToRefField(const Sheet::RefField& ref_field) {
+  x = ref_field.x;
+  y = ref_field.y;
+  orientation = pinDirectionToLabelOrientation(ref_field.side, type);
 }
 
 bool Sheet::Label::operator<(const Sheet::Label& o) const {
@@ -60,16 +105,6 @@ void Sheet::Component::offset(int x_offset, int y_offset) {
     field.x += x_offset;
     field.y += y_offset;
   }
-}
-
-Lib::Component& Lib::findComponent(const std::string& name) {
-  for (auto& comp : components) {
-    for (const auto& comp_name : comp.names) {
-      if (comp_name == name)
-        return comp;
-    }
-  }
-  verify_expr(false, "can't find component '%s'", name.c_str());
 }
 
 template<typename T>
