@@ -49,7 +49,7 @@ add_library(memecad_library
     src/memecad/parser.cpp include/memecad/parser.h
     src/memecad/types.cpp include/memecad/types.h
     src/memecad/mapper.cpp include/memecad/mapper.h
-    src/memecad/yosys_module.cpp include/memecad/yosys_module.h)
+    src/memecad/yosys_module.cpp include/memecad/yosys_module.h src/memecad/util.cpp include/memecad/util.h)
 
 add_executable(memecad src/programs/memecad.cpp)
 add_executable(generate_firmware src/programs/generate_firmware.cpp)

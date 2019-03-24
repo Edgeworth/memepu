@@ -52,7 +52,7 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
         log("  Adding chip '%s'\n", cell->type.str().c_str());
         verify_expr(cell->type[0] == '\\', "unexpected non-user component");
         // TODO: compare verilog input/output to electrical type for kicad pins
-        mapper_.addComponentFromCell(*cell);
+        mapper_.addCell(*cell);
       }
     }
   }

@@ -15,18 +15,22 @@ public:
   Mapper(const std::string& memecad_json, const Lib& lib);
 
   void writeHierarchy(const std::string& directory);
-  void addComponentFromCell(const Yosys::RTLIL::Cell& cell);
+  void addCell(const Yosys::RTLIL::Cell& cell);
 
 private:
-  struct SheetData {
+  // Each module corresponds to a module in verilog. The verilog module is composed of child
+  // modules. If a module has no child modules, it must be a leaf module which maps to a Kicad
+  // component.
+  struct ModuleData {
     Sheet sheet = {};
     int pack_x = 1000;
     int pack_y = 1000;
   };
 
-  void addLeafComponent(const Yosys::RTLIL::Cell& cell);
+  void addLeafModule(const Yosys::RTLIL::Cell& cell);
+  void addNonLeafModule(const Yosys::RTLIL::Cell& cell);
 
-  std::unordered_map<std::string, SheetData> sheet_map_;
+  std::unordered_map<std::string, ModuleData> modules_;
   Lib lib_;
   pt::ptree root_;
 };
