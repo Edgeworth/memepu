@@ -55,7 +55,7 @@ struct Lib {
     std::vector<Pin> pins;
     std::vector<Field> fields;
 
-    Rect getBoundingBox(int subcomponent);
+    Rect getBoundingBox(int subcomponent) const;
     const Lib::Pin* findPin(const std::string& pin_name) const;
     const Lib::Pin* findPin(int pin_number) const;
   };
@@ -83,11 +83,13 @@ struct Sheet {
     std::string timestamp = "DEADBEEF";
     std::string name;
     std::string filename;
-    int x = 0;
+    int x = 0;  // TODO: Change all x, y into Point.
     int y = 0;
     int width = 1000;
     int height = 1000;
     std::vector<RefField> fields;
+
+    void offsetTo(const Point& loc);
   };
 
   struct Label {
@@ -135,7 +137,7 @@ struct Sheet {
     std::vector<Field> fields;
     std::string footer = DEFAULT_FOOTER;
 
-    void offset(int x_offset, int y_offset);
+    void offset(Point offset);
     void addLibField(const Lib::Field& lib_field, const std::string& text);
   };
 

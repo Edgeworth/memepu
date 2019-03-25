@@ -22,10 +22,6 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
     if (!design->selected_module(module)) continue;
 
     SigMap sigmap(module);
-    log("Checking module %s, bitcount: %d\n", log_id(module_id),
-        static_cast<int>(sigmap.database.size()));
-    log("Is leaf module: %d\n", int(isLeafModule(module)));
-
     for (auto& cell_iter : module->cells_) {
       const auto&[cell_id, cell] = cell_iter;
       log("  Checking cell %s, name: %s, type: %s\n", cell_id.c_str(),
@@ -41,7 +37,8 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
     log("  Looking at wires\n");
     for (auto& wire_iter : module->wires_) {
       const auto&[wire_id, wire] = wire_iter;
-      log("    Looking at wire %s, offset: %d, port id: %d\n", wire_id.c_str(), int(wire->start_offset), int(wire->port_id));
+      log("    Looking at wire %s, offset: %d, port id: %d\n", wire_id.c_str(),
+          int(wire->start_offset), int(wire->port_id));
     }
     printf("\n");
 
@@ -57,7 +54,7 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
     }
   }
 
-  mapper_.writeHierarchy("test");
+  mapper_.getSchematic().writeHierarchy("test");
 }
 
 bool TestPass::isLeafModule(RTLIL::Module* module) {
