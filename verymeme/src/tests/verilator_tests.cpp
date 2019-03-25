@@ -32,7 +32,8 @@ constexpr auto bitRanges(Ts... ts) {
   return ::testing::ValuesIn(CartesianProduct<uint32_t, arr.size()>(arr).get());
 }
 
-class Chip7400Test : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
+class Chip7400Test
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
 protected:
   Vchip7400 chip;
 };
@@ -47,7 +48,8 @@ TEST_P(Chip7400Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7400Test, bitRanges(4, 4));
 
-class Chip7404Test : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 1>> {
+class Chip7404Test
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 1>> {
 protected:
   Vchip7404 chip;
 };
@@ -61,7 +63,8 @@ TEST_P(Chip7404Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7404Test, bitRanges(6));
 
-class Chip7408Test : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
+class Chip7408Test
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
 protected:
   Vchip7408 chip;
 };
@@ -76,7 +79,8 @@ TEST_P(Chip7408Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7408Test, bitRanges(4, 4));
 
-class Chip7432Test : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
+class Chip7432Test
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
 protected:
   Vchip7432 chip;
 };
@@ -91,7 +95,8 @@ TEST_P(Chip7432Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7432Test, bitRanges(4, 4));
 
-class Chip7486Test : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
+class Chip7486Test
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
 protected:
   Vchip7486 chip;
 };
@@ -106,7 +111,8 @@ TEST_P(Chip7486Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7486Test, bitRanges(4, 4));
 
-class Chip74299Test : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 6>> {
+class Chip74299Test
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 6>> {
 protected:
   Vchip74299 chip;
 };
@@ -153,7 +159,8 @@ TEST_P(Chip74299Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip74299Test, bitRanges(2, 2, 1, 1, 1, 8));
 
-class FullAdderTest : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 3>> {
+class FullAdderTest
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 3>> {
 protected:
   Vfull_adder chip;
 };
@@ -209,7 +216,9 @@ void testAluOps(uint64_t a, uint64_t b, uint64_t c_in) {
   TEST_ALU_OP(a + ((~b) & 0xFFFFFFFF) + 1);
 }
 
-class SemiExhaustiveAluTest : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 3>> {};
+class SemiExhaustiveAluTest
+    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 3>> {
+};
 
 TEST_P(SemiExhaustiveAluTest, Basic) {
   const auto[A, B, C_IN] = GetParam();
@@ -218,7 +227,10 @@ TEST_P(SemiExhaustiveAluTest, Basic) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, SemiExhaustiveAluTest, bitRanges(8, 8, 1));
 
-class AluTest : public VerilatorTest, public ::testing::WithParamInterface<std::tuple<uint32_t, uint32_t, uint32_t>> {};
+class AluTest
+    : public VerilatorTest,
+      public ::testing::WithParamInterface<std::tuple<uint32_t, uint32_t, uint32_t>> {
+};
 
 TEST_P(AluTest, Exhaustive) {
   const auto[A, B, C_IN] = GetParam();

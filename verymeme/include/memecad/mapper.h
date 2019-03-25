@@ -5,6 +5,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <kernel/rtlil.h>
 #include "memecad/types.h"
+#include "memecad/schematic.h"
 
 namespace memecad {
 
@@ -14,25 +15,16 @@ class Mapper {
 public:
   Mapper(const std::string& memecad_json, const Lib& lib);
 
-  void writeHierarchy(const std::string& directory);
   void addCell(const Yosys::RTLIL::Cell& cell);
+  Schematic& getSchematic() { return schematic_; }
 
 private:
-  // Each module corresponds to a module in verilog. The verilog module is composed of child
-  // modules. If a module has no child modules, it must be a leaf module which maps to a Kicad
-  // component.
-  struct ModuleData {
-    Sheet sheet = {};
-    int pack_x = 1000;
-    int pack_y = 1000;
-  };
-
-  void addLeafModule(const Yosys::RTLIL::Cell& cell);
+  void addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping);
   void addNonLeafModule(const Yosys::RTLIL::Cell& cell);
 
-  std::unordered_map<std::string, ModuleData> modules_;
   Lib lib_;
   pt::ptree root_;
+  Schematic schematic_;
 };
 
 }  // memecad

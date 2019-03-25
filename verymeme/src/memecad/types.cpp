@@ -1,7 +1,6 @@
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>
-#include <memecad/types.h>
 
 
 namespace memecad {
@@ -32,7 +31,7 @@ PinType netTypeToPinType(Sheet::Label::NetType net_type) {
 }
 
 
-Rect Lib::Component::getBoundingBox(int subcomponent) {
+Rect Lib::Component::getBoundingBox(int subcomponent) const {
   Rect bounds;
   for (const auto& pin : pins) {
     if (pin.subcomponent != subcomponent) continue;
@@ -70,6 +69,16 @@ Lib::Component& Lib::findComponent(const std::string& name) {
   verify_expr(false, "can't find component '%s'", name.c_str());
 }
 
+
+void Sheet::Ref::offsetTo(const Point& loc) {
+  for (auto& field : fields) {
+    field.x += loc.x - x;
+    field.y += loc.y - y;
+  }
+  x = loc.x;
+  y = loc.y;
+}
+
 void Sheet::Label::connectToPin(const Lib::Pin& pin) {
   x = pin.x;
   y = pin.y;
@@ -98,12 +107,12 @@ void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::strin
   f.style = lib_field.vertical_justification;
 }
 
-void Sheet::Component::offset(int x_offset, int y_offset) {
-  x += x_offset;
-  y += y_offset;
+void Sheet::Component::offset(Point p) {
+  x += p.x;
+  y += p.y;
   for (auto& field : fields) {
-    field.x += x_offset;
-    field.y += y_offset;
+    field.x += p.x;
+    field.y += p.y;
   }
 }
 

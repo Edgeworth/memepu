@@ -1,8 +1,6 @@
 
 #include <verymeme/common.h>
 
-#include "verymeme/common.h"
-
 namespace {
 
 char READ_BUF[1 << 16];
