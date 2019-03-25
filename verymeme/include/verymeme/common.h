@@ -38,6 +38,11 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   return reversed;
 }
 
+struct Point {
+  int x = 0;
+  int y = 0;
+};
+
 struct Rect {
   int left = 0;
   int top = 0;
