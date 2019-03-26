@@ -13,6 +13,26 @@ constexpr int SHEET_WIDTH = 14000;
 constexpr int SHEET_HEIGHT = 8000;
 constexpr int SHEET_MARGIN = 1000;
 
+Sheet::Label CreateParentLabel(const ConnectionData& data) {
+  Sheet::Label parent_label = {};
+  if (data.bit.wire && data.bit.wire->port_id != 0) {
+    // Signal supplied from a higher up module.
+    parent_label.type = Sheet::Label::Type::HIERARCHICAL;
+    // TODO: check direction compared to kicad
+    parent_label.net_type = data.bit.wire->port_input ? Sheet::Label::NetType::INPUT
+                                                      : Sheet::Label::NetType::OUTPUT;
+  } else if (data.bit.wire) {
+    // Signal supplied from within this module.
+    parent_label.type = Sheet::Label::Type::LOCAL;
+  } else {
+    // Otherwise assume it's VCC, GND, or something like that.
+    parent_label.type = Sheet::Label::Type::GLOBAL;
+    parent_label.net_type = Sheet::Label::NetType::PASSIVE;
+  }
+  parent_label.text = data.parent_label;
+  return parent_label;
+}
+
 }  // namespace
 
 Schematic::SheetData::SheetData() : cur({SHEET_MARGIN, SHEET_MARGIN}) {}
@@ -79,17 +99,8 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
     verify_expr(conn_iter != mapping.end(),
         "BUG: should have association from child label '%s' to parent label",
         labels[i].text.c_str());
-    Sheet::Label& parent_label = parent.sheet.labels.emplace_back();
-    // TODO: merge with similar code below.
-    if (conn_iter->second.bit.wire && conn_iter->second.bit.wire->port_id != 0) {
-      parent_label.type = Sheet::Label::Type::HIERARCHICAL;
-      // TODO: check direction compared to kicad
-      parent_label.net_type = conn_iter->second.bit.wire->port_input ? Sheet::Label::NetType::INPUT
-                                                 : Sheet::Label::NetType::OUTPUT;
-    } else {
-      parent_label.type = Sheet::Label::Type::LOCAL;
-    }
-    parent_label.text = conn_iter->second.parent_label;
+    Sheet::Label& parent_label = parent.sheet.labels.emplace_back(
+        CreateParentLabel(conn_iter->second));
     parent_label.connectToRefField(ref.fields[i]);
   }
 }
@@ -135,17 +146,8 @@ void Schematic::addComponentToSheet(const Lib::Component& lib_component, const P
   for (const auto& kv : mapping) {
     const auto&[kicad_pin, conn] = kv;
 
-    auto& label = data.sheet.labels.emplace_back();
-    if (conn.bit.wire && conn.bit.wire->port_id != 0) {
-      label.type = Sheet::Label::Type::HIERARCHICAL;
-      // TODO: check direction compared to kicad
-      label.net_type = conn.bit.wire->port_input ? Sheet::Label::NetType::INPUT
-                                                 : Sheet::Label::NetType::OUTPUT;
-    } else {
-      label.type = Sheet::Label::Type::LOCAL;
-    }
+    auto& label = data.sheet.labels.emplace_back(CreateParentLabel(conn));
     label.connectToPin(*kicad_pin);
-    label.text = conn.parent_label;
 
     // Move to location we placed this subcomponent.
     label.x += subcomponents[kicad_pin->subcomponent].x;

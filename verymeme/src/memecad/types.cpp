@@ -8,10 +8,12 @@ namespace memecad {
 namespace {
 
 int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
+  bool is_hierarchical_or_global =
+      label_type == Sheet::Label::Type::HIERARCHICAL || label_type == Sheet::Label::Type::GLOBAL;
   switch (d) {
-    case Direction::LEFT: return label_type == Sheet::Label::Type::HIERARCHICAL ? 2 : 0;
+    case Direction::LEFT: return is_hierarchical_or_global ? 2 : 0;
     case Direction::DOWN: return 1;
-    case Direction::RIGHT: return label_type == Sheet::Label::Type::HIERARCHICAL ? 0 : 2;
+    case Direction::RIGHT: return is_hierarchical_or_global ? 0 : 2;
     case Direction::UP: return 3;
     default: verify_expr(false, "unknown direction '%d'", int(d));
   }
@@ -29,7 +31,6 @@ PinType netTypeToPinType(Sheet::Label::NetType net_type) {
     default: verify_expr(false, "Unknown net type '%d'", int(net_type));
   }
 }
-
 
 Rect Lib::Component::getBoundingBox(int subcomponent) const {
   Rect bounds;

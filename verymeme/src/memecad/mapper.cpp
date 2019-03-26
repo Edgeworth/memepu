@@ -122,7 +122,7 @@ makeConnectionData(const std::pair<Yosys::IdString, Yosys::SigSpec>& conn,
 std::vector<ConnectionData>
 getConnectionsForSignal(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell) {
   std::vector<ConnectionData> conn_data;
-  // TODO: Use proper VCC and GND.
+  // TODO: Support arbitrary constants?
   if (pin_spec == "1") {
     conn_data.push_back({"VCC", "VCC", {Yosys::State::S1}});
   } else if (pin_spec == "0") {
@@ -194,7 +194,8 @@ void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapp
           kicad_signal.c_str(), verilog_signal.c_str());
       for (int i = 0; i < int(kicad_pins.size()); ++i) {
         pin_mapping[kicad_pins[i]] = conns[i];
-        printf("  Mapping %s (pin %d) => %s => %s\n", kicad_pins[i]->name.c_str(), kicad_pins[i]->pin_number,
+        printf("  Mapping %s (pin %d) => %s => %s\n", kicad_pins[i]->name.c_str(),
+            kicad_pins[i]->pin_number,
             conns[i].child_label.c_str(), conns[i].parent_label.c_str());
       }
     }

@@ -49,12 +49,14 @@ add_library(memecad_library
     src/memecad/parser.cpp include/memecad/parser.h
     src/memecad/types.cpp include/memecad/types.h
     src/memecad/mapper.cpp include/memecad/mapper.h
-    src/memecad/yosys_module.cpp include/memecad/yosys_module.h src/memecad/util.cpp include/memecad/util.h src/memecad/schematic.cpp include/memecad/schematic.h)
+    src/memecad/yosys_module.cpp include/memecad/yosys_module.h
+    src/memecad/util.cpp include/memecad/util.h
+    src/memecad/schematic.cpp include/memecad/schematic.h)
 
 add_executable(memecad src/programs/memecad.cpp)
 add_executable(generate_firmware src/programs/generate_firmware.cpp)
 add_executable(tests src/tests/verilator_tests.cpp
-    src/programs/test_harness.cpp src/tests/kicad_tests.cpp src/tests/common_tests.cpp)
+    src/programs/test_harness.cpp src/tests/memecad_tests.cpp src/tests/common_tests.cpp)
 
 target_include_directories(verymeme_library PUBLIC
     ${VERILATOR_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} include)

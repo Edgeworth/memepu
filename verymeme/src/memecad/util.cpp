@@ -1,8 +1,6 @@
 
 #include <memecad/util.h>
 
-#include "memecad/util.h"
-
 
 std::string memecad::moduleType(const Yosys::Cell& cell) {
   // Ignore leading '\'.
