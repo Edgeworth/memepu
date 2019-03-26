@@ -16,7 +16,6 @@ std::string modulePath(const Yosys::Cell& cell);
 // kicad component. A parent is a sheet. For leaf kicad components, child labels are mapped to
 // pins in the kicad component via a mapping file.
 struct ConnectionData {
-  // TODO: Support VCC/GND for parent_label properly.
   std::string parent_label;
   std::string child_label;
   Yosys::RTLIL::SigBit bit;
@@ -24,8 +23,6 @@ struct ConnectionData {
 
 using PinMapping = std::unordered_map<const Lib::Pin*, ConnectionData>;
 using ChildMapping = std::unordered_map<std::string, ConnectionData>;
-
-// TODO: moduleTypePath moduleNamePath
 
 }  // namespace memecad
 

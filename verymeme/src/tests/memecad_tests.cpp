@@ -6,7 +6,8 @@ namespace {
 using SchematicTest = testing::Test;
 
 TEST_F(SchematicTest, DoesNotLoseInformation) {
-  std::string full_adder_original = readFile("test_data/full_adder.sch", false /* binary */);
+  std::string full_adder_original = readFile("test_data/parsing0/full_adder.sch",
+      false /* binary */);
   memecad::Sheet sheet = memecad::parseSheet(full_adder_original);
   std::string full_adder_output = memecad::writeSheet(sheet);
 
