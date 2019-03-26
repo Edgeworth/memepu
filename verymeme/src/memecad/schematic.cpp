@@ -44,6 +44,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
       label_set.insert(label);
   }
   std::vector<Sheet::Label> labels(label_set.begin(), label_set.end());
+
   verify_expr(labels.size() == mapping.size(),
       "number of hierarchical labels in child '%s' does not match number of verilog connections",
       child_name.c_str());
@@ -79,9 +80,17 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
         "BUG: should have association from child label '%s' to parent label",
         labels[i].text.c_str());
     Sheet::Label& parent_label = parent.sheet.labels.emplace_back();
-    parent_label.connectToRefField(ref.fields[i]);
-    parent_label.type = Sheet::Label::Type::LOCAL;  // TODO may need to plumb up further with hierarchical.
+    // TODO: merge with similar code below.
+    if (conn_iter->second.bit.wire && conn_iter->second.bit.wire->port_id != 0) {
+      parent_label.type = Sheet::Label::Type::HIERARCHICAL;
+      // TODO: check direction compared to kicad
+      parent_label.net_type = conn_iter->second.bit.wire->port_input ? Sheet::Label::NetType::INPUT
+                                                 : Sheet::Label::NetType::OUTPUT;
+    } else {
+      parent_label.type = Sheet::Label::Type::LOCAL;
+    }
     parent_label.text = conn_iter->second.parent_label;
+    parent_label.connectToRefField(ref.fields[i]);
   }
 }
 
