@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
   Yosys::yosys_banner();
 
   Yosys::run_pass(
-      "read -sv ./verilog/two_a_plus_b.v ./verilog/full_adder.v ./verilog/chip7486.v ./verilog/chip7408.v ./verilog/chip7432.v");
+      "read -sv ./verilog/tapb_top_level.v ./verilog/two_a_plus_b.v ./verilog/full_adder.v ./verilog/chip7486.v ./verilog/chip7408.v ./verilog/chip7432.v");
   Yosys::run_pass("memecad");
 
   Yosys::yosys_shutdown();

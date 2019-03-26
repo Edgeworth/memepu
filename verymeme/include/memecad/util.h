@@ -10,6 +10,7 @@ namespace memecad {
 std::string moduleType(const Yosys::Cell& cell);
 std::string moduleName(const Yosys::Cell& cell);
 std::string parentModuleType(const Yosys::Cell& cell);
+std::string modulePath(const Yosys::Cell& cell);
 
 // Describes the connection between a child and parent. A child is either a child sheet or a leaf
 // kicad component. A parent is a sheet. For leaf kicad components, child labels are mapped to

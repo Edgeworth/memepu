@@ -1,3 +1,6 @@
+
+#include <memecad/util.h>
+
 #include "memecad/util.h"
 
 
@@ -20,4 +23,9 @@ std::string memecad::parentModuleType(const Yosys::Cell& cell) {
   verify_expr(cell.module->name.size() > 1 && cell.module->name[0] == '\\',
       "BUG: module type '%s' must be user defined", cell.module->name.c_str());
   return cell.module->name.c_str() + 1;
+}
+
+std::string memecad::modulePath(const Yosys::Cell& cell) {
+  // TODO: Output full path somehow?
+  return parentModuleType(cell) + "/" + moduleName(cell) + "(" + moduleType(cell) + ")";
 }
