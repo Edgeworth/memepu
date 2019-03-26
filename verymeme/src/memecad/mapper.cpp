@@ -97,11 +97,14 @@ parseKicadSignal(std::string pin_specs, const Lib::Component& lib_component) {
 
 ConnectionData
 makeConnectionData(const std::pair<Yosys::IdString, Yosys::SigSpec>& conn,
-    const Yosys::SigBit& bit) {
-  // Parent label is where the connection goes to.
+    const Yosys::SigBit& bit, int offset) {
+  // Parent label is where the connection goes to from the child.
   std::string parent_label;
   if (bit.wire) {
     parent_label = std::string(bit.wire->name.c_str() + 1);
+    // A single child signal may connect to multiple different parent signals and wires, e.g.
+    // .B(C[2:0], C_IN): The child signal B connects to C_IN and C[2:0]. So, use parent offset
+    // and width values for deciding the parent label.
     if (bit.wire->width > 1) parent_label += std::to_string(bit.offset);
   } else {
     verify_expr(bit.data == Yosys::State::S0 || bit.data == Yosys::State::S1,
@@ -111,9 +114,7 @@ makeConnectionData(const std::pair<Yosys::IdString, Yosys::SigSpec>& conn,
   // Child label is the connection id without the leading '\' - i.e. the connection name.
   // Don't include the offset if it's only a single bit.
   std::string child_label = conn.first.c_str() + 1;
-  if (bit.wire && bit.wire->width > 1) {
-    child_label += std::to_string(bit.offset);
-  }
+  if (conn.second.size() > 1) child_label += std::to_string(offset);
 
   return ConnectionData{parent_label, child_label, bit};
 }
@@ -121,8 +122,7 @@ makeConnectionData(const std::pair<Yosys::IdString, Yosys::SigSpec>& conn,
 std::vector<ConnectionData>
 getConnectionsForSignal(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell) {
   std::vector<ConnectionData> conn_data;
-  // TODO: handle case of no wire for signal, just connected to value
-  // TODO: generalise VCC and GND below to use that system.
+  // TODO: Use proper VCC and GND.
   if (pin_spec == "1") {
     conn_data.push_back({"VCC", "VCC", {Yosys::State::S1}});
   } else if (pin_spec == "0") {
@@ -135,8 +135,8 @@ getConnectionsForSignal(const std::string& pin_spec, const Yosys::RTLIL::Cell& c
         pin_spec.c_str(), cell.name.c_str());
     Yosys::SigMap sigmap(cell.module);
     const auto& signal = sigmap(conn_iter->second);
-    for (const auto& bit : signal.bits())
-      conn_data.push_back(makeConnectionData(*conn_iter, bit));
+    for (int i = 0; i < signal.size(); ++i)
+      conn_data.push_back(makeConnectionData(*conn_iter, signal[i], i));
   }
   return conn_data;
 }
@@ -157,27 +157,22 @@ void Mapper::addCell(const Yosys::RTLIL::Cell& cell) {
 }
 
 void Mapper::addNonLeafModule(const Yosys::Cell& cell) {
-  // TODO: Add logging for each operation, print out e.g. module name (type) -> module name (type) -> ... for each
-  const std::string module_type = moduleType(cell);
-  const std::string module_name = moduleName(cell);
-  printf("Adding non-leaf module '%s' of type '%s'\n", module_name.c_str(), module_type.c_str());
-
-  // TODO: Need to be able to connect labels onto hierarchical labels
+  printf("Adding non-leaf module '%s'\n", modulePath(cell).c_str());
   ChildMapping child_mapping;
   for (const auto& conn : cell.connections()) {
     for (const auto& conn_data : getConnectionsForSignal(conn.first.c_str() + 1, cell)) {
       verify_expr(!child_mapping.count(conn_data.child_label),
           "duplicate mapping from child label '%s'", conn_data.child_label.c_str());
       child_mapping[conn_data.child_label] = conn_data;
+      printf("  Mapping %s => %s\n", conn_data.child_label.c_str(), conn_data.parent_label.c_str());
     }
   }
-
-  schematic_.addChildSheetToParent(module_name, child_mapping, module_type, parentModuleType(cell));
+  schematic_.addChildSheetToParent(moduleName(cell), child_mapping, moduleType(cell),
+      parentModuleType(cell));
 }
 
 void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping) {
-  printf("Adding leaf module '%s' with type '%s'\n", moduleName(cell).c_str(),
-      moduleType(cell).c_str());
+  printf("Adding leaf module '%s'\n", modulePath(cell).c_str());
   const std::string kicad_name = mapping.get<std::string>("kicad_name");
   auto& lib_component = lib_.findComponent(kicad_name);
 
@@ -197,8 +192,11 @@ void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapp
       verify_expr(kicad_pins.size() == conns.size(),
           "bit-width of kicad signal '%s' does not match bit-width of verilog signal '%s'",
           kicad_signal.c_str(), verilog_signal.c_str());
-      for (int i = 0; i < int(kicad_pins.size()); ++i)
+      for (int i = 0; i < int(kicad_pins.size()); ++i) {
         pin_mapping[kicad_pins[i]] = conns[i];
+        printf("  Mapping %s (pin %d) => %s => %s\n", kicad_pins[i]->name.c_str(), kicad_pins[i]->pin_number,
+            conns[i].child_label.c_str(), conns[i].parent_label.c_str());
+      }
     }
   }
 

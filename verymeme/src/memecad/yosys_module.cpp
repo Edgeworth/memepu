@@ -14,41 +14,41 @@ TestPass::TestPass(const std::string& memecad_map_filename,
 
 void TestPass::execute(std::vector<std::string> args, Design* design) {
   log_header(design, "Extracting modules...\n");
-
   extra_args(args, 1, design);
 
   for (auto& module_iter : design->modules_) {
     const auto&[module_id, module] = module_iter;
     if (!design->selected_module(module)) continue;
 
-    SigMap sigmap(module);
-    for (auto& cell_iter : module->cells_) {
-      const auto&[cell_id, cell] = cell_iter;
-      log("  Checking cell %s, name: %s, type: %s\n", cell_id.c_str(),
-          cell->name.c_str(), cell->type.c_str());
-      for (auto& conn : cell->connections()) {
-        const auto& conn_id = conn.first;
-        const auto& sig = sigmap(conn.second);
-        log("    Looking at connection: %s, signal: %s|%d\n",
-            conn_id.c_str(), log_signal(sig), sig.size());
-      }
-    }
-
-    log("  Looking at wires\n");
-    for (auto& wire_iter : module->wires_) {
-      const auto&[wire_id, wire] = wire_iter;
-      log("    Looking at wire %s, offset: %d, port id: %d\n", wire_id.c_str(),
-          int(wire->start_offset), int(wire->port_id));
-    }
-    printf("\n");
-
-    // Generate kicad sheet containing this module.
+    // Generate kicad sheet for this module.
     if (!isLeafModule(module)) {
+      SigMap sigmap(module);
+      log("Checking module %s, bitcount: %d\n", log_id(module_id),
+          static_cast<int>(sigmap.database.size()));
+
       for (auto& cell_iter : module->cells_) {
         const auto&[cell_id, cell] = cell_iter;
-        log("  Adding chip '%s'\n", cell->type.str().c_str());
+        log("  Checking cell %s, name: %s, type: %s\n", cell_id.c_str(),
+            cell->name.c_str(), cell->type.c_str());
+        for (auto& conn : cell->connections()) {
+          const auto& conn_id = conn.first;
+          const auto& sig = sigmap(conn.second);
+          log("    Looking at connection: %s, signal: %s|%d\n",
+              conn_id.c_str(), log_signal(sig), sig.size());
+        }
+      }
+
+      log("  Looking at wires\n");
+      for (auto& wire_iter : module->wires_) {
+        const auto&[wire_id, wire] = wire_iter;
+        log("    Looking at wire %s, offset: %d, port id: %d\n", wire_id.c_str(),
+            int(wire->start_offset), int(wire->port_id));
+      }
+      printf("\n");
+
+      for (auto& cell_iter : module->cells_) {
+        const auto&[cell_id, cell] = cell_iter;
         verify_expr(cell->type[0] == '\\', "unexpected non-user component");
-        // TODO: compare verilog input/output to electrical type for kicad pins
         mapper_.addCell(*cell);
       }
     }
