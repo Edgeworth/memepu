@@ -5,7 +5,6 @@
 
 namespace memecad {
 
-namespace {
 
 int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   bool is_hierarchical_or_global =
@@ -18,8 +17,6 @@ int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
     default: verify_expr(false, "unknown direction '%d'", int(d));
   }
 }
-
-}  // namespace
 
 PinType netTypeToPinType(Sheet::Label::NetType net_type) {
   switch (net_type) {

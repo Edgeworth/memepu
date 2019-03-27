@@ -26,6 +26,10 @@ convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
   for (const auto& filename : verilog_filenames)
     yosys_cmd += " " + filename;
   Yosys::run_pass(yosys_cmd);
+  // Check all needed files exist. Also adjusts the port width so you can e.g. pass 32 bit
+  // constant to a single bit port.
+  Yosys::run_pass("hierarchy -check");
+  Yosys::run_pass("check -assert");  // Check for misc problems.
   Yosys::run_pass(PASS_NAME);
   Yosys::yosys_shutdown();
 
@@ -66,16 +70,26 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
       log("  Looking at wires\n");
       for (auto& wire_iter : module->wires_) {
         const auto&[wire_id, wire] = wire_iter;
-        log("    Looking at wire %s, offset: %d, port id: %d\n", wire_id.c_str(),
-            int(wire->start_offset), int(wire->port_id));
+        log("    Looking at wire %s, start offset: %d, port id: %d\n", wire_id.c_str(),
+            wire->start_offset, wire->port_id);
       }
       printf("\n");
 
+      log("  Looking at module connections\n");
+      for (auto& sigsig : module->connections()) {
+        log("   Looking at sigsig: %s (size: %d) <=> %s (size: %d)\n", log_signal(sigsig.first),
+            sigsig.first.size(), log_signal(sigsig.second), sigsig.second.size());
+      }
+      printf("\n");
+
+      mapper_.addModule(*module);
       for (auto& cell_iter : module->cells_) {
         const auto&[cell_id, cell] = cell_iter;
         verify_expr(cell->type[0] == '\\', "unexpected non-user component");
         mapper_.addCell(*cell);
       }
+    } else {
+      printf("Skipping leaf module '%s'\n", log_id(module_id));
     }
   }
 }
