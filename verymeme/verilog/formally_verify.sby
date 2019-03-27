@@ -18,10 +18,7 @@ chip7432
 chip7486
 chip74299
 chip7416374
-full_adder
 sram
-two_a_plus_b
-tapb_top_level
 
 [script]
 alu: read -formal -D CONTRACT=assume alu.v
@@ -37,17 +34,8 @@ chip7432: prep -top chip7432
 chip7486: prep -top chip7486
 chip74299: prep -top chip74299
 chip7416374: prep -top chip7416374
-full_adder: read -formal -D CONTRACT=assume full_adder.v
-full_adder: read -formal -D CONTRACT=assert chip7486.v chip7408.v chip7432.v
-full_adder: prep -top full_adder
 sram: read -formal -D CONTRACT=assume sram.v
 sram: prep -top sram
-two_a_plus_b: read -formal -D CONTRACT=assume two_a_plus_b.v
-two_a_plus_b: read -formal -D CONTRACT=assert full_adder.v chip7486.v chip7408.v chip7432.v
-two_a_plus_b: prep -top two_a_plus_b
-tapb_top_level: read -formal -D CONTRACT=assume tapb_top_level.v
-tapb_top_level: read -formal -D CONTRACT=assert two_a_plus_b.v full_adder.v chip7486.v chip7408.v chip7432.v
-tapb_top_level: prep -top tapb_top_level
 
 [files]
 alu.v
@@ -60,9 +48,6 @@ chip7486.v
 chip74299.v
 chip7416374.v
 common.v
-full_adder.v
 sram.v
-two_a_plus_b.v
-tapb_top_level.v
 alu_slice.hex
 alu_lookahead.hex

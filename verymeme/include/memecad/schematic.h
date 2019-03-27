@@ -9,13 +9,18 @@ namespace memecad {
 
 class Schematic {
 public:
+  struct SchematicFile {
+    std::string filename;
+    std::string contents;
+  };
+
   explicit Schematic(const Lib& lib) : lib_(lib) {}
 
   void addChildSheetToParent(const std::string& title, const ChildMapping& mapping,
       const std::string& child_name, const std::string& parent_name);
   void addComponentToSheet(const Lib::Component& lib_component, const PinMapping& mapping,
       const std::string& sheet_name);
-  void writeHierarchy(const std::string& directory);
+  std::vector<SchematicFile> writeHierarchy();
 
 private:
   struct SheetData {

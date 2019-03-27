@@ -159,25 +159,6 @@ TEST_P(Chip74299Test, Exhaustive) {
 
 INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip74299Test, bitRanges(2, 2, 1, 1, 1, 8));
 
-class FullAdderTest
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 3>> {
-protected:
-  Vfull_adder chip;
-};
-
-TEST_P(FullAdderTest, Exhaustive) {
-  const auto[A, B, C_IN] = GetParam();
-  chip.A = uint8_t(A);
-  chip.B = uint8_t(B);
-  chip.C_IN = uint8_t(C_IN);
-  chip.eval();
-  const uint32_t result = A + B + C_IN;
-  EXPECT_EQ(uint8_t(result), chip.Y);
-  EXPECT_EQ((result & 0x100) >> 8, chip.C_OUT);
-}
-
-INSTANTIATE_TEST_SUITE_P(Exhaustive, FullAdderTest, bitRanges(8, 8, 1));
-
 #define TEST_ALU_OP(result) \
   EXPECT_EQ(uint32_t(result), alu.OUT); \
   EXPECT_EQ(((result) & 0x100000000LL) >> 32, alu.C); \

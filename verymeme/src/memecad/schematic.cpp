@@ -37,15 +37,16 @@ Sheet::Label CreateParentLabel(const ConnectionData& data) {
 
 Schematic::SheetData::SheetData() : cur({SHEET_MARGIN, SHEET_MARGIN}) {}
 
-void Schematic::writeHierarchy(const std::string& directory) {
+std::vector<Schematic::SchematicFile> Schematic::writeHierarchy() {
+  std::vector<Schematic::SchematicFile> files;
   for (auto& kv : sheets_) {
     auto&[sheet_name, sheet_data] = kv;
-    const std::string sheet_filename = directory + "/" + sheet_name + ".sch";
     sheet_data.sheet.title = sheet_name;
     sheet_data.sheet.id = 1;  // TODO sheet index.
 
-    writeFile(sheet_filename, writeSheet(sheet_data.sheet), false /* binary */);
+    files.push_back({sheet_name + ".sch", writeSheet(sheet_data.sheet)});
   }
+  return files;
 }
 
 void Schematic::addChildSheetToParent(const std::string& title, const ChildMapping& mapping,
@@ -56,7 +57,8 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   ref.filename = child_name + ".sch";
 
   // Plumb up hierarchical labels for this module to the parent:
-  verify_expr(sheets_.count(child_name), "could not find child '%s'", child_name.c_str());
+  verify_expr(sheets_.count(child_name), "could not find child '%s' - maybe missing file",
+      child_name.c_str());
   auto& child = sheets_[child_name];
   std::set<Sheet::Label> label_set;
   for (const auto& label : child.sheet.labels) {
