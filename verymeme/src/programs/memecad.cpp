@@ -8,14 +8,14 @@
 namespace po = boost::program_options;
 
 int main(int argc, char* argv[]) {
-  std::string filename;
+  std::vector<std::string> verilog_filenames;
   std::string kicad_library_filename;
   std::string memecad_map_filename;
   try {
     po::options_description desc{"Options"};
     desc.add_options()
         ("help,h", "Help screen")
-        ("file,f", po::value<std::string>()->required())
+        ("files,f", po::value<std::vector<std::string>>()->required()->multitoken())
         ("memecad-map,k", po::value<std::string>()->required())
         ("chip-library,c", po::value<std::string>()->required());
 
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
       return 0;
     }
 
-    filename = vm["file"].as<std::string>();
+    verilog_filenames = vm["files"].as<std::vector<std::string>>();
     kicad_library_filename = vm["chip-library"].as<std::string>();
     memecad_map_filename = vm["memecad-map"].as<std::string>();
   } catch (const po::error& ex) {
@@ -36,17 +36,10 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  memecad::TestPass test_pass(memecad_map_filename, kicad_library_filename);
-
   Yosys::log_streams.push_back(&std::cout);
   Yosys::log_error_stderr = true;
-
-  Yosys::yosys_setup();
   Yosys::yosys_banner();
 
-  Yosys::run_pass(
-      "read -sv ./verilog/tapb_top_level.v ./verilog/two_a_plus_b.v ./verilog/full_adder.v ./verilog/chip7486.v ./verilog/chip7408.v ./verilog/chip7432.v");
-  Yosys::run_pass("memecad");
-
-  Yosys::yosys_shutdown();
+  memecad::convertVerilogToKicadSchematics(memecad_map_filename, verilog_filenames,
+      {kicad_library_filename});
 }

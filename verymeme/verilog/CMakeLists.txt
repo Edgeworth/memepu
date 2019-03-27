@@ -41,7 +41,6 @@ add_verilog_module(chip7432.v)
 add_verilog_module(chip7486.v)
 add_verilog_module(chip74299.v)
 add_verilog_module(chip7416374.v)
-add_verilog_module(full_adder.v)
 add_verilog_module(sram.v)
 
 add_library(verymeme_verilated ${ALL_VERILATOR_OUTPUTS})
