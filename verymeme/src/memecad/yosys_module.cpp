@@ -1,14 +1,39 @@
 #include "memecad/yosys_module.h"
 
 #include <kernel/sigtools.h>
+
 #include "memecad/parser.h"
 
 namespace memecad {
 USING_YOSYS_NAMESPACE
 
+namespace {
+
+constexpr const char* PASS_NAME = "memecad";
+
+}  // namespace
+
+std::vector<Schematic::SchematicFile>
+convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
+    const std::vector<std::string>& verilog_filenames,
+    const std::vector<std::string>& kicad_library_filenames) {
+  // TODO: Support multiple libraries.
+  verify_expr(kicad_library_filenames.size() == 1, "TODO: support multiple libraries");
+  memecad::TestPass test_pass(memecad_map_filename, kicad_library_filenames.back());
+
+  Yosys::yosys_setup();
+  std::string yosys_cmd = "read -sv";
+  for (const auto& filename : verilog_filenames)
+    yosys_cmd += " " + filename;
+  Yosys::run_pass(yosys_cmd);
+  Yosys::run_pass(PASS_NAME);
+  Yosys::yosys_shutdown();
+
+  return test_pass.getMapper().getSchematic().writeHierarchy();
+}
 
 TestPass::TestPass(const std::string& memecad_map_filename,
-    const std::string& kicad_library_filename) : Pass("memecad"), mapper_(
+    const std::string& kicad_library_filename) : Pass(PASS_NAME), mapper_(
     readFile(memecad_map_filename, false /* binary */),
     parseLibrary(kicad_library_filename)) {}
 
@@ -53,8 +78,6 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
       }
     }
   }
-
-  mapper_.getSchematic().writeHierarchy("test");
 }
 
 bool TestPass::isLeafModule(RTLIL::Module* module) {
