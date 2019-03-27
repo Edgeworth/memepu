@@ -40,6 +40,8 @@ int main(int argc, char* argv[]) {
   Yosys::log_error_stderr = true;
   Yosys::yosys_banner();
 
-  memecad::convertVerilogToKicadSchematics(memecad_map_filename, verilog_filenames,
+  auto files = memecad::convertVerilogToKicadSchematics(memecad_map_filename, verilog_filenames,
       {kicad_library_filename});
+  for (const auto& file : files)
+    writeFile("test/" + file.filename, file.contents, false /* binary */);
 }

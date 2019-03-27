@@ -20,6 +20,8 @@ public:
       const std::string& child_name, const std::string& parent_name);
   void addComponentToSheet(const Lib::Component& lib_component, const PinMapping& mapping,
       const std::string& sheet_name);
+  void addModuleConnectionsToSheet(const std::string& sheet_name,
+      const std::vector<Yosys::SigSig>& sigs);
   std::vector<SchematicFile> writeHierarchy();
 
 private:

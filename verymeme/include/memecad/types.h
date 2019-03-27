@@ -161,6 +161,7 @@ private:
 };
 
 PinType netTypeToPinType(Sheet::Label::NetType net_type);
+int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type);
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o);
 std::istream& operator>>(std::istream& str, Orientation& o);
