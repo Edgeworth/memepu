@@ -1,5 +1,6 @@
 
 #include <memecad/schematic.h>
+#include <boost/lexical_cast.hpp>
 
 #include "memecad/parser.h"
 
@@ -13,15 +14,15 @@ constexpr int SHEET_WIDTH = 14000;
 constexpr int SHEET_HEIGHT = 8000;
 constexpr int SHEET_MARGIN = 1000;
 
-Sheet::Label CreateParentLabel(const ConnectionData& data) {
+Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
   Sheet::Label parent_label = {};
-  if (data.bit.wire && data.bit.wire->port_id != 0) {
+  if (bit.wire && bit.wire->port_id != 0) {
     // Signal supplied from a higher up module.
     parent_label.type = Sheet::Label::Type::HIERARCHICAL;
     // TODO: check direction compared to kicad
-    parent_label.net_type = data.bit.wire->port_input ? Sheet::Label::NetType::INPUT
-                                                      : Sheet::Label::NetType::OUTPUT;
-  } else if (data.bit.wire) {
+    parent_label.net_type = bit.wire->port_input ? Sheet::Label::NetType::INPUT
+                                                 : Sheet::Label::NetType::OUTPUT;
+  } else if (bit.wire) {
     // Signal supplied from within this module.
     parent_label.type = Sheet::Label::Type::LOCAL;
   } else {
@@ -29,7 +30,7 @@ Sheet::Label CreateParentLabel(const ConnectionData& data) {
     parent_label.type = Sheet::Label::Type::GLOBAL;
     parent_label.net_type = Sheet::Label::NetType::PASSIVE;
   }
-  parent_label.text = data.parent_label;
+  parent_label.text = getIdForSigBit(bit);
   return parent_label;
 }
 
@@ -68,7 +69,8 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   std::vector<Sheet::Label> labels(label_set.begin(), label_set.end());
 
   verify_expr(labels.size() == mapping.size(),
-      "number of hierarchical labels in child '%s' does not match number of verilog connections",
+      "number of hierarchical labels in child '%s' does not match number of verilog connections"
+      " - maybe missing connection / unused",
       child_name.c_str());
 
   // Add hierarchical label for child sheet.
@@ -102,7 +104,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
         "BUG: should have association from child label '%s' to parent label",
         labels[i].text.c_str());
     Sheet::Label& parent_label = parent.sheet.labels.emplace_back(
-        CreateParentLabel(conn_iter->second));
+        createParentLabel(conn_iter->second.bit));
     parent_label.connectToRefField(ref.fields[i]);
   }
 }
@@ -148,12 +150,49 @@ void Schematic::addComponentToSheet(const Lib::Component& lib_component, const P
   for (const auto& kv : mapping) {
     const auto&[kicad_pin, conn] = kv;
 
-    auto& label = data.sheet.labels.emplace_back(CreateParentLabel(conn));
+    auto& label = data.sheet.labels.emplace_back(createParentLabel(conn.bit));
     label.connectToPin(*kicad_pin);
 
     // Move to location we placed this subcomponent.
     label.x += subcomponents[kicad_pin->subcomponent].x;
     label.y += subcomponents[kicad_pin->subcomponent].y;
+  }
+}
+
+void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
+    const std::vector<Yosys::SigSig>& sigs) {
+  auto& data = sheets_[sheet_name];
+  for (const auto& sig : sigs) {
+    verify_expr(sig.first.size() == sig.second.size(),
+        "signal signal connection does not have equal sizes: %s : %s", Yosys::log_signal(sig.first),
+        Yosys::log_signal(sig.second));
+    const auto& sig0_bits = sig.first.bits();
+    const auto& sig1_bits = sig.second.bits();
+    std::vector<Sheet::Label> labels;
+    int height = 0;
+    for (int i = 0; i < sig.first.size(); ++i) {
+      auto label0 = createParentLabel(sig0_bits[i]);
+      auto label1 = createParentLabel(sig1_bits[i]);
+
+      label0.y += height;
+      label0.orientation = pinDirectionToLabelOrientation(Direction::LEFT, label0.type);
+      label1.y += height;
+      label1.orientation = pinDirectionToLabelOrientation(Direction::RIGHT, label1.type);
+
+      height += std::max(label0.dimension, label1.dimension) * 2;
+      labels.push_back(label0);
+      labels.push_back(label1);
+      printf("  Connecting %s of type %s => %s of type %s\n",
+          label0.text.c_str(), boost::lexical_cast<std::string>(label0.type).c_str(),
+          label1.text.c_str(), boost::lexical_cast<std::string>(label1.type).c_str());
+    }
+    // TODO: Compute actual width.
+    Point offset = data.packBox({500, height});
+    for (auto& label : labels) {
+      label.x += offset.x;
+      label.y += offset.y;
+      data.sheet.labels.push_back(label);
+    }
   }
 }
 

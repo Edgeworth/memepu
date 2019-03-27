@@ -18,6 +18,7 @@ public:
   void addCell(const Yosys::RTLIL::Cell& cell);
   Schematic& getSchematic() { return schematic_; }
 
+  void addModule(const Yosys::Module& module);
 private:
   void addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping);
   void addNonLeafModule(const Yosys::RTLIL::Cell& cell);

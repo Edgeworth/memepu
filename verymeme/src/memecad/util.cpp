@@ -27,3 +27,19 @@ std::string memecad::modulePath(const Yosys::Cell& cell) {
   // TODO: Output full path somehow?
   return parentModuleType(cell) + "/" + moduleName(cell) + "(" + moduleType(cell) + ")";
 }
+
+std::string memecad::getIdForSigBit(const Yosys::SigBit& bit) {
+  std::string parent_label;
+  if (bit.wire) {
+    parent_label = std::string(bit.wire->name.c_str() + 1);
+    // A single child signal may connect to multiple different parent signals and wires, e.g.
+    // .B(C[2:0], C_IN): The child signal B connects to C_IN and C[2:0]. So, use parent offset
+    // and width values for deciding the parent label.
+    if (bit.wire->width > 1) parent_label += std::to_string(bit.offset);
+  } else {
+    verify_expr(bit.data == Yosys::State::S0 || bit.data == Yosys::State::S1,
+        "unsupported state for signal: %d", int(bit.data));
+    parent_label = bit.data == Yosys::State::S1 ? "VCC" : "GND";
+  }
+  return parent_label;
+}
