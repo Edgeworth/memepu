@@ -43,6 +43,7 @@ struct Point {
   int y = 0;
 
   Point& operator+=(const Point& p);
+  Point operator-(const Point& p) const;
 };
 
 std::ostream& operator<<(std::ostream& str, const Point& p);

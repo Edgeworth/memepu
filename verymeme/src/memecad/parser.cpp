@@ -46,8 +46,7 @@ public:
       else if (tok == "Text") {
         auto& label = sheet.labels.emplace_back();
         label.type = next<Sheet::Label::Type>();
-        label.x = next<int>();
-        label.y = next<int>();
+        label.p = {next<int>(), next<int>()};
         label.orientation = next<int>();
         label.dimension = next<int>();
         if (label.type == Sheet::Label::Type::HIERARCHICAL ||
@@ -61,16 +60,13 @@ public:
         auto& label = sheet.labels.emplace_back();
         label.type = Sheet::Label::Type::NOCONNECT;
         expect({"~"});
-        label.x = next<int>();
-        label.y = next<int>();
+        label.p = {next<int>(), next<int>()};
         expect({"\n"});
       } else if (tok == "Wire") {
         expect({"Wire", "Line", "\n", "\t"});
         auto& wire = sheet.wires.emplace_back();
-        wire.start.x = next<int>();
-        wire.start.y = next<int>();
-        wire.end.x = next<int>();
-        wire.end.y = next<int>();
+        wire.start = {next<int>(), next<int>()};
+        wire.end = {next<int>(), next<int>()};
         expect({"\n"});
       } else if (tok == "$Sheet") {
         sheet.refs.emplace_back(parseSheetRef());
@@ -109,8 +105,7 @@ private:
     expect({"1"});
     comp.timestamp = next();
     expect({"\n", "P"});
-    comp.x = next<int>();
-    comp.y = next<int>();
+    comp.p = {next<int>(), next<int>()};
     expect({"\n"});
     while (true) {
       std::string tok = peek();
@@ -120,8 +115,7 @@ private:
         field.num = next<int>();
         field.text = trim(next(), "\"");
         field.orientation = next<Orientation>();
-        field.x = next<int>();
-        field.y = next<int>();
+        field.p = {next<int>(), next<int>()};
         field.size = next<int>();
         field.flags = next();
         field.justification = next();
@@ -141,8 +135,7 @@ private:
   Sheet::Ref parseSheetRef() {
     Sheet::Ref ref;
     expect({"\n", "S"});
-    ref.x = next<int>();
-    ref.y = next<int>();
+    ref.p = {next<int>(), next<int>()};
     ref.width = next<int>();
     ref.height = next<int>();
     expect({"\n", "U"});
@@ -163,8 +156,7 @@ private:
       field.text = trim(next(), "\"");
       field.type = next<PinType>();
       field.side = next<Direction>();
-      field.x = next<int>();
-      field.y = next<int>();
+      field.p = {next<int>(), next<int>()};
       next();  // Label dimension.
       expect({"\n"});
     }
@@ -235,8 +227,7 @@ private:
         auto& field = component.fields.emplace_back();
         field.num = boost::lexical_cast<int>(tok.substr(1));
         field.text = trim(next(), "\"");
-        field.x = next<int>();
-        field.y = -next<int>();  // Seems like y-axis is inverted for libraries.
+        field.p = {next<int>(), -next<int>()}; // Seems like y-axis is inverted for libraries.
         field.text_size = next<int>();
         field.text_orientation = next<Orientation>();
         next();  // Skip visibility.
@@ -250,8 +241,7 @@ private:
         auto& pin = component.pins.emplace_back();
         pin.name = next();
         pin.pin_number = next<int>();
-        pin.x = next<int>();
-        pin.y = -next<int>();   // Seems like y-axis is inverted for libraries.
+        pin.p = {next<int>(), -next<int>()}; // Seems like y-axis is inverted for libraries.
         next(); // Length
         pin.direction = next<Direction>();
         next();
@@ -279,11 +269,10 @@ public:
       data += "$Comp\n";
       data += "L " + comp.name + " " + comp.ref + "\n";
       data += "U " + tos(comp.subcomponent + 1) + " 1 " + comp.timestamp + "\n";
-      data += "P " + tos(comp.x) + " " + tos(comp.y) + "\n";
+      data += "P " + tos(comp.p) + "\n";
       for (const auto& f : comp.fields) {
-        data += "F " + tos(f.num) + " \"" + f.text + "\" " + tos(f.orientation) + " " + tos(f.x) +
-                " " + tos(f.y) + " " + tos(f.size) + " " + f.flags + " " + f.justification + " " +
-                f.style + "\n";
+        data += "F " + tos(f.num) + " \"" + f.text + "\" " + tos(f.orientation) + " " + tos(f.p) +
+                " " + tos(f.size) + " " + f.flags + " " + f.justification + " " + f.style + "\n";
       }
       data += comp.footer;
       data += "$EndComp\n";
@@ -291,11 +280,11 @@ public:
 
     for (const auto& l : sheet.labels) {
       if (l.type == Sheet::Label::Type::NOCONNECT) {
-        data += "NoConn ~ " + tos(l.x) + " " + tos(l.y) + "\n";
+        data += "NoConn ~ " + tos(l.p) + "\n";
         continue;
       }
-      data += "Text " + tos(l.type) + " " + tos(l.x) + " " + tos(l.y) + " " + tos(l.orientation) +
-              " " + tos(l.dimension) + " ";
+      data += "Text " + tos(l.type) + " " + tos(l.p) + " " + tos(l.orientation) + " " +
+              tos(l.dimension) + " ";
       if (l.type == Sheet::Label::Type::HIERARCHICAL || l.type == Sheet::Label::Type::GLOBAL)
         data += tos(l.net_type) + " ";
       data += std::string(l.italic ? "Italic" : "~") + " " + (l.bold ? "10" : "0") + "\n";
@@ -307,13 +296,13 @@ public:
 
     for (const auto& r : sheet.refs) {
       data += "$Sheet\n";
-      data += "S " + tos(r.x) + " " + tos(r.y) + " " + tos(r.width) + " " + tos(r.height) + "\n";
+      data += "S " + tos(r.p) + " " + tos(r.width) + " " + tos(r.height) + "\n";
       data += "U " + r.timestamp + "\n";
       data += "F0 \"" + r.name + "\" 50\n";
       data += "F1 \"" + r.filename + "\" 50\n";
       for (const auto& f : r.fields) {
         data += "F" + tos(f.num) + " \"" + f.text + "\" " + tos(f.type) + " " + tos(f.side) + " " +
-                tos(f.x) + " " + tos(f.y) + " 50\n";
+                tos(f.p) + " 50\n";
       }
       data += "$EndSheet\n";
     }
