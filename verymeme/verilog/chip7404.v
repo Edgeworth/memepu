@@ -1,10 +1,9 @@
 `include "common.v"
 
 module chip7404(
-  input /*u*/ wire [5:0] A,
-  output /*u*/ wire [5:0] Y
+  input wire [5:0] A,
+  output logic [5:0] Y
 );
-
   assign Y = ~A;
 
   `ifdef FORMAL
