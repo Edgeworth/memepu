@@ -28,7 +28,8 @@ TEST_F(SchematicTest, Hierarchical0) {
        "test_data/common/chip7432.v", "test_data/common/chip7486.v"},
       {"test_data/common/74xx.lib"});
   for (const auto& file : files) {
-    std::string golden = readFile("test_data/hierarchical0/output/" + file.filename, false /* binary */);
+    std::string golden = readFile("test_data/hierarchical0/output/" + file.filename,
+        false /* binary */);
     EXPECT_EQ(golden, file.contents);
   }
 }

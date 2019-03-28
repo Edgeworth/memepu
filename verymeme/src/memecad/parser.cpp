@@ -8,7 +8,8 @@ namespace memecad {
 namespace {
 
 std::vector<std::string> tokenize(const std::string& data) {
-  const std::regex split(R"((\".*?[^\\]\")|(\"\")|([^ \n]+)|(\n))");
+  // Token is either: Empty quotes, quoted string, non space/tab/newline string, newline, tab.
+  const std::regex split(R"((\".*?[^\\]\")|(\"\")|([^ \t\n]+)|(\n)|(\t))");
   std::vector<std::string> toks;
   for (auto i = std::sregex_iterator(data.begin(), data.end(), split);
        i != std::sregex_iterator(); ++i) {
@@ -56,6 +57,21 @@ public:
         label.bold = next() != "0";
         expect({"\n"});
         label.text = trim(getLines(1), "\\n");
+      } else if (tok == "NoConn") {
+        auto& label = sheet.labels.emplace_back();
+        label.type = Sheet::Label::Type::NOCONNECT;
+        expect({"~"});
+        label.x = next<int>();
+        label.y = next<int>();
+        expect({"\n"});
+      } else if (tok == "Wire") {
+        expect({"Wire", "Line", "\n", "\t"});
+        auto& wire = sheet.wires.emplace_back();
+        wire.start.x = next<int>();
+        wire.start.y = next<int>();
+        wire.end.x = next<int>();
+        wire.end.y = next<int>();
+        expect({"\n"});
       } else if (tok == "$Sheet") {
         sheet.refs.emplace_back(parseSheetRef());
       } else {
@@ -111,7 +127,7 @@ private:
         field.justification = next();
         field.style = next();
         expect({"\n"});
-      } else if (tok[0] == '\t') {
+      } else if (tok == "\t") {
         comp.footer = getLines(2);
         expect({"$EndComp", "\n"});
         break;
@@ -180,7 +196,13 @@ private:
   std::string getSubstr(int st, int en) {
     std::string substr;
     for (int i = st; i < en; ++i) {
-      if (!substr.empty() && substr.back() != '\n' && toks_[i] != "\n") substr += ' ';
+      // Only separate by a space if there's at least one character accumulated, and it's:
+      // 1. not already terminated with a newline (prevent space on next line)
+      // 2. not about to be terminated with a newline (prevent space before newline)
+      // 3. same two rules as above for tab.
+      if (!substr.empty() && substr.back() != '\n' && toks_[i] != "\n" &&
+          substr.back() != '\t' && toks_[i] != "\t")
+        substr += ' ';
       substr += toks_[i];
     }
     return substr;
@@ -268,6 +290,10 @@ public:
     }
 
     for (const auto& l : sheet.labels) {
+      if (l.type == Sheet::Label::Type::NOCONNECT) {
+        data += "NoConn ~ " + tos(l.x) + " " + tos(l.y) + "\n";
+        continue;
+      }
       data += "Text " + tos(l.type) + " " + tos(l.x) + " " + tos(l.y) + " " + tos(l.orientation) +
               " " + tos(l.dimension) + " ";
       if (l.type == Sheet::Label::Type::HIERARCHICAL || l.type == Sheet::Label::Type::GLOBAL)
@@ -275,6 +301,9 @@ public:
       data += std::string(l.italic ? "Italic" : "~") + " " + (l.bold ? "10" : "0") + "\n";
       data += l.text + "\n";
     }
+
+    for (const auto& w : sheet.wires)
+      data += "Wire Wire Line\n\t" + tos(w.start) + " " + tos(w.end) + "\n";
 
     for (const auto& r : sheet.refs) {
       data += "$Sheet\n";

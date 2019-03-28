@@ -16,6 +16,14 @@ constexpr int SHEET_MARGIN = 1000;
 
 Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
   Sheet::Label parent_label = {};
+  const std::string label_text = getIdForSigBit(bit);
+
+  // Unused signal, so place a no-connect.
+  if (label_text.empty()) {
+    parent_label.type = Sheet::Label::Type::NOCONNECT;
+    return parent_label;
+  }
+
   if (bit.wire && bit.wire->port_id != 0) {
     // Signal supplied from a higher up module.
     parent_label.type = Sheet::Label::Type::HIERARCHICAL;
@@ -30,7 +38,7 @@ Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
     parent_label.type = Sheet::Label::Type::GLOBAL;
     parent_label.net_type = Sheet::Label::NetType::PASSIVE;
   }
-  parent_label.text = getIdForSigBit(bit);
+  parent_label.text = label_text;
   return parent_label;
 }
 
@@ -169,15 +177,22 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
     const auto& sig0_bits = sig.first.bits();
     const auto& sig1_bits = sig.second.bits();
     std::vector<Sheet::Label> labels;
+    std::vector<Sheet::Wire> wires;
     int height = 0;
     for (int i = 0; i < sig.first.size(); ++i) {
       auto label0 = createParentLabel(sig0_bits[i]);
       auto label1 = createParentLabel(sig1_bits[i]);
+      auto& wire = wires.emplace_back();
 
+      // Add a wire between these two labels otherwise Kicad won't consider them connected for ERC.
       label0.y += height;
-      label0.orientation = pinDirectionToLabelOrientation(Direction::LEFT, label0.type);
+      label0.orientation = pinDirectionToLabelOrientation(Direction::RIGHT, label0.type);
+      wire.start = {label0.x, label0.y};
+
+      label1.x += label0.dimension;
       label1.y += height;
-      label1.orientation = pinDirectionToLabelOrientation(Direction::RIGHT, label1.type);
+      label1.orientation = pinDirectionToLabelOrientation(Direction::LEFT, label1.type);
+      wire.end = {label1.x, label1.y};
 
       height += std::max(label0.dimension, label1.dimension) * 2;
       labels.push_back(label0);
@@ -192,6 +207,11 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
       label.x += offset.x;
       label.y += offset.y;
       data.sheet.labels.push_back(label);
+    }
+    for (auto& wire : wires) {
+      wire.start += offset;
+      wire.end += offset;
+      data.sheet.wires.push_back(wire);
     }
   }
 }
