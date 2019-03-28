@@ -67,6 +67,11 @@ struct Lib {
 };
 
 struct Sheet {
+  struct Wire {
+    Point start = {};
+    Point end = {};
+  };
+
   struct RefField {
     // First two fields are for name and filename.
     constexpr static int HIERARCHICAL_REF_OFFSET = 2;
@@ -94,7 +99,7 @@ struct Sheet {
 
   struct Label {
     enum class Type {
-      GLOBAL, HIERARCHICAL, LOCAL, NOTES, COUNT
+      GLOBAL, HIERARCHICAL, LOCAL, NOTES, NOCONNECT, COUNT
     };
     enum class NetType {
       INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, COUNT
@@ -148,6 +153,7 @@ struct Sheet {
   std::vector<Component> components;
   std::vector<Label> labels;
   std::vector<Ref> refs;
+  std::vector<Wire> wires;
 
 private:
   constexpr static const char* DEFAULT_HEADER1 =

@@ -33,7 +33,7 @@ template<typename T>
 std::vector<T> reverse(std::vector<T>&& vec) {
   std::vector<T> reversed;
   reversed.reserve(vec.size());
-  for (int i = vec.size() - 1; i >= 0; --i)
+  for (int i = int(vec.size()) - 1; i >= 0; --i)
     reversed[i] = std::move(vec[i]);
   return reversed;
 }
@@ -41,7 +41,11 @@ std::vector<T> reverse(std::vector<T>&& vec) {
 struct Point {
   int x = 0;
   int y = 0;
+
+  Point& operator+=(const Point& p);
 };
+
+std::ostream& operator<<(std::ostream& str, const Point& p);
 
 struct Rect {
   int left = 0;

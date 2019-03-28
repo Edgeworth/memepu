@@ -32,6 +32,11 @@ std::string memecad::getIdForSigBit(const Yosys::SigBit& bit) {
   std::string parent_label;
   if (bit.wire) {
     parent_label = std::string(bit.wire->name.c_str() + 1);
+
+    // Empty string as special case for unused.
+    if (parent_label.substr(0, 6) == "unused")
+      return "";
+
     // A single child signal may connect to multiple different parent signals and wires, e.g.
     // .B(C[2:0], C_IN): The child signal B connects to C_IN and C[2:0]. So, use parent offset
     // and width values for deciding the parent label.

@@ -1,6 +1,8 @@
 
 #include <verymeme/common.h>
 
+#include "verymeme/common.h"
+
 namespace {
 
 char READ_BUF[1 << 16];
@@ -40,4 +42,14 @@ std::string stem(const std::string& filename) {
 }
 void checked_chdir(const std::string& path) {
   verify_expr(chdir(path.c_str()) == 0, "could not change directory");
+}
+
+std::ostream& operator<<(std::ostream& str, const Point& p) {
+  return str << p.x << " " << p.y;
+}
+
+Point& Point::operator+=(const Point& p) {
+  x += p.x;
+  y += p.y;
+  return *this;
 }
