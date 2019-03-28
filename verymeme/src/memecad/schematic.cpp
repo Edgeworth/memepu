@@ -82,10 +82,10 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
       child_name.c_str());
 
   // Add hierarchical label for child sheet.
-  int pack_y = ref.y + 100;
+  int pack_y = ref.p.y + 100;
   for (int i = 0; i < int(labels.size()); ++i) {
     if (i == int(labels.size() / 2))  // Place on other side.
-      pack_y = ref.y + 100;
+      pack_y = ref.p.y + 100;
     const bool left = i < int(labels.size() / 2);
 
     Sheet::RefField& ref_field = ref.fields.emplace_back();
@@ -93,11 +93,11 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
     ref_field.text = labels[i].text;
     ref_field.type = netTypeToPinType(labels[i].net_type);
     ref_field.side = left ? Direction::RIGHT : Direction::LEFT;
-    ref_field.x = left ? ref.x : (ref.x + ref.width);
-    ref_field.y = pack_y;
+    ref_field.p.x = left ? ref.p.x : (ref.p.x + ref.width);
+    ref_field.p.y = pack_y;
     pack_y += ref_field.dimension * 2;
   }
-  ref.height = pack_y - ref.y;
+  ref.height = pack_y - ref.p.y;
 
   // Pack child sheet.
   // TODO: Dynamically size width for child sheets.
@@ -162,8 +162,7 @@ void Schematic::addComponentToSheet(const Lib::Component& lib_component, const P
     label.connectToPin(*kicad_pin);
 
     // Move to location we placed this subcomponent.
-    label.x += subcomponents[kicad_pin->subcomponent].x;
-    label.y += subcomponents[kicad_pin->subcomponent].y;
+    label.p += subcomponents[kicad_pin->subcomponent].p;
   }
 }
 
@@ -185,14 +184,13 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
       auto& wire = wires.emplace_back();
 
       // Add a wire between these two labels otherwise Kicad won't consider them connected for ERC.
-      label0.y += height;
+      label0.p.y += height;
       label0.orientation = pinDirectionToLabelOrientation(Direction::RIGHT, label0.type);
-      wire.start = {label0.x, label0.y};
+      wire.start = label0.p;
 
-      label1.x += label0.dimension;
-      label1.y += height;
+      label1.p += {label0.dimension, height};
       label1.orientation = pinDirectionToLabelOrientation(Direction::LEFT, label1.type);
-      wire.end = {label1.x, label1.y};
+      wire.end = label1.p;
 
       height += std::max(label0.dimension, label1.dimension) * 2;
       labels.push_back(label0);
@@ -204,8 +202,7 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
     // TODO: Compute actual width.
     Point offset = data.packBox({500, height});
     for (auto& label : labels) {
-      label.x += offset.x;
-      label.y += offset.y;
+      label.p += offset;
       data.sheet.labels.push_back(label);
     }
     for (auto& wire : wires) {

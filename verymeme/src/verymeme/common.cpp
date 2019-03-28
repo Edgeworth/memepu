@@ -1,6 +1,3 @@
-
-#include <verymeme/common.h>
-
 #include "verymeme/common.h"
 
 namespace {
@@ -40,6 +37,7 @@ std::string stem(const std::string& filename) {
   if (base.empty() || base[0] == '.') return base;
   return base.substr(0, base.find('.'));
 }
+
 void checked_chdir(const std::string& path) {
   verify_expr(chdir(path.c_str()) == 0, "could not change directory");
 }
@@ -52,4 +50,8 @@ Point& Point::operator+=(const Point& p) {
   x += p.x;
   y += p.y;
   return *this;
+}
+
+Point Point::operator-(const Point& p) const {
+  return {x - p.x, y - p.y};
 }

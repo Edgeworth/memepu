@@ -25,8 +25,7 @@ struct Lib {
   struct Pin {
     std::string name;
     int pin_number = -1;
-    int x = -1;
-    int y = -1;
+    Point p = {};
     Direction direction;
     int subcomponent = -1;
     PinType type;
@@ -35,8 +34,7 @@ struct Lib {
   struct Field {
     int num = -1;
     std::string text;
-    int x = -1;
-    int y = -1;
+    Point p = {};
     int text_size = -1;
     Orientation text_orientation;
     std::string horizontal_justification = "C";
@@ -79,8 +77,7 @@ struct Sheet {
     std::string text;
     PinType type;
     Direction side;
-    int x;
-    int y;
+    Point p = {};
     int dimension = 50;
   };
 
@@ -88,8 +85,7 @@ struct Sheet {
     std::string timestamp = "DEADBEEF";
     std::string name;
     std::string filename;
-    int x = 0;  // TODO: Change all x, y into Point.
-    int y = 0;
+    Point p = {};
     int width = 1000;
     int height = 1000;
     std::vector<RefField> fields;
@@ -106,8 +102,7 @@ struct Sheet {
     };
 
     Type type;
-    int x = 0;
-    int y = 0;
+    Point p = {};
     int orientation = 0;
     int dimension = 50;
     NetType net_type;  // Only used for Global and Hierarchical labels.
@@ -124,8 +119,7 @@ struct Sheet {
     int num = -1;
     std::string text;
     Orientation orientation = Orientation::HORIZONTAL;
-    int x = 0;
-    int y = 0;
+    Point p = {};
     int size = 50;
     std::string flags = "0000";
     std::string justification = "C";
@@ -137,8 +131,7 @@ struct Sheet {
     std::string ref;
     int subcomponent = -1;
     std::string timestamp = "DEADBEEF";
-    int x = 0;
-    int y = 0;
+    Point p = {};
     std::vector<Field> fields;
     std::string footer = DEFAULT_FOOTER;
 
