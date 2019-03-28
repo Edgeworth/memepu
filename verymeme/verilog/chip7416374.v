@@ -3,12 +3,12 @@
 module chip7416374(
   input wire [7:0] D1,
   input wire [7:0] D2,
-  input /*u*/ wire CLK1,
-  input /*u*/ wire CLK2,
-  input /*u*/ wire N_OE1,
-  input /*u*/ wire N_OE2,
-  output /*u*/ wire [7:0] Q1,
-  output /*u*/ wire [7:0] Q2
+  input wire CLK1,
+  input wire CLK2,
+  input wire N_OE1,
+  input wire N_OE2,
+  output logic [7:0] Q1,
+  output logic [7:0] Q2
 );
   logic [7:0] low;
   logic [7:0] high;

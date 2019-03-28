@@ -5,7 +5,7 @@ module sram(
   input wire N_WE,
   input wire N_OE,
   input wire [WIDTH-1:0] IN_DATA,
-  output wire [WIDTH-1:0] OUT_DATA
+  output logic [WIDTH-1:0] OUT_DATA
 );
   parameter DEPTH = 12;
   parameter WIDTH = 8;
@@ -25,18 +25,18 @@ module sram(
   `ifdef FORMAL
   // Consider any arbitrary address, and say that the value stored in the memory should be the
   // last one written to that address.
-  (* anyconst *) wire [DEPTH-1:0] verify_addr;
-  logic [WIDTH-1:0] verify_data;
+  (* anyconst *) wire [DEPTH-1:0] f_verify_addr;
+  logic [WIDTH-1:0] f_verify_data;
 
-  initial assume (verify_data == mem[verify_addr]);
+  initial assume (f_verify_data == mem[f_verify_addr]);
 
   always_ff @(negedge N_WE) begin
-    if (ADDR == verify_addr) verify_data <= IN_DATA;
+    if (ADDR == f_verify_addr) f_verify_data <= IN_DATA;
   end
 
   always_comb begin
         `CONTRACT (N_OE || N_WE);
-    assert (verify_data == mem[verify_addr]);
+    assert (f_verify_data == mem[f_verify_addr]);
   end
 
   `ifdef HEXFILE

@@ -5,10 +5,10 @@ module alu(
   input wire [31:0] B,
   input wire [2:0] OP,
   input wire C_IN,
-  output /*u*/ wire [31:0] OUT,
-  output /*u*/ wire Z,
-  output /*u*/ wire C,
-  output /*u*/ wire N
+  output logic [31:0] OUT,
+  output logic Z,
+  output logic C,
+  output logic N
 );
   wire [7:0] tmp = 0;  // TODO bootstrapping
   wire [7:0] slice_p, slice_g, slice_z, slice_unused;
@@ -25,6 +25,8 @@ module alu(
         .OUT({slice_unused[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}));
     end
   endgenerate
+
+  // TODO make own file and move this in + non-hexfile implementation.
   sram#(.DEPTH(17), .WIDTH(8), .INITIAL("alu_lookahead.hex")) lookahead_mem(
     .ADDR({C_IN, slice_g, slice_p}), .N_WE(1), .N_OE(0), .IN_DATA(tmp), .OUT_DATA(carrys));
 
@@ -38,18 +40,19 @@ module alu(
   `ifdef FORMAL
   always_comb begin
     case (OP)
-      common::ALU_ADD: assert (OUT == A+B+{31'b0, C_IN});
+      common::ALU_ADD: begin assert (OUT == A+B+{31'b0, C_IN}); end
       common::ALU_SUB: begin
+        // Implementation must set carry when doing subtraction.
         `CONTRACT (C_IN == 1'b1);
         assert (OUT == (A-B));
       end
-      common::ALU_AND: assert (OUT == (A & B));
-      common::ALU_OR: assert (OUT == (A | B));
-      common::ALU_XOR: assert (OUT == (A ^ B));
-      common::ALU_NOT: assert (OUT == ~A);
-      common::ALU_NOP0: assert (OUT == 0);
-      common::ALU_NOP1: assert (OUT == 0);
-      default: assert (0);
+      common::ALU_AND: begin assert (OUT == (A & B)); end
+      common::ALU_OR: begin assert (OUT == (A | B)); end
+      common::ALU_XOR: begin assert (OUT == (A ^ B)); end
+      common::ALU_NOT: begin assert (OUT == ~A); end
+      common::ALU_NOP0: begin assert (OUT == 0); end
+      common::ALU_NOP1: begin assert (OUT == 0); end
+      default: begin assert (0); end
     endcase
     assert (Z == (OUT == 0));
   end
