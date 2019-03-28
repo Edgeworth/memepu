@@ -7,7 +7,6 @@
 #include "Vchip7432.h"
 #include "Vchip7486.h"
 #include "Vchip74299.h"
-#include "Vfull_adder.h"
 #include "Valu.h"
 #include "verymeme/firmware_constants.h"
 

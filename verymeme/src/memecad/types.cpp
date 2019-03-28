@@ -135,7 +135,7 @@ inputEnum(std::istream& str, T& enumeration, const std::string (& mapping)[int(T
 }
 
 const std::string ORIENTATION_MAPPING[] = {"H", "V"};
-const std::string LABEL_MAPPING[] = {"GLabel", "HLabel", "Label", "Notes"};
+const std::string LABEL_MAPPING[] = {"GLabel", "HLabel", "Label", "Notes", "NoConn"};
 const std::string DIRECTION_MAPPING[] = {"L", "R", "U", "D"};
 const std::string UNIT_SWAPPABLE_MAPPING[] = {"F", "L"};
 const std::string PIN_TYPE_MAPPING[] =
