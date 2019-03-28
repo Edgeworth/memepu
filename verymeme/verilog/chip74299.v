@@ -1,15 +1,15 @@
 `include "common.v"
 
 module chip74299(
-  input /*u*/ wire [1:0] S,
-  input /*u*/ wire [1:0] N_OE,
-  input /*u*/ wire N_MR,
-  input /*u*/ wire DSR,
-  input /*u*/ wire DSL,
-  input /*u*/ wire CP,
+  input wire [1:0] S,
+  input wire [1:0] N_OE,
+  input wire N_MR,
+  input wire DSR,
+  input wire DSL,
+  input wire CP,
   inout wire [7:0] IO,
-  output /*u*/ wire Q0,
-  output /*u*/ wire Q7
+  output logic Q0,
+  output logic Q7
 );
   logic [7:0] shift_reg;
 

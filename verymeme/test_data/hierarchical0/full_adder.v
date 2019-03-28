@@ -2,8 +2,8 @@ module full_adder(
   input wire [7:0] A,
   input wire [7:0] B,
   input wire C_IN,
-  output wire [7:0] Y,
-  output wire C_OUT
+  output logic [7:0] Y,
+  output logic C_OUT
 );
   logic [7:0] A_XOR_B;
   logic [7:0] A_AND_B;

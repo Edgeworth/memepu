@@ -27,12 +27,19 @@ alu: prep -top alu
 alu_slice: read -formal -D CONTRACT=assume alu_slice.v
 alu_slice: read -formal -D CONTRACT=assert sram.v
 alu_slice: prep -top alu_slice
+chip7400: read -formal -D CONTRACT=assume chip7400.v
 chip7400: prep -top chip7400
+chip7404: read -formal -D CONTRACT=assume chip7404.v
 chip7404: prep -top chip7404
+chip7408: read -formal -D CONTRACT=assume chip7408.v
 chip7408: prep -top chip7408
+chip7432: read -formal -D CONTRACT=assume chip7432.v
 chip7432: prep -top chip7432
+chip7486: read -formal -D CONTRACT=assume chip7486.v
 chip7486: prep -top chip7486
+chip74299: read -formal -D CONTRACT=assume chip74299.v
 chip74299: prep -top chip74299
+chip7416374: read -formal -D CONTRACT=assume chip7416374.v
 chip7416374: prep -top chip7416374
 sram: read -formal -D CONTRACT=assume sram.v
 sram: prep -top sram

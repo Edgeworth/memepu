@@ -1,7 +1,7 @@
 module two_a_plus_b(
   input wire [7:0] A,
   input wire [7:0] B,
-  output wire [7:0] OUT,
+  output logic [7:0] OUT,
 );
   logic [7:0] two_a;
   logic unused_carry0;
