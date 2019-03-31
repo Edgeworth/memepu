@@ -9,7 +9,10 @@ namespace memecad {
 namespace {
 
 const pt::ptree* findMappingForCell(const Yosys::RTLIL::Cell& cell, const pt::ptree& root) {
-  const std::string module_type = moduleType(cell);
+  // Discard $gen$ or $paramod$, look for the user-specified part of the name.
+  const auto pos = cell.type.str().find('\\');
+  if (pos == std::string::npos) return nullptr;
+  const std::string module_type = cell.type.str().substr(pos + 1);
   for (const auto& kv : root) {
     const auto&[k, v] = kv;
     if (module_type == v.get<std::string>("verilog_name"))
@@ -99,13 +102,13 @@ makeConnectionData(const std::pair<Yosys::IdString, Yosys::SigSpec>& conn,
 }
 
 std::vector<ConnectionData>
-getConnectionsForSignal(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell) {
+getConnectionsForSignal(const std::string& pin_spec, const Yosys::RTLIL::Cell& cell,
+    int suggest_width) {
   std::vector<ConnectionData> conn_data;
-  // TODO: Support arbitrary constants?
   if (pin_spec == "1") {
-    conn_data.push_back({"VCC", {Yosys::State::S1}});
+    for (int i = 0; i < suggest_width; ++i) conn_data.push_back({"VCC", {Yosys::State::S1}});
   } else if (pin_spec == "0") {
-    conn_data.push_back({"GND", {Yosys::State::S0}});
+    for (int i = 0; i < suggest_width; ++i) conn_data.push_back({"GND", {Yosys::State::S0}});
   } else {
     // Collect module connections.
     auto conn_iter = cell.connections().find("\\" + pin_spec);
@@ -129,17 +132,18 @@ Mapper::Mapper(const std::string& memecad_json, const std::vector<Lib>& libs) : 
 
 void Mapper::addCell(const Yosys::RTLIL::Cell& cell) {
   // Cell type is either mapping a Kicad library component and it's in the map, or it's a parent
-  // component.
+  // component. There should be a mapped module for each leaf module.
   const auto* mapping = findMappingForCell(cell, root_);
-  if (mapping) addLeafModule(cell, *mapping);
-  else addNonLeafModule(cell);
+  if (mapping) addMappedModule(cell, *mapping);
+  else addUnmappedModule(cell);
 }
 
-void Mapper::addNonLeafModule(const Yosys::Cell& cell) {
-  printf("Adding non-leaf module '%s'\n", modulePath(cell).c_str());
+void Mapper::addUnmappedModule(const Yosys::Cell& cell) {
+  printf("Adding unmapped module '%s'\n", modulePath(cell).c_str());
   ChildMapping child_mapping;
   for (const auto& conn : cell.connections()) {
-    for (const auto& conn_data : getConnectionsForSignal(conn.first.c_str() + 1, cell)) {
+    for (const auto& conn_data : getConnectionsForSignal(conn.first.c_str() + 1, cell,
+        -1  /* suggest_width */)) {
       verify_expr(!child_mapping.count(conn_data.child_label),
           "duplicate mapping from child label '%s'", conn_data.child_label.c_str());
       child_mapping[conn_data.child_label] = conn_data;
@@ -151,9 +155,9 @@ void Mapper::addNonLeafModule(const Yosys::Cell& cell) {
       parentModuleType(cell));
 }
 
-void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping) {
-  printf("Adding leaf module '%s'\n", modulePath(cell).c_str());
-  const std::string kicad_name = mapping.get<std::string>("kicad_name");
+void Mapper::addMappedModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping) {
+  printf("Adding mapped module '%s'\n", modulePath(cell).c_str());
+  const auto kicad_name = mapping.get<std::string>("kicad_name");
   Lib::Component* lib_component = nullptr;
   Lib* lib;
   for (auto& l : libs_) {
@@ -174,9 +178,10 @@ void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapp
     for (const auto& kv2 : child_tree)
       kicad_signals.push_back(kv2.second.get_value<std::string>());
 
-    const auto& conns = getConnectionsForSignal(verilog_signal, cell);
     for (const auto& kicad_signal : kicad_signals) {
       auto kicad_pins = parseKicadSignal(kicad_signal, *lib_component);
+      const auto& conns = getConnectionsForSignal(verilog_signal, cell,
+          kicad_pins.size() /* suggest_width */);
       verify_expr(kicad_pins.size() == conns.size(),
           "bit-width of kicad signal '%s' does not match bit-width of verilog signal '%s'",
           kicad_signal.c_str(), verilog_signal.c_str());

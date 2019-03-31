@@ -9,7 +9,12 @@ namespace po = boost::program_options;
 
 int main(int argc, char* argv[]) {
   Verilated::commandArgs(argc, argv);
-  Verilated::randReset(2);  // Randomize all bits.
+  // Set all initial bits to zero. Do this instead of random reset because of what looks like a bug
+  // in verilator. Creating e.g. wire [8:0] carrys; assign carrys[0] = C_IN; assign C = carrys[8];
+  // some_output(.OUT(carrys[8:1])) makes verilator produce assignment to carrys of the form:
+  // carrys = old_carrys & 0xFE | C_IN; carrys = (OUT & 0xFE) | carrys; which keeps random bits
+  // around from the beginning.
+  Verilated::randReset(0);
   Verilated::debug(2);
 
   ::testing::InitGoogleTest(&argc, argv);

@@ -62,8 +62,12 @@ void TestPrinter::OnTestEnd(const TestInfo& test_info) {
   fflush(stdout);
 }
 
-void TestPrinter::OnTestCaseEnd(const TestSuite& test_suite) {
-  printf("[---------] %d test(s) from %s (%lld ms total)", test_suite.test_to_run_count(),
+void TestPrinter::OnTestSuiteStart(const TestSuite& test_suite) {
+  printf("[-RUNNING-] %d test(s) from %s\n", test_suite.test_to_run_count(), test_suite.name());
+}
+
+void TestPrinter::OnTestSuiteEnd(const TestSuite& test_suite) {
+  printf("[-FINISH--] %d test(s) from %s (%lld ms total)", test_suite.test_to_run_count(),
       test_suite.name(), test_suite.elapsed_time());
   if (test_suite.type_param())
     printf(", with type param = %s", test_suite.type_param());

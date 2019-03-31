@@ -13,12 +13,13 @@ public:
   using TestPartResult = ::testing::TestPartResult;
   using TestInfo = ::testing::TestInfo;
 
-  TestPrinter(bool print_individual_tests) : print_individual_tests_(print_individual_tests) {}
+  explicit TestPrinter(bool print_individual_tests) : print_individual_tests_(print_individual_tests) {}
 
   void OnTestIterationStart(const UnitTest& unit_test, int iteration) override;
   void OnTestPartResult(const TestPartResult& result) override;
   void OnTestEnd(const TestInfo& test_info) override;
-  void OnTestCaseEnd(const TestSuite& test_suite) override;
+  void OnTestSuiteStart(const TestSuite& test_suite) override;
+  void OnTestSuiteEnd(const TestSuite& test_suite) override;
   void OnTestIterationEnd(const UnitTest& unit_test, int iteration) override;
 
 private:

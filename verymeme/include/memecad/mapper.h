@@ -20,8 +20,8 @@ public:
 
   void addModule(const Yosys::Module& module);
 private:
-  void addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping);
-  void addNonLeafModule(const Yosys::RTLIL::Cell& cell);
+  void addMappedModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping);
+  void addUnmappedModule(const Yosys::RTLIL::Cell& cell);
 
   std::vector<Lib> libs_;
   pt::ptree root_;
