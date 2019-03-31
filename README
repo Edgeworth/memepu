@@ -1,0 +1,10 @@
+# Memepu
+
+TODO fill out.
+
+### Adding new symbols
+Process for adding a new leaf module for verymeme:
+1. Decide which Kicad symbol to use. If it's a new symbol, add data to
+   pcb/kicadtools/ and generate using that.
+2. Write a verilog module corresponding to that symbol
+3. Write a mapping in memecad_map.json for the verilog module and kicad symbol.
