@@ -5,7 +5,8 @@ package common;
   `default_nettype none
   // Load hex files into SRAMs using readmemh. This makes formal verification very slow, so
   // disabling this will instead use in-verilog implementations.
-//  `define HEXFILE
+  // This should be defined for generating schematics.
+  `define HEXFILE
 
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248
   localparam ALU_ADD = 0;
@@ -16,5 +17,5 @@ package common;
   localparam ALU_NOT = 5;
   localparam ALU_NOP0 = 6;  // TODO sign extend
   localparam ALU_NOP1 = 7;
-endpackage : common
+endpackage
 `endif

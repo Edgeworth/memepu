@@ -9,6 +9,7 @@ namespace memecad {
 
 std::string moduleType(const Yosys::Cell& cell);
 std::string moduleName(const Yosys::Cell& cell);
+std::string moduleName(const Yosys::Module& module);
 std::string parentModuleType(const Yosys::Cell& cell);
 std::string modulePath(const Yosys::Cell& cell);
 std::string getIdForSigBit(const Yosys::SigBit& bit);

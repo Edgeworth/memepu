@@ -193,8 +193,9 @@ void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapp
 }
 
 void Mapper::addModule(const Yosys::Module& module) {
-  printf("Adding module connections for '%s'\n", module.name.c_str());
-  schematic_.addModuleConnectionsToSheet(module.name.c_str() + 1, module.connections());
+  const std::string module_name = moduleName(module);
+  printf("Adding module connections for '%s'\n", module_name.c_str());
+  schematic_.addModuleConnectionsToSheet(module_name.c_str(), module.connections());
 }
 
 }  // memecad

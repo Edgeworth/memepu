@@ -1,6 +1,8 @@
 #include "memecad/yosys_module.h"
 
 #include <kernel/sigtools.h>
+#include <memecad/yosys_module.h>
+
 
 #include "memecad/parser.h"
 
@@ -45,53 +47,56 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
   log_header(design, "Extracting modules...\n");
   extra_args(args, 1, design);
 
+  std::unordered_map<Module*, std::vector<Module*>> adj;
+  std::unordered_map<Module*, int> incoming;
   for (auto& module_iter : design->modules_) {
     const auto&[module_id, module] = module_iter;
     if (!design->selected_module(module)) continue;
 
     // Generate kicad sheet for this module.
     if (!isLeafModule(module)) {
-      SigMap sigmap(module);
-      log("Checking module %s, bitcount: %d\n", log_id(module_id),
-          static_cast<int>(sigmap.database.size()));
-
       for (auto& cell_iter : module->cells_) {
         const auto&[cell_id, cell] = cell_iter;
-        log("  Checking cell %s, name: %s, type: %s\n", cell_id.c_str(),
-            cell->name.c_str(), cell->type.c_str());
-        for (auto& conn : cell->connections()) {
-          const auto& conn_id = conn.first;
-          const auto& sig = sigmap(conn.second);
-          log("    Looking at connection: %s, signal: %s|%d\n",
-              conn_id.c_str(), log_signal(sig), sig.size());
-        }
-      }
+        // Add edge from child to parent, for reverse top-sort.
+        auto* child_module = design->module(cell->type);
+        if (isLeafModule(child_module)) continue;  // Don't need to process leaf modules.
 
-      log("  Looking at wires\n");
-      for (auto& wire_iter : module->wires_) {
-        const auto&[wire_id, wire] = wire_iter;
-        log("    Looking at wire %s, start offset: %d, port id: %d\n", wire_id.c_str(),
-            wire->start_offset, wire->port_id);
-      }
-      printf("\n");
-
-      log("  Looking at module connections\n");
-      for (auto& sigsig : module->connections()) {
-        log("   Looking at sigsig: %s (size: %d) <=> %s (size: %d)\n", log_signal(sigsig.first),
-            sigsig.first.size(), log_signal(sigsig.second), sigsig.second.size());
-      }
-      printf("\n");
-
-      mapper_.addModule(*module);
-      for (auto& cell_iter : module->cells_) {
-        const auto&[cell_id, cell] = cell_iter;
-        verify_expr(cell->type[0] == '\\', "unexpected non-user component");
-        mapper_.addCell(*cell);
+        verify_expr(child_module != nullptr, "expected module '%s' to exist", cell->type.c_str());
+        adj[child_module].push_back(module);
+        printf("Processing module: %s, %s\n", log_id(module_id), cell_id.c_str());
+        incoming[module]++; // Parent module has incoming edge.
       }
     } else {
       printf("Skipping leaf module '%s'\n", log_id(module_id));
     }
   }
+
+  std::vector<Module*> next;
+  for (auto& kv : design->modules_)
+    if (incoming[kv.second] == 0) next.push_back(kv.second);
+
+  // Topological sort.
+  int num_processed = 0;
+  while (!next.empty()) {
+    Module* module = next.back();
+    next.pop_back();
+    num_processed++;
+
+    printModuleInfo(module);
+    mapper_.addModule(*module);
+    for (auto& cell_iter : module->cells_) {
+      const auto&[cell_id, cell] = cell_iter;
+      mapper_.addCell(*cell);
+    }
+
+    // Add new nodes with no incoming edges.
+    for (auto* child : adj[module]) {
+      incoming[child]--;
+      if (incoming[child] == 0)
+        next.push_back(child);
+    }
+  }
+  verify_expr(num_processed == int(adj.size()), "BUG: did not process all modules");
 }
 
 bool TestPass::isLeafModule(RTLIL::Module* module) {
@@ -102,6 +107,37 @@ bool TestPass::isLeafModule(RTLIL::Module* module) {
     if (cell_id[0] != '$') return false;
   }
   return true;
+}
+
+void TestPass::printModuleInfo(Yosys::RTLIL::Module* module) {
+  SigMap sigmap(module);
+  log("Module %s\n", log_id(module->name));
+
+  for (auto& cell_iter : module->cells_) {
+    const auto&[cell_id, cell] = cell_iter;
+    log("  Checking cell %s, name: %s, type: %s, module: %s\n", cell_id.c_str(),
+        cell->name.c_str(), cell->type.c_str(), cell->module->name.c_str());
+    for (auto& conn : cell->connections()) {
+      const auto& sig = sigmap(conn.second);
+      log("    Looking at connection: %s, signal: %s|%d\n",
+          conn.first.c_str(), log_signal(sig), sig.size());
+    }
+  }
+
+  log("  Looking at wires\n");
+  for (auto& wire_iter : module->wires_) {
+    const auto&[wire_id, wire] = wire_iter;
+    log("    Looking at wire %s, start offset: %d, port id: %d\n", wire_id.c_str(),
+        wire->start_offset, wire->port_id);
+  }
+  log("\n");
+
+  log("  Looking at module connections\n");
+  for (auto& sigsig : module->connections()) {
+    log("   Looking at sigsig: %s (size: %d) <=> %s (size: %d)\n", log_signal(sigsig.first),
+        sigsig.first.size(), log_signal(sigsig.second), sigsig.second.size());
+  }
+  log("\n");
 }
 
 }  // memecad
