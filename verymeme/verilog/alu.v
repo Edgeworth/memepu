@@ -10,20 +10,22 @@ module alu(
   output logic C,
   output logic N
 );
-  wire [7:0] slice_p, slice_g, slice_z, unused_slice, carrys;
+  wire [7:0] slice_p, slice_g, slice_z, unused_slice;
+  wire [8:0] carrys;
 
-  assign C = carrys[7];
+  assign carrys[0] = C_IN;
+  assign C = carrys[8];
   assign N = OUT[31];
 
   generate
     genvar i;
     for (i = 0; i < 8; i = i+1) begin
       alu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP),
-        .C_IN(i == 0 ? C_IN:carrys[i-1]),
+        .C_IN(carrys[i]),
         .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}));
     end
   endgenerate
-  alu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys));
+  alu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys[8:1]));
 
   wire [3:0] z_level0;
   wire [1:0] z_level1;

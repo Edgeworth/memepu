@@ -1,34 +1,39 @@
+#include "memecad/util.h"
 
-#include <memecad/util.h>
+namespace memecad {
 
+namespace {
 
-std::string memecad::moduleType(const Yosys::Cell& cell) {
-  // Ignore leading '\'.
-  verify_expr(cell.type.size() > 1 && cell.type[0] == '\\',
-      "BUG: cell type '%s' must be user defined cell", cell.type.c_str());
-  return cell.type.c_str() + 1;
+std::string checkModuleName(const std::string& name) {
+  auto idx = name.find('\\');
+  verify_expr(idx != std::string::npos, "BUG: cell name '%s' must be user defined cell", name.c_str());
+  return name.substr(idx + 1);
 }
 
-std::string memecad::moduleName(const Yosys::Cell& cell) {
-  // Ignore leading '\'.
-  verify_expr(cell.name.size() > 1 && cell.name[0] == '\\',
-      "BUG: cell name '%s' must be user defined cell", cell.name.c_str());
-  return cell.name.c_str() + 1;
+}  // namespace
+
+std::string moduleType(const Yosys::Cell& cell) {
+  return checkModuleName(cell.type.str());
 }
 
-std::string memecad::parentModuleType(const Yosys::Cell& cell) {
-  // Ignore leading '\'.
-  verify_expr(cell.module->name.size() > 1 && cell.module->name[0] == '\\',
-      "BUG: module type '%s' must be user defined", cell.module->name.c_str());
-  return cell.module->name.c_str() + 1;
+std::string moduleName(const Yosys::Cell& cell) {
+  return checkModuleName(cell.name.str());
 }
 
-std::string memecad::modulePath(const Yosys::Cell& cell) {
+std::string moduleName(const Yosys::Module& module) {
+  return checkModuleName(module.name.str());
+}
+
+std::string parentModuleType(const Yosys::Cell& cell) {
+  return checkModuleName(cell.module->name.str());
+}
+
+std::string modulePath(const Yosys::Cell& cell) {
   // TODO: Output full path somehow?
   return parentModuleType(cell) + "/" + moduleName(cell) + "(" + moduleType(cell) + ")";
 }
 
-std::string memecad::getIdForSigBit(const Yosys::SigBit& bit) {
+std::string getIdForSigBit(const Yosys::SigBit& bit) {
   std::string parent_label;
   if (bit.wire) {
     parent_label = std::string(bit.wire->name.c_str() + 1);
@@ -48,3 +53,4 @@ std::string memecad::getIdForSigBit(const Yosys::SigBit& bit) {
   }
   return parent_label;
 }
+} // namespace memecad
