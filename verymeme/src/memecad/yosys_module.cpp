@@ -15,10 +15,8 @@ constexpr const char* PASS_NAME = "memecad";
 
 std::vector<Lib> parseLibraries(const std::vector<std::string>& filenames) {
   std::vector<Lib> libs;
-  for (const auto& filename : filenames) {
-    fprintf(stderr, "FILENAME: %s\n", filename.c_str());
+  for (const auto& filename : filenames)
     libs.push_back(parseLibrary(filename));
-  }
   return libs;
 }
 
@@ -39,6 +37,7 @@ convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
   // constant to a single bit port.
   Yosys::run_pass("hierarchy -check");
   Yosys::run_pass("check -assert");  // Check for misc problems.
+
   Yosys::run_pass(PASS_NAME);
   Yosys::yosys_shutdown();
 

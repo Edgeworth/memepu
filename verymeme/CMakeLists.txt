@@ -43,7 +43,6 @@ add_subdirectory(verilog)
 
 add_library(verymeme_library
     src/verymeme/common.cpp include/verymeme/common.h
-    src/verymeme/test_printer.cpp include/verymeme/test_printer.h
     include/verymeme/firmware_constants.h)
 add_library(memecad_library
     src/memecad/parser.cpp include/memecad/parser.h
@@ -73,4 +72,4 @@ target_link_libraries(generate_firmware PRIVATE verymeme_library)
 target_link_libraries(memecad_library PUBLIC ${YOSYS_LIBRARIES} verymeme_library)
 target_link_libraries(memecad PRIVATE memecad_library)
 
-# gtest_discover_tests is slow for a large number of tests, so it's not used here.
+gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
