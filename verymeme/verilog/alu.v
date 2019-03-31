@@ -10,9 +10,7 @@ module alu(
   output logic C,
   output logic N
 );
-  wire [7:0] tmp = 0;  // TODO bootstrapping
-  wire [7:0] slice_p, slice_g, slice_z, slice_unused;
-  wire [7:0] carrys;
+  wire [7:0] slice_p, slice_g, slice_z, unused_slice, carrys;
 
   assign C = carrys[7];
   assign N = OUT[31];
@@ -22,20 +20,17 @@ module alu(
     for (i = 0; i < 8; i = i+1) begin
       alu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP),
         .C_IN(i == 0 ? C_IN:carrys[i-1]),
-        .OUT({slice_unused[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}));
+        .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}));
     end
   endgenerate
-
-  // TODO make own file and move this in + non-hexfile implementation.
-  sram#(.DEPTH(17), .WIDTH(8), .INITIAL("alu_lookahead.hex")) lookahead_mem(
-    .ADDR({C_IN, slice_g, slice_p}), .N_WE(1), .N_OE(0), .IN_DATA(tmp), .OUT_DATA(carrys));
+  alu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys));
 
   wire [3:0] z_level0;
   wire [1:0] z_level1;
-  wire z_unused;
+  wire unused_z;
   chip7408 and_level0(.A(slice_z[3:0]), .B(slice_z[7:4]), .Y(z_level0));
   chip7408 and_level1(.A({1'b0, z_level1[0], z_level0[1:0]}),
-    .B({1'b0, z_level1[1], z_level0[3:2]}), .Y({z_unused, Z, z_level1[1:0]}));
+    .B({1'b0, z_level1[1], z_level0[3:2]}), .Y({unused_z, Z, z_level1[1:0]}));
 
   `ifdef FORMAL
   always_comb begin

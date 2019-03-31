@@ -65,32 +65,4 @@ struct Rect {
   constexpr int height() const { return bottom - top; }
 };
 
-template<typename T, int N>
-class CartesianProduct {
-public:
-  explicit CartesianProduct(const std::array<int, N>& ranges) : ranges_(std::move(ranges)) {}
-
-  std::vector<std::array<T, N>> get() {
-    generate(0);
-    return std::move(product_);
-  }
-
-private:
-  void generate(int i) {
-    if (i == int(ranges_.size())) {
-      product_.push_back(cur_);
-      return;
-    }
-
-    for (int j = 0; j < ranges_[i]; ++j) {
-      cur_[i] = T(j);
-      generate(i + 1);
-    }
-  }
-
-  std::array<int, N> ranges_;
-  std::array<T, N> cur_;
-  std::vector<std::array<T, N>> product_;
-};
-
 #endif  // VERYMEME_COMMON_H
