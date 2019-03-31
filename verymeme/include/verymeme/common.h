@@ -34,7 +34,7 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   std::vector<T> reversed;
   reversed.reserve(vec.size());
   for (int i = int(vec.size()) - 1; i >= 0; --i)
-    reversed[i] = std::move(vec[i]);
+    reversed.emplace_back(std::move(vec[i]));
   return reversed;
 }
 

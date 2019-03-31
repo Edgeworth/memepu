@@ -117,7 +117,8 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   }
 }
 
-void Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component& lib_component,
+void
+Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component& lib_component,
     const PinMapping& mapping, const std::string& sheet_name) {
   verify_expr(2u == lib_component.fields.size(), "library component missing fields");
 
@@ -161,6 +162,9 @@ void Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Comp
     label.connectToPin(*kicad_pin);
 
     // Move to location we placed this subcomponent.
+    verify_expr(kicad_pin->subcomponent >= 0 && kicad_pin->subcomponent < int(subcomponents.size()),
+        "subcomponent %d is out of range, only have %d subcomponents", kicad_pin->subcomponent,
+        int(subcomponents.size()));
     label.p += subcomponents[kicad_pin->subcomponent].p;
   }
 }
