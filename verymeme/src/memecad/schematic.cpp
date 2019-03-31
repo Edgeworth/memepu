@@ -184,6 +184,12 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
     for (int i = 0; i < sig.first.size(); ++i) {
       auto label0 = createParentLabel(sig0_bits[i]);
       auto label1 = createParentLabel(sig1_bits[i]);
+      // One of these being a no-connect means that it will have already been put on the appropriate
+      // component, and connecting no-connect to the default 0 (GND) value will cause ERC errors.
+      if ((label0.type == Sheet::Label::Type::NOCONNECT && !sig1_bits[i].wire) ||
+          (label1.type == Sheet::Label::Type::NOCONNECT && !sig0_bits[i].wire))
+        continue;
+
       auto& wire = wires.emplace_back();
 
       // Add a wire between these two labels otherwise Kicad won't consider them connected for ERC.
@@ -202,6 +208,8 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
           label0.text.c_str(), boost::lexical_cast<std::string>(label0.type).c_str(),
           label1.text.c_str(), boost::lexical_cast<std::string>(label1.type).c_str());
     }
+    if (labels.empty()) continue;
+
     // TODO: Compute actual width.
     Point offset = data.packBox({500, height});
     for (auto& label : labels) {
@@ -217,18 +225,16 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
 }
 
 Point Schematic::SheetData::packBox(Point box_size) {
-  Point p = cur;
-  cur.x += box_size.x + PADDING;
-
   // Finished this line, start a new line.
   if (cur.x > SHEET_MARGIN + SHEET_WIDTH) {
     cur.x = SHEET_MARGIN;
     cur.y += max_y;
     verify_expr(cur.y < SHEET_MARGIN + SHEET_HEIGHT, "ran out of space on sheet");
     max_y = 0;
-    p = cur;
   }
 
+  Point p = cur;
+  cur.x += box_size.x + PADDING;
   max_y = std::max(max_y, box_size.y + PADDING);
   return p;
 }
