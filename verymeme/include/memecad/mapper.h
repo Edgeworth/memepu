@@ -13,7 +13,7 @@ namespace pt = boost::property_tree;
 
 class Mapper {
 public:
-  Mapper(const std::string& memecad_json, const Lib& lib);
+  Mapper(const std::string& memecad_json, const std::vector<Lib>& libs);
 
   void addCell(const Yosys::RTLIL::Cell& cell);
   Schematic& getSchematic() { return schematic_; }
@@ -23,9 +23,9 @@ private:
   void addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping);
   void addNonLeafModule(const Yosys::RTLIL::Cell& cell);
 
-  Lib lib_;
+  std::vector<Lib> libs_;
   pt::ptree root_;
-  Schematic schematic_;
+  Schematic schematic_ = {};
 };
 
 }  // memecad

@@ -14,22 +14,40 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text Label 1000 1100 2 50 ~ 0
-two_a0
-Text Label 1000 1200 2 50 ~ 0
-two_a1
-Text Label 1000 1300 2 50 ~ 0
-two_a2
-Text Label 1000 1400 2 50 ~ 0
-two_a3
-Text Label 1000 1500 2 50 ~ 0
-two_a4
-Text Label 1000 1600 2 50 ~ 0
-two_a5
-Text Label 1000 1700 2 50 ~ 0
-two_a6
-Text Label 1000 1800 2 50 ~ 0
-two_a7
+NoConn ~ 4000 1500
+NoConn ~ 2000 1500
+Text HLabel 3000 1900 0 50 Input ~ 0
+A0
+Text HLabel 3000 1100 0 50 Input ~ 0
+A0
+Text HLabel 3000 1200 0 50 Input ~ 0
+A1
+Text HLabel 3000 2000 0 50 Input ~ 0
+A1
+Text HLabel 3000 1300 0 50 Input ~ 0
+A2
+Text HLabel 3000 2100 0 50 Input ~ 0
+A2
+Text HLabel 3000 1400 0 50 Input ~ 0
+A3
+Text HLabel 3000 2200 0 50 Input ~ 0
+A3
+Text HLabel 3000 1500 0 50 Input ~ 0
+A4
+Text HLabel 3000 2300 0 50 Input ~ 0
+A4
+Text HLabel 4000 1100 2 50 Input ~ 0
+A5
+Text HLabel 3000 1600 0 50 Input ~ 0
+A5
+Text HLabel 4000 1200 2 50 Input ~ 0
+A6
+Text HLabel 3000 1700 0 50 Input ~ 0
+A6
+Text HLabel 4000 1300 2 50 Input ~ 0
+A7
+Text HLabel 3000 1800 0 50 Input ~ 0
+A7
 Text HLabel 1000 1900 0 50 Input ~ 0
 B0
 Text HLabel 1000 2000 0 50 Input ~ 0
@@ -46,9 +64,38 @@ Text HLabel 2000 1200 2 50 Input ~ 0
 B6
 Text HLabel 2000 1300 2 50 Input ~ 0
 B7
-Text GLabel 2000 1400 2 50 UnSpc ~ 0
-GND
-NoConn ~ 2000 1500
+Text Label 4000 1600 0 50 ~ 0
+two_a0
+Text Label 1000 1100 2 50 ~ 0
+two_a0
+Text Label 1000 1200 2 50 ~ 0
+two_a1
+Text Label 4000 1700 0 50 ~ 0
+two_a1
+Text Label 4000 1800 0 50 ~ 0
+two_a2
+Text Label 1000 1300 2 50 ~ 0
+two_a2
+Text Label 4000 1900 0 50 ~ 0
+two_a3
+Text Label 1000 1400 2 50 ~ 0
+two_a3
+Text Label 4000 2000 0 50 ~ 0
+two_a4
+Text Label 1000 1500 2 50 ~ 0
+two_a4
+Text Label 4000 2100 0 50 ~ 0
+two_a5
+Text Label 1000 1600 2 50 ~ 0
+two_a5
+Text Label 4000 2200 0 50 ~ 0
+two_a6
+Text Label 1000 1700 2 50 ~ 0
+two_a6
+Text Label 4000 2300 0 50 ~ 0
+two_a7
+Text Label 1000 1800 2 50 ~ 0
+two_a7
 Text HLabel 2000 1600 2 50 Output ~ 0
 OUT0
 Text HLabel 2000 1700 2 50 Output ~ 0
@@ -65,57 +112,10 @@ Text HLabel 2000 2200 2 50 Output ~ 0
 OUT6
 Text HLabel 2000 2300 2 50 Output ~ 0
 OUT7
-Text HLabel 3000 1100 0 50 Input ~ 0
-A0
-Text HLabel 3000 1200 0 50 Input ~ 0
-A1
-Text HLabel 3000 1300 0 50 Input ~ 0
-A2
-Text HLabel 3000 1400 0 50 Input ~ 0
-A3
-Text HLabel 3000 1500 0 50 Input ~ 0
-A4
-Text HLabel 3000 1600 0 50 Input ~ 0
-A5
-Text HLabel 3000 1700 0 50 Input ~ 0
-A6
-Text HLabel 3000 1800 0 50 Input ~ 0
-A7
-Text HLabel 3000 1900 0 50 Input ~ 0
-A0
-Text HLabel 3000 2000 0 50 Input ~ 0
-A1
-Text HLabel 3000 2100 0 50 Input ~ 0
-A2
-Text HLabel 3000 2200 0 50 Input ~ 0
-A3
-Text HLabel 3000 2300 0 50 Input ~ 0
-A4
-Text HLabel 4000 1100 2 50 Input ~ 0
-A5
-Text HLabel 4000 1200 2 50 Input ~ 0
-A6
-Text HLabel 4000 1300 2 50 Input ~ 0
-A7
 Text GLabel 4000 1400 2 50 UnSpc ~ 0
 GND
-NoConn ~ 4000 1500
-Text Label 4000 1600 0 50 ~ 0
-two_a0
-Text Label 4000 1700 0 50 ~ 0
-two_a1
-Text Label 4000 1800 0 50 ~ 0
-two_a2
-Text Label 4000 1900 0 50 ~ 0
-two_a3
-Text Label 4000 2000 0 50 ~ 0
-two_a4
-Text Label 4000 2100 0 50 ~ 0
-two_a5
-Text Label 4000 2200 0 50 ~ 0
-two_a6
-Text Label 4000 2300 0 50 ~ 0
-two_a7
+Text GLabel 2000 1400 2 50 UnSpc ~ 0
+GND
 $Sheet
 S 1000 1000 1000 1400
 U DEADBEEF
