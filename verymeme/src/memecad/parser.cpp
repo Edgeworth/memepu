@@ -247,6 +247,8 @@ private:
         next();
         next();  // Name text size, num text size.
         pin.subcomponent = next<int>() - 1;
+        // TODO: Pins common to all subcomponents (==0) are just put in the first one for now.
+        if (pin.subcomponent == -1) pin.subcomponent = 0;
         next();  // convert
         pin.type = next<PinType>();
         getLines(1); // Ignore rest.

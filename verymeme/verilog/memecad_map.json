@@ -4,7 +4,7 @@
     "kicad_name": "628128_TSOP32",
     "verilog_to_kicad_map": {
       "0": [
-        "A[16:13]",
+        "A[16:12]",
         "~CS1",
         "GND"
       ],
@@ -12,7 +12,26 @@
         "VCC",
         "CS2"
       ],
-      "ADDR": "A[12:0]",
+      "ADDR": "A[11:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "sram17x8",
+    "kicad_name": "628128_TSOP32",
+    "verilog_to_kicad_map": {
+      "0": [
+        "~CS1",
+        "GND"
+      ],
+      "1": [
+        "VCC",
+        "CS2"
+      ],
+      "ADDR": "A[16:0]",
       "N_WE": "~WE",
       "N_OE": "~OE",
       "IN_DATA": "Q",

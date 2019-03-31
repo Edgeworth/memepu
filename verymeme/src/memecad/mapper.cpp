@@ -66,6 +66,7 @@ parseKicadPinSpec(const std::string& pin_spec, const Lib::Component& lib_compone
     verify_expr(!pins.empty(), "implicit pin spec '%s' does not exist", pin_spec.c_str());
     return reverse(std::move(pins));
   }
+
   verify_expr(pin_by_name,
       "pin spec '%s' is neither pin number, valid pin name, valid pin range",
       pin_spec.c_str());
@@ -80,8 +81,8 @@ parseKicadSignal(std::string pin_specs, const Lib::Component& lib_component) {
   pin_specs += ',';  // Sentinel.
   for (auto c : pin_specs) {
     if (c == ',') {
-      auto range_pins = parseKicadPinSpec(pin_spec, lib_component);
-      pins.insert(pins.end(), range_pins.begin(), range_pins.end());
+      for (const auto* pin : parseKicadPinSpec(pin_spec, lib_component))
+        pins.push_back(pin);
       pin_spec.clear();
     } else {
       pin_spec += c;
@@ -178,13 +179,14 @@ void Mapper::addMappedModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& ma
     for (const auto& kv2 : child_tree)
       kicad_signals.push_back(kv2.second.get_value<std::string>());
 
-    for (const auto& kicad_signal : kicad_signals) {
-      auto kicad_pins = parseKicadSignal(kicad_signal, *lib_component);
+    for (const auto& kicad_signal_name : kicad_signals) {
+      const auto& kicad_pins = parseKicadSignal(kicad_signal_name, *lib_component);
       const auto& conns = getConnectionsForSignal(verilog_signal, cell,
           kicad_pins.size() /* suggest_width */);
       verify_expr(kicad_pins.size() == conns.size(),
-          "bit-width of kicad signal '%s' does not match bit-width of verilog signal '%s'",
-          kicad_signal.c_str(), verilog_signal.c_str());
+          "bit-width of kicad signal '%s|%d' does not match bit-width of verilog signal '%s|%d'",
+          kicad_signal_name.c_str(), int(kicad_pins.size()), verilog_signal.c_str(),
+          int(conns.size()));
       for (int i = 0; i < int(kicad_pins.size()); ++i) {
         pin_mapping[kicad_pins[i]] = conns[i];
         printf("  Mapping %s (pin %s) => %s => %s\n", kicad_pins[i]->name.c_str(),

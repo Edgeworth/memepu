@@ -9,7 +9,7 @@ module alu_lookahead(
 
   `ifdef HEXFILE
   wire [7:0] unused = 0;
-  sram#(.DEPTH(17), .WIDTH(8), .INITIAL("alu_lookahead.hex")) lookahead_mem(
+  sram17x8#(.INITIAL("alu_lookahead.hex")) lookahead_mem(
     .ADDR({C_IN, G, P}), .N_WE(1), .N_OE(0), .IN_DATA(unused), .OUT_DATA(CARRYS));
   `else
   logic prev_carry, carry;

@@ -19,7 +19,7 @@ chip7432
 chip7486
 chip74299
 chip7416374
-sram
+sram17x8
 
 [script]
 alu: read -formal -D CONTRACT=assume alu.v
@@ -45,8 +45,8 @@ chip74299: read -formal -D CONTRACT=assume chip74299.v
 chip74299: prep -top chip74299
 chip7416374: read -formal -D CONTRACT=assume chip7416374.v
 chip7416374: prep -top chip7416374
-sram: read -formal -D CONTRACT=assume sram.v
-sram: prep -top sram
+sram17x8: read -formal -D CONTRACT=assume sram17x8.v
+sram17x8: prep -top sram17x8
 
 [files]
 alu.v
@@ -60,6 +60,6 @@ chip7486.v
 chip74299.v
 chip7416374.v
 common.v
-sram.v
+sram17x8.v
 alu_slice.hex
 alu_lookahead.hex
