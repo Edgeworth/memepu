@@ -23,6 +23,7 @@ private:
   Mapper mapper_;
 
   bool isLeafModule(Yosys::RTLIL::Module* module);
+  void printModuleInfo(Yosys::RTLIL::Module* module);
 };
 
 }  // namespace
