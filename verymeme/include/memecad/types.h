@@ -21,10 +21,12 @@ enum class Direction {
   LEFT, RIGHT, UP, DOWN, COUNT
 };
 
+constexpr int DEFAULT_DIMENSION = 50;
+
 struct Lib {
   struct Pin {
-    std::string name;
-    int pin_number = -1;
+    std::string name = {};
+    std::string id = {};  // There are some pins that have string ids.
     Point p = {};
     Direction direction;
     int subcomponent = -1;
@@ -54,20 +56,21 @@ struct Lib {
     std::vector<Field> fields;
 
     Rect getBoundingBox(int subcomponent) const;
-    const Lib::Pin* findPin(const std::string& pin_name) const;
-    const Lib::Pin* findPin(int pin_number) const;
+    const Lib::Pin* findPinByName(const std::string& pin_name) const;
+    const Lib::Pin* findPinById(const std::string& pin_id) const;
   };
 
   std::string name;
   std::vector<Component> components;
 
-  Component& findComponent(const std::string& name);
+  Component* findComponent(const std::string& name_to_find);
 };
 
 struct Sheet {
   struct Wire {
     Point start = {};
     Point end = {};
+    bool operator<(const Wire& o) const;
   };
 
   struct RefField {
@@ -78,7 +81,8 @@ struct Sheet {
     PinType type;
     Direction side;
     Point p = {};
-    int dimension = 50;
+    int dimension = DEFAULT_DIMENSION;
+    bool operator<(const RefField& o) const;
   };
 
   struct Ref {
@@ -91,6 +95,7 @@ struct Sheet {
     std::vector<RefField> fields;
 
     void offsetTo(const Point& loc);
+    bool operator<(const Ref& o) const;
   };
 
   struct Label {
@@ -104,7 +109,7 @@ struct Sheet {
     Type type;
     Point p = {};
     int orientation = 0;
-    int dimension = 50;
+    int dimension = DEFAULT_DIMENSION;
     NetType net_type;  // Only used for Global and Hierarchical labels.
     bool italic = false;
     bool bold = false;
@@ -120,10 +125,12 @@ struct Sheet {
     std::string text;
     Orientation orientation = Orientation::HORIZONTAL;
     Point p = {};
-    int size = 50;
+    int size = DEFAULT_DIMENSION;
     std::string flags = "0000";
     std::string justification = "C";
     std::string style = "CNN";
+
+    bool operator<(const Field& o) const;
   };
 
   struct Component {
@@ -137,6 +144,7 @@ struct Sheet {
 
     void offset(Point offset);
     void addLibField(const Lib::Field& lib_field, const std::string& text);
+    bool operator<(const Component& o) const;
   };
 
   std::string header1 = DEFAULT_HEADER1;

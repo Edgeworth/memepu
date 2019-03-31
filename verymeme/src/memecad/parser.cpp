@@ -240,7 +240,7 @@ private:
       } else if (tok == "X") {
         auto& pin = component.pins.emplace_back();
         pin.name = next();
-        pin.pin_number = next<int>();
+        pin.id = next();
         pin.p = {next<int>(), -next<int>()}; // Seems like y-axis is inverted for libraries.
         next(); // Length
         pin.direction = next<Direction>();
@@ -259,12 +259,15 @@ private:
 
 class KicadWriter {
 public:
-  std::string writeSheet(const Sheet& sheet) {
+  std::string writeSheet(Sheet sheet) {
     std::string data;
     data += sheet.header1;
     data += "Sheet 1 " + tos(sheet.id) + "\n";
     data += "Title \"" + sheet.title + "\"\n";
     data += sheet.header2;
+
+    // Sort children to maintain a consistent order for tests.
+    std::sort(sheet.components.begin(), sheet.components.end());
     for (const auto& comp : sheet.components) {
       data += "$Comp\n";
       data += "L " + comp.name + " " + comp.ref + "\n";
@@ -278,6 +281,7 @@ public:
       data += "$EndComp\n";
     }
 
+    std::sort(sheet.labels.begin(), sheet.labels.end());
     for (const auto& l : sheet.labels) {
       if (l.type == Sheet::Label::Type::NOCONNECT) {
         data += "NoConn ~ " + tos(l.p) + "\n";
@@ -291,9 +295,11 @@ public:
       data += l.text + "\n";
     }
 
+    std::sort(sheet.wires.begin(), sheet.wires.end());
     for (const auto& w : sheet.wires)
       data += "Wire Wire Line\n\t" + tos(w.start) + " " + tos(w.end) + "\n";
 
+    std::sort(sheet.refs.begin(), sheet.refs.end());
     for (const auto& r : sheet.refs) {
       data += "$Sheet\n";
       data += "S " + tos(r.p) + " " + tos(r.width) + " " + tos(r.height) + "\n";
@@ -318,22 +324,36 @@ private:
 
 }  // namespace
 
-Sheet
-
-parseSheet(const std::string& data) {
-  return KicadParser(data).parseSheet();
+Sheet parseSheet(const std::string& data) {
+  try {
+    return KicadParser(data).parseSheet();
+  } catch (const std::exception& e) {
+    verify_expr(false, "failed exception: %s", e.what());
+  }
 }
 
 std::string writeSheet(const Sheet& sheet) {
-  return KicadWriter().writeSheet(sheet);
+  try {
+    return KicadWriter().writeSheet(sheet);
+  } catch (const std::exception& e) {
+    verify_expr(false, "failed exception: %s", e.what());
+  }
 }
 
 Lib parseLibrary(const std::string& filename) {
-  return parseLibrary(readFile(filename, false /* binary */), stem(filename));
+  try {
+    return parseLibrary(readFile(filename, false /* binary */), stem(filename));
+  } catch (const std::exception& e) {
+    verify_expr(false, "failed exception: %s", e.what());
+  }
 }
 
 Lib parseLibrary(const std::string& data, const std::string& name) {
-  return KicadParser(data).parseLibrary(name);
+  try {
+    return KicadParser(data).parseLibrary(name);
+  } catch (const std::exception& e) {
+    verify_expr(false, "failed exception: %s", e.what());
+  }
 }
 
 }  // memecad

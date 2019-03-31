@@ -1,6 +1,7 @@
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>
+#include <memecad/types.h>
 
 
 namespace memecad {
@@ -41,7 +42,7 @@ Rect Lib::Component::getBoundingBox(int subcomponent) const {
   bounds.inset(-200, -200);
   return bounds;
 }
-const Lib::Pin* Lib::Component::findPin(const std::string& pin_name) const {
+const Lib::Pin* Lib::Component::findPinByName(const std::string& pin_name) const {
   for (const auto& pin : pins) {
     if (pin.name == pin_name)
       return &pin;
@@ -49,30 +50,43 @@ const Lib::Pin* Lib::Component::findPin(const std::string& pin_name) const {
   return nullptr;
 }
 
-const Lib::Pin* Lib::Component::findPin(int pin_number) const {
+const Lib::Pin* Lib::Component::findPinById(const std::string& pin_id) const {
   for (const auto& pin : pins) {
-    if (pin.pin_number == pin_number)
+    if (pin.id == pin_id)
       return &pin;
   }
   return nullptr;
 }
 
-Lib::Component& Lib::findComponent(const std::string& name) {
+Lib::Component* Lib::findComponent(const std::string& name_to_find) {
   for (auto& comp : components) {
     for (const auto& comp_name : comp.names) {
-      if (comp_name == name)
-        return comp;
+      if (comp_name == name_to_find)
+        return &comp;
     }
   }
-  verify_expr(false, "can't find component '%s'", name.c_str());
+  return nullptr;
 }
 
+bool Sheet::Wire::operator<(const Sheet::Wire& o) const {
+  return std::tie(start, end) < std::tie(o.start, o.end);
+}
+
+bool Sheet::RefField::operator<(const Sheet::RefField& o) const {
+  return std::tie(text, num, type, side, p, dimension) <
+         std::tie(o.text, o.num, o.type, o.side, o.p, o.dimension);
+}
 
 void Sheet::Ref::offsetTo(const Point& loc) {
   for (auto& field : fields) {
     field.p += loc - p;
   }
   p = loc;
+}
+
+bool Sheet::Ref::operator<(const Sheet::Ref& o) const {
+  return std::tie(name, timestamp, filename, p, width, height, fields) <
+         std::tie(o.name, o.timestamp, o.filename, o.p, o.width, o.height, o.fields);
 }
 
 void Sheet::Label::connectToPin(const Lib::Pin& pin) {
@@ -86,8 +100,12 @@ void Sheet::Label::connectToRefField(const Sheet::RefField& ref_field) {
 }
 
 bool Sheet::Label::operator<(const Sheet::Label& o) const {
-  // Consider labels uniquely defined by their text and net type. Put inputs before outputs.
   return std::tie(net_type, text) < std::tie(o.net_type, o.text);
+}
+
+bool Sheet::Field::operator<(const Sheet::Field& o) const {
+  return std::tie(text, num, orientation, p, size, flags, justification, style) <
+         std::tie(o.text, o.num, o.orientation, o.p, o.size, o.flags, o.justification, o.style);
 }
 
 void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::string& text) {
@@ -104,6 +122,11 @@ void Sheet::Component::offset(Point offset) {
   p += offset;
   for (auto& field : fields)
     field.p += offset;
+}
+
+bool Sheet::Component::operator<(const Sheet::Component& o) const {
+  return std::tie(name, ref, subcomponent, timestamp, p, fields, footer) <
+         std::tie(o.name, o.ref, o.subcomponent, o.timestamp, o.p, o.fields, o.footer);
 }
 
 template<typename T>

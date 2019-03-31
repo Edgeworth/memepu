@@ -13,15 +13,22 @@ namespace {
 
 constexpr const char* PASS_NAME = "memecad";
 
+std::vector<Lib> parseLibraries(const std::vector<std::string>& filenames) {
+  std::vector<Lib> libs;
+  for (const auto& filename : filenames) {
+    fprintf(stderr, "FILENAME: %s\n", filename.c_str());
+    libs.push_back(parseLibrary(filename));
+  }
+  return libs;
+}
+
 }  // namespace
 
 std::vector<Schematic::SchematicFile>
 convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
     const std::vector<std::string>& verilog_filenames,
     const std::vector<std::string>& kicad_library_filenames) {
-  // TODO: Support multiple libraries.
-  verify_expr(kicad_library_filenames.size() == 1, "TODO: support multiple libraries");
-  memecad::TestPass test_pass(memecad_map_filename, kicad_library_filenames.back());
+  memecad::TestPass test_pass(memecad_map_filename, kicad_library_filenames);
 
   Yosys::yosys_setup();
   std::string yosys_cmd = "read -sv";
@@ -39,9 +46,9 @@ convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
 }
 
 TestPass::TestPass(const std::string& memecad_map_filename,
-    const std::string& kicad_library_filename) : Pass(PASS_NAME), mapper_(
+    const std::vector<std::string>& kicad_library_filenames) : Pass(PASS_NAME), mapper_(
     readFile(memecad_map_filename, false /* binary */),
-    parseLibrary(kicad_library_filename)) {}
+    parseLibraries(kicad_library_filenames)) {}
 
 void TestPass::execute(std::vector<std::string> args, Design* design) {
   log_header(design, "Extracting modules...\n");
@@ -72,8 +79,10 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
   }
 
   std::vector<Module*> next;
-  for (auto& kv : design->modules_)
-    if (incoming[kv.second] == 0) next.push_back(kv.second);
+  for (auto& kv : design->modules_) {
+    if (!isLeafModule(kv.second) && incoming[kv.second] == 0)
+      next.push_back(kv.second);
+  }
 
   // Topological sort.
   int num_processed = 0;

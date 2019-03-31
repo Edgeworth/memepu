@@ -11,12 +11,13 @@ std::string removeWhitespace(const std::string& input) {
 
 using SchematicTest = testing::Test;
 
-TEST_F(SchematicTest, DoesNotLoseInformation) {
+TEST_F(SchematicTest, Parsing0) {
   std::string full_adder_original = readFile("test_data/parsing0/full_adder.sch",
       false /* binary */);
   memecad::Sheet sheet = memecad::parseSheet(full_adder_original);
   std::string full_adder_output = memecad::writeSheet(sheet);
 
+  printf("output:\n%s", full_adder_output.c_str());
   EXPECT_EQ(removeWhitespace(full_adder_original), full_adder_output);
 }
 

@@ -14,62 +14,62 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+NoConn ~ 3000 2200
+NoConn ~ 3000 2100
+NoConn ~ 3000 2000
+NoConn ~ 3000 1900
+NoConn ~ 3000 1800
+NoConn ~ 3000 1700
+NoConn ~ 3000 1600
+NoConn ~ 3000 1500
 Text Label 1000 1000 2 50 ~ 0
 high_b0
-Text GLabel 1050 1000 2 50 UnSpc ~ 0
-GND
 Text Label 1000 1100 2 50 ~ 0
 high_b1
-Text GLabel 1050 1100 2 50 UnSpc ~ 0
-VCC
 Text Label 1000 1200 2 50 ~ 0
 high_b2
-Text GLabel 1050 1200 2 50 UnSpc ~ 0
-GND
 Text Label 1000 1300 2 50 ~ 0
 high_b3
-Text GLabel 1050 1300 2 50 UnSpc ~ 0
-VCC
-Text GLabel 2000 1100 0 50 UnSpc ~ 0
+Text GLabel 2000 1900 0 50 UnSpc ~ 0
 GND
-Text GLabel 2000 1200 0 50 UnSpc ~ 0
-VCC
-Text GLabel 2000 1300 0 50 UnSpc ~ 0
+Text GLabel 3000 1300 2 50 UnSpc ~ 0
 GND
-Text GLabel 2000 1400 0 50 UnSpc ~ 0
-VCC
-Text GLabel 2000 1500 0 50 UnSpc ~ 0
+Text GLabel 3000 1100 2 50 UnSpc ~ 0
 GND
-Text GLabel 2000 1600 0 50 UnSpc ~ 0
-VCC
-Text GLabel 2000 1700 0 50 UnSpc ~ 0
+Text GLabel 2000 2100 0 50 UnSpc ~ 0
 GND
 Text GLabel 2000 1800 0 50 UnSpc ~ 0
 GND
-Text GLabel 2000 1900 0 50 UnSpc ~ 0
+Text GLabel 2000 1700 0 50 UnSpc ~ 0
+GND
+Text GLabel 2000 1500 0 50 UnSpc ~ 0
+GND
+Text GLabel 2000 1300 0 50 UnSpc ~ 0
+GND
+Text GLabel 2000 1100 0 50 UnSpc ~ 0
+GND
+Text GLabel 1050 1200 2 50 UnSpc ~ 0
+GND
+Text GLabel 1050 1000 2 50 UnSpc ~ 0
 GND
 Text GLabel 2000 2000 0 50 UnSpc ~ 0
 VCC
-Text GLabel 2000 2100 0 50 UnSpc ~ 0
-GND
 Text GLabel 2000 2200 0 50 UnSpc ~ 0
 VCC
-Text GLabel 3000 1100 2 50 UnSpc ~ 0
-GND
+Text GLabel 2000 1600 0 50 UnSpc ~ 0
+VCC
 Text GLabel 3000 1200 2 50 UnSpc ~ 0
 VCC
-Text GLabel 3000 1300 2 50 UnSpc ~ 0
-GND
 Text GLabel 3000 1400 2 50 UnSpc ~ 0
 VCC
-NoConn ~ 3000 1500
-NoConn ~ 3000 1600
-NoConn ~ 3000 1700
-NoConn ~ 3000 1800
-NoConn ~ 3000 1900
-NoConn ~ 3000 2000
-NoConn ~ 3000 2100
-NoConn ~ 3000 2200
+Text GLabel 2000 1400 0 50 UnSpc ~ 0
+VCC
+Text GLabel 2000 1200 0 50 UnSpc ~ 0
+VCC
+Text GLabel 1050 1300 2 50 UnSpc ~ 0
+VCC
+Text GLabel 1050 1100 2 50 UnSpc ~ 0
+VCC
 Wire Wire Line
 	1000 1000 1050 1000
 Wire Wire Line
