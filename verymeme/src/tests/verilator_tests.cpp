@@ -1,4 +1,5 @@
 #include <array>
+#include <numeric>
 
 #include "verymeme/common.h"
 #include "Vchip7400.h"
@@ -23,140 +24,152 @@ public:
   }
 };
 
-template<typename ...Ts>
-constexpr auto bitRanges(Ts... ts) {
-  std::array<int, sizeof...(ts)> arr{static_cast<int>(ts)...};
-  for (std::size_t i = 0; i < arr.size(); ++i)
-    arr[i] = 1 << arr[i];
-  return ::testing::ValuesIn(CartesianProduct<uint32_t, arr.size()>(arr).get());
-}
+template<int... Ns>
+class ExhaustiveVerilatorTest : public VerilatorTest {
+public:
+  void run() {
+    // Do this because gtest will construct a list of every test, which is slow for large
+    // exhaustive tests.
+    const int bits[sizeof...(Ns)] = {Ns...};
+    uint64_t bitsum = 0;
+    for (int i : bits) bitsum += i;
 
-class Chip7400Test
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
+    for (uint64_t i = 0; i < (1ULL << bitsum); ++i) {
+      int bitcum = 0;
+      for (int bitidx = 0; bitidx < int(sizeof...(Ns)); ++bitidx) {
+        param[bitidx] = (i >> bitcum) & ((1ULL << bits[bitidx]) - 1);
+        bitcum += bits[bitidx];
+      }
+      doTest();
+    }
+  }
+
+  virtual void doTest() = 0;
+
 protected:
-  Vchip7400 chip;
+  std::array<uint32_t, sizeof...(Ns)> param = {};
 };
 
-TEST_P(Chip7400Test, Exhaustive) {
-  const auto[A, B] = GetParam();
-  chip.A = uint8_t(A);
-  chip.B = uint8_t(B);
-  chip.eval();
-  EXPECT_EQ(~(A & B) & 0x0F, chip.Y);
-}
-
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7400Test, bitRanges(4, 4));
-
-class Chip7404Test
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 1>> {
-protected:
-  Vchip7404 chip;
+class Chip7400Test : public ExhaustiveVerilatorTest<4, 4> {
+  void doTest() override {
+    Vchip7400 chip;
+    const auto[A, B] = param;
+    chip.A = uint8_t(A);
+    chip.B = uint8_t(B);
+    chip.eval();
+    EXPECT_EQ(~(A & B) & 0x0F, chip.Y);
+  }
 };
 
-TEST_P(Chip7404Test, Exhaustive) {
-  const auto[A] = GetParam();
-  chip.A = uint8_t(A);
-  chip.eval();
-  EXPECT_EQ(~A & 0x3F, chip.Y);
+TEST_F(Chip7400Test, Exhaustive) {
+  run();
 }
 
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7404Test, bitRanges(6));
-
-class Chip7408Test
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
-protected:
-  Vchip7408 chip;
+class Chip7404Test : public ExhaustiveVerilatorTest<6> {
+  void doTest() override {
+    Vchip7404 chip;
+    const auto[A] = param;
+    chip.A = uint8_t(A);
+    chip.eval();
+    EXPECT_EQ(~A & 0x3F, chip.Y);
+  }
 };
 
-TEST_P(Chip7408Test, Exhaustive) {
-  const auto[A, B] = GetParam();
-  chip.A = uint8_t(A);
-  chip.B = uint8_t(B);
-  chip.eval();
-  EXPECT_EQ(A & B, chip.Y);
+TEST_F(Chip7404Test, Exhaustive) {
+  run();
 }
 
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7408Test, bitRanges(4, 4));
-
-class Chip7432Test
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
-protected:
-  Vchip7432 chip;
+class Chip7408Test : public ExhaustiveVerilatorTest<4, 4> {
+  void doTest() override {
+    Vchip7408 chip;
+    const auto[A, B] = param;
+    chip.A = uint8_t(A);
+    chip.B = uint8_t(B);
+    chip.eval();
+    EXPECT_EQ(A & B, chip.Y);
+  }
 };
 
-TEST_P(Chip7432Test, Exhaustive) {
-  const auto[A, B] = GetParam();
-  chip.A = uint8_t(A);
-  chip.B = uint8_t(B);
-  chip.eval();
-  EXPECT_EQ(A | B, chip.Y);
+TEST_F(Chip7408Test, Exhaustive) {
+  run();
 }
 
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7432Test, bitRanges(4, 4));
-
-class Chip7486Test
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 2>> {
-protected:
-  Vchip7486 chip;
+class Chip7432Test : public ExhaustiveVerilatorTest<4, 4> {
+  void doTest() override {
+    Vchip7432 chip;
+    const auto[A, B] = param;
+    chip.A = uint8_t(A);
+    chip.B = uint8_t(B);
+    chip.eval();
+    EXPECT_EQ(A | B, chip.Y);
+  }
 };
 
-TEST_P(Chip7486Test, Exhaustive) {
-  const auto[A, B] = GetParam();
-  chip.A = uint8_t(A);
-  chip.B = uint8_t(B);
-  chip.eval();
-  EXPECT_EQ(A ^ B, chip.Y);
+TEST_F(Chip7432Test, Exhaustive) {
+  run();
 }
 
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip7486Test, bitRanges(4, 4));
-
-class Chip74299Test
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 6>> {
-protected:
-  Vchip74299 chip;
+class Chip7486Test : public ExhaustiveVerilatorTest<4, 4> {
+  void doTest() override {
+    Vchip7486 chip;
+    const auto[A, B] = param;
+    chip.A = uint8_t(A);
+    chip.B = uint8_t(B);
+    chip.eval();
+    EXPECT_EQ(A ^ B, chip.Y);
+  }
 };
 
-TEST_P(Chip74299Test, Exhaustive) {
-  const auto[S, N_OE, N_MR, DSR, DSL, IO] = GetParam();
-  chip.CP = 0;
-  chip.eval();
-
-  chip.S = 0b11;  // LOAD.
-  chip.N_OE = 0b11; // Don't output.
-  chip.N_MR = 1;
-  chip.DSR = 0;
-  chip.DSL = 0;
-  chip.IO = uint8_t(IO);
-  chip.CP = 1;
-  chip.eval();
-
-  chip.N_OE = 0b00;  // Output and check.
-  chip.eval();
-  EXPECT_EQ(IO, chip.IO);
-  EXPECT_EQ(IO & 1, chip.Q0);
-  EXPECT_EQ((IO >> 7) & 1, chip.Q7);
-
-  // Now apply operation to loaded data.
-  chip.CP = 0;
-  chip.eval();
-
-  chip.S = uint8_t(S);
-  chip.N_OE = uint8_t(N_OE);
-  chip.N_MR = uint8_t(N_MR);
-  chip.DSR = uint8_t(DSR);
-  chip.DSL = uint8_t(DSL);
-  chip.IO = uint8_t(IO);
-  chip.CP = 1;
-  chip.eval();
-  uint32_t result = IO;
-  if (S == 0b01) result = uint8_t((result << 1) | DSL);
-  else if (S == 0b10) result = uint8_t((result >> 1) | (DSR << 7));
-  EXPECT_EQ(N_MR && N_OE == 0b00 ? result : 0, chip.IO);
-  EXPECT_EQ(N_MR ? result & 1 : 0, chip.Q0);
-  EXPECT_EQ(N_MR ? (result >> 7) & 1 : 0, chip.Q7);
+TEST_F(Chip7486Test, Exhaustive) {
+  run();
 }
 
-INSTANTIATE_TEST_SUITE_P(Exhaustive, Chip74299Test, bitRanges(2, 2, 1, 1, 1, 8));
+class Chip74299Test : public ExhaustiveVerilatorTest<2, 2, 1, 1, 1, 8> {
+  void doTest() override {
+    Vchip74299 chip;
+    const auto[S, N_OE, N_MR, DSR, DSL, IO] = param;
+    chip.CP = 0;
+    chip.eval();
+
+    chip.S = 0b11;  // LOAD.
+    chip.N_OE = 0b11; // Don't output.
+    chip.N_MR = 1;
+    chip.DSR = 0;
+    chip.DSL = 0;
+    chip.IO = uint8_t(IO);
+    chip.CP = 1;
+    chip.eval();
+
+    chip.N_OE = 0b00;  // Output and check.
+    chip.eval();
+    EXPECT_EQ(IO, chip.IO);
+    EXPECT_EQ(IO & 1, chip.Q0);
+    EXPECT_EQ((IO >> 7) & 1, chip.Q7);
+
+    // Now apply operation to loaded data.
+    chip.CP = 0;
+    chip.eval();
+
+    chip.S = uint8_t(S);
+    chip.N_OE = uint8_t(N_OE);
+    chip.N_MR = uint8_t(N_MR);
+    chip.DSR = uint8_t(DSR);
+    chip.DSL = uint8_t(DSL);
+    chip.IO = uint8_t(IO);
+    chip.CP = 1;
+    chip.eval();
+    uint32_t result = IO;
+    if (S == 0b01) result = uint8_t((result << 1) | DSL);
+    else if (S == 0b10) result = uint8_t((result >> 1) | (DSR << 7));
+    EXPECT_EQ(N_MR && N_OE == 0b00 ? result : 0, chip.IO);
+    EXPECT_EQ(N_MR ? result & 1 : 0, chip.Q0);
+    EXPECT_EQ(N_MR ? (result >> 7) & 1 : 0, chip.Q7);
+  }
+};
+
+TEST_F(Chip74299Test, Exhaustive) {
+  run();
+}
 
 #define TEST_ALU_OP(result) \
   EXPECT_EQ(uint32_t(result), alu.OUT); \
@@ -196,23 +209,26 @@ void testAluOps(uint64_t a, uint64_t b, uint64_t c_in) {
   TEST_ALU_OP(a + ((~b) & 0xFFFFFFFF) + 1);
 }
 
-class SemiExhaustiveAluTest
-    : public VerilatorTest, public ::testing::WithParamInterface<std::array<uint32_t, 3>> {
+#undef TEST_ALU_OP
+
+class SemiExhaustiveAluTest : public ExhaustiveVerilatorTest<10, 10, 1> {
+public:
+  void doTest() override {
+    const auto[A, B, C_IN] = param;
+    testAluOps(A, B, C_IN);
+  }
 };
 
-TEST_P(SemiExhaustiveAluTest, Basic) {
-  const auto[A, B, C_IN] = GetParam();
-  testAluOps(A, B, C_IN);
+TEST_F(SemiExhaustiveAluTest, SemiExhaustiveAluTest) {
+  run();
 }
-
-INSTANTIATE_TEST_SUITE_P(Exhaustive, SemiExhaustiveAluTest, bitRanges(8, 8, 1));
 
 class AluTest
     : public VerilatorTest,
       public ::testing::WithParamInterface<std::tuple<uint32_t, uint32_t, uint32_t>> {
 };
 
-TEST_P(AluTest, Exhaustive) {
+TEST_P(AluTest, SpecialTestCases) {
   const auto[A, B, C_IN] = GetParam();
   testAluOps(A, B, C_IN);
 }

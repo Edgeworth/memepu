@@ -40,12 +40,12 @@ module sram(
   end
 
   `ifdef HEXFILE
-  logic [WIDTH-1:0] mem_cpy [(1 << DEPTH)-1:0];
-  integer i;
+  logic [WIDTH-1:0] f_mem [(1 << DEPTH)-1:0];
+  integer f_i;
   always_comb begin
-        `CONTRACT (N_WE);
-    $readmemh(INITIAL, mem_cpy);
-    for (i = 0; i < (1 << DEPTH); i = i+1) assert (mem[i] == mem_cpy[i]);
+    `CONTRACT (N_WE);
+    $readmemh(INITIAL, f_mem);
+    for (f_i = 0; f_i < (1 << DEPTH); f_i = f_i+1) assert (mem[f_i] == f_mem[f_i]);
   end
   `endif
   `endif

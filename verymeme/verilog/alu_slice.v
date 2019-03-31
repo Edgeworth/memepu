@@ -1,5 +1,4 @@
 `include "common.v"
-
 module alu_slice(
   input wire [3:0] A,
   input wire [3:0] B,
@@ -27,7 +26,7 @@ module alu_slice(
         gen = ({1'b0, A}+{1'b0, B} > 5'hF);
       end
       common::ALU_SUB: begin
-        out_low = A-B-{3'b0, C_IN};
+        out_low = A+(~B)+{3'b0, C_IN};
         prop = (A+(~B) == 4'hF);
         gen = ({1'b0, A}+{1'b0, ~B} > 5'hF);
       end
@@ -57,7 +56,8 @@ module alu_slice(
         assert (f_gen == ({1'b0, A}+{1'b0, B} > 5'hF));
       end
       common::ALU_SUB: begin
-        assert (f_out == (A-B-{3'b0, C_IN}));
+        // C_IN must be 1 for the first slice. After that, it depends.
+        assert (f_out == A+(~B)+{3'b0, C_IN});
         assert (f_prop == (A+(~B) == 4'hF));
         assert (f_gen == ({1'b0, A}+{1'b0, ~B} > 5'hF));
       end
