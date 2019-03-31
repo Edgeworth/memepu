@@ -8,7 +8,8 @@ std::string checkModuleName(const std::string& name) {
   auto idx = name.find('\\');
   // Parametric modules and generated modules are prefixed with e.g. $gen$ or $paramod$, so just
   // check for the presence of a \.
-  verify_expr(idx != std::string::npos, "BUG: cell name '%s' must be user defined cell", name.c_str());
+  verify_expr(idx != std::string::npos, "BUG: cell name '%s' must be user defined cell",
+      name.c_str());
   return name.substr(1);
 }
 

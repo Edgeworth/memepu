@@ -29,7 +29,7 @@ struct Lib {
     std::string id = {};  // There are some pins that have string ids.
     Point p = {};
     Direction direction;
-    int subcomponent = -1;
+    int subcomponent = -1;  // 0 means common to all subcomponents.
     PinType type;
   };
 

@@ -13,7 +13,8 @@ public:
   using TestPartResult = ::testing::TestPartResult;
   using TestInfo = ::testing::TestInfo;
 
-  explicit TestPrinter(bool print_individual_tests) : print_individual_tests_(print_individual_tests) {}
+  explicit TestPrinter(bool print_individual_tests) : print_individual_tests_(
+      print_individual_tests) {}
 
   void OnTestIterationStart(const UnitTest& unit_test, int iteration) override;
   void OnTestPartResult(const TestPartResult& result) override;
