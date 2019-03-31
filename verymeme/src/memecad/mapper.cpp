@@ -18,24 +18,18 @@ const pt::ptree* findMappingForCell(const Yosys::RTLIL::Cell& cell, const pt::pt
   return nullptr;
 }
 
-bool isInteger(const std::string& s) {
-  for (auto c : s)
-    if (!isdigit(c)) return false;
-  return true;
-}
-
 std::vector<const Lib::Pin*>
 parseKicadPinSpec(const std::string& pin_spec, const Lib::Component& lib_component) {
-  // Pin specifier is either: a pin number; a pin name; a pin base name and integer range.
+  // Pin specifier is either: a pin id; a pin name; a pin base name and integer range.
   // If a pin name does not exist, try to resolve it to a pin range. If both exist, default to
   // the single pin.
   // e.g. 1; OE; A[12:0]
-  // Check for pin number.
-  if (isInteger(pin_spec)) {
-    const auto* pin = lib_component.findPin(boost::lexical_cast<int>(pin_spec));
-    verify_expr(pin, "can't find pin with number %s", pin_spec.c_str());
-    return {pin};
-  }
+  // Check for pin id.
+  const auto* pin_by_id = lib_component.findPinById(pin_spec);
+  const auto* pin_by_name = lib_component.findPinByName(pin_spec);
+  verify_expr(!(pin_by_id && pin_by_name), "ambiguous pin for pin spec '%s'", pin_spec.c_str());
+  if (pin_by_id)
+    return {pin_by_id};
 
   // Check for explicit pin.
   const std::regex split(R"(^([^\]])+\[(\d+):(\d+)]$)");
@@ -48,22 +42,20 @@ parseKicadPinSpec(const std::string& pin_spec, const Lib::Component& lib_compone
     verify_expr(st <= en, "pin specs (currently) must be specified from MSB to LSB");
     for (int i = en; i >= st; --i) {
       const std::string pin_name = pin_basename + std::to_string(i);
-      const auto* pin = lib_component.findPin(pin_name);
+      const auto* pin = lib_component.findPinByName(pin_name);
       verify_expr(pin, "couldn't find pin with name '%s' in pin spec", pin_name.c_str());
       pins.push_back(pin);
     }
     return pins;
   }
 
-  // Check for singular pin.
-  const auto* pin = lib_component.findPin(pin_spec);
-  if (!pin) {
+  if (!pin_by_name) {
     // Check for implicit pins.
     int index = 0;
     std::vector<const Lib::Pin*> pins;
     while (true) {
       const std::string pin_name = pin_spec + std::to_string(index);
-      const auto* ranged_pin = lib_component.findPin(pin_name);
+      const auto* ranged_pin = lib_component.findPinByName(pin_name);
       if (!ranged_pin) break;
       pins.push_back(ranged_pin);
       index++;
@@ -71,10 +63,10 @@ parseKicadPinSpec(const std::string& pin_spec, const Lib::Component& lib_compone
     verify_expr(!pins.empty(), "implicit pin spec '%s' does not exist", pin_spec.c_str());
     return reverse(std::move(pins));
   }
-  verify_expr(pin,
+  verify_expr(pin_by_name,
       "pin spec '%s' is neither pin number, valid pin name, valid pin range",
       pin_spec.c_str());
-  return {pin};
+  return {pin_by_name};
 }
 
 std::vector<const Lib::Pin*>
@@ -130,7 +122,7 @@ getConnectionsForSignal(const std::string& pin_spec, const Yosys::RTLIL::Cell& c
 
 }  // namespace
 
-Mapper::Mapper(const std::string& memecad_json, const Lib& lib) : lib_(lib), schematic_(lib) {
+Mapper::Mapper(const std::string& memecad_json, const std::vector<Lib>& libs) : libs_(libs) {
   std::stringstream s(memecad_json);
   pt::read_json(s, root_);
 }
@@ -162,7 +154,15 @@ void Mapper::addNonLeafModule(const Yosys::Cell& cell) {
 void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping) {
   printf("Adding leaf module '%s'\n", modulePath(cell).c_str());
   const std::string kicad_name = mapping.get<std::string>("kicad_name");
-  auto& lib_component = lib_.findComponent(kicad_name);
+  Lib::Component* lib_component = nullptr;
+  Lib* lib;
+  for (auto& l : libs_) {
+    lib = &l;
+    lib_component = l.findComponent(kicad_name);
+    if (lib_component) break;
+  }
+  verify_expr(lib_component != nullptr, "could not find library component '%s'",
+      kicad_name.c_str());
 
   // Add labels for connecting each component.
   PinMapping pin_mapping;
@@ -176,26 +176,26 @@ void Mapper::addLeafModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapp
 
     const auto& conns = getConnectionsForSignal(verilog_signal, cell);
     for (const auto& kicad_signal : kicad_signals) {
-      auto kicad_pins = parseKicadSignal(kicad_signal, lib_component);
+      auto kicad_pins = parseKicadSignal(kicad_signal, *lib_component);
       verify_expr(kicad_pins.size() == conns.size(),
           "bit-width of kicad signal '%s' does not match bit-width of verilog signal '%s'",
           kicad_signal.c_str(), verilog_signal.c_str());
       for (int i = 0; i < int(kicad_pins.size()); ++i) {
         pin_mapping[kicad_pins[i]] = conns[i];
-        printf("  Mapping %s (pin %d) => %s => %s\n", kicad_pins[i]->name.c_str(),
-            kicad_pins[i]->pin_number,
+        printf("  Mapping %s (pin %s) => %s => %s\n", kicad_pins[i]->name.c_str(),
+            kicad_pins[i]->id.c_str(),
             conns[i].child_label.c_str(), getIdForSigBit(conns[i].bit).c_str());
       }
     }
   }
 
-  schematic_.addComponentToSheet(lib_component, pin_mapping, parentModuleType(cell));
+  schematic_.addComponentToSheet(lib->name, *lib_component, pin_mapping, parentModuleType(cell));
 }
 
 void Mapper::addModule(const Yosys::Module& module) {
   const std::string module_name = moduleName(module);
   printf("Adding module connections for '%s'\n", module_name.c_str());
-  schematic_.addModuleConnectionsToSheet(module_name.c_str(), module.connections());
+  schematic_.addModuleConnectionsToSheet(module_name, module.connections());
 }
 
 }  // memecad

@@ -117,8 +117,8 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   }
 }
 
-void Schematic::addComponentToSheet(const Lib::Component& lib_component, const PinMapping& mapping,
-    const std::string& sheet_name) {
+void Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component& lib_component,
+    const PinMapping& mapping, const std::string& sheet_name) {
   verify_expr(2u == lib_component.fields.size(), "library component missing fields");
 
   // Add components.
@@ -127,8 +127,7 @@ void Schematic::addComponentToSheet(const Lib::Component& lib_component, const P
     auto& component = subcomponents.emplace_back();
     const auto& lib_ref_field = lib_component.fields[0];
 
-    // TODO: Assumes lib_component comes from lib_.
-    component.name = lib_.name + ":" + lib_component.names.front();
+    component.name = lib_name + ":" + lib_component.names.front();
     component.ref = lib_ref_field.text + "?";
     component.subcomponent = subcomponent;
     // F0: Reference, F1: Value, F2: Footprint, F3: Datasheet

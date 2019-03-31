@@ -14,12 +14,10 @@ public:
     std::string contents;
   };
 
-  explicit Schematic(const Lib& lib) : lib_(lib) {}
-
   void addChildSheetToParent(const std::string& title, const ChildMapping& mapping,
       const std::string& child_name, const std::string& parent_name);
-  void addComponentToSheet(const Lib::Component& lib_component, const PinMapping& mapping,
-      const std::string& sheet_name);
+  void addComponentToSheet(const std::string& lib_name, const Lib::Component& lib_component,
+      const PinMapping& mapping, const std::string& sheet_name);
   void addModuleConnectionsToSheet(const std::string& sheet_name,
       const std::vector<Yosys::SigSig>& sigs);
   std::vector<SchematicFile> writeHierarchy();
@@ -36,7 +34,6 @@ private:
   };
 
   std::unordered_map<std::string, SheetData> sheets_;
-  Lib lib_;
 };
 
 }  // memecad

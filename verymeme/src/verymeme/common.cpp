@@ -55,3 +55,6 @@ Point& Point::operator+=(const Point& p) {
 Point Point::operator-(const Point& p) const {
   return {x - p.x, y - p.y};
 }
+bool Point::operator<(const Point& p) const {
+  return std::tie(x, y) < std::tie(p.x, p.y);
+}
