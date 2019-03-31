@@ -30,14 +30,14 @@ public:
   void run() {
     // Do this because gtest will construct a list of every test, which is slow for large
     // exhaustive tests.
-    const int bits[sizeof...(Ns)] = {Ns...};
+    const uint32_t bits[sizeof...(Ns)] = {Ns...};
     uint64_t bitsum = 0;
     for (int i : bits) bitsum += i;
 
-    for (uint64_t i = 0; i < (1ULL << bitsum); ++i) {
-      int bitcum = 0;
-      for (int bitidx = 0; bitidx < int(sizeof...(Ns)); ++bitidx) {
-        param[bitidx] = (i >> bitcum) & ((1ULL << bits[bitidx]) - 1);
+    for (uint64_t i = 0; i < (1ull << bitsum); ++i) {
+      uint32_t bitcum = 0;
+      for (uint32_t bitidx = 0; bitidx < int(sizeof...(Ns)); ++bitidx) {
+        param[bitidx] = (i >> bitcum) & ((1ull << bits[bitidx]) - 1);
         bitcum += bits[bitidx];
       }
       doTest();
@@ -159,8 +159,8 @@ class Chip74299Test : public ExhaustiveVerilatorTest<2, 2, 1, 1, 1, 8> {
     chip.CP = 1;
     chip.eval();
     uint32_t result = IO;
-    if (S == 0b01) result = uint8_t((result << 1) | DSL);
-    else if (S == 0b10) result = uint8_t((result >> 1) | (DSR << 7));
+    if (S == 0b01) result = uint8_t((result << 1u) | DSL);
+    else if (S == 0b10) result = uint8_t((result >> 1u) | (DSR << 7u));
     EXPECT_EQ(N_MR && N_OE == 0b00 ? result : 0, chip.IO);
     EXPECT_EQ(N_MR ? result & 1 : 0, chip.Q0);
     EXPECT_EQ(N_MR ? (result >> 7) & 1 : 0, chip.Q7);
@@ -173,9 +173,9 @@ TEST_F(Chip74299Test, Exhaustive) {
 
 #define TEST_ALU_OP(result) \
   EXPECT_EQ(uint32_t(result), alu.OUT); \
-  EXPECT_EQ(((result) & 0x100000000LL) >> 32, alu.C); \
+  EXPECT_EQ(((result) & 0x100000000ull) >> 32u, alu.C); \
   EXPECT_EQ(uint32_t(result) ? 0 : 1, alu.Z); \
-  EXPECT_EQ((result) & 0x80000000 ? 1 : 0, alu.N); \
+  EXPECT_EQ((result) & 0x80000000u ? 1 : 0, alu.N); \
 
 void testAluOps(uint64_t a, uint64_t b, uint64_t c_in) {
   Valu alu;

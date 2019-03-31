@@ -66,9 +66,9 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
         const auto&[cell_id, cell] = cell_iter;
         // Add edge from child to parent, for reverse top-sort.
         auto* child_module = design->module(cell->type);
-        if (isLeafModule(child_module)) continue;  // Don't need to process leaf modules.
-
         verify_expr(child_module != nullptr, "expected module '%s' to exist", cell->type.c_str());
+
+        if (isLeafModule(child_module)) continue;  // Don't need to process leaf modules.
         adj[child_module].push_back(module);
         printf("Processing module: %s, %s\n", log_id(module_id), cell_id.c_str());
         incoming[module]++; // Parent module has incoming edge.
@@ -124,8 +124,8 @@ void TestPass::printModuleInfo(Yosys::RTLIL::Module* module) {
 
   for (auto& cell_iter : module->cells_) {
     const auto&[cell_id, cell] = cell_iter;
-    log("  Checking cell %s, name: %s, type: %s, module: %s\n", cell_id.c_str(),
-        cell->name.c_str(), cell->type.c_str(), cell->module->name.c_str());
+    log("  Checking cell %s, name: %s, module: %s\n    type: %s\n", cell_id.c_str(),
+        cell->name.c_str(), cell->module->name.c_str(), cell->type.c_str());
     for (auto& conn : cell->connections()) {
       const auto& sig = sigmap(conn.second);
       log("    Looking at connection: %s, signal: %s|%d\n",
