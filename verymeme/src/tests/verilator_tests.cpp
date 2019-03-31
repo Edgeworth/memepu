@@ -177,8 +177,7 @@ TEST_F(Chip74299Test, Exhaustive) {
   EXPECT_EQ(uint32_t(result) ? 0 : 1, alu.Z); \
   EXPECT_EQ((result) & 0x80000000u ? 1 : 0, alu.N); \
 
-void testAluOps(uint64_t a, uint64_t b, uint64_t c_in) {
-  Valu alu;
+void testAluOps(Valu& alu, uint64_t a, uint64_t b, uint64_t c_in) {
   alu.A = uint32_t(a);
   alu.B = uint32_t(b);
   alu.C_IN = uint8_t(c_in);
@@ -215,8 +214,10 @@ class SemiExhaustiveAluTest : public ExhaustiveVerilatorTest<10, 10, 1> {
 public:
   void doTest() override {
     const auto[A, B, C_IN] = param;
-    testAluOps(A, B, C_IN);
+    testAluOps(alu_, A, B, C_IN);
   }
+private:
+  Valu alu_;
 };
 
 TEST_F(SemiExhaustiveAluTest, SemiExhaustiveAluTest) {
@@ -226,11 +227,13 @@ TEST_F(SemiExhaustiveAluTest, SemiExhaustiveAluTest) {
 class AluTest
     : public VerilatorTest,
       public ::testing::WithParamInterface<std::tuple<uint32_t, uint32_t, uint32_t>> {
+protected:
+  Valu alu_;
 };
 
 TEST_P(AluTest, SpecialTestCases) {
   const auto[A, B, C_IN] = GetParam();
-  testAluOps(A, B, C_IN);
+  testAluOps(alu_, A, B, C_IN);
 }
 
 INSTANTIATE_TEST_SUITE_P(Basic, AluTest,

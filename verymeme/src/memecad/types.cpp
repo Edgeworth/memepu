@@ -42,6 +42,7 @@ Rect Lib::Component::getBoundingBox(int subcomponent) const {
   bounds.inset(-200, -200);
   return bounds;
 }
+
 const Lib::Pin* Lib::Component::findPinByName(const std::string& pin_name) const {
   for (const auto& pin : pins) {
     if (pin.name == pin_name)

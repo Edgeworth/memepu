@@ -9,15 +9,19 @@ std::string removeWhitespace(const std::string& input) {
   return std::regex_replace(input, whitespace, "$1");
 }
 
-using SchematicTest = testing::Test;
+class SchematicTest : public testing::Test {
+public:
+  void SetUp() override {
+    Yosys::log_streams.push_back(&std::cout);
+    Yosys::log_error_stderr = true;
+  }
+};
 
 TEST_F(SchematicTest, Parsing0) {
   std::string full_adder_original = readFile("test_data/parsing0/full_adder.sch",
       false /* binary */);
   memecad::Sheet sheet = memecad::parseSheet(full_adder_original);
   std::string full_adder_output = memecad::writeSheet(sheet);
-
-  printf("output:\n%s", full_adder_output.c_str());
   EXPECT_EQ(removeWhitespace(full_adder_original), full_adder_output);
 }
 
@@ -28,8 +32,23 @@ TEST_F(SchematicTest, Hierarchical0) {
        "test_data/hierarchical0/full_adder.v", "test_data/common/chip7408.v",
        "test_data/common/chip7432.v", "test_data/common/chip7486.v"},
       {"test_data/common/74xx.lib"});
+  EXPECT_EQ(3u, files.size());
   for (const auto& file : files) {
     std::string golden = readFile("test_data/hierarchical0/output/" + file.filename,
+        false /* binary */);
+    EXPECT_EQ(golden, file.contents);
+  }
+}
+
+TEST_F(SchematicTest, Alu0) {
+  auto files = memecad::convertVerilogToKicadSchematics(
+      "test_data/common/memecad_map.json",
+      {"test_data/alu0/alu.v", "test_data/alu0/alu_lookahead.v", "test_data/alu0/sram17x8.v",
+       "test_data/alu0/alu_slice.v", "test_data/alu0/sram.v", "test_data/common/chip7408.v"},
+      {"test_data/common/74xx.lib", "test_data/common/Memory_RAM.lib"});
+  EXPECT_EQ(3u, files.size());
+  for (const auto& file : files) {
+    std::string golden = readFile("test_data/alu0/output/" + file.filename,
         false /* binary */);
     EXPECT_EQ(golden, file.contents);
   }
