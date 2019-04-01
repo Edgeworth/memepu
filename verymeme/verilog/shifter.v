@@ -1,29 +1,25 @@
 `include "common.v"
-
-module alu(
+/* verilator lint_off UNUSED */
+module shifter(
   input wire [31:0] IN,
   input wire [4:0] SHFT,
   output logic [31:0] OUT
 );
-  wire [7:0] slice_p, slice_g, slice_z, unused_slice;
-  wire [8:0] carrys;
+  wire [15:0] stage0_out;
+  wire [4:0] not_shft;
+  wire unused_not_shft;
 
-  assign carrys[0] = C_IN;
-  assign C = carrys[8];
-  assign N = OUT[31];
+  chip7404 shft_not(.A({1'b0, SHFT}), .Y({unused_not_shft, not_shft}));
 
-  generate
-    genvar i;
-    for (i = 0; i < 8; i = i+1) begin
-      alu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP),
-        .C_IN(carrys[i]),
-        .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}));
-    end
-  endgenerate
+  buffer_mux stage0_mux_lo(.A(IN[15:0]), .B({IN[14:0], IN[15]}), .OUT(stage0_out),
+    .SEL_A(not_shft[0]), .N_SEL_A(SHFT[0]));
+
+  assign OUT[15:0] = stage0_out[15:0];
+  assign OUT[31:16] = IN[31:16];
 
   `ifdef FORMAL
   always_comb begin
-    assert (OUT == (IN << SHFT));
+    assert (OUT[15:0] == (IN[15:0] << SHFT[0]) | (SHFT[0] & IN[15]));
   end
   `endif
 endmodule

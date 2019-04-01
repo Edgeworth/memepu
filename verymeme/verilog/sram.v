@@ -15,7 +15,7 @@ module sram(
   assign OUT_DATA = N_OE == 0 ? mem[ADDR]:8'bZ;
   always_ff @(negedge N_WE) mem[ADDR] <= IN_DATA;
 
-  `ifdef HEXFILE
+  `ifdef SCHEMATIC
   // TODO: Bootstrapping
   initial begin
     $readmemh(INITIAL, mem);
@@ -39,7 +39,7 @@ module sram(
     assert (f_verify_data == mem[f_verify_addr]);
   end
 
-  `ifdef HEXFILE
+  `ifdef SCHEMATIC
   logic [WIDTH-1:0] f_mem [(1 << DEPTH)-1:0];
   integer f_i;
   always_comb begin

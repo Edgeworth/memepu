@@ -33,13 +33,17 @@ PIN_DIR = {
     'up': (3, 'R'),
 }
 
+DIALOG_DELAY = 0.5
 
-def reset_pin_dialog():
+
+def reset_pin_dialog(side):
   run_xdotool_key(*nav('p'))
-  time.sleep(0.05)  # wait a bit for the dialog to appear
+  time.sleep(DIALOG_DELAY)  # wait a bit for the dialog to appear
+  # Need to actually place pin to set settings.A2
   run_xdotool_key('Tab', 'Tab', *nav('10U'), *(['Tab'] * 4), *nav('4U'), 'Tab',
-                  *tr('2.54'), *nav('E'), 'Escape')
-
+                  *tr('2.54'), *nav('E'))
+  time.sleep(DIALOG_DELAY)  # wait a bit for the dialog to appear
+  run_xdotool_key(*nav('E' + PIN_DIR[side][1] * 2))
 
 def insert_pins(prefix, numbers, pin_type, side):
   """
@@ -57,12 +61,14 @@ def insert_pins(prefix, numbers, pin_type, side):
     if len(numbers) > 1:
       pin_name += str(i)
     run_xdotool_key(*nav('p'))
-    time.sleep(0.05)  # wait a bit for the dialog to appear
+    time.sleep(DIALOG_DELAY)  # wait a bit for the dialog to appear
     run_xdotool_key(*tr(pin_name), 'Tab', *tr(pin_number), 'Tab')
     if i == 0:  # Set up pin properties.
       run_xdotool_key(*(['Down'] * PIN_TYPES[pin_type]), *(['Tab'] * 4),
                       *(['Down'] * PIN_DIR[side][0]))
-    run_xdotool_key('Tab', 'Tab', *nav('EE' + PIN_DIR[side][1] * 2))
+    run_xdotool_key('Tab', 'Tab', *nav('E'))
+    time.sleep(DIALOG_DELAY) # wait a bit for the dialog to disappear
+    run_xdotool_key(*nav('E' + PIN_DIR[side][1] * 2))
 
 
 def insert_side(data, group, pin_type, side):
@@ -75,10 +81,10 @@ def insert_side(data, group, pin_type, side):
     :param side: Pin side (up, left, right, down)
     :return:
     """
-  reset_pin_dialog()
+  reset_pin_dialog(side)
   group_data = data[group]
   if isinstance(group_data, list):
     group_data = {group: group_data}
   for k, v in group_data.items():
     insert_pins(k, listify(v), pin_type, side)
-    reset_pin_dialog()
+    reset_pin_dialog(side)

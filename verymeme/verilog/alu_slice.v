@@ -7,7 +7,7 @@ module alu_slice(
   output logic [7:0] OUT
 );
 
-  `ifdef HEXFILE
+  `ifdef SCHEMATIC
   wire [7:0] unused = 0;
   sram#(.DEPTH(12), .WIDTH(8), .INITIAL("alu_slice.hex")) slice_mem(
     .ADDR({OP, C_IN, B, A}), .N_WE(1), .N_OE(0), .IN_DATA(unused), .OUT_DATA(OUT));
