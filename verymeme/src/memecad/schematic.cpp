@@ -75,7 +75,6 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
       label_set.insert(label);
   }
   std::vector<Sheet::Label> labels(label_set.begin(), label_set.end());
-
   verify_expr(labels.size() == mapping.size(),
       "number of hierarchical labels in child '%s' does not match number of verilog connections"
       " - maybe missing connection / unused",

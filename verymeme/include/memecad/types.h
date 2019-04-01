@@ -106,11 +106,11 @@ struct Sheet {
       INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, COUNT
     };
 
-    Type type;
+    Type type = {};
     Point p = {};
     int orientation = 0;
     int dimension = DEFAULT_DIMENSION;
-    NetType net_type;  // Only used for Global and Hierarchical labels.
+    NetType net_type = {};  // Only used for Global and Hierarchical labels.
     bool italic = false;
     bool bold = false;
     std::string text;

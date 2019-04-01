@@ -9,13 +9,7 @@ std::string removeWhitespace(const std::string& input) {
   return std::regex_replace(input, whitespace, "$1");
 }
 
-class SchematicTest : public testing::Test {
-public:
-  void SetUp() override {
-    Yosys::log_streams.push_back(&std::cout);
-    Yosys::log_error_stderr = true;
-  }
-};
+using SchematicTest = testing::Test;
 
 TEST_F(SchematicTest, Parsing0) {
   std::string full_adder_original = readFile("test_data/parsing0/full_adder.sch",

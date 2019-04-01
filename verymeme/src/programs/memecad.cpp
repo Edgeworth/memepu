@@ -43,4 +43,5 @@ int main(int argc, char* argv[]) {
       kicad_library_filenames);
   for (const auto& file : files)
     writeFile("test/" + file.filename, file.contents, false /* binary */);
+  printf("Finished writing %d files\n", int(files.size()));
 }
