@@ -1,0 +1,10 @@
+### TODO soon
+- Fix test
+- Add verilator test for shifter
+
+### TODO later
+- Move kicadtools into verymeme - direct generation
+- Automation for running verilog tests both with and without SCHEMATIC defined.
+- Timing models for each chip
+- Read hex-files in at boot time
+- Sign extend in ALU somehow.

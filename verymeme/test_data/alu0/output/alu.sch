@@ -104,55 +104,71 @@ F 1 "74LS08" H 10400 6950 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
-NoConn ~ 13000 1600
-NoConn ~ 8000 5100
-NoConn ~ 8000 5000
+NoConn ~ 2000 5200
 NoConn ~ 6000 5700
+NoConn ~ 6000 5300
 NoConn ~ 6000 5200
-NoConn ~ 6000 5100
 NoConn ~ 6000 5000
-NoConn ~ 13000 1500
+NoConn ~ 11000 1400
 NoConn ~ 4000 5700
 NoConn ~ 4000 5300
 NoConn ~ 4000 5200
 NoConn ~ 4000 5100
 NoConn ~ 4000 5000
-NoConn ~ 6000 5300
-NoConn ~ 2000 5700
-NoConn ~ 13000 2000
-NoConn ~ 2000 5300
-NoConn ~ 15000 1300
-NoConn ~ 2000 5200
-NoConn ~ 15000 1400
-NoConn ~ 2000 5100
-NoConn ~ 15000 1500
-NoConn ~ 2000 5000
-NoConn ~ 15000 1600
-NoConn ~ 7000 1000
-NoConn ~ 15000 2000
 NoConn ~ 11000 1500
-NoConn ~ 9700 5300
-NoConn ~ 13000 1300
-NoConn ~ 13000 1400
-NoConn ~ 6000 1000
-NoConn ~ 9700 4900
-NoConn ~ 7050 1000
-NoConn ~ 11000 2000
+NoConn ~ 2000 5700
 NoConn ~ 11000 1600
+NoConn ~ 2000 5300
+NoConn ~ 11000 2000
+NoConn ~ 6000 5100
+NoConn ~ 7050 1000
+NoConn ~ 2000 5100
+NoConn ~ 13000 1300
+NoConn ~ 2000 5000
+NoConn ~ 13000 1400
+NoConn ~ 7000 1000
+NoConn ~ 13000 1500
+NoConn ~ 15000 2000
+NoConn ~ 13000 1600
+NoConn ~ 15000 1600
+NoConn ~ 13000 2000
+NoConn ~ 15000 1500
+NoConn ~ 15000 1300
+NoConn ~ 15000 1400
+NoConn ~ 9000 1400
 NoConn ~ 8000 5700
-NoConn ~ 11000 1400
-NoConn ~ 11000 1300
-NoConn ~ 9000 2000
 NoConn ~ 9000 1600
 NoConn ~ 8000 5300
+NoConn ~ 9000 2000
+NoConn ~ 9700 4900
 NoConn ~ 9000 1500
-NoConn ~ 9000 1400
-NoConn ~ 9000 1300
 NoConn ~ 8000 5200
+NoConn ~ 9700 5300
+NoConn ~ 8000 5100
+NoConn ~ 9000 1300
+NoConn ~ 6000 1000
+NoConn ~ 8000 5000
+NoConn ~ 11000 1300
 Text Label 1000 1000 2 50 ~ 0
 A0
 Text Label 1000 1100 2 50 ~ 0
 A1
+Text Label 1000 1200 2 50 ~ 0
+A2
+Text Label 1000 1300 2 50 ~ 0
+A3
+Text Label 1000 1400 2 50 ~ 0
+A4
+Text Label 1000 1500 2 50 ~ 0
+A5
+Text Label 1000 1600 2 50 ~ 0
+A6
+Text Label 1000 1700 2 50 ~ 0
+A7
+Text Label 1000 1800 2 50 ~ 0
+A8
+Text Label 1000 1900 2 50 ~ 0
+A9
 Text Label 1000 2000 2 50 ~ 0
 A10
 Text Label 1000 2100 2 50 ~ 0
@@ -173,8 +189,6 @@ Text Label 1000 2800 2 50 ~ 0
 A18
 Text Label 1000 2900 2 50 ~ 0
 A19
-Text Label 1000 1200 2 50 ~ 0
-A2
 Text Label 1000 3000 2 50 ~ 0
 A20
 Text Label 1000 3100 2 50 ~ 0
@@ -195,28 +209,30 @@ Text Label 1000 3800 2 50 ~ 0
 A28
 Text Label 1000 3900 2 50 ~ 0
 A29
-Text Label 1000 1300 2 50 ~ 0
-A3
 Text Label 1000 4000 2 50 ~ 0
 A30
 Text Label 1000 4100 2 50 ~ 0
 A31
-Text Label 1000 1400 2 50 ~ 0
-A4
-Text Label 1000 1500 2 50 ~ 0
-A5
-Text Label 1000 1600 2 50 ~ 0
-A6
-Text Label 1000 1700 2 50 ~ 0
-A7
-Text Label 1000 1800 2 50 ~ 0
-A8
-Text Label 1000 1900 2 50 ~ 0
-A9
 Text Label 2000 1000 2 50 ~ 0
 B0
 Text Label 2000 1100 2 50 ~ 0
 B1
+Text Label 2000 1200 2 50 ~ 0
+B2
+Text Label 2000 1300 2 50 ~ 0
+B3
+Text Label 2000 1400 2 50 ~ 0
+B4
+Text Label 2000 1500 2 50 ~ 0
+B5
+Text Label 2000 1600 2 50 ~ 0
+B6
+Text Label 2000 1700 2 50 ~ 0
+B7
+Text Label 2000 1800 2 50 ~ 0
+B8
+Text Label 2000 1900 2 50 ~ 0
+B9
 Text Label 2000 2000 2 50 ~ 0
 B10
 Text Label 2000 2100 2 50 ~ 0
@@ -237,8 +253,6 @@ Text Label 2000 2800 2 50 ~ 0
 B18
 Text Label 2000 2900 2 50 ~ 0
 B19
-Text Label 2000 1200 2 50 ~ 0
-B2
 Text Label 2000 3000 2 50 ~ 0
 B20
 Text Label 2000 3100 2 50 ~ 0
@@ -259,24 +273,10 @@ Text Label 2000 3800 2 50 ~ 0
 B28
 Text Label 2000 3900 2 50 ~ 0
 B29
-Text Label 2000 1300 2 50 ~ 0
-B3
 Text Label 2000 4000 2 50 ~ 0
 B30
 Text Label 2000 4100 2 50 ~ 0
 B31
-Text Label 2000 1400 2 50 ~ 0
-B4
-Text Label 2000 1500 2 50 ~ 0
-B5
-Text Label 2000 1600 2 50 ~ 0
-B6
-Text Label 2000 1700 2 50 ~ 0
-B7
-Text Label 2000 1800 2 50 ~ 0
-B8
-Text Label 2000 1900 2 50 ~ 0
-B9
 Text Label 5050 1000 0 50 ~ 0
 C_IN
 Text Label 4000 1000 2 50 ~ 0
