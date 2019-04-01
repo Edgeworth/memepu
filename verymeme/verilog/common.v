@@ -3,10 +3,10 @@
 package common;
   // Must explicitly specify net types:
   `default_nettype none
-  // Load hex files into SRAMs using readmemh. This makes formal verification very slow, so
-  // disabling this will instead use in-verilog implementations.
-  // This should be defined for generating schematics.
-  `define HEXFILE
+  // This should be defined for generating schematics. This will enable schematic specific features
+  // e.g. loading hex files into SRAMs, or tri-state logic muxes. Loading hex files makes formal
+  // verification very slow, so disabling this will instead use in-verilog implementations.
+  `define SCHEMATIC
 
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248
   localparam ALU_ADD = 0;

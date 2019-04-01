@@ -12,6 +12,7 @@ smtbmc --progress
 alu
 alu_lookahead
 alu_slice
+buffer_mux
 chip7400
 chip7404
 chip7408
@@ -19,12 +20,17 @@ chip7432
 chip7486
 chip74299
 chip7416374
+chip74LVC162244
+shifter
 sram17x8
 
 [script]
 alu: read -formal -D CONTRACT=assume alu.v
 alu: read -formal -D CONTRACT=assert alu_slice.v alu_lookahead.v sram.v chip7408.v
 alu: prep -top alu
+buffer_mux: read -formal -D CONTRACT=assume buffer_mux.v
+buffer_mux: read -formal -D CONTRACT=assert chip74LVC162244.v
+buffer_mux: prep -top buffer_mux
 alu_lookahead: read -formal -D CONTRACT=assume alu_lookahead.v
 alu_lookahead: read -formal -D CONTRACT=assert sram.v
 alu_lookahead: prep -top alu_lookahead
@@ -45,6 +51,11 @@ chip74299: read -formal -D CONTRACT=assume chip74299.v
 chip74299: prep -top chip74299
 chip7416374: read -formal -D CONTRACT=assume chip7416374.v
 chip7416374: prep -top chip7416374
+chip74LVC162244: read -formal -D CONTRACT=assume chip74LVC162244.v
+chip74LVC162244: prep -top chip74LVC162244
+shifter: read -formal -D CONTRACT=assume shifter.v
+shifter: read -formal -D CONTRACT=assert buffer_mux.v chip7404.v chip74LVC162244.v
+shifter: prep -top shifter
 sram17x8: read -formal -D CONTRACT=assume sram17x8.v
 sram17x8: prep -top sram17x8
 
@@ -52,6 +63,7 @@ sram17x8: prep -top sram17x8
 alu.v
 alu_lookahead.v
 alu_slice.v
+buffer_mux.v
 chip7400.v
 chip7404.v
 chip7408.v
@@ -59,7 +71,9 @@ chip7432.v
 chip7486.v
 chip74299.v
 chip7416374.v
+chip74LVC162244.v
 common.v
+shifter.v
 sram17x8.v
 alu_slice.hex
 alu_lookahead.hex

@@ -15,7 +15,7 @@ def replace(l, fr, to):
 
 
 def run_xdotool_key(*keys):
-  cmd = ['xdotool', 'key', '--delay', '50'] + list(keys)
+  cmd = ['xdotool', 'key', '--delay', '150'] + list(keys)
   subprocess.call(['echo'] + cmd)
   subprocess.call(cmd)
 

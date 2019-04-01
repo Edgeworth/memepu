@@ -13,7 +13,7 @@ module sram17x8(
   assign OUT_DATA = N_OE == 0 ? mem[ADDR]:8'bZ;
   always_ff @(negedge N_WE) mem[ADDR] <= IN_DATA;
 
-  `ifdef HEXFILE
+  `ifdef SCHEMATIC
   // TODO: Bootstrapping
   initial begin
     $readmemh(INITIAL, mem);
@@ -21,7 +21,7 @@ module sram17x8(
   `endif
 
   `ifdef FORMAL
-  `ifdef HEXFILE
+  `ifdef SCHEMATIC
   logic [7:0] f_mem [(1 << 17)-1:0];
   integer f_i;
   always_comb begin
