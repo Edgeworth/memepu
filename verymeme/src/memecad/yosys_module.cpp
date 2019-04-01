@@ -1,9 +1,6 @@
 #include "memecad/yosys_module.h"
 
 #include <kernel/sigtools.h>
-#include <memecad/yosys_module.h>
-
-
 #include "memecad/parser.h"
 
 namespace memecad {
@@ -36,7 +33,7 @@ convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
   // Check all needed files exist. Also adjusts the port width so you can e.g. pass 32 bit
   // constant to a single bit port.
   Yosys::run_pass("hierarchy -check");
-  Yosys::run_pass("check -assert");  // Check for misc problems.
+  Yosys::run_pass("check");  // Check for misc problems.
 
   Yosys::run_pass(PASS_NAME);
   Yosys::yosys_shutdown();

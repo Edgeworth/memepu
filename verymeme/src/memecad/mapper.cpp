@@ -35,7 +35,7 @@ parseKicadPinSpec(const std::string& pin_spec, const Lib::Component& lib_compone
     return {pin_by_id};
 
   // Check for explicit pin.
-  const std::regex split(R"(^([^\]])+\[(\d+):(\d+)]$)");
+  const std::regex split(R"(^([^\]]+)\[(\d+):(\d+)]$)");
   std::smatch sm;
   if (std::regex_match(pin_spec, sm, split)) {
     const std::string& pin_basename = sm[1];

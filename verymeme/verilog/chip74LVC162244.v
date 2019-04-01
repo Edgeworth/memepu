@@ -1,15 +1,17 @@
 `include "common.v"
 
 // 74LVC162244 buffer.
-module chip7400(
+module chip74LVC162244(
   input wire [15:0] IN,
-  input wire [15:0] OUT,
+  input wire N_OE,
+  output logic [15:0] OUT
 );
-  assign Y = ~(A & B);
+  assign OUT = N_OE == 0 ? IN : 16'bZ;
 
   `ifdef FORMAL
   always_comb begin
-    assert (Y == ~(A & B));
+    if (N_OE == 0)
+      assert (OUT == IN);
   end
   `endif
 endmodule
