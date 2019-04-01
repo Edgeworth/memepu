@@ -23,9 +23,16 @@ std::vector<Schematic::SchematicFile>
 convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
     const std::vector<std::string>& verilog_filenames,
     const std::vector<std::string>& kicad_library_filenames) {
-  memecad::TestPass test_pass(memecad_map_filename, kicad_library_filenames);
+  static bool has_setup_yosys = false;
+  static memecad::TestPass test_pass;
 
-  Yosys::yosys_setup();
+  if (!has_setup_yosys) {
+    Yosys::log_streams.push_back(&std::cout);
+    Yosys::log_error_stderr = true;
+    Yosys::yosys_setup();
+    has_setup_yosys = true;
+  }
+  Yosys::run_pass("delete *");  // Delete any old modules etc from previous runs.
   std::string yosys_cmd = "read -sv";
   for (const auto& filename : verilog_filenames)
     yosys_cmd += " " + filename;
@@ -35,16 +42,20 @@ convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
   Yosys::run_pass("hierarchy -check");
   Yosys::run_pass("check");  // Check for misc problems.
 
+  test_pass.setup(memecad_map_filename, kicad_library_filenames);
   Yosys::run_pass(PASS_NAME);
-  Yosys::yosys_shutdown();
 
   return test_pass.getMapper().getSchematic().writeHierarchy();
 }
 
-TestPass::TestPass(const std::string& memecad_map_filename,
-    const std::vector<std::string>& kicad_library_filenames) : Pass(PASS_NAME), mapper_(
-    readFile(memecad_map_filename, false /* binary */),
-    parseLibraries(kicad_library_filenames)) {}
+TestPass::TestPass() : Pass(PASS_NAME) {}
+
+void TestPass::setup(const std::string& memecad_map_filename,
+    const std::vector<std::string>& kicad_library_filenames) {
+  mapper_ = Mapper(readFile(memecad_map_filename, false /* binary */),
+      parseLibraries(kicad_library_filenames));
+}
+
 
 void TestPass::execute(std::vector<std::string> args, Design* design) {
   log_header(design, "Extracting modules...\n");

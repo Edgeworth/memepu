@@ -6,6 +6,34 @@
 
 namespace memecad {
 
+namespace {
+
+std::pair<std::string, int> toStringIntPair(const std::string& s) {
+  std::string str;
+  std::string num;
+  for (auto c : s) {
+    num += c;
+    if (!isdigit(c)) {
+      str += num;
+      num = "";
+    }
+  }
+  if (num.empty()) return std::make_pair(str, 0);
+  return std::make_pair(str, boost::lexical_cast<int>(num));
+}
+
+}  // namespace
+
+PinType netTypeToPinType(Sheet::Label::NetType net_type) {
+  switch (net_type) {
+    case Sheet::Label::NetType::INPUT: return PinType::INPUT;
+    case Sheet::Label::NetType::OUTPUT: return PinType::OUTPUT;
+    case Sheet::Label::NetType::BIDIRECTIONAL: return PinType::BIDIRECTIONAL;
+    case Sheet::Label::NetType::TRISTATE: return PinType::TRISTATE;
+    case Sheet::Label::NetType::PASSIVE: return PinType::PASSIVE;
+    default: verify_expr(false, "Unknown net type '%d'", int(net_type));
+  }
+}
 
 int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   bool is_hierarchical_or_global =
@@ -16,17 +44,6 @@ int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
     case Direction::RIGHT: return is_hierarchical_or_global ? 0 : 2;
     case Direction::UP: return 3;
     default: verify_expr(false, "unknown direction '%d'", int(d));
-  }
-}
-
-PinType netTypeToPinType(Sheet::Label::NetType net_type) {
-  switch (net_type) {
-    case Sheet::Label::NetType::INPUT: return PinType::INPUT;
-    case Sheet::Label::NetType::OUTPUT: return PinType::OUTPUT;
-    case Sheet::Label::NetType::BIDIRECTIONAL: return PinType::BIDIRECTIONAL;
-    case Sheet::Label::NetType::TRISTATE: return PinType::TRISTATE;
-    case Sheet::Label::NetType::PASSIVE: return PinType::PASSIVE;
-    default: verify_expr(false, "Unknown net type '%d'", int(net_type));
   }
 }
 
@@ -101,7 +118,10 @@ void Sheet::Label::connectToRefField(const Sheet::RefField& ref_field) {
 }
 
 bool Sheet::Label::operator<(const Sheet::Label& o) const {
-  return std::tie(net_type, text) < std::tie(o.net_type, o.text);
+  // Deliberately consider labels the same if they don't differ by net type or text.
+  // This is used to collect the set of heirarchical labels that need to be plumbed upward.
+  if (net_type != o.net_type) return net_type < o.net_type;
+  return toStringIntPair(text) < toStringIntPair(o.text);
 }
 
 bool Sheet::Field::operator<(const Sheet::Field& o) const {

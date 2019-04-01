@@ -13,12 +13,13 @@ namespace pt = boost::property_tree;
 
 class Mapper {
 public:
+  Mapper() = default;
   Mapper(const std::string& memecad_json, const std::vector<Lib>& libs);
 
   void addCell(const Yosys::RTLIL::Cell& cell);
+  void addModule(const Yosys::Module& module);
   Schematic& getSchematic() { return schematic_; }
 
-  void addModule(const Yosys::Module& module);
 private:
   void addMappedModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& mapping);
   void addUnmappedModule(const Yosys::RTLIL::Cell& cell);
