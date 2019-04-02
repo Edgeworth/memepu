@@ -1,8 +1,6 @@
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>
-#include <memecad/types.h>
-
 
 namespace memecad {
 
@@ -116,7 +114,7 @@ void Sheet::Label::connectToRefField(const Sheet::RefField& ref_field) {
 
 bool Sheet::Label::operator<(const Sheet::Label& o) const {
   // Deliberately consider labels the same if they don't differ by net type or text.
-  // This is used to collect the set of heirarchical labels that need to be plumbed upward.
+  // This is used to collect the set of hierarchical labels that need to be plumbed upward.
   if (net_type != o.net_type) return net_type < o.net_type;
   return toStringIntPair(text) < toStringIntPair(o.text);
 }

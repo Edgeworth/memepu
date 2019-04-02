@@ -248,8 +248,8 @@ Point Schematic::SheetData::packBox(Point box_size) {
     cur.x = SHEET_MARGIN;
     cur.y += max_y;
     // TODO: Dynamically size sheets.
-   if (cur.y > SHEET_MARGIN + SHEET_HEIGHT)
-     printf("WARNING: ran out of space on sheet");
+    if (cur.y > SHEET_MARGIN + SHEET_HEIGHT)
+      printf("WARNING: ran out of space on sheet");
     max_y = 0;
   }
 
