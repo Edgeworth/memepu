@@ -35,10 +35,6 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  Yosys::log_streams.push_back(&std::cout);
-  Yosys::log_error_stderr = true;
-  Yosys::yosys_banner();
-
   auto files = memecad::convertVerilogToKicadSchematics(memecad_map_filename, verilog_filenames,
       kicad_library_filenames);
   for (const auto& file : files)
