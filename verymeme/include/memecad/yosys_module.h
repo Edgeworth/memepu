@@ -9,8 +9,8 @@
 namespace memecad {
 
 std::vector<Schematic::SchematicFile> convertVerilogToKicadSchematics(
-    const std::string& memecad_map_filename, const std::vector<std::string>& verilog_filenames,
-    const std::vector<std::string>& kicad_library_filenames);
+    const std::string& memecad_map_filename, std::vector<std::string> verilog_filenames,
+    std::vector<std::string> kicad_library_filenames);
 
 class TestPass : public Yosys::Pass {
 public:
