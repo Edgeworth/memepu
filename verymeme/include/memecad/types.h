@@ -94,7 +94,7 @@ struct Sheet {
     int height = 1000;
     std::vector<RefField> fields;
 
-    void offsetTo(const Point& loc);
+    void offset(const Point& offset);
     bool operator<(const Ref& o) const;
   };
 

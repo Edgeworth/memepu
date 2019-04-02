@@ -93,11 +93,10 @@ bool Sheet::RefField::operator<(const Sheet::RefField& o) const {
          std::tie(o.text, o.num, o.type, o.side, o.p, o.dimension);
 }
 
-void Sheet::Ref::offsetTo(const Point& loc) {
-  for (auto& field : fields) {
-    field.p += loc - p;
-  }
-  p = loc;
+void Sheet::Ref::offset(const Point& offset) {
+  p += offset;
+  for (auto& field : fields)
+    field.p += offset;
 }
 
 bool Sheet::Ref::operator<(const Sheet::Ref& o) const {
