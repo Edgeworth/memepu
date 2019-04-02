@@ -21,14 +21,21 @@ std::vector<Lib> parseLibraries(const std::vector<std::string>& filenames) {
 
 std::vector<Schematic::SchematicFile>
 convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
-    const std::vector<std::string>& verilog_filenames,
-    const std::vector<std::string>& kicad_library_filenames) {
+    std::vector<string> verilog_filenames,
+    std::vector<string> kicad_library_filenames) {
   static bool has_setup_yosys = false;
   static memecad::TestPass test_pass;
 
+  // Some ordering (e.g. order of packing components into schematics) can be affected by filename
+  // order, so sort here to keep things consistent.
+  std::sort(verilog_filenames.begin(), verilog_filenames.end());
+  std::sort(kicad_library_filenames.begin(), kicad_library_filenames.end());
+
+  Yosys::autoidx = 1;  // Reset the indexing so we get the same output each time.
   if (!has_setup_yosys) {
     Yosys::log_streams.push_back(&std::cout);
     Yosys::log_error_stderr = true;
+    Yosys::yosys_banner();
     Yosys::yosys_setup();
     has_setup_yosys = true;
   }
@@ -41,7 +48,6 @@ convertVerilogToKicadSchematics(const std::string& memecad_map_filename,
   // constant to a single bit port.
   Yosys::run_pass("hierarchy -check");
   Yosys::run_pass("check");  // Check for misc problems.
-
   test_pass.setup(memecad_map_filename, kicad_library_filenames);
   Yosys::run_pass(PASS_NAME);
 
