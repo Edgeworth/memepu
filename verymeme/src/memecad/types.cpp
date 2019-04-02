@@ -22,6 +22,16 @@ std::pair<std::string, int> toStringIntPair(const std::string& s) {
   return std::make_pair(str, boost::lexical_cast<int>(num));
 }
 
+Direction getOppositeDirection(Direction d) {
+  switch (d) {
+    case Direction::LEFT: return Direction::RIGHT;
+    case Direction::DOWN: return Direction::UP;
+    case Direction::RIGHT: return Direction::LEFT;
+    case Direction::UP: return Direction::DOWN;
+    default: verify_expr(false, "unknown direction '%d'", int(d));
+  }
+}
+
 }  // namespace
 
 PinType netTypeToPinType(Sheet::Label::NetType net_type) {
@@ -35,18 +45,6 @@ PinType netTypeToPinType(Sheet::Label::NetType net_type) {
   }
 }
 
-int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
-  bool is_hierarchical_or_global =
-      label_type == Sheet::Label::Type::HIERARCHICAL || label_type == Sheet::Label::Type::GLOBAL;
-  switch (d) {
-    case Direction::LEFT: return is_hierarchical_or_global ? 2 : 0;
-    case Direction::DOWN: return 1;
-    case Direction::RIGHT: return is_hierarchical_or_global ? 0 : 2;
-    case Direction::UP: return 3;
-    default: verify_expr(false, "unknown direction '%d'", int(d));
-  }
-}
-
 Rect Lib::Component::getBoundingBox(int subcomponent) const {
   Rect bounds;
   for (const auto& pin : pins) {
@@ -56,7 +54,7 @@ Rect Lib::Component::getBoundingBox(int subcomponent) const {
     bounds.top = std::min(bounds.top, pin.p.y);
     bounds.bottom = std::max(bounds.bottom, pin.p.y);
   }
-  bounds.inset(-200, -200);
+  bounds.inset(-100, -100);
   return bounds;
 }
 
@@ -109,12 +107,12 @@ bool Sheet::Ref::operator<(const Sheet::Ref& o) const {
 
 void Sheet::Label::connectToPin(const Lib::Pin& pin) {
   p = pin.p;
-  orientation = pinDirectionToLabelOrientation(pin.direction, type);
+  direction = getOppositeDirection(pin.direction);
 }
 
 void Sheet::Label::connectToRefField(const Sheet::RefField& ref_field) {
   p = ref_field.p;
-  orientation = pinDirectionToLabelOrientation(ref_field.side, type);
+  direction = getOppositeDirection(ref_field.side);
 }
 
 bool Sheet::Label::operator<(const Sheet::Label& o) const {
@@ -122,6 +120,17 @@ bool Sheet::Label::operator<(const Sheet::Label& o) const {
   // This is used to collect the set of heirarchical labels that need to be plumbed upward.
   if (net_type != o.net_type) return net_type < o.net_type;
   return toStringIntPair(text) < toStringIntPair(o.text);
+}
+
+Rect Sheet::Label::getBoundingBox() const {
+  const int text_length = text.size() * dimension;
+  switch (direction) {
+    case Direction::LEFT: return {p.x - text_length, p.y - dimension, p.x, p.y};
+    case Direction::DOWN: return {p.x - dimension, p.y, p.x, p.y + text_length};
+    case Direction::RIGHT: return {p.x, p.y - dimension, p.x + text_length, p.y};
+    case Direction::UP: return {p.x - dimension, p.y - text_length, p.x, p.y};
+    default: verify_expr(false, "unknown direction '%d'", int(direction));
+  }
 }
 
 bool Sheet::Field::operator<(const Sheet::Field& o) const {

@@ -135,29 +135,25 @@ Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component
     component.addLibField(lib_component.fields[1], lib_component.names.front());
   }
 
-  // Add finished components to sheet:
+  // Compute box size contribution from components:
   auto& data = sheets_[sheet_name];
-  int max_width = 0;
+  std::vector<Rect> aabbs;
   int y = 0;
   for (auto& component : subcomponents) {
-    Rect aabb = lib_component.getBoundingBox(component.subcomponent);
     // Get relative positions correct.
-    component.offset({-aabb.left, y - aabb.top});
+    Rect aabb = lib_component.getBoundingBox(component.subcomponent);
+    Point offset = {0, y - aabb.top};
+    aabb.offset(offset);
+    component.offset(offset);
     y += aabb.height();
-    max_width = std::max(max_width, aabb.width());
+    aabbs.push_back(aabb);
   }
 
-  Point loc = data.packBox({max_width, y});
-  for (auto& component : subcomponents) {
-    component.offset(loc);
-    data.sheet.components.push_back(component);
-  }
-
-  // Add finished labels to sheet:
+  // Place labels relative to subcomponents and collect sizing data.
+  std::vector<Sheet::Label> labels;
   for (const auto& kv : mapping) {
     const auto&[kicad_pin, conn] = kv;
-
-    auto& label = data.sheet.labels.emplace_back(createParentLabel(conn.bit));
+    auto& label = labels.emplace_back(createParentLabel(conn.bit));
     label.connectToPin(*kicad_pin);
 
     // Move to location we placed this subcomponent.
@@ -165,6 +161,22 @@ Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component
         "subcomponent %d is out of range, only have %d subcomponents", kicad_pin->subcomponent,
         int(subcomponents.size()));
     label.p += subcomponents[kicad_pin->subcomponent].p;
+    printf("Label bounding box: %s %s %s\n", lib_component.names.front().c_str(),
+        label.text.c_str(), label.getBoundingBox().toString().c_str());
+    aabbs.push_back(label.getBoundingBox());
+  }
+
+  // Place component based on packing:
+  Point offset = data.packBoxesOffset(aabbs);
+  for (auto& component : subcomponents) {
+    component.offset(offset);
+    data.sheet.components.push_back(component);
+  }
+
+  // Add finished labels to sheet:
+  for (auto& label : labels) {
+    label.p += offset;
+    data.sheet.labels.push_back(label);
   }
 }
 
@@ -193,11 +205,11 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
 
       // Add a wire between these two labels otherwise Kicad won't consider them connected for ERC.
       label0.p.y += height;
-      label0.orientation = pinDirectionToLabelOrientation(Direction::RIGHT, label0.type);
+      label0.direction = Direction::LEFT;
       wire.start = label0.p;
 
       label1.p += {label0.dimension, height};
-      label1.orientation = pinDirectionToLabelOrientation(Direction::LEFT, label1.type);
+      label1.direction = Direction::RIGHT;
       wire.end = label1.p;
 
       height += std::max(label0.dimension, label1.dimension) * 2;
@@ -236,6 +248,14 @@ Point Schematic::SheetData::packBox(Point box_size) {
   cur.x += box_size.x + PADDING;
   max_y = std::max(max_y, box_size.y + PADDING);
   return p;
+}
+
+Point Schematic::SheetData::packBoxesOffset(const std::vector<Rect>& rects) {
+  Rect r;
+  for (const auto& rect : rects)
+    r.merge(rect);
+  const Point loc = packBox({r.width(), r.height()});
+  return loc - r.origin();
 }
 
 
