@@ -56,14 +56,34 @@ struct Rect {
   int bottom = 0;
 
   void inset(int w, int h) {
-    left += w / 2;
-    top += h / 2;
-    right -= w / 2;
-    bottom -= h / 2;
+    left += w;
+    top += h;
+    right -= w;
+    bottom -= h;
   }
 
+  void merge(const Rect& r) {
+    left = std::min(left, r.left);
+    right = std::max(right, r.right);
+    top = std::min(top, r.top);
+    bottom = std::max(bottom, r.bottom);
+  }
+
+  void offset(const Point& p) {
+    left += p.x;
+    right += p.x;
+    top += p.y;
+    bottom += p.y;
+  }
+
+  constexpr Point origin() const { return {left, top}; }
   constexpr int width() const { return right - left; }
   constexpr int height() const { return bottom - top; }
+
+  std::string toString() const {
+    return "{" + std::to_string(left) + ", " + std::to_string(top) + ", " + std::to_string(right) +
+        ", " + std::to_string(bottom) + "}";
+  }
 };
 
 #endif  // VERYMEME_COMMON_H

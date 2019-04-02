@@ -108,7 +108,7 @@ struct Sheet {
 
     Type type = {};
     Point p = {};
-    int orientation = 0;
+    Direction direction = {};
     int dimension = DEFAULT_DIMENSION;
     NetType net_type = {};  // Only used for Global and Hierarchical labels.
     bool italic = false;
@@ -117,6 +117,7 @@ struct Sheet {
 
     void connectToPin(const Lib::Pin& pin);
     void connectToRefField(const RefField& ref_field);
+    Rect getBoundingBox() const;
     bool operator<(const Label& o) const;
   };
 
@@ -168,7 +169,6 @@ private:
 };
 
 PinType netTypeToPinType(Sheet::Label::NetType net_type);
-int pinDirectionToLabelOrientation(Direction d, Sheet::Label::Type label_type);
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o);
 std::istream& operator>>(std::istream& str, Orientation& o);

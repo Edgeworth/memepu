@@ -1,9 +1,11 @@
 ### TODO soon
-- Fix test
 - Add verilator test for shifter
 
 ### TODO later
 - Move kicadtools into verymeme - direct generation
+  - Can then improve bounding box calculation to look at actual drawn stuff
+- Include labels in component bounding box
+- Dynamically size generated sheets
 - Automation for running verilog tests both with and without SCHEMATIC defined.
 - Timing models for each chip
 - Read hex-files in at boot time

@@ -17,90 +17,90 @@ $EndDescr
 $Comp
 L 74xx:74LS08 U?
 U 1 1 DEADBEEF
-P 9400 4900
-F 0 "U?" H 9400 4850 50 0000 C CNN
-F 1 "74LS08" H 9400 4950 50 0000 C CNN
+P 9750 4900
+F 0 "U?" H 9750 4850 50 0000 C CNN
+F 1 "74LS08" H 9750 4950 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 1 1 DEADBEEF
-P 10700 4900
-F 0 "U?" H 10700 4850 50 0000 C CNN
-F 1 "74LS08" H 10700 4950 50 0000 C CNN
+P 11700 4900
+F 0 "U?" H 11700 4850 50 0000 C CNN
+F 1 "74LS08" H 11700 4950 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 2 1 DEADBEEF
-P 9400 5300
-F 0 "U?" H 9400 5250 50 0000 C CNN
-F 1 "74LS08" H 9400 5350 50 0000 C CNN
+P 9750 5300
+F 0 "U?" H 9750 5250 50 0000 C CNN
+F 1 "74LS08" H 9750 5350 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 2 1 DEADBEEF
-P 10700 5300
-F 0 "U?" H 10700 5250 50 0000 C CNN
-F 1 "74LS08" H 10700 5350 50 0000 C CNN
+P 11700 5300
+F 0 "U?" H 11700 5250 50 0000 C CNN
+F 1 "74LS08" H 11700 5350 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 3 1 DEADBEEF
-P 9400 5700
-F 0 "U?" H 9400 5650 50 0000 C CNN
-F 1 "74LS08" H 9400 5750 50 0000 C CNN
+P 9750 5700
+F 0 "U?" H 9750 5650 50 0000 C CNN
+F 1 "74LS08" H 9750 5750 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 3 1 DEADBEEF
-P 10700 5700
-F 0 "U?" H 10700 5650 50 0000 C CNN
-F 1 "74LS08" H 10700 5750 50 0000 C CNN
+P 11700 5700
+F 0 "U?" H 11700 5650 50 0000 C CNN
+F 1 "74LS08" H 11700 5750 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 4 1 DEADBEEF
-P 9400 6100
-F 0 "U?" H 9400 6050 50 0000 C CNN
-F 1 "74LS08" H 9400 6150 50 0000 C CNN
+P 9750 6100
+F 0 "U?" H 9750 6050 50 0000 C CNN
+F 1 "74LS08" H 9750 6150 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 4 1 DEADBEEF
-P 10700 6100
-F 0 "U?" H 10700 6050 50 0000 C CNN
-F 1 "74LS08" H 10700 6150 50 0000 C CNN
+P 11700 6100
+F 0 "U?" H 11700 6050 50 0000 C CNN
+F 1 "74LS08" H 11700 6150 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 5 1 DEADBEEF
-P 9100 6900
-F 0 "U?" H 9100 6850 50 0000 C CNN
-F 1 "74LS08" H 9100 6950 50 0000 C CNN
+P 9750 6900
+F 0 "U?" H 9750 6850 50 0000 C CNN
+F 1 "74LS08" H 9750 6950 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
 $Comp
 L 74xx:74LS08 U?
 U 5 1 DEADBEEF
-P 10400 6900
-F 0 "U?" H 10400 6850 50 0000 C CNN
-F 1 "74LS08" H 10400 6950 50 0000 C CNN
+P 11700 6900
+F 0 "U?" H 11700 6850 50 0000 C CNN
+F 1 "74LS08" H 11700 6950 50 0000 C CNN
 	1    2600 1750
 	1    0    0    -1
 $EndComp
@@ -140,10 +140,10 @@ NoConn ~ 8000 5700
 NoConn ~ 9000 1600
 NoConn ~ 8000 5300
 NoConn ~ 9000 2000
-NoConn ~ 9700 4900
+NoConn ~ 10050 4900
 NoConn ~ 9000 1500
 NoConn ~ 8000 5200
-NoConn ~ 9700 5300
+NoConn ~ 10050 5300
 NoConn ~ 8000 5100
 NoConn ~ 9000 1300
 NoConn ~ 6000 1000
@@ -291,155 +291,155 @@ Text Label 5000 1000 2 50 ~ 0
 carrys0
 Text Label 5000 5600 2 50 ~ 0
 carrys1
-Text Label 12600 5300 0 50 ~ 0
+Text Label 13950 5300 0 50 ~ 0
 carrys1
 Text Label 3000 5600 2 50 ~ 0
 carrys2
-Text Label 12600 5400 0 50 ~ 0
+Text Label 13950 5400 0 50 ~ 0
 carrys2
 Text Label 1000 5600 2 50 ~ 0
 carrys3
-Text Label 12600 5500 0 50 ~ 0
+Text Label 13950 5500 0 50 ~ 0
 carrys3
 Text Label 14000 1900 2 50 ~ 0
 carrys4
-Text Label 12600 5600 0 50 ~ 0
+Text Label 13950 5600 0 50 ~ 0
 carrys4
 Text Label 12000 1900 2 50 ~ 0
 carrys5
-Text Label 12600 5700 0 50 ~ 0
+Text Label 13950 5700 0 50 ~ 0
 carrys5
 Text Label 10000 1900 2 50 ~ 0
 carrys6
-Text Label 12600 5800 0 50 ~ 0
+Text Label 13950 5800 0 50 ~ 0
 carrys6
-Text Label 12600 5900 0 50 ~ 0
+Text Label 13950 5900 0 50 ~ 0
 carrys7
 Text Label 8000 1900 2 50 ~ 0
 carrys7
 Text Label 6050 1000 0 50 ~ 0
 carrys8
-Text Label 12600 6000 0 50 ~ 0
+Text Label 13950 6000 0 50 ~ 0
 carrys8
 Text Label 8000 5500 0 50 ~ 0
 slice_g0
-Text Label 11600 4900 2 50 ~ 0
+Text Label 12950 4900 2 50 ~ 0
 slice_g0
 Text Label 6000 5500 0 50 ~ 0
 slice_g1
-Text Label 11600 5000 2 50 ~ 0
+Text Label 12950 5000 2 50 ~ 0
 slice_g1
 Text Label 4000 5500 0 50 ~ 0
 slice_g2
-Text Label 11600 5100 2 50 ~ 0
+Text Label 12950 5100 2 50 ~ 0
 slice_g2
 Text Label 2000 5500 0 50 ~ 0
 slice_g3
-Text Label 11600 5200 2 50 ~ 0
+Text Label 12950 5200 2 50 ~ 0
 slice_g3
 Text Label 15000 1800 0 50 ~ 0
 slice_g4
-Text Label 11600 5300 2 50 ~ 0
+Text Label 12950 5300 2 50 ~ 0
 slice_g4
 Text Label 13000 1800 0 50 ~ 0
 slice_g5
-Text Label 11600 5400 2 50 ~ 0
+Text Label 12950 5400 2 50 ~ 0
 slice_g5
-Text Label 11600 5500 2 50 ~ 0
+Text Label 12950 5500 2 50 ~ 0
 slice_g6
 Text Label 11000 1800 0 50 ~ 0
 slice_g6
 Text Label 9000 1800 0 50 ~ 0
 slice_g7
-Text Label 11600 5600 2 50 ~ 0
+Text Label 12950 5600 2 50 ~ 0
 slice_g7
 Text Label 8000 5400 0 50 ~ 0
 slice_p0
-Text Label 11600 5700 2 50 ~ 0
+Text Label 12950 5700 2 50 ~ 0
 slice_p0
 Text Label 6000 5400 0 50 ~ 0
 slice_p1
-Text Label 11600 5800 2 50 ~ 0
+Text Label 12950 5800 2 50 ~ 0
 slice_p1
-Text Label 11600 5900 2 50 ~ 0
+Text Label 12950 5900 2 50 ~ 0
 slice_p2
 Text Label 4000 5400 0 50 ~ 0
 slice_p2
-Text Label 12600 4800 0 50 ~ 0
+Text Label 13950 4800 0 50 ~ 0
 slice_p3
 Text Label 2000 5400 0 50 ~ 0
 slice_p3
-Text Label 12600 4900 0 50 ~ 0
+Text Label 13950 4900 0 50 ~ 0
 slice_p4
 Text Label 15000 1700 0 50 ~ 0
 slice_p4
-Text Label 12600 5000 0 50 ~ 0
+Text Label 13950 5000 0 50 ~ 0
 slice_p5
 Text Label 13000 1700 0 50 ~ 0
 slice_p5
-Text Label 12600 5100 0 50 ~ 0
+Text Label 13950 5100 0 50 ~ 0
 slice_p6
 Text Label 11000 1700 0 50 ~ 0
 slice_p6
 Text Label 9000 1700 0 50 ~ 0
 slice_p7
-Text Label 12600 5200 0 50 ~ 0
+Text Label 13950 5200 0 50 ~ 0
 slice_p7
 Text Label 8000 5600 0 50 ~ 0
 slice_z0
-Text Label 10400 6000 2 50 ~ 0
+Text Label 11400 6000 2 50 ~ 0
 slice_z0
-Text Label 10400 5600 2 50 ~ 0
+Text Label 11400 5600 2 50 ~ 0
 slice_z1
 Text Label 6000 5600 0 50 ~ 0
 slice_z1
 Text Label 4000 5600 0 50 ~ 0
 slice_z2
-Text Label 10400 5200 2 50 ~ 0
+Text Label 11400 5200 2 50 ~ 0
 slice_z2
 Text Label 2000 5600 0 50 ~ 0
 slice_z3
-Text Label 10400 4800 2 50 ~ 0
+Text Label 11400 4800 2 50 ~ 0
 slice_z3
-Text Label 10400 6200 2 50 ~ 0
+Text Label 11400 6200 2 50 ~ 0
 slice_z4
 Text Label 15000 1900 0 50 ~ 0
 slice_z4
-Text Label 10400 5800 2 50 ~ 0
+Text Label 11400 5800 2 50 ~ 0
 slice_z5
 Text Label 13000 1900 0 50 ~ 0
 slice_z5
-Text Label 10400 5400 2 50 ~ 0
+Text Label 11400 5400 2 50 ~ 0
 slice_z6
 Text Label 11000 1900 0 50 ~ 0
 slice_z6
-Text Label 10400 5000 2 50 ~ 0
+Text Label 11400 5000 2 50 ~ 0
 slice_z7
 Text Label 9000 1900 0 50 ~ 0
 slice_z7
-Text Label 9100 6000 2 50 ~ 0
+Text Label 9450 6000 2 50 ~ 0
 z_level00
-Text Label 11000 6100 0 50 ~ 0
+Text Label 12000 6100 0 50 ~ 0
 z_level00
-Text Label 9100 5600 2 50 ~ 0
+Text Label 9450 5600 2 50 ~ 0
 z_level01
-Text Label 11000 5700 0 50 ~ 0
+Text Label 12000 5700 0 50 ~ 0
 z_level01
-Text Label 9100 6200 2 50 ~ 0
+Text Label 9450 6200 2 50 ~ 0
 z_level02
-Text Label 11000 5300 0 50 ~ 0
+Text Label 12000 5300 0 50 ~ 0
 z_level02
-Text Label 9100 5800 2 50 ~ 0
+Text Label 9450 5800 2 50 ~ 0
 z_level03
-Text Label 11000 4900 0 50 ~ 0
+Text Label 12000 4900 0 50 ~ 0
 z_level03
-Text Label 9700 6100 0 50 ~ 0
+Text Label 10050 6100 0 50 ~ 0
 z_level10
-Text Label 9100 5200 2 50 ~ 0
+Text Label 9450 5200 2 50 ~ 0
 z_level10
-Text Label 9100 5400 2 50 ~ 0
+Text Label 9450 5400 2 50 ~ 0
 z_level11
-Text Label 9700 5700 0 50 ~ 0
+Text Label 10050 5700 0 50 ~ 0
 z_level11
 Text GLabel 1050 3000 2 50 UnSpc ~ 0
 GND
@@ -499,15 +499,15 @@ Text GLabel 1050 1900 2 50 UnSpc ~ 0
 GND
 Text GLabel 1050 1800 2 50 UnSpc ~ 0
 GND
-Text GLabel 9100 5000 0 50 UnSpc ~ 0
+Text GLabel 9450 5000 0 50 UnSpc ~ 0
 GND
-Text GLabel 9100 7400 3 50 UnSpc ~ 0
+Text GLabel 9750 7400 3 50 UnSpc ~ 0
 GND
-Text GLabel 9100 4800 0 50 UnSpc ~ 0
+Text GLabel 9450 4800 0 50 UnSpc ~ 0
 GND
-Text GLabel 10400 7400 3 50 UnSpc ~ 0
+Text GLabel 11700 7400 3 50 UnSpc ~ 0
 GND
-Text GLabel 11600 4800 0 50 UnSpc ~ 0
+Text GLabel 12950 4800 0 50 UnSpc ~ 0
 GND
 Text GLabel 1050 2100 2 50 UnSpc ~ 0
 GND
@@ -765,9 +765,9 @@ Text GLabel 2050 1500 2 50 UnSpc ~ 0
 GND
 Text GLabel 2050 1400 2 50 UnSpc ~ 0
 GND
-Text GLabel 9100 6400 1 50 UnSpc ~ 0
+Text GLabel 9750 6400 1 50 UnSpc ~ 0
 VCC
-Text GLabel 10400 6400 1 50 UnSpc ~ 0
+Text GLabel 11700 6400 1 50 UnSpc ~ 0
 VCC
 Wire Wire Line
 	1000 1000 1050 1000
@@ -1120,34 +1120,34 @@ F20 "OUT6" O L 9000 1900 50
 F21 "OUT7" O L 9000 2000 50
 $EndSheet
 $Sheet
-S 11600 4700 1000 1400
+S 12950 4700 1000 1400
 U DEADBEEF
 F0 "lookahead" 50
 F1 "alu_lookahead.sch" 50
-F2 "C_IN" I R 11600 4800 50
-F3 "G0" I R 11600 4900 50
-F4 "G1" I R 11600 5000 50
-F5 "G2" I R 11600 5100 50
-F6 "G3" I R 11600 5200 50
-F7 "G4" I R 11600 5300 50
-F8 "G5" I R 11600 5400 50
-F9 "G6" I R 11600 5500 50
-F10 "G7" I R 11600 5600 50
-F11 "P0" I R 11600 5700 50
-F12 "P1" I R 11600 5800 50
-F13 "P2" I R 11600 5900 50
-F14 "P3" I L 12600 4800 50
-F15 "P4" I L 12600 4900 50
-F16 "P5" I L 12600 5000 50
-F17 "P6" I L 12600 5100 50
-F18 "P7" I L 12600 5200 50
-F19 "CARRYS0" O L 12600 5300 50
-F20 "CARRYS1" O L 12600 5400 50
-F21 "CARRYS2" O L 12600 5500 50
-F22 "CARRYS3" O L 12600 5600 50
-F23 "CARRYS4" O L 12600 5700 50
-F24 "CARRYS5" O L 12600 5800 50
-F25 "CARRYS6" O L 12600 5900 50
-F26 "CARRYS7" O L 12600 6000 50
+F2 "C_IN" I R 12950 4800 50
+F3 "G0" I R 12950 4900 50
+F4 "G1" I R 12950 5000 50
+F5 "G2" I R 12950 5100 50
+F6 "G3" I R 12950 5200 50
+F7 "G4" I R 12950 5300 50
+F8 "G5" I R 12950 5400 50
+F9 "G6" I R 12950 5500 50
+F10 "G7" I R 12950 5600 50
+F11 "P0" I R 12950 5700 50
+F12 "P1" I R 12950 5800 50
+F13 "P2" I R 12950 5900 50
+F14 "P3" I L 13950 4800 50
+F15 "P4" I L 13950 4900 50
+F16 "P5" I L 13950 5000 50
+F17 "P6" I L 13950 5100 50
+F18 "P7" I L 13950 5200 50
+F19 "CARRYS0" O L 13950 5300 50
+F20 "CARRYS1" O L 13950 5400 50
+F21 "CARRYS2" O L 13950 5500 50
+F22 "CARRYS3" O L 13950 5600 50
+F23 "CARRYS4" O L 13950 5700 50
+F24 "CARRYS5" O L 13950 5800 50
+F25 "CARRYS6" O L 13950 5900 50
+F26 "CARRYS7" O L 13950 6000 50
 $EndSheet
 $EndSCHEMATC

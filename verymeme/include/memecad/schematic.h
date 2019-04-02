@@ -31,6 +31,7 @@ private:
     int max_y = 0;
 
     Point packBox(Point box_size);
+    Point packBoxesOffset(const std::vector<Rect>& rects);
   };
 
   std::unordered_map<std::string, SheetData> sheets_;
