@@ -26,6 +26,26 @@ std::string trim(const std::string& data, const std::string& c) {
   return sm[1].str();
 }
 
+int directionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
+  const bool is_hierarchical_or_global =
+      label_type == Sheet::Label::Type::HIERARCHICAL || label_type == Sheet::Label::Type::GLOBAL;
+  switch (d) {
+    case Direction::LEFT: return is_hierarchical_or_global ? 0 : 2;
+    case Direction::DOWN: return 3;
+    case Direction::RIGHT: return is_hierarchical_or_global ? 2 : 0;
+    case Direction::UP: return 1;
+    default: verify_expr(false, "unknown direction '%d'", int(d));
+  }
+}
+
+Direction labelOrientationToDirection(int orientation, Sheet::Label::Type label_type) {
+  for (int d = 0; d < int(Direction::COUNT); ++d) {
+    if (directionToLabelOrientation(Direction(d), label_type) == orientation)
+      return Direction(d);
+  }
+  verify_expr(false, "unknown label orientation %d", orientation);
+}
+
 class KicadParser {
 public:
   explicit KicadParser(const std::string& data) : toks_(tokenize(data)) {}
@@ -47,7 +67,7 @@ public:
         auto& label = sheet.labels.emplace_back();
         label.type = next<Sheet::Label::Type>();
         label.p = {next<int>(), next<int>()};
-        label.orientation = next<int>();
+        label.direction = labelOrientationToDirection(next<int>(), label.type);
         label.dimension = next<int>();
         if (label.type == Sheet::Label::Type::HIERARCHICAL ||
             label.type == Sheet::Label::Type::GLOBAL)
@@ -289,8 +309,8 @@ public:
         data += "NoConn ~ " + tos(l.p) + "\n";
         continue;
       }
-      data += "Text " + tos(l.type) + " " + tos(l.p) + " " + tos(l.orientation) + " " +
-              tos(l.dimension) + " ";
+      data += "Text " + tos(l.type) + " " + tos(l.p) + " " +
+          tos(directionToLabelOrientation(l.direction, l.type)) + " " + tos(l.dimension) + " ";
       if (l.type == Sheet::Label::Type::HIERARCHICAL || l.type == Sheet::Label::Type::GLOBAL)
         data += tos(l.net_type) + " ";
       data += std::string(l.italic ? "Italic" : "~") + " " + (l.bold ? "10" : "0") + "\n";
