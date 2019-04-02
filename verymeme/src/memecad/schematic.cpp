@@ -69,28 +69,28 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   verify_expr(sheets_.count(child_name), "could not find child '%s' - maybe missing file",
       child_name.c_str());
   auto& child = sheets_[child_name];
-  std::set<Sheet::Label> label_set;
+  std::set<Sheet::Label> child_label_set;
   for (const auto& label : child.sheet.labels) {
     if (label.type == Sheet::Label::Type::HIERARCHICAL)
-      label_set.insert(label);
+      child_label_set.insert(label);
   }
-  std::vector<Sheet::Label> labels(label_set.begin(), label_set.end());
-  verify_expr(labels.size() == mapping.size(),
+  std::vector<Sheet::Label> child_labels(child_label_set.begin(), child_label_set.end());
+  verify_expr(child_labels.size() == mapping.size(),
       "number of hierarchical labels in child '%s' does not match number of verilog connections"
       " - maybe missing connection / unused",
       child_name.c_str());
 
   // Add hierarchical label for child sheet.
   int pack_y = ref.p.y + 100;
-  for (int i = 0; i < int(labels.size()); ++i) {
-    if (i == int(labels.size() / 2))  // Place on other side.
+  for (int i = 0; i < int(child_labels.size()); ++i) {
+    if (i == int(child_labels.size() / 2))  // Place on other side.
       pack_y = ref.p.y + 100;
-    const bool left = i < int(labels.size() / 2);
+    const bool left = i < int(child_labels.size() / 2);
 
     Sheet::RefField& ref_field = ref.fields.emplace_back();
     ref_field.num = i + Sheet::RefField::HIERARCHICAL_REF_OFFSET;
-    ref_field.text = labels[i].text;
-    ref_field.type = netTypeToPinType(labels[i].net_type);
+    ref_field.text = child_labels[i].text;
+    ref_field.type = netTypeToPinType(child_labels[i].net_type);
     ref_field.side = left ? Direction::RIGHT : Direction::LEFT;
     ref_field.p.x = left ? ref.p.x : (ref.p.x + ref.width);
     ref_field.p.y = pack_y;
@@ -98,21 +98,30 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   }
   ref.height = pack_y - ref.p.y;
 
-  // Pack child sheet.
-  // TODO: Dynamically size width for child sheets.
-  Point loc = parent.packBox({ref.width + PADDING, ref.height + PADDING});
-  ref.offsetTo(loc);
+  std::vector<Rect> aabbs;
+  aabbs.push_back(
+      {ref.p.x, ref.p.y, ref.p.x + ref.width, ref.p.y + ref.height});
 
-  // Add label connecting to hierarchical label for parent sheet. Do this after deciding the final
-  // location of the child sheet in the parent sheet.
-  for (int i = 0; i < int(labels.size()); ++i) {
-    auto conn_iter = mapping.find(labels[i].text);
+  // Add label connecting to hierarchical label for parent sheet.
+  std::vector<Sheet::Label> labels;
+  for (int i = 0; i < int(child_labels.size()); ++i) {
+    auto conn_iter = mapping.find(child_labels[i].text);
     verify_expr(conn_iter != mapping.end(),
         "BUG: should have association from child label '%s' to parent label",
-        labels[i].text.c_str());
-    Sheet::Label& parent_label = parent.sheet.labels.emplace_back(
+        child_labels[i].text.c_str());
+    Sheet::Label& parent_label = labels.emplace_back(
         createParentLabel(conn_iter->second.bit));
     parent_label.connectToRefField(ref.fields[i]);
+    aabbs.push_back(parent_label.getBoundingBox());
+  }
+
+  // Pack child sheet and offset accordingly.
+  // TODO: Dynamically size width for child sheets.
+  Point offset = parent.packBoxesOffset(aabbs);
+  ref.offset(offset);
+  for (auto& label : labels) {
+    label.p += offset;
+    parent.sheet.labels.push_back(label);
   }
 }
 
@@ -161,8 +170,6 @@ Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component
         "subcomponent %d is out of range, only have %d subcomponents", kicad_pin->subcomponent,
         int(subcomponents.size()));
     label.p += subcomponents[kicad_pin->subcomponent].p;
-    printf("Label bounding box: %s %s %s\n", lib_component.names.front().c_str(),
-        label.text.c_str(), label.getBoundingBox().toString().c_str());
     aabbs.push_back(label.getBoundingBox());
   }
 
@@ -240,7 +247,9 @@ Point Schematic::SheetData::packBox(Point box_size) {
   if (cur.x > SHEET_MARGIN + SHEET_WIDTH) {
     cur.x = SHEET_MARGIN;
     cur.y += max_y;
-    verify_expr(cur.y < SHEET_MARGIN + SHEET_HEIGHT, "ran out of space on sheet");
+    // TODO: Dynamically size sheets.
+   if (cur.y > SHEET_MARGIN + SHEET_HEIGHT)
+     printf("WARNING: ran out of space on sheet");
     max_y = 0;
   }
 
