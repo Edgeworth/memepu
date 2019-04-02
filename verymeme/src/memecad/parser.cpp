@@ -310,7 +310,7 @@ public:
         continue;
       }
       data += "Text " + tos(l.type) + " " + tos(l.p) + " " +
-          tos(directionToLabelOrientation(l.direction, l.type)) + " " + tos(l.dimension) + " ";
+              tos(directionToLabelOrientation(l.direction, l.type)) + " " + tos(l.dimension) + " ";
       if (l.type == Sheet::Label::Type::HIERARCHICAL || l.type == Sheet::Label::Type::GLOBAL)
         data += tos(l.net_type) + " ";
       data += std::string(l.italic ? "Italic" : "~") + " " + (l.bold ? "10" : "0") + "\n";
