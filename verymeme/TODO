@@ -1,4 +1,7 @@
 ### TODO soon
+- Finish shifter.
+- Have SCHEMATIC variable automatically defined. Verilator tests should run
+  with both on and off.
 - Add verilator test for shifter
 
 ### TODO later
