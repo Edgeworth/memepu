@@ -8,7 +8,7 @@
 #include "Vchip7432.h"
 #include "Vchip7486.h"
 #include "Vchip74299.h"
-#include "Valu.h"
+#include "Vmlu.h"
 #include "Vshifter.h"
 #include "verymeme/firmware_constants.h"
 
@@ -172,72 +172,72 @@ TEST_F(Chip74299Test, Exhaustive) {
   run();
 }
 
-#define TEST_ALU_OP(result) \
-  EXPECT_EQ(uint32_t(result), alu.OUT); \
-  EXPECT_EQ(((result) & 0x100000000ull) >> 32u, alu.C); \
-  EXPECT_EQ(uint32_t(result) ? 0 : 1, alu.Z); \
-  EXPECT_EQ((result) & 0x80000000u ? 1 : 0, alu.N); \
+#define TEST_MLU_OP(result) \
+  EXPECT_EQ(uint32_t(result), mlu.OUT); \
+  EXPECT_EQ(((result) & 0x100000000ull) >> 32u, mlu.C); \
+  EXPECT_EQ(uint32_t(result) ? 0 : 1, mlu.Z); \
+  EXPECT_EQ((result) & 0x80000000u ? 1 : 0, mlu.N); \
 
-void testAluOps(Valu& alu, uint64_t a, uint64_t b, uint64_t c_in) {
-  alu.A = uint32_t(a);
-  alu.B = uint32_t(b);
-  alu.C_IN = uint8_t(c_in);
+void testMluOps(Vmlu& mlu, uint64_t a, uint64_t b, uint64_t c_in) {
+  mlu.A = uint32_t(a);
+  mlu.B = uint32_t(b);
+  mlu.C_IN = uint8_t(c_in);
 
-  alu.OP = Alu::ADD;
-  alu.eval();
-  TEST_ALU_OP(a + b + c_in);
+  mlu.OP = Mlu::ADD;
+  mlu.eval();
+  TEST_MLU_OP(a + b + c_in);
 
-  alu.OP = Alu::AND;
-  alu.eval();
-  TEST_ALU_OP(a & b);
+  mlu.OP = Mlu::AND;
+  mlu.eval();
+  TEST_MLU_OP(a & b);
 
-  alu.OP = Alu::OR;
-  alu.eval();
-  TEST_ALU_OP(a | b);
+  mlu.OP = Mlu::OR;
+  mlu.eval();
+  TEST_MLU_OP(a | b);
 
-  alu.OP = Alu::XOR;
-  alu.eval();
-  TEST_ALU_OP(a ^ b);
+  mlu.OP = Mlu::XOR;
+  mlu.eval();
+  TEST_MLU_OP(a ^ b);
 
-  alu.OP = Alu::NOT;
-  alu.eval();
-  TEST_ALU_OP((~a) & 0xFFFFFFFF);
+  mlu.OP = Mlu::NOT;
+  mlu.eval();
+  TEST_MLU_OP((~a) & 0xFFFFFFFF);
 
-  alu.C_IN = 1;  // SUB only valid for C_IN == 1.
-  alu.OP = Alu::SUB;
-  alu.eval();
-  TEST_ALU_OP(a + ((~b) & 0xFFFFFFFF) + 1);
+  mlu.C_IN = 1;  // SUB only valid for C_IN == 1.
+  mlu.OP = Mlu::SUB;
+  mlu.eval();
+  TEST_MLU_OP(a + ((~b) & 0xFFFFFFFF) + 1);
 }
 
-#undef TEST_ALU_OP
+#undef TEST_MLU_OP
 
-class SemiExhaustiveAluTest : public ExhaustiveVerilatorTest<10, 10, 1> {
+class SemiExhaustiveMluTest : public ExhaustiveVerilatorTest<10, 10, 1> {
 public:
   void doTest() override {
     const auto[A, B, C_IN] = param;
-    testAluOps(alu_, A, B, C_IN);
+    testMluOps(mlu_, A, B, C_IN);
   }
 private:
-  Valu alu_;
+  Vmlu mlu_;
 };
 
-TEST_F(SemiExhaustiveAluTest, SemiExhaustiveAluTest) {
+TEST_F(SemiExhaustiveMluTest, SemiExhaustiveMluTest) {
   run();
 }
 
-class AluTest
+class MluTest
     : public VerilatorTest,
       public ::testing::WithParamInterface<std::tuple<uint32_t, uint32_t, uint32_t>> {
 protected:
-  Valu alu_;
+  Vmlu mlu_;
 };
 
-TEST_P(AluTest, SpecialTestCases) {
+TEST_P(MluTest, SpecialTestCases) {
   const auto[A, B, C_IN] = GetParam();
-  testAluOps(alu_, A, B, C_IN);
+  testMluOps(mlu_, A, B, C_IN);
 }
 
-INSTANTIATE_TEST_SUITE_P(Basic, AluTest,
+INSTANTIATE_TEST_SUITE_P(Basic, MluTest,
     testing::Values(std::make_tuple(1, 2, 0), std::make_tuple(1, 1, 1),
         std::make_tuple(3364619464, 3637411669, 0)));
 
@@ -253,7 +253,8 @@ public:
     shifter_.eval();
     if (LEFT) EXPECT_EQ(IN << SHFT, shifter_.OUT);
     else if (ARITH) EXPECT_EQ(int32_t(IN) >> SHFT, shifter_.OUT);
-    else EXPECT_EQ(IN >> SHFT, shifter_.OUT);
+    else
+      EXPECT_EQ(IN >> SHFT, shifter_.OUT);
   }
 private:
   Vshifter shifter_;

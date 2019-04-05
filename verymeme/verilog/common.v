@@ -6,16 +6,16 @@ package common;
   // This should be defined for generating schematics. This will enable schematic specific features
   // e.g. loading hex files into SRAMs, or tri-state logic muxes. Loading hex files makes formal
   // verification very slow, so disabling this will instead use in-verilog implementations.
-  `define SCHEMATIC
+//  `define SCHEMATIC
 
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248
-  localparam ALU_ADD = 0;
-  localparam ALU_SUB = 1;
-  localparam ALU_AND = 2;
-  localparam ALU_OR = 3;
-  localparam ALU_XOR = 4;
-  localparam ALU_NOT = 5;
-  localparam ALU_NOP0 = 6;  // TODO sign extend
-  localparam ALU_NOP1 = 7;
+  localparam MLU_ADD = 0;
+  localparam MLU_SUB = 1;
+  localparam MLU_AND = 2;
+  localparam MLU_OR = 3;
+  localparam MLU_XOR = 4;
+  localparam MLU_NOT = 5;
+  localparam MLU_NOP0 = 6;  // TODO sign extend
+  localparam MLU_NOP1 = 7;
 endpackage
 `endif
