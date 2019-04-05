@@ -1,5 +1,7 @@
 ### TODO soon
-- Finish shifter.
+- Finish chip74161
+- Build timer
+- Implement EEPROM hexfile load.
 - Have SCHEMATIC variable automatically defined. Verilator tests should run
   with both on and off.
 - Add verilator test for shifter

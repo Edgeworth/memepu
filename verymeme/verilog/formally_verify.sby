@@ -1,6 +1,6 @@
 [options]
 mode prove
-depth 1
+depth 5
 multiclock on
 
 [engines]
@@ -18,11 +18,13 @@ chip7404
 chip7408
 chip7432
 chip7486
+chip74161
 chip74299
 chip7416374
 chip74LVC162244
 shifter
 sram17x8
+timer
 
 [script]
 alu: read -formal -D CONTRACT=assume alu.v
@@ -47,6 +49,8 @@ chip7432: read -formal -D CONTRACT=assume chip7432.v
 chip7432: prep -top chip7432
 chip7486: read -formal -D CONTRACT=assume chip7486.v
 chip7486: prep -top chip7486
+chip74161: read -formal -D CONTRACT=assume chip74161.v
+chip74161: prep -top chip74161
 chip74299: read -formal -D CONTRACT=assume chip74299.v
 chip74299: prep -top chip74299
 chip7416374: read -formal -D CONTRACT=assume chip7416374.v
@@ -58,6 +62,9 @@ shifter: read -formal -D CONTRACT=assert buffer_mux.v chip7404.v chip7408.v chip
 shifter: prep -top shifter
 sram17x8: read -formal -D CONTRACT=assume sram17x8.v
 sram17x8: prep -top sram17x8
+timer: read -formal -D CONTRACT=assume timer.v
+timer: read -formal -D CONTRACT=assert chip74161.v
+timer: prep -top timer
 
 [files]
 alu.v
@@ -69,11 +76,13 @@ chip7404.v
 chip7408.v
 chip7432.v
 chip7486.v
+chip74161.v
 chip74299.v
 chip7416374.v
 chip74LVC162244.v
 common.v
 shifter.v
 sram17x8.v
+timer.v
 alu_slice.hex
 alu_lookahead.hex

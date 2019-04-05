@@ -8,14 +8,14 @@ namespace memecad {
 
 namespace {
 
-const pt::ptree* findMappingForCell(const Yosys::RTLIL::Cell& cell, const pt::ptree& root) {
+const pt::ptree* findMappingForModuleType(const std::string module_type, const pt::ptree& root) {
   // Discard $gen$ or $paramod$, look for the user-specified part of the name.
-  const auto pos = cell.type.str().find('\\');
+  const auto pos = module_type.find('\\');
   if (pos == std::string::npos) return nullptr;
-  const std::string module_type = cell.type.str().substr(pos + 1);
+  const std::string name = module_type.substr(pos + 1);
   for (const auto& kv : root) {
     const auto&[k, v] = kv;
-    if (module_type == v.get<std::string>("verilog_name"))
+    if (name == v.get<std::string>("verilog_name"))
       return &v;
   }
   return nullptr;
@@ -133,8 +133,9 @@ Mapper::Mapper(const std::string& memecad_json, const std::vector<Lib>& libs) : 
 
 void Mapper::addCell(const Yosys::RTLIL::Cell& cell) {
   // Cell type is either mapping a Kicad library component and it's in the map, or it's a parent
-  // component. There should be a mapped module for each leaf module.
-  const auto* mapping = findMappingForCell(cell, root_);
+  // component. There should be a mapped module for each leaf module. Look up using the full
+  // type name, not the result of |moduleType| because the '\' is used during lookup.
+  const auto* mapping = findMappingForModuleType(cell.type.str(), root_);
   if (mapping) addMappedModule(cell, *mapping);
   else addUnmappedModule(cell);
 }
@@ -203,6 +204,10 @@ void Mapper::addModule(const Yosys::Module& module) {
   const std::string module_name = moduleName(module);
   printf("Adding module connections for '%s'\n", module_name.c_str());
   schematic_.addModuleConnectionsToSheet(module_name, module.connections());
+}
+
+bool Mapper::isMappedModule(const Yosys::RTLIL::Module& module) const {
+  return findMappingForModuleType(module.name.str(), root_) != nullptr;
 }
 
 }  // memecad
