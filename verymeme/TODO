@@ -1,10 +1,6 @@
 ### TODO soon
-- Finish chip74161
-- Build timer
 - Implement EEPROM hexfile load.
-- Have SCHEMATIC variable automatically defined. Verilator tests should run
-  with both on and off.
-- Add verilator test for shifter
+- Add verilator test for shifter, chips, timer
 
 ### TODO later
 - Move kicadtools into verymeme - direct generation

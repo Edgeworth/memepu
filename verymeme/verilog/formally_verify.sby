@@ -8,6 +8,7 @@ smtbmc --progress
 
 [tasks]
 buffer_mux
+chip74LVC162244
 chip7400
 chip7404
 chip7408
@@ -16,10 +17,11 @@ chip7486
 chip74161
 chip74299
 chip7416374
-chip74LVC162244
+kpu
 mlu
 mlu_lookahead
 mlu_slice
+register32
 shifter
 sram
 sram17x8
@@ -29,6 +31,8 @@ timer
 buffer_mux: read -formal -D CONTRACT=assume buffer_mux.v
 buffer_mux: read -formal -D CONTRACT=assert chip74LVC162244.v
 buffer_mux: prep -top buffer_mux
+chip74LVC162244: read -formal -D CONTRACT=assume chip74LVC162244.v
+chip74LVC162244: prep -top chip74LVC162244
 chip7400: read -formal -D CONTRACT=assume chip7400.v
 chip7400: prep -top chip7400
 chip7404: read -formal -D CONTRACT=assume chip7404.v
@@ -45,8 +49,9 @@ chip74299: read -formal -D CONTRACT=assume chip74299.v
 chip74299: prep -top chip74299
 chip7416374: read -formal -D CONTRACT=assume chip7416374.v
 chip7416374: prep -top chip7416374
-chip74LVC162244: read -formal -D CONTRACT=assume chip74LVC162244.v
-chip74LVC162244: prep -top chip74LVC162244
+kpu: read -formal -D CONTRACT=assume kpu.v
+kpu: read -formal -D CONTRACT=assert chip7408.v chip74161.v chip7416374.v mlu_slice.v mlu_lookahead.v register32.v sram.v timer.v
+kpu: prep -top kpu
 mlu: read -formal -D CONTRACT=assume mlu.v
 mlu: read -formal -D CONTRACT=assert mlu_slice.v mlu_lookahead.v sram.v chip7408.v
 mlu: prep -top mlu
@@ -56,6 +61,9 @@ mlu_lookahead: prep -top mlu_lookahead
 mlu_slice: read -formal -D CONTRACT=assume mlu_slice.v
 mlu_slice: read -formal -D CONTRACT=assert sram.v
 mlu_slice: prep -top mlu_slice
+register32: read -formal -D CONTRACT=assume register32.v
+register32: read -formal -D CONTRACT=assert chip7416374.v
+register32: prep -top register32
 shifter: read -formal -D CONTRACT=assume shifter.v
 shifter: read -formal -D CONTRACT=assert buffer_mux.v chip7404.v chip7408.v chip74LVC162244.v
 shifter: prep -top shifter
@@ -69,6 +77,7 @@ timer: prep -top timer
 
 [files]
 buffer_mux.v
+chip74LVC162244.v
 chip7400.v
 chip7404.v
 chip7408.v
@@ -77,10 +86,11 @@ chip7486.v
 chip74161.v
 chip74299.v
 chip7416374.v
-chip74LVC162244.v
+kpu.v
 mlu.v
 mlu_lookahead.v
 mlu_slice.v
+register32.v
 shifter.v
 sram.v
 sram17x8.v
