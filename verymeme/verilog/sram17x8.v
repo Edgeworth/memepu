@@ -7,7 +7,7 @@ module sram17x8(
   input wire [7:0] IN_DATA,
   output logic [7:0] OUT_DATA
 );
-  parameter INITIAL = "alu_lookahead.hex";  // TODO remove.
+  parameter INITIAL = "mlu_lookahead.hex";  // TODO remove.
   logic [7:0] mem [(1 << 17)-1:0];
 
   assign OUT_DATA = N_OE == 0 ? mem[ADDR]:8'bZ;

@@ -1,7 +1,7 @@
 #ifndef VERYMEME_FIRMWARE_CONSTANTS_H
 #define VERYMEME_FIRMWARE_CONSTANTS_H
 
-enum Alu {
+enum Mlu {
   ADD, SUB, AND, OR, XOR, NOT, NOP0, NOP1
 };
 

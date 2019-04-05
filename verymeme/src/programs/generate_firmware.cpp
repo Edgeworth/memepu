@@ -19,27 +19,27 @@ uint8_t generateGeneralOutput(uint32_t result) {
   return (result & 0x0F) | ((result & 0x0F) == 0 ? 0b0100'0000 : 0);
 }
 
-std::vector<uint8_t> generateAluSliceFirmware() {
+std::vector<uint8_t> generateMluSliceFirmware() {
   std::vector<uint8_t> data(1 << 12);
   for (uint32_t a = 0; a < (1 << 4); ++a) {
     for (uint32_t b = 0; b < (1 << 4); ++b) {
       for (uint32_t c_in = 0; c_in < 2; ++c_in) {
         uint32_t addr = a | (b << 4) | (c_in << 8);
-        data[(Alu::ADD << 9) | addr] = generateSumOutput(a + b, c_in);
-        data[(Alu::SUB << 9) | addr] = generateSumOutput(a + ((~b) & 0x0F), c_in);
-        data[(Alu::AND << 9) | addr] = generateGeneralOutput(a & b);
-        data[(Alu::OR << 9) | addr] = generateGeneralOutput(a | b);
-        data[(Alu::XOR << 9) | addr] = generateGeneralOutput(a ^ b);
-        data[(Alu::NOT << 9) | addr] = generateGeneralOutput(~a);
-        data[(Alu::NOP0 << 9) | addr] = generateGeneralOutput(0);
-        data[(Alu::NOP1 << 9) | addr] = generateGeneralOutput(0);
+        data[(Mlu::ADD << 9) | addr] = generateSumOutput(a + b, c_in);
+        data[(Mlu::SUB << 9) | addr] = generateSumOutput(a + ((~b) & 0x0F), c_in);
+        data[(Mlu::AND << 9) | addr] = generateGeneralOutput(a & b);
+        data[(Mlu::OR << 9) | addr] = generateGeneralOutput(a | b);
+        data[(Mlu::XOR << 9) | addr] = generateGeneralOutput(a ^ b);
+        data[(Mlu::NOT << 9) | addr] = generateGeneralOutput(~a);
+        data[(Mlu::NOP0 << 9) | addr] = generateGeneralOutput(0);
+        data[(Mlu::NOP1 << 9) | addr] = generateGeneralOutput(0);
       }
     }
   }
   return data;
 }
 
-std::vector<uint8_t> generateAluLookaheadFirmware() {
+std::vector<uint8_t> generateMluLookaheadFirmware() {
   std::vector<uint8_t> data(1 << 17);
   for (uint32_t p = 0; p < (1 << 8); ++p) {
     for (uint32_t g = 0; g < (1 << 8); ++g) {
@@ -99,6 +99,6 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  writeFile(output + "/alu_slice.hex", convertToHex(generateAluSliceFirmware()), false);
-  writeFile(output + "/alu_lookahead.hex", convertToHex(generateAluLookaheadFirmware()), false);
+  writeFile(output + "/mlu_slice.hex", convertToHex(generateMluSliceFirmware()), false);
+  writeFile(output + "/mlu_lookahead.hex", convertToHex(generateMluLookaheadFirmware()), false);
 }

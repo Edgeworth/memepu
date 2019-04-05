@@ -1,6 +1,6 @@
 `include "common.v"
 /* verilator lint_off UNOPTFLAT */
-module alu(
+module mlu(
   input wire [31:0] A,
   input wire [31:0] B,
   input wire [2:0] OP,
@@ -20,12 +20,12 @@ module alu(
   generate
     genvar i;
     for (i = 0; i < 8; i = i+1) begin
-      alu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP),
+      mlu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP),
         .C_IN(carrys[i]),
         .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}));
     end
   endgenerate
-  alu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys[8:1]));
+  mlu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys[8:1]));
 
   wire [3:0] z_level0;
   wire [1:0] z_level1;
@@ -37,18 +37,18 @@ module alu(
   `ifdef FORMAL
   always_comb begin
     case (OP)
-      common::ALU_ADD: begin assert (OUT == A+B+{31'b0, C_IN}); end
-      common::ALU_SUB: begin
+      common::MLU_ADD: begin assert (OUT == A+B+{31'b0, C_IN}); end
+      common::MLU_SUB: begin
         // Implementation must set carry when doing subtraction.
         `CONTRACT (C_IN == 1'b1);
         assert (OUT == (A-B));
       end
-      common::ALU_AND: begin assert (OUT == (A & B)); end
-      common::ALU_OR: begin assert (OUT == (A | B)); end
-      common::ALU_XOR: begin assert (OUT == (A ^ B)); end
-      common::ALU_NOT: begin assert (OUT == ~A); end
-      common::ALU_NOP0: begin assert (OUT == 0); end
-      common::ALU_NOP1: begin assert (OUT == 0); end
+      common::MLU_AND: begin assert (OUT == (A & B)); end
+      common::MLU_OR: begin assert (OUT == (A | B)); end
+      common::MLU_XOR: begin assert (OUT == (A ^ B)); end
+      common::MLU_NOT: begin assert (OUT == ~A); end
+      common::MLU_NOP0: begin assert (OUT == 0); end
+      common::MLU_NOP1: begin assert (OUT == 0); end
       default: begin assert (0); end
     endcase
     assert (Z == (OUT == 0));
