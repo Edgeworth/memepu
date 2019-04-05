@@ -15,9 +15,9 @@ add_library(verilator ${VERILATOR_SOURCES})
 
 # Run verilator on verilog files.
 set(VERILATOR_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/verilator)
-set(VERILOG_MODULES mlu.v mlu_slice.v buffer_mux.v chip7400.v chip7404.v chip7408.v chip7432.v
-    chip7486.v chip74161.v chip74299.v chip7416374.v sram17x8.v chip74LVC162244.v shifter.v
-    timer.v)
+set(VERILOG_MODULES buffer_mux.v  chip74LVC162244.v chip7400.v chip7404.v chip7408.v chip7432.v
+    chip7486.v chip74161.v chip74299.v chip7416374.v kpu.v mlu.v mlu_lookahead.v
+    mlu_slice.v register32.v shifter.v sram.v sram17x8.v timer.v)
 
 function(add_verilog_module VERILOG_MODULE)
   set(VERILOG_MODULE_SOURCES ${VERILOG_MODULE})
