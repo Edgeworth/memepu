@@ -38,3 +38,6 @@ if args.test:
     print("Running test with schematic=%s" % str(schematic))
     path = create_build_config(schematic=schematic)
     run_tests(path)
+  os.chdir('verilog')
+  run_command('sby -t formally_verify.sby')
+  os.chdir('..')
