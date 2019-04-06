@@ -1,5 +1,21 @@
 [
   {
+    "verilog_name": "chip74LVC162244",
+    "kicad_name": "74LVC162244",
+    "verilog_to_kicad_map": {
+      "0": "GND[7:0]",
+      "1": "VCC[3:0]",
+      "N_OE": [
+        "~OE0",
+        "~OE1",
+        "~OE2",
+        "~OE3"
+      ],
+      "IN": "A[15:0]",
+      "OUT": "Y[15:0]"
+    }
+  },
+  {
     "verilog_name": "chip7400",
     "kicad_name": "74HC00",
     "verilog_to_kicad_map": {
@@ -84,22 +100,6 @@
       "IO": "IO",
       "Q0": "Q0",
       "Q7": "Q7"
-    }
-  },
-  {
-    "verilog_name": "chip74LVC162244",
-    "kicad_name": "74LVC162244",
-    "verilog_to_kicad_map": {
-      "0": "GND[7:0]",
-      "1": "VCC[3:0]",
-      "N_OE": [
-        "~OE0",
-        "~OE1",
-        "~OE2",
-        "~OE3"
-      ],
-      "IN": "A[15:0]",
-      "OUT": "Y[15:0]"
     }
   },
   {

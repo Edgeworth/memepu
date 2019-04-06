@@ -60,6 +60,14 @@
 		set up alu
 		set up instruction compression data
 
+Input plane - read into these from the bus:
+	NONE, REG, TMP0, TMP1
+
+Output plane - write these out onto the bus:
+	NONE, MLU, SHIFTER, TMP0, TMP1
+
+Register plane - 5 bit:
+	which register to select in the register file
 
 Microcode snippets:
 Fetch:
