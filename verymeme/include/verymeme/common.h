@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <boost/stacktrace/stacktrace.hpp>
+#include <boost/lexical_cast.hpp>
 
 #define verify_expr(expr, ...)                        \
   do {                                                \
@@ -35,6 +36,9 @@ std::vector<T> reverse(std::vector<T>&& vec) {
     reversed.emplace_back(std::move(vec[i]));
   return reversed;
 }
+
+template<typename T>
+std::string tos(const T& val) { return boost::lexical_cast<std::string>(val); }
 
 struct Point {
   int x = 0;

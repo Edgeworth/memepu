@@ -45,7 +45,8 @@ add_subdirectory(verilog)
 # Add libraries.
 add_library(verymeme_library
     src/verymeme/common.cpp include/verymeme/common.h
-    include/verymeme/firmware_constants.h)
+    include/verymeme/firmware_constants.h
+    src/verymeme/parser.cpp include/verymeme/parser.h)
 add_library(memecad_library
     src/memecad/parser.cpp include/memecad/parser.h
     src/memecad/types.cpp include/memecad/types.h
@@ -53,7 +54,9 @@ add_library(memecad_library
     src/memecad/yosys_module.cpp include/memecad/yosys_module.h
     src/memecad/util.cpp include/memecad/util.h
     src/memecad/schematic.cpp include/memecad/schematic.h)
-add_library(memeroute_library src/memeroute/parser.cpp include/memeroute/parser.h)
+add_library(memeroute_library
+    src/memeroute/parser.cpp include/memeroute/parser.h
+    src/memeroute/types.cpp include/memeroute/types.h)
 
 # Add executables
 add_executable(memecad src/programs/memecad.cpp)
@@ -73,10 +76,13 @@ set_property(TARGET verymeme_library PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_compile_options(memecad_library PUBLIC ${YOSYS_OPTIONS})
 target_link_options(memecad_library PUBLIC ${YOSYS_LDFLAGS})
 
+# Memeroute library configuration:
+target_include_directories(memeroute_library PUBLIC ${SFML_INCLUDE_DIR})
+
 # Link libraries.
 target_link_libraries(verymeme_library PUBLIC ${Boost_LIBRARIES})
 target_link_libraries(memecad_library PUBLIC ${YOSYS_LIBRARIES} verymeme_library)
-target_link_libraries(memeroute_library PUBLIC verymeme_library)
+target_link_libraries(memeroute_library PUBLIC verymeme_library ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 # Link executables.
 target_link_libraries(tests PRIVATE gtest verymeme_library memecad_library verilated_library)
