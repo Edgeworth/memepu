@@ -1,6 +1,7 @@
 #include <array>
 #include <numeric>
 
+#include "gtest/gtest.h"
 #include "verymeme/common.h"
 #include "Vchip7400.h"
 #include "Vchip7404.h"

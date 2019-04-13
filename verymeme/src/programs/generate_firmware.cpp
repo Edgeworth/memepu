@@ -1,5 +1,6 @@
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <iomanip>
 
 #include "verymeme/common.h"
 #include "verymeme/firmware_constants.h"

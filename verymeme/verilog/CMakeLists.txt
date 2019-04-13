@@ -1,6 +1,6 @@
 find_package(Verilator REQUIRED)
 
-# Build verilator module
+# Find verilator
 find_path(VERILATOR_PATH verilated.h
     PATH_SUFFIXES verilator/include
     HINTS ${VERILATOR_INCLUDE_DIRS})
@@ -8,10 +8,6 @@ find_path(VERILATOR_PATH verilated.h
 if ("${VERILATOR_PATH}" STREQUAL "VERILATOR_PATH-NOTFOUND")
   message(FATAL_ERROR "cannot find verilator")
 endif ()
-
-set(VERILATOR_SOURCES verilated.cpp verilated.h verilated_save.cpp verilated_save.h)
-list(TRANSFORM VERILATOR_SOURCES PREPEND ${VERILATOR_PATH}/)
-add_library(verilator ${VERILATOR_SOURCES})
 
 # Run verilator on verilog files.
 set(VERILATOR_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/verilator)
@@ -39,6 +35,8 @@ foreach (VERILOG_MODULE ${VERILOG_MODULES})
   add_verilog_module(${VERILOG_MODULE})
 endforeach ()
 
-add_library(verymeme_verilated ${ALL_VERILATOR_OUTPUTS})
-target_include_directories(verymeme_verilated PUBLIC ${VERILATOR_INCLUDE_DIRS} ${VERILATOR_OUTPUT_DIR})
-target_link_libraries(verymeme_verilated PUBLIC verilator)
+# Add verilator library.
+set(VERILATOR_COMMON_SOURCES verilated.cpp verilated.h verilated_save.cpp verilated_save.h)
+list(TRANSFORM VERILATOR_COMMON_SOURCES PREPEND ${VERILATOR_PATH}/)
+add_library(verilated_library ${VERILATOR_COMMON_SOURCES} ${ALL_VERILATOR_OUTPUTS})
+target_include_directories(verilated_library PUBLIC ${VERILATOR_INCLUDE_DIRS} ${VERILATOR_OUTPUT_DIR})

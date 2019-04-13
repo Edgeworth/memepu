@@ -8,8 +8,6 @@
 #include <sstream>
 #include <boost/stacktrace/stacktrace.hpp>
 
-#include "gtest/gtest.h"
-
 #define verify_expr(expr, ...)                        \
   do {                                                \
     if (!(expr)) {                                    \

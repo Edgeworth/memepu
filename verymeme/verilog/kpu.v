@@ -5,7 +5,7 @@ module kpu(
 //  input wire N_CLK,
   input wire N_RST
 );
-  // Bus.
+/*  // Bus.
   wire [31:0] bus;
 
   // Scratch registers - invisible to running code.
@@ -64,5 +64,5 @@ module kpu(
   always_comb begin
     assert (8'b0+mlu_n_oe+shifter_n_oe+reg_n_oe <= 1);  // No conflict on busses.
   end
-  `endif
+  `endif*/
 endmodule
