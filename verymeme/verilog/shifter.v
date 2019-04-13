@@ -69,7 +69,7 @@ module shifter(
     `CONTRACT (!(LEFT && ARITH));  // Left arithmetic shift does not make sense.
     // Should rotate left.
     if (LEFT) assert (OUT == (IN << SHFT));
-    else if (ARITH) assert (OUT == ($signed(IN) >>> SHFT));
+    else if (ARITH) assert ($signed(OUT) == ($signed(IN) >>> SHFT));
     else assert (OUT == (IN >> SHFT));
   end
   `endif

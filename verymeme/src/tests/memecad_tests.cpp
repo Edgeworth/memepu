@@ -1,4 +1,6 @@
 #include <regex>
+
+#include "gtest/gtest.h"
 #include "memecad/yosys_module.h"
 #include "memecad/parser.h"
 

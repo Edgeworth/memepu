@@ -1,5 +1,7 @@
 #include "verymeme/common.h"
 
+#include "gtest/gtest.h"
+
 namespace {
 
 using CommonTest = testing::Test;
