@@ -1,4 +1,5 @@
 #include "memecad/parser.h"
+#include "verymeme/parser.h"
 
 #include <regex>
 #include <boost/lexical_cast.hpp>
@@ -7,24 +8,8 @@ namespace memecad {
 
 namespace {
 
-std::vector<std::string> tokenize(const std::string& data) {
-  // Token is either: Empty quotes, quoted string, non space/tab/newline string, newline, tab.
-  const std::regex split(R"((\".*?[^\\]\")|(\"\")|([^ \t\n]+)|(\n)|(\t))");
-  std::vector<std::string> toks;
-  for (auto i = std::sregex_iterator(data.begin(), data.end(), split);
-       i != std::sregex_iterator(); ++i) {
-    const std::smatch& sm = *i;
-    toks.push_back(sm[0].str());
-  }
-  return toks;
-}
-
-std::string trim(const std::string& data, const std::string& c) {
-  const std::regex trim("^" + c + "*((\n|.)*?)" + c + "*$");
-  std::smatch sm;
-  verify_expr(std::regex_match(data, sm, trim), "BUG");
-  return sm[1].str();
-}
+// Token is either: Empty quotes, quoted string, non space/tab/newline string, newline, tab.
+const std::regex TOKEN(R"((\".*?[^\\]\")|(\"\")|([^ \t\n]+)|(\n)|(\t))");
 
 int directionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   const bool is_hierarchical_or_global =
@@ -48,46 +33,46 @@ Direction labelOrientationToDirection(int orientation, Sheet::Label::Type label_
 
 class KicadParser {
 public:
-  explicit KicadParser(const std::string& data) : toks_(tokenize(data)) {}
+  explicit KicadParser(const std::string& data) : p_(data, TOKEN) {}
 
   Sheet parseSheet() {
     Sheet sheet = {};
-    sheet.header1 = getLines(6);
-    expect({"Sheet", "1"});
-    sheet.id = next<int>();
-    expect({"\n", "Title"});
-    sheet.title = trim(next(), "\"");
-    expect({"\n"});
-    sheet.header2 = getLines(8);
+    sheet.header1 = p_.getLines(6);
+    p_.expect({"Sheet", "1"});
+    sheet.id = p_.next<int>();
+    p_.expect({"\n", "Title"});
+    sheet.title = trim(p_.next(), "\"");
+    p_.expect({"\n"});
+    sheet.header2 = p_.getLines(8);
     while (true) {
-      std::string tok = next();
+      std::string tok = p_.next();
       if (tok == "$EndSCHEMATC") break;
       else if (tok == "$Comp") sheet.components.emplace_back(parseComponent());
       else if (tok == "Text") {
         auto& label = sheet.labels.emplace_back();
-        label.type = next<Sheet::Label::Type>();
-        label.p = {next<int>(), next<int>()};
-        label.direction = labelOrientationToDirection(next<int>(), label.type);
-        label.dimension = next<int>();
+        label.type = p_.next<Sheet::Label::Type>();
+        label.p = {p_.next<int>(), p_.next<int>()};
+        label.direction = labelOrientationToDirection(p_.next<int>(), label.type);
+        label.dimension = p_.next<int>();
         if (label.type == Sheet::Label::Type::HIERARCHICAL ||
             label.type == Sheet::Label::Type::GLOBAL)
-          label.net_type = next<Sheet::Label::NetType>();
-        label.italic = next() == "Italic";
-        label.bold = next() != "0";
-        expect({"\n"});
-        label.text = trim(getLines(1), "\\n");
+          label.net_type = p_.next<Sheet::Label::NetType>();
+        label.italic = p_.next() == "Italic";
+        label.bold = p_.next() != "0";
+        p_.expect({"\n"});
+        label.text = trim(p_.getLines(1), "\\n");
       } else if (tok == "NoConn") {
         auto& label = sheet.labels.emplace_back();
         label.type = Sheet::Label::Type::NOCONNECT;
-        expect({"~"});
-        label.p = {next<int>(), next<int>()};
-        expect({"\n"});
+        p_.expect({"~"});
+        label.p = {p_.next<int>(), p_.next<int>()};
+        p_.expect({"\n"});
       } else if (tok == "Wire") {
-        expect({"Wire", "Line", "\n", "\t"});
+        p_.expect({"Wire", "Line", "\n", "\t"});
         auto& wire = sheet.wires.emplace_back();
-        wire.start = {next<int>(), next<int>()};
-        wire.end = {next<int>(), next<int>()};
-        expect({"\n"});
+        wire.start = {p_.next<int>(), p_.next<int>()};
+        wire.end = {p_.next<int>(), p_.next<int>()};
+        p_.expect({"\n"});
       } else if (tok == "$Sheet") {
         sheet.refs.emplace_back(parseSheetRef());
       } else {
@@ -100,50 +85,49 @@ public:
   Lib parseLibrary(const std::string& name) {
     Lib lib = {};
     lib.name = name;
-    while (idx_ < int(toks_.size())) {
-      std::string tok = peek();
+    while (p_.hasTokens()) {
+      std::string tok = p_.peek();
       if (tok == "DEF") {
         lib.components.push_back(parseLibraryComponent());
       } else {
-        getLines(1);  // Skip
+        p_.getLines(1);  // Skip
       }
     }
     return lib;
   }
 
 private:
-  std::vector<std::string> toks_;
-  int idx_ = 0;
+  Parser p_;
 
   Sheet::Component parseComponent() {
     Sheet::Component comp;
-    expect({"\n", "L"});
-    comp.name = next();
-    comp.ref = next();
-    expect({"\n", "U"});
-    comp.subcomponent = next<int>() - 1;
-    expect({"1"});
-    comp.timestamp = next();
-    expect({"\n", "P"});
-    comp.p = {next<int>(), next<int>()};
-    expect({"\n"});
+    p_.expect({"\n", "L"});
+    comp.name = p_.next();
+    comp.ref = p_.next();
+    p_.expect({"\n", "U"});
+    comp.subcomponent = p_.next<int>() - 1;
+    p_.expect({"1"});
+    comp.timestamp = p_.next();
+    p_.expect({"\n", "P"});
+    comp.p = {p_.next<int>(), p_.next<int>()};
+    p_.expect({"\n"});
     while (true) {
-      std::string tok = peek();
+      std::string tok = p_.peek();
       if (tok == "F") {
         auto& field = comp.fields.emplace_back();
-        expect({"F"});
-        field.num = next<int>();
-        field.text = trim(next(), "\"");
-        field.orientation = next<Orientation>();
-        field.p = {next<int>(), next<int>()};
-        field.size = next<int>();
-        field.flags = next();
-        field.justification = next();
-        field.style = next();
-        expect({"\n"});
+        p_.expect({"F"});
+        field.num = p_.next<int>();
+        field.text = trim(p_.next(), "\"");
+        field.orientation = p_.next<Orientation>();
+        field.p = {p_.next<int>(), p_.next<int>()};
+        field.size = p_.next<int>();
+        field.flags = p_.next();
+        field.justification = p_.next();
+        field.style = p_.next();
+        p_.expect({"\n"});
       } else if (tok == "\t") {
-        comp.footer = getLines(2);
-        expect({"$EndComp", "\n"});
+        comp.footer = p_.getLines(2);
+        p_.expect({"$EndComp", "\n"});
         break;
       } else {
         verify_expr(false, "unexpected token '%s'", tok.c_str());
@@ -154,127 +138,84 @@ private:
 
   Sheet::Ref parseSheetRef() {
     Sheet::Ref ref;
-    expect({"\n", "S"});
-    ref.p = {next<int>(), next<int>()};
-    ref.width = next<int>();
-    ref.height = next<int>();
-    expect({"\n", "U"});
-    ref.timestamp = next();
-    expect({"\n", "F0"});
-    ref.name = trim(next(), "\"");
-    next();  // Name dimension.
-    expect({"\n", "F1"});
-    ref.filename = trim(next(), "\"");
-    next();  // Filename dimension.
-    expect({"\n"});
+    p_.expect({"\n", "S"});
+    ref.p = {p_.next<int>(), p_.next<int>()};
+    ref.width = p_.next<int>();
+    ref.height = p_.next<int>();
+    p_.expect({"\n", "U"});
+    ref.timestamp = p_.next();
+    p_.expect({"\n", "F0"});
+    ref.name = trim(p_.next(), "\"");
+    p_.next();  // Name dimension.
+    p_.expect({"\n", "F1"});
+    ref.filename = trim(p_.next(), "\"");
+    p_.next();  // Filename dimension.
+    p_.expect({"\n"});
     while (true) {
-      std::string tok = next();
+      std::string tok = p_.next();
       if (tok == "$EndSheet") break;
 
       Sheet::RefField& field = ref.fields.emplace_back();
       field.num = boost::lexical_cast<int>(tok.c_str() + 1);
-      field.text = trim(next(), "\"");
-      field.type = next<PinType>();
-      field.side = next<Direction>();
-      field.p = {next<int>(), next<int>()};
-      next();  // Label dimension.
-      expect({"\n"});
+      field.text = trim(p_.next(), "\"");
+      field.type = p_.next<PinType>();
+      field.side = p_.next<Direction>();
+      field.p = {p_.next<int>(), p_.next<int>()};
+      p_.next();  // Label dimension.
+      p_.expect({"\n"});
     }
-    expect({"\n"});
+    p_.expect({"\n"});
     return ref;
-  }
-
-  template<typename T = std::string>
-  T peek() {
-    verify_expr(idx_ < int(toks_.size()), "expecting token");
-    return boost::lexical_cast<T>(toks_[idx_]);
-  }
-
-  template<typename T = std::string>
-  T next() {
-    T value = peek<T>();
-    idx_++;
-    return value;
-  }
-
-  void expect(const std::vector<std::string>& toks) {
-    for (const std::string& tok : toks) {
-      const std::string next_tok = next();
-      verify_expr(tok == next_tok, "expected '%s', got '%s'", tok.c_str(),
-          next_tok.c_str());
-    }
-  }
-
-  std::string getSubstr(int st, int en) {
-    std::string substr;
-    for (int i = st; i < en; ++i) {
-      // Only separate by a space if there's at least one character accumulated, and it's:
-      // 1. not already terminated with a newline (prevent space on next line)
-      // 2. not about to be terminated with a newline (prevent space before newline)
-      // 3. same two rules as above for tab.
-      if (!substr.empty() && substr.back() != '\n' && toks_[i] != "\n" &&
-          substr.back() != '\t' && toks_[i] != "\t")
-        substr += ' ';
-      substr += toks_[i];
-    }
-    return substr;
-  }
-
-  std::string getLines(int num_lines = 1) {
-    const int start_idx = idx_;
-    while (num_lines > 0)
-      if (next() == "\n") num_lines--;
-    return getSubstr(start_idx, idx_);
   }
 
   Lib::Component parseLibraryComponent() {
     Lib::Component component = {};
-    expect({"DEF"});
-    component.names.push_back(next());
-    component.ref = next();
-    expect({"0"});  // Unused.
-    next();
-    next();
-    next();  // Text offset, draw pin number, draw pin name.
-    component.unit_count = next<int>();
-    component.unit_swappable = next<Lib::Component::UnitSwappable>();
-    getLines(1);  // Ignore rest.
+    p_.expect({"DEF"});
+    component.names.push_back(p_.next());
+    component.ref = p_.next();
+    p_.expect({"0"});  // Unused.
+    p_.next();
+    p_.next();
+    p_.next();  // Text offset, draw pin number, draw pin name.
+    component.unit_count = p_.next<int>();
+    component.unit_swappable = p_.next<Lib::Component::UnitSwappable>();
+    p_.getLines(1);  // Ignore rest.
     while (true) {
-      std::string tok = next();
+      std::string tok = p_.next();
       if (tok == "ENDDEF") break;
       else if (tok == "F0" || tok == "F1") {
         // Record reference and value fields.
         auto& field = component.fields.emplace_back();
         field.num = boost::lexical_cast<int>(tok.substr(1));
-        field.text = trim(next(), "\"");
-        field.p = {next<int>(), -next<int>()}; // Seems like y-axis is inverted for libraries.
-        field.text_size = next<int>();
-        field.text_orientation = next<Orientation>();
-        next();  // Skip visibility.
-        field.horizontal_justification = next();
-        field.vertical_justification = next();
-        expect({"\n"});
+        field.text = trim(p_.next(), "\"");
+        field.p = {p_.next<int>(), -p_.next<int>()}; // Seems like y-axis is inverted for libraries.
+        field.text_size = p_.next<int>();
+        field.text_orientation = p_.next<Orientation>();
+        p_.next();  // Skip visibility.
+        field.horizontal_justification = p_.next();
+        field.vertical_justification = p_.next();
+        p_.expect({"\n"});
       } else if (tok == "ALIAS") {
-        for (std::string name = next(); name != "\n"; name = next())
+        for (std::string name = p_.next(); name != "\n"; name = p_.next())
           component.names.push_back(name);
       } else if (tok == "X") {
         auto& pin = component.pins.emplace_back();
-        pin.name = next();
-        pin.id = next();
-        pin.p = {next<int>(), -next<int>()}; // Seems like y-axis is inverted for libraries.
-        next(); // Length
-        pin.direction = next<Direction>();
-        next();
-        next();  // Name text size, num text size.
-        pin.subcomponent = next<int>() - 1;
+        pin.name = p_.next();
+        pin.id = p_.next();
+        pin.p = {p_.next<int>(), -p_.next<int>()}; // Seems like y-axis is inverted for libraries.
+        p_.next(); // Length
+        pin.direction = p_.next<Direction>();
+        p_.next();
+        p_.next();  // Name text size, num text size.
+        pin.subcomponent = p_.next<int>() - 1;
         // TODO: Pins common to all subcomponents (==0) are just put in the first one for now.
         if (pin.subcomponent == -1) pin.subcomponent = 0;
-        next();  // convert
-        pin.type = next<PinType>();
-        getLines(1); // Ignore rest.
+        p_.next();  // convert
+        pin.type = p_.next<PinType>();
+        p_.getLines(1); // Ignore rest.
       }
     }
-    expect({"\n"});
+    p_.expect({"\n"});
     return component;
   }
 };
@@ -340,8 +281,6 @@ public:
   }
 
 private:
-  template<typename T>
-  std::string tos(const T& val) { return boost::lexical_cast<std::string>(val); }
 };
 
 }  // namespace

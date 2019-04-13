@@ -1,2 +1,1 @@
-
-#include "../../include/memeroute/parser.h"
+#include "memeroute/parser.h"

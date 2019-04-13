@@ -223,8 +223,8 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
       labels.push_back(label0);
       labels.push_back(label1);
       printf("  Connecting (%s of type %s) => (%s of type %s)\n",
-          label0.text.c_str(), boost::lexical_cast<std::string>(label0.type).c_str(),
-          label1.text.c_str(), boost::lexical_cast<std::string>(label1.type).c_str());
+          label0.text.c_str(), tos(label0.type).c_str(),
+          label1.text.c_str(), tos(label1.type).c_str());
     }
     if (labels.empty()) continue;
 
