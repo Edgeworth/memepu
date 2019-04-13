@@ -13,7 +13,7 @@ constexpr const char* PASS_NAME = "memecad";
 std::vector<Lib> parseLibraries(const std::vector<std::string>& filenames) {
   std::vector<Lib> libs;
   for (const auto& filename : filenames)
-    libs.push_back(parseLibrary(filename));
+    libs.push_back(parseLibrary(readFile(filename), stem(filename)));
   return libs;
 }
 
@@ -58,8 +58,7 @@ TestPass::TestPass() : Pass(PASS_NAME) {}
 
 void TestPass::setup(const std::string& memecad_map_filename,
     const std::vector<std::string>& kicad_library_filenames) {
-  mapper_ = Mapper(readFile(memecad_map_filename, false /* binary */),
-      parseLibraries(kicad_library_filenames));
+  mapper_ = Mapper(readFile(memecad_map_filename), parseLibraries(kicad_library_filenames));
 }
 
 

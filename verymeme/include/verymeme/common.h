@@ -22,8 +22,8 @@
     }                                                 \
   } while (0)
 
-std::string readFile(const std::string& filename, bool binary);
-void writeFile(const std::string& filename, const std::string& data, bool binary);
+std::string readFile(const std::string& filename, bool binary = false);
+void writeFile(const std::string& filename, const std::string& data, bool binary = false);
 std::string basename(const std::string& filename);
 std::string stem(const std::string& filename);
 void checked_chdir(const std::string& path);

@@ -100,6 +100,6 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  writeFile(output + "/mlu_slice.hex", convertToHex(generateMluSliceFirmware()), false);
-  writeFile(output + "/mlu_lookahead.hex", convertToHex(generateMluLookaheadFirmware()), false);
+  writeFile(output + "/mlu_slice.hex", convertToHex(generateMluSliceFirmware()));
+  writeFile(output + "/mlu_lookahead.hex", convertToHex(generateMluLookaheadFirmware()));
 }

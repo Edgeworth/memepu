@@ -3,6 +3,8 @@
 
 #include <regex>
 #include <boost/lexical_cast.hpp>
+#include <memeroute/parser.h>
+
 
 namespace memecad {
 
@@ -293,25 +295,17 @@ Sheet parseSheet(const std::string& data) {
   }
 }
 
-std::string writeSheet(const Sheet& sheet) {
-  try {
-    return KicadWriter().writeSheet(sheet);
-  } catch (const std::exception& e) {
-    verify_expr(false, "failed exception: %s", e.what());
-  }
-}
-
-Lib parseLibrary(const std::string& filename) {
-  try {
-    return parseLibrary(readFile(filename, false /* binary */), stem(filename));
-  } catch (const std::exception& e) {
-    verify_expr(false, "failed exception: %s", e.what());
-  }
-}
-
 Lib parseLibrary(const std::string& data, const std::string& name) {
   try {
     return KicadParser(data).parseLibrary(name);
+  } catch (const std::exception& e) {
+    verify_expr(false, "failed exception: %s", e.what());
+  }
+}
+
+std::string writeSheet(const Sheet& sheet) {
+  try {
+    return KicadWriter().writeSheet(sheet);
   } catch (const std::exception& e) {
     verify_expr(false, "failed exception: %s", e.what());
   }
