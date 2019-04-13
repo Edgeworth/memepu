@@ -14,8 +14,7 @@ std::string removeWhitespace(const std::string& input) {
 using SchematicTest = testing::Test;
 
 TEST_F(SchematicTest, Parsing0) {
-  std::string full_adder_original = readFile("test_data/parsing0/full_adder.sch",
-      false /* binary */);
+  std::string full_adder_original = readFile("test_data/parsing0/full_adder.sch");
   memecad::Sheet sheet = memecad::parseSheet(full_adder_original);
   std::string full_adder_output = memecad::writeSheet(sheet);
   EXPECT_EQ(removeWhitespace(full_adder_original), full_adder_output);
@@ -30,8 +29,7 @@ TEST_F(SchematicTest, Hierarchical0) {
       {"test_data/common/74xx.lib"});
   EXPECT_EQ(3u, files.size());
   for (const auto& file : files) {
-    std::string golden = readFile("test_data/hierarchical0/output/" + file.filename,
-        false /* binary */);
+    std::string golden = readFile("test_data/hierarchical0/output/" + file.filename);
     EXPECT_EQ(golden, file.contents);
   }
 }
@@ -44,8 +42,7 @@ TEST_F(SchematicTest, Alu0) {
       {"test_data/common/74xx.lib", "test_data/common/Memory_RAM.lib"});
   EXPECT_EQ(3u, files.size());
   for (const auto& file : files) {
-    std::string golden = readFile("test_data/alu0/output/" + file.filename,
-        false /* binary */);
+    std::string golden = readFile("test_data/alu0/output/" + file.filename);
     EXPECT_EQ(golden, file.contents);
   }
 }

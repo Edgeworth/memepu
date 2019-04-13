@@ -38,6 +38,6 @@ int main(int argc, char* argv[]) {
   auto files = memecad::convertVerilogToKicadSchematics(memecad_map_filename, verilog_filenames,
       kicad_library_filenames);
   for (const auto& file : files)
-    writeFile("test/" + file.filename, file.contents, false /* binary */);
+    writeFile("test/" + file.filename, file.contents);
   printf("Finished writing %d files\n", int(files.size()));
 }
