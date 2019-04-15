@@ -12,9 +12,9 @@ public:
   Parser(const std::string& data, const std::regex& token);
 
   template<typename T = std::string>
-  T peek() {
-    verify_expr(idx_ < int(toks_.size()), "expecting token");
-    return boost::lexical_cast<T>(toks_[idx_]);
+  T peek(int ahead = 0) {
+    verify_expr(idx_ + ahead < int(toks_.size()), "expecting token");
+    return boost::lexical_cast<T>(toks_[idx_ + ahead]);
   }
 
   template<typename T = std::string>

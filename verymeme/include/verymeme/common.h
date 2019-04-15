@@ -47,6 +47,8 @@ struct Point {
   Point& operator+=(const Point& p);
   Point operator-(const Point& p) const;
   bool operator<(const Point& p) const;
+
+  std::string toString() const { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
 };
 
 std::ostream& operator<<(std::ostream& str, const Point& p);
@@ -86,6 +88,8 @@ struct Rect {
     return "{" + std::to_string(left) + ", " + std::to_string(top) + ", " + std::to_string(right) +
            ", " + std::to_string(bottom) + "}";
   }
+
+  static Rect enclosing(const Point& a, const Point& b);
 };
 
 #endif  // VERYMEME_COMMON_H
