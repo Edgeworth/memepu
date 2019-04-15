@@ -3,12 +3,147 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 
+#include "memeroute/render_shapes.h"
 #include "memeroute/parser.h"
 #include "verymeme/common.h"
 
-const sf::Color LIGHT_GREY(240, 240, 240);
-
 namespace po = boost::program_options;
+
+namespace memeroute {
+
+class DisplayList {
+public:
+  void draw(sf::RenderWindow& window) {
+    for (const auto& array : arrays_)
+      window.draw(array);
+  }
+
+  void add(const sf::VertexArray& array) {
+    arrays_.push_back(array);
+  }
+
+private:
+  std::vector<sf::VertexArray> arrays_;
+};
+
+class Renderer {
+public:
+  explicit Renderer(const Pcb& pcb) : pcb_(pcb) {}
+
+  void run() {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 4;
+    win_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 800), "memeroute",
+        sf::Style::Default, settings);
+    win_->setVerticalSyncEnabled(true);
+    win_->setFramerateLimit(60);  // TODO
+
+    addPcbToDisplayList();
+
+    sf::Vector2f mm;
+    while (win_->isOpen()) {
+      sf::Event ev{};
+      while (win_->pollEvent(ev)) {
+        switch (ev.type) {
+          case sf::Event::Closed:
+            win_->close();
+            break;
+          case sf::Event::MouseWheelScrolled: {
+            const auto& mouse = windowToWorld(ev.mouseWheelScroll);
+            const float f = ev.mouseWheelScroll.delta > 0 ? SCALE_FACTOR : 1.f / SCALE_FACTOR;
+            translation += (1.f / f - 1) * (mouse + translation);
+            scale *= f;
+            break;
+          }
+          case sf::Event::MouseButtonPressed:
+            panning_ = true;
+            pan_loc_ = windowToWorld(ev.mouseButton);
+            break;
+          case sf::Event::MouseButtonReleased:
+            panning_ = false;
+            break;
+          case sf::Event::MouseMoved:
+            if (panning_) {
+              auto mouse_loc = windowToWorld(ev.mouseMove);
+              translation += mouse_loc - pan_loc_;
+              pan_loc_ = mouse_loc;
+            }
+            mm = windowToWorld(ev.mouseMove);
+            break;
+          default:
+            break;
+        }
+      }
+
+      win_->clear(LIGHT_GREY);
+      sf::View view(sf::FloatRect(-1.f, -1.f, 2.f, 2.f));
+      view.move(-translation);
+      view.zoom(1.f / scale);
+      win_->setView(view);
+      dl_.draw(*win_);
+      win_->draw(createCircle(mm, 500.f, true));
+      win_->display();
+    }
+  }
+
+private:
+  const sf::Color LIGHT_GREY = sf::Color(240, 240, 240);
+  const float HSIZE = 50000.f;
+  const float SCALE_FACTOR = 1.2f;
+
+  std::unique_ptr<sf::RenderWindow> win_;
+  DisplayList dl_;
+  Pcb pcb_;
+
+  bool panning_ = false;
+  sf::Vector2f pan_loc_ = {};
+  float scale = 1.f / (HSIZE * 2.0f);  // Converts from world to screen coords.
+  sf::Vector2f translation = {};  // Translation in world coordinates.
+
+  template<typename T>
+  sf::Vector2f windowToWorld(const T& mouse) {
+    const auto& screen =
+        2.f * sf::Vector2f(mouse.x / float(win_->getSize().x), mouse.y / float(win_->getSize().y)) -
+        sf::Vector2f(1.0f, 1.0f);
+    return 1.f / scale * screen - translation;
+  }
+
+  sf::FloatRect addShapeToDisplayList(const Shape& shape, const sf::Vector2f& offset) {
+    const auto& arrays = createVertexArraysFromShape(shape, offset);
+    for (const auto& array : arrays)
+      dl_.add(array);
+    return getVertexArraysBoundingBox(arrays);
+  }
+
+  sf::FloatRect addImageToDisplayList(const Image& image, const sf::Vector2f& offset) {
+    sf::FloatRect bounds{};
+    for (const auto& outline : image.outlines) {
+      bounds = floatRectUnion(addShapeToDisplayList(outline, offset), bounds);
+    }
+    for (const auto& pin : image.pins) {
+      auto iter = pcb_.padstacks.find(pin.padstack_id);
+      for (const auto& shape : iter->second.shapes)
+        bounds = floatRectUnion(
+            addShapeToDisplayList(shape, pointToVector(pin.p) + offset), bounds);
+    }
+    return bounds;
+  }
+
+  void addPcbToDisplayList() {
+    sf::Vector2f offset = {-HSIZE / 2.0f, -HSIZE / 2.0f};
+    for (const auto& image : pcb_.images) {
+      const auto& bounds = addImageToDisplayList(image, offset);
+      dl_.add(createRect(bounds, {}));
+      offset.x = bounds.left + bounds.width;
+      if (offset.x > HSIZE / 2.0f) {
+        offset.x = -HSIZE / 2.0f;
+        offset.y = bounds.top + bounds.height;
+      }
+    }
+  }
+};
+
+}  // memeroute
 
 int main(int argc, char* argv[]) {
   std::string dsn_filename;
@@ -32,21 +167,6 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  memeroute::parsePcb(readFile(dsn_filename));
-
-  return 0;
-
-  sf::RenderWindow window(sf::VideoMode(800, 600), "memeroute");
-  window.setVerticalSyncEnabled(true);
-
-  while (window.isOpen()) {
-    sf::Event ev{};
-    while (window.pollEvent(ev)) {
-      if (ev.type == sf::Event::Closed)
-        window.close();
-    }
-
-    window.clear(LIGHT_GREY);
-    window.display();
-  }
+  memeroute::Renderer renderer(memeroute::parsePcb(readFile(dsn_filename)));
+  renderer.run();
 }
