@@ -55,6 +55,16 @@ Point& Point::operator+=(const Point& p) {
 Point Point::operator-(const Point& p) const {
   return {x - p.x, y - p.y};
 }
+
 bool Point::operator<(const Point& p) const {
   return std::tie(x, y) < std::tie(p.x, p.y);
+}
+
+Rect Rect::enclosing(const Point& a, const Point& b) {
+  Rect r{};
+  r.left = std::min(a.x, b.x);
+  r.right = std::max(a.x, b.x);
+  r.top = std::min(a.y, b.y);
+  r.bottom = std::max(a.y, b.y);
+  return r;
 }
