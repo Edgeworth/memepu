@@ -22,6 +22,8 @@
     }                                                 \
   } while (0)
 
+constexpr float EP = 1e-6;
+
 std::string readFile(const std::string& filename, bool binary = false);
 void writeFile(const std::string& filename, const std::string& data, bool binary = false);
 std::string basename(const std::string& filename);

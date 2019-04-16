@@ -56,13 +56,15 @@ add_library(memecad_library
     src/memecad/schematic.cpp include/memecad/schematic.h)
 add_library(memeroute_library
     src/memeroute/parser.cpp include/memeroute/parser.h
-    src/memeroute/types.cpp include/memeroute/types.h src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h)
+    src/memeroute/types.cpp include/memeroute/types.h
+    src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h)
 
 # Add executables
 add_executable(memecad src/programs/memecad.cpp)
 add_executable(generate_firmware src/programs/generate_firmware.cpp)
 add_executable(tests src/tests/verilator_tests.cpp
-    src/programs/test_harness.cpp src/tests/memecad_tests.cpp src/tests/common_tests.cpp)
+    src/programs/test_harness.cpp src/tests/memecad_tests.cpp
+    src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
 add_executable(memeroute src/programs/memeroute.cpp src/programs/memeroute.cpp)
 
 # Verymeme library configuration:
@@ -85,7 +87,8 @@ target_link_libraries(memecad_library PUBLIC ${YOSYS_LIBRARIES} verymeme_library
 target_link_libraries(memeroute_library PUBLIC verymeme_library ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 # Link executables.
-target_link_libraries(tests PRIVATE gtest verymeme_library memecad_library verilated_library)
+target_link_libraries(tests PRIVATE gtest verymeme_library memecad_library
+    memeroute_library verilated_library)
 target_link_libraries(generate_firmware PRIVATE verymeme_library)
 target_link_libraries(memecad PRIVATE memecad_library)
 target_link_libraries(memeroute PRIVATE memeroute_library)

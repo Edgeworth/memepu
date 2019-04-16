@@ -153,7 +153,7 @@ struct Sheet {
   std::string title;
   std::string header2 = DEFAULT_HEADER2;
   std::vector<Component> components;
-  std::vector<Label> labels;
+  std::vector<Label> labels;  // TODO: Associate labels with component so it's easier to position components.
   std::vector<Ref> refs;
   std::vector<Wire> wires;
 
