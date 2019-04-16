@@ -10,14 +10,18 @@ struct Shape {
     int width;
     std::vector<Point> points;
   };
+  struct Circle {
+    int diameter;
+    Point p = {};
+  };
   enum class Type {
     PATH, CIRCLE, RECT
   };
   Type type;
-  std::string layer_id;
-  Path path;
-  int circle_diameter;
-  Rect rect;
+  std::string layer_id = "";
+  Path path = {};
+  Circle circle = {};
+  Rect rect = {};
 };
 
 struct Padstack {
@@ -35,12 +39,20 @@ struct Image {
   std::string name;
   std::vector<Shape> outlines;
   std::vector<Pin> pins;
+  std::vector<Shape> keepouts;
+};
+
+struct Component {
+  std::string name;
+  std::string image_id;
+  Point p;
 };
 
 struct Pcb {
   std::string name;
-  std::vector<Image> images;
+  std::unordered_map<std::string, Image> images;
   std::unordered_map<std::string, Padstack> padstacks;
+  std::vector<Component> components;
 };
 
 }  // memeroute

@@ -40,7 +40,7 @@ public:
 
     addPcbToDisplayList();
 
-    sf::Vector2f mm;
+    sf::Vector2f mouse_cusor;
     while (win_->isOpen()) {
       sf::Event ev{};
       while (win_->pollEvent(ev)) {
@@ -57,18 +57,18 @@ public:
           }
           case sf::Event::MouseButtonPressed:
             panning_ = true;
-            pan_loc_ = windowToWorld(ev.mouseButton);
+            pan_screen_loc_ = windowToScreen(ev.mouseButton);
             break;
           case sf::Event::MouseButtonReleased:
             panning_ = false;
             break;
           case sf::Event::MouseMoved:
             if (panning_) {
-              auto mouse_loc = windowToWorld(ev.mouseMove);
-              translation += mouse_loc - pan_loc_;
-              pan_loc_ = mouse_loc;
+              const auto& mouse_screen_loc_ = windowToScreen(ev.mouseMove);
+              translation += 1 / scale * (mouse_screen_loc_ - pan_screen_loc_);
+              pan_screen_loc_ = mouse_screen_loc_;
             }
-            mm = windowToWorld(ev.mouseMove);
+            mouse_cusor = windowToWorld(ev.mouseMove);
             break;
           default:
             break;
@@ -81,7 +81,7 @@ public:
       view.zoom(1.f / scale);
       win_->setView(view);
       dl_.draw(*win_);
-      win_->draw(createCircle(mm, 500.f, true));
+      win_->draw(createCircle(500.f, true, mouse_cusor, sf::Color::Black));
       win_->display();
     }
   }
@@ -90,26 +90,31 @@ private:
   const sf::Color LIGHT_GREY = sf::Color(240, 240, 240);
   const float HSIZE = 50000.f;
   const float SCALE_FACTOR = 1.2f;
+  const float PADDING = 1000.f;
 
   std::unique_ptr<sf::RenderWindow> win_;
   DisplayList dl_;
   Pcb pcb_;
 
   bool panning_ = false;
-  sf::Vector2f pan_loc_ = {};
+  sf::Vector2f pan_screen_loc_ = {};
   float scale = 1.f / (HSIZE * 2.0f);  // Converts from world to screen coords.
   sf::Vector2f translation = {};  // Translation in world coordinates.
 
   template<typename T>
-  sf::Vector2f windowToWorld(const T& mouse) {
-    const auto& screen =
+  sf::Vector2f windowToScreen(const T& mouse) {
+    return
         2.f * sf::Vector2f(mouse.x / float(win_->getSize().x), mouse.y / float(win_->getSize().y)) -
         sf::Vector2f(1.0f, 1.0f);
-    return 1.f / scale * screen - translation;
+  }
+
+  template<typename T>
+  sf::Vector2f windowToWorld(const T& mouse) {
+    return 1.f / scale * windowToScreen(mouse) - translation;
   }
 
   sf::FloatRect addShapeToDisplayList(const Shape& shape, const sf::Vector2f& offset) {
-    const auto& arrays = createVertexArraysFromShape(shape, offset);
+    const auto& arrays = createVertexArraysFromShape(shape, offset, sf::Color::Blue);
     for (const auto& array : arrays)
       dl_.add(array);
     return getVertexArraysBoundingBox(arrays);
@@ -117,9 +122,8 @@ private:
 
   sf::FloatRect addImageToDisplayList(const Image& image, const sf::Vector2f& offset) {
     sf::FloatRect bounds{};
-    for (const auto& outline : image.outlines) {
+    for (const auto& outline : image.outlines)
       bounds = floatRectUnion(addShapeToDisplayList(outline, offset), bounds);
-    }
     for (const auto& pin : image.pins) {
       auto iter = pcb_.padstacks.find(pin.padstack_id);
       for (const auto& shape : iter->second.shapes)
@@ -131,13 +135,14 @@ private:
 
   void addPcbToDisplayList() {
     sf::Vector2f offset = {-HSIZE / 2.0f, -HSIZE / 2.0f};
-    for (const auto& image : pcb_.images) {
+    for (const auto& kv : pcb_.images) {
+      const auto& image = kv.second;
       const auto& bounds = addImageToDisplayList(image, offset);
-      dl_.add(createRect(bounds, {}));
-      offset.x = bounds.left + bounds.width;
+      dl_.add(createRect(bounds, {}, sf::Color::Red));
+      offset.x += bounds.width + PADDING;
       if (offset.x > HSIZE / 2.0f) {
         offset.x = -HSIZE / 2.0f;
-        offset.y = bounds.top + bounds.height;
+        offset.y += bounds.height + PADDING;
       }
     }
   }

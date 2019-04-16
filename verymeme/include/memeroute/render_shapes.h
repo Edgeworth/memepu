@@ -13,9 +13,12 @@ sf::FloatRect floatRectUnion(const sf::FloatRect& a, const sf::FloatRect& b);
 sf::FloatRect getVertexArraysBoundingBox(const std::vector<sf::VertexArray>& arrays);
 
 // Drawing routines:
-sf::VertexArray createCircle(const sf::Vector2f& loc, float radius, bool filled);
-sf::VertexArray createRect(const sf::FloatRect& r, const sf::Vector2f& offset);
-std::vector<sf::VertexArray> createVertexArraysFromShape(const Shape& shape, const sf::Vector2f& offset);
+sf::VertexArray
+createCircle(float radius, bool filled, const sf::Vector2f& loc, const sf::Color& color);
+sf::VertexArray
+createRect(const sf::FloatRect& r, const sf::Vector2f& offset, const sf::Color& color);
+std::vector<sf::VertexArray>
+createVertexArraysFromShape(const Shape& shape, const sf::Vector2f& offset, const sf::Color& color);
 
 // Conversion routines:
 sf::Vector2f pointToVector(const Point& p);

@@ -1,13 +1,22 @@
 ### TODO soon
+#### memecad
+- Check TODOs in codebase
+
+#### kpu
 - Implement EEPROM hexfile load.
 - Add verilator test for shifter, chips, timer
 
+#### memeroute
+- Finish DSN parsing. Better displaying.
+
 ### TODO later
+#### memecad
 - Move kicadtools into verymeme - direct generation
   - Can then improve bounding box calculation to look at actual drawn stuff
 - Include labels in component bounding box
 - Dynamically size generated sheets
-- Automation for running verilog tests both with and without SCHEMATIC defined.
+
+#### kpu
 - Timing models for each chip
 - Read hex-files in at boot time
 - Sign extend in ALU somehow.
