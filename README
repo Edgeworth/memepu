@@ -2,6 +2,11 @@
 
 TODO fill out.
 
+## Verymeme
+### Running tests
+Run run.py to run the tests for both SCHEMATIC and non-SCHEMATIC verilog
+configurations.
+
 ### Adding new symbols
 Process for adding a new leaf module for verymeme:
 1. Decide which Kicad symbol to use. If it's a new symbol, add data to
