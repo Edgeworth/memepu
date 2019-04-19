@@ -14,15 +14,24 @@ sf::FloatRect getVertexArraysBoundingBox(const std::vector<sf::VertexArray>& arr
 
 // Drawing routines:
 sf::VertexArray
-createCircle(float radius, bool filled, const sf::Vector2f& loc, const sf::Color& color);
+createCircle(float radius, bool filled, const sf::Transform& tf, const sf::Color& color);
 sf::VertexArray
-createRect(const sf::FloatRect& r, const sf::Vector2f& offset, const sf::Color& color);
+createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color);
 std::vector<sf::VertexArray>
-createVertexArraysFromShape(const Shape& shape, const sf::Vector2f& offset, const sf::Color& color);
+createVertexArraysFromShape(const Shape& shape, const sf::Transform& tf, const sf::Color& color);
 
 // Conversion routines:
 sf::Vector2f pointToVector(const Point& p);
 sf::FloatRect rectToFloatRect(const Rect& r);
+
+class DisplayList {
+public:
+  void draw(sf::RenderWindow& window);
+  void add(const sf::VertexArray& array);
+
+private:
+  std::vector<sf::VertexArray> arrays_;
+};
 
 }  // memeroute
 

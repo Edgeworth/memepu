@@ -13,6 +13,10 @@ void verifyPcb(const Pcb& pcb) {
           pin.padstack_id.c_str());
     }
   }
+  for (const auto& component : pcb.components) {
+    verify_expr(pcb.images.count(component.image_id) > 0, "missing image '%s'",
+        component.image_id.c_str());
+  }
 }
 
 // Token is either: Paren, empty quotes, quoted string, non space/tab/newline/paren string.
@@ -155,6 +159,31 @@ private:
     }
   }
 
+  std::vector<Component> parseComponents() {
+    p_.expect({"(", "component"});
+    const std::string image_id = trim(p_.next(), "\"");
+    std::vector<Component> components;
+    while (true) {
+      const std::string& tok = p_.peek();
+      if (tok == "(") {
+        p_.expect({"(", "place"});
+        Component& component = components.emplace_back();
+        component.name = p_.next();
+        component.image_id = image_id;
+        component.p = parsePoint();
+        component.side = p_.next<Side>();
+        component.rotation = p_.next<int>();
+        p_.expect({"(", "PN"});
+        component.part_number = p_.next();
+        p_.expect({")", ")"});
+      } else {
+        break;
+      }
+    }
+    p_.expect({")"});
+    return components;
+  }
+
   void checkParseConfiguration() {
     p_.expect({"(", "parser"});
     while (true) {
@@ -202,9 +231,9 @@ private:
       const auto& padstack = parsePadstack();
       verify_expr(pcb_.padstacks.count(padstack.name) == 0, "duplicate padstack");
       pcb_.padstacks[padstack.name] = padstack;
-    } else if (name == "placement") {
-      ignoreRestOfExpression(); // TODO: Don't ignore.
-//      pcb_.components.push_back(parseComponent());
+    } else if (name == "component") {
+      const auto& components = parseComponents();
+      pcb_.components.insert(pcb_.components.end(), components.begin(), components.end());
     } else if (name == "structure") {
       ignoreRestOfExpression();  // TODO: Don't ignore.
     } else if (name == "parser") {
@@ -213,16 +242,15 @@ private:
       ignoreRestOfExpression();  // TODO: Don't ignore.
     } else if (name == "wiring") {
       ignoreRestOfExpression();  // TODO: Don't ignore.
-    }else if (name == "resolution") {
+    } else if (name == "resolution") {
       p_.expect({"(", "resolution"});
       p_.next();  // Ignore unit for now.
       resolution_ = p_.next<int>();
       p_.expect({")"});
     } else if (name == "unit") {
       ignoreRestOfExpression();  // Ignore for now.
-    } else if (name == "library") {
-      // Ignore some expressions.
-      // TODO: Actually make parseLibrary function?
+    } else if (name == "library" || name == "placement") {
+      // Just process children.
       p_.expect({"(", name});
       while (p_.peek() != ")") parse();
       p_.expect({")"});
