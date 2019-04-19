@@ -22,11 +22,16 @@ std::pair<std::string, int> toStringIntPair(const std::string& s) {
 
 Direction getOppositeDirection(Direction d) {
   switch (d) {
-    case Direction::LEFT: return Direction::RIGHT;
-    case Direction::DOWN: return Direction::UP;
-    case Direction::RIGHT: return Direction::LEFT;
-    case Direction::UP: return Direction::DOWN;
-    default: verify_expr(false, "unknown direction '%d'", int(d));
+    case Direction::LEFT:
+      return Direction::RIGHT;
+    case Direction::DOWN:
+      return Direction::UP;
+    case Direction::RIGHT:
+      return Direction::LEFT;
+    case Direction::UP:
+      return Direction::DOWN;
+    default:
+      verify_expr(false, "unknown direction '%d'", int(d));
   }
 }
 
@@ -34,12 +39,18 @@ Direction getOppositeDirection(Direction d) {
 
 PinType netTypeToPinType(Sheet::Label::NetType net_type) {
   switch (net_type) {
-    case Sheet::Label::NetType::INPUT: return PinType::INPUT;
-    case Sheet::Label::NetType::OUTPUT: return PinType::OUTPUT;
-    case Sheet::Label::NetType::BIDIRECTIONAL: return PinType::BIDIRECTIONAL;
-    case Sheet::Label::NetType::TRISTATE: return PinType::TRISTATE;
-    case Sheet::Label::NetType::PASSIVE: return PinType::PASSIVE;
-    default: verify_expr(false, "Unknown net type '%d'", int(net_type));
+    case Sheet::Label::NetType::INPUT:
+      return PinType::INPUT;
+    case Sheet::Label::NetType::OUTPUT:
+      return PinType::OUTPUT;
+    case Sheet::Label::NetType::BIDIRECTIONAL:
+      return PinType::BIDIRECTIONAL;
+    case Sheet::Label::NetType::TRISTATE:
+      return PinType::TRISTATE;
+    case Sheet::Label::NetType::PASSIVE:
+      return PinType::PASSIVE;
+    default:
+      verify_expr(false, "Unknown net type '%d'", int(net_type));
   }
 }
 
@@ -122,11 +133,16 @@ bool Sheet::Label::operator<(const Sheet::Label& o) const {
 Rect Sheet::Label::getBoundingBox() const {
   const int text_length = text.size() * dimension;
   switch (direction) {
-    case Direction::LEFT: return {p.x - text_length, p.y - dimension, p.x, p.y};
-    case Direction::DOWN: return {p.x - dimension, p.y, p.x, p.y + text_length};
-    case Direction::RIGHT: return {p.x, p.y - dimension, p.x + text_length, p.y};
-    case Direction::UP: return {p.x - dimension, p.y - text_length, p.x, p.y};
-    default: verify_expr(false, "unknown direction '%d'", int(direction));
+    case Direction::LEFT:
+      return {p.x - text_length, p.y - dimension, p.x, p.y};
+    case Direction::DOWN:
+      return {p.x - dimension, p.y, p.x, p.y + text_length};
+    case Direction::RIGHT:
+      return {p.x, p.y - dimension, p.x + text_length, p.y};
+    case Direction::UP:
+      return {p.x - dimension, p.y - text_length, p.x, p.y};
+    default:
+      verify_expr(false, "unknown direction '%d'", int(direction));
   }
 }
 
@@ -154,26 +170,6 @@ void Sheet::Component::offset(Point offset) {
 bool Sheet::Component::operator<(const Sheet::Component& o) const {
   return std::tie(name, ref, subcomponent, timestamp, p, fields, footer) <
          std::tie(o.name, o.ref, o.subcomponent, o.timestamp, o.p, o.fields, o.footer);
-}
-
-template<typename T>
-std::ostream&
-outputEnum(std::ostream& str, const T& enumeration, const std::string (& mapping)[int(T::COUNT)]) {
-  return str << mapping[int(enumeration)];
-}
-
-template<typename T>
-std::istream&
-inputEnum(std::istream& str, T& enumeration, const std::string (& mapping)[int(T::COUNT)]) {
-  std::string v;
-  str >> v;
-  for (int i = 0; i < int(T::COUNT); ++i) {
-    if (mapping[i] == v) {
-      enumeration = T(i);
-      return str;
-    }
-  }
-  verify_expr(false, "unknown enum with string value '%s'", v.c_str());
 }
 
 const std::string ORIENTATION_MAPPING[] = {"H", "V"};

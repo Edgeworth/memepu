@@ -24,6 +24,11 @@
 
 constexpr float EP = 1e-6;
 
+template<typename T>
+T clamp(T low, T high, T val) {
+  return std::max(low, std::min(val, high));
+}
+
 std::string readFile(const std::string& filename, bool binary = false);
 void writeFile(const std::string& filename, const std::string& data, bool binary = false);
 std::string basename(const std::string& filename);
@@ -41,6 +46,26 @@ std::vector<T> reverse(std::vector<T>&& vec) {
 
 template<typename T>
 std::string tos(const T& val) { return boost::lexical_cast<std::string>(val); }
+
+template<typename T>
+std::ostream&
+outputEnum(std::ostream& str, const T& enumeration, const std::string (& mapping)[int(T::COUNT)]) {
+  return str << mapping[int(enumeration)];
+}
+
+template<typename T>
+std::istream&
+inputEnum(std::istream& str, T& enumeration, const std::string (& mapping)[int(T::COUNT)]) {
+  std::string v;
+  str >> v;
+  for (int i = 0; i < int(T::COUNT); ++i) {
+    if (mapping[i] == v) {
+      enumeration = T(i);
+      return str;
+    }
+  }
+  verify_expr(false, "unknown enum with string value '%s'", v.c_str());
+}
 
 struct Point {
   int x = 0;
