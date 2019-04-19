@@ -5,6 +5,10 @@
 
 namespace memeroute {
 
+enum class Side {
+  FRONT, BACK, COUNT
+};
+
 struct Shape {
   struct Path {
     int width;
@@ -46,6 +50,9 @@ struct Component {
   std::string name;
   std::string image_id;
   Point p;
+  Side side;
+  int rotation;
+  std::string part_number;
 };
 
 struct Pcb {
@@ -54,6 +61,10 @@ struct Pcb {
   std::unordered_map<std::string, Padstack> padstacks;
   std::vector<Component> components;
 };
+
+
+std::ostream& operator<<(std::ostream& str, const Side& o);
+std::istream& operator>>(std::istream& str, Side& o);
 
 }  // memeroute
 

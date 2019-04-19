@@ -32,9 +32,13 @@ createPathWithThickness(const std::vector<sf::Vector2f> points, float thickness,
       quads.append({p0 - thickness * perp / 2.0f, color});
       quads.append({p1 - thickness * perp / 2.0f, color});
       quads.append({p1 + thickness * perp / 2.0f, color});
-      circles.push_back(createCircle(thickness / 2.0f, true /* filled */, p1, color));
+      sf::Transform p1_tf;
+      p1_tf.translate(p1);
+      circles.push_back(createCircle(thickness / 2.0f, true /* filled */, p1_tf, color));
     }
-    circles.push_back(createCircle(thickness / 2.0f, true /* filled */, p0, color));
+    sf::Transform p0_tf;
+    p0_tf.translate(p0);
+    circles.push_back(createCircle(thickness / 2.0f, true /* filled */, p0_tf, color));
   }
   circles.push_back(std::move(quads));
   return circles;
@@ -71,45 +75,56 @@ sf::FloatRect rectToFloatRect(const Rect& r) {
 }
 
 sf::VertexArray
-createCircle(float radius, bool filled, const sf::Vector2f& loc, const sf::Color& color) {
+createCircle(float radius, bool filled, const sf::Transform& tf, const sf::Color& color) {
   sf::CircleShape circle(radius);
   sf::VertexArray array(filled ? sf::PrimitiveType::TriangleFan : sf::PrimitiveType::LineStrip);
-  const sf::Vector2f offset = loc - sf::Vector2f(radius, radius);
+  sf::Transform new_tf = tf;
+  new_tf.translate(-radius, -radius);
   for (int i = 0; i < int(circle.getPointCount()); ++i)
-    array.append({circle.getPoint(i) + offset, color});
+    array.append({new_tf * circle.getPoint(i), color});
   if (!filled)
-    array.append({circle.getPoint(0) + offset, color});
+    array.append({new_tf * circle.getPoint(0), color});
   return array;
 }
 
 sf::VertexArray
-createRect(const sf::FloatRect& r, const sf::Vector2f& offset, const sf::Color& color) {
+createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color) {
   sf::VertexArray array(sf::PrimitiveType::LineStrip);
-  array.append({sf::Vector2f(r.left, r.top) + offset, color});
-  array.append({sf::Vector2f(r.left, r.top + r.height) + offset, color});
-  array.append({sf::Vector2f(r.left + r.width, r.top + r.height) + offset, color});
-  array.append({sf::Vector2f(r.left + r.width, r.top) + offset, color});
-  array.append({sf::Vector2f(r.left, r.top) + offset, color});
+  array.append({tf * sf::Vector2f(r.left, r.top), color});
+  array.append({tf * sf::Vector2f(r.left, r.top + r.height), color});
+  array.append({tf * sf::Vector2f(r.left + r.width, r.top + r.height), color});
+  array.append({tf * sf::Vector2f(r.left + r.width, r.top), color});
+  array.append({tf * sf::Vector2f(r.left, r.top), color});
   return array;
 }
 
 std::vector<sf::VertexArray>
-createVertexArraysFromShape(const Shape& shape, const sf::Vector2f& offset,
-    const sf::Color& color) {
+createVertexArraysFromShape(const Shape& shape, const sf::Transform& tf, const sf::Color& color) {
   switch (shape.type) {
     case Shape::Type::PATH: {
       std::vector<sf::Vector2f> points;
       for (const auto& p : shape.path.points)
-        points.emplace_back(pointToVector(p) + offset);
+        points.emplace_back(tf * pointToVector(p));
       return createPathWithThickness(points, shape.path.width, color);
     }
-    case Shape::Type::CIRCLE:
-      return {createCircle(shape.circle.diameter / 2.0f, false /* filled */,
-          offset + pointToVector(shape.circle.p), color)};
+    case Shape::Type::CIRCLE: {
+      sf::Transform new_tf = tf;
+      new_tf.translate(pointToVector(shape.circle.p));
+      return {createCircle(shape.circle.diameter / 2.0f, false /* filled */, new_tf, color)};
+    }
     case Shape::Type::RECT:
-      return {createRect(rectToFloatRect(shape.rect), offset, color)};
+      return {createRect(rectToFloatRect(shape.rect), tf, color)};
   }
   return {};
+}
+
+void DisplayList::draw(sf::RenderWindow& window) {
+  for (const auto& array : arrays_)
+    window.draw(array);
+}
+
+void DisplayList::add(const sf::VertexArray& array) {
+  arrays_.push_back(array);
 }
 
 }  // memeroute

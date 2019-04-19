@@ -17,11 +17,16 @@ int directionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   const bool is_hierarchical_or_global =
       label_type == Sheet::Label::Type::HIERARCHICAL || label_type == Sheet::Label::Type::GLOBAL;
   switch (d) {
-    case Direction::LEFT: return is_hierarchical_or_global ? 0 : 2;
-    case Direction::DOWN: return 3;
-    case Direction::RIGHT: return is_hierarchical_or_global ? 2 : 0;
-    case Direction::UP: return 1;
-    default: verify_expr(false, "unknown direction '%d'", int(d));
+    case Direction::LEFT:
+      return is_hierarchical_or_global ? 0 : 2;
+    case Direction::DOWN:
+      return 3;
+    case Direction::RIGHT:
+      return is_hierarchical_or_global ? 2 : 0;
+    case Direction::UP:
+      return 1;
+    default:
+      verify_expr(false, "unknown direction '%d'", int(d));
   }
 }
 

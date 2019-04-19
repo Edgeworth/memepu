@@ -1,10 +1,9 @@
-(kicad_pcb (version 20190331) (host pcbnew "5.1.0-unknown-a81512c~94~ubuntu18.04.1")
+(kicad_pcb (version 20190331) (host pcbnew "5.1.0-unknown-203019d~94~ubuntu18.04.1")
 
   (general
     (thickness 1.6)
     (drawings 4)
     (tracks 0)
-    (zones 0)
     (modules 52)
     (nets 267)
   )
