@@ -14,15 +14,22 @@ sf::FloatRect getVertexArraysBoundingBox(const std::vector<sf::VertexArray>& arr
 
 // Drawing routines:
 sf::VertexArray
-createCircle(float radius, bool filled, const sf::Transform& tf, const sf::Color& color);
+createCircle(float radius, bool filled, sf::Transform tf, const sf::Color& color);
 sf::VertexArray
 createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color);
+
+
 std::vector<sf::VertexArray>
-createVertexArraysFromShape(const Shape& shape, const sf::Transform& tf, const sf::Color& color);
+createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Color& color);
 
 // Conversion routines:
 sf::Vector2f pointToVector(const Point& p);
 sf::FloatRect rectToFloatRect(const Rect& r);
+
+template<typename T>
+sf::Vector2f centerOf(const T& p) {
+  return sf::Vector2f(p.left + float(p.width) / 2.f, p.top + float(p.height) / 2.f);
+}
 
 class DisplayList {
 public:

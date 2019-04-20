@@ -29,7 +29,7 @@ const float MAX_SCALE_FACTOR = 20.f;
 
 }  // namespace
 
-Renderer::Renderer(const Pcb& pcb) : pcb_(pcb) {
+Renderer::Renderer(const Pcb& pcb) : pcb_(pcb), router_(pcb) {
   initialiseDrawingState();
 }
 
@@ -106,60 +106,76 @@ sf::Text Renderer::createText(const std::string& str) {
   return text;
 }
 
-sf::FloatRect Renderer::addShapeToDisplayList(const Shape& shape, const sf::Transform& tf) {
-  const auto& arrays = createVertexArraysFromShape(shape, tf, PRIMARY_COLOR[0]);
+sf::FloatRect Renderer::addShapeToDisplayList(const Shape& shape, const sf::Transform& tf,
+    const sf::Color& color) {
+  const auto& arrays = createVertexArraysFromShape(shape, tf, color);
   for (const auto& array : arrays)
     dl_.add(array);
   return getVertexArraysBoundingBox(arrays);
 }
 
-sf::FloatRect Renderer::addImageToDisplayList(const Image& image, const sf::Transform& tf) {
+sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf::Transform tf) {
+  tf.translate(pointToVector(component.p));
+  tf.rotate(component.rotation);
+  if (component.side == Side::BACK)
+    tf.scale(-1.f, -1.f);  // TODO is it correct to flip both axes?
+
   sf::FloatRect bounds{};
+  const auto& image = pcb_.images[component.image_id];
+
   for (const auto& outline : image.outlines)
-    bounds = floatRectUnion(addShapeToDisplayList(outline, tf), bounds);
-  for (const auto& pin : image.pins) {
-    auto iter = pcb_.padstacks.find(pin.padstack_id);
-    for (const auto& shape : iter->second.shapes) {
-      sf::Transform new_tf = tf;
-      new_tf.translate(pointToVector(pin.p));
-      bounds = floatRectUnion(addShapeToDisplayList(shape, new_tf), bounds);
+    bounds = floatRectUnion(addShapeToDisplayList(outline, tf,  PRIMARY_COLOR[0]), bounds);
+
+  for (const auto& kv : image.pins) {
+    const auto& pin = kv.second;
+    sf::Transform pin_tf = tf;
+    pin_tf.translate(pointToVector(pin.p));
+
+    const auto* net = pcb_.getNetForPinId(Net::PinId{component.name, pin.pin_id});
+    if (net) {
+      auto& net_text = labels_.emplace_back(createText(net->name));
+      net_text.move(pin_tf * sf::Vector2f(0, 0));
+      net_text.scale(0.25f, 0.25f);
     }
+
+    auto padstack_iter = pcb_.padstacks.find(pin.padstack_id);
+    for (const auto& shape : padstack_iter->second.shapes)
+      bounds = floatRectUnion(addShapeToDisplayList(shape, pin_tf, PRIMARY_COLOR[1]), bounds);
   }
+  dl_.add(createRect(bounds, {}, SECONDARY_COLOR[0]));
+
+  // Todo text scale depends on bounds.
+  auto& text = labels_.emplace_back(createText(component.part_number));
+  text.move(tf * sf::Vector2f(0, 0));
+
   return bounds;
 }
 
 void Renderer::initialiseDrawingState() {
-  verify_expr(font_.loadFromFile("assets/Roboto.ttf"), "could not load font");
+  verify_expr(font_.loadFromFile("assets/Roboto-Bold.ttf"), "could not load font");
 
-  for (const auto& component : pcb_.components) {
-    const auto& image = pcb_.images[component.image_id];
-    // TODO: rotation
-    sf::Transform tf;
-    // Flip y scale to correct for viewport.
-    tf.scale(1.f, -1.f);
-    tf.translate(pointToVector(component.p));
-    tf.rotate(component.rotation);
-    if (component.side == Side::BACK)
-      tf.scale(-1.f, -1.f);  // TODO is it correct to flip both axes?
-    const auto& image_bounds = addImageToDisplayList(image, tf);
-    dl_.add(createRect(image_bounds, {}, SECONDARY_COLOR[0]));
-    bounds_ = floatRectUnion(image_bounds, bounds_);
+  sf::Transform tf;
+  tf.scale(1.f, -1.f);  // Flip y scale to correct for viewport.
+  // Compute bounds from components.
+  for (const auto& kv : pcb_.components)
+    bounds_ = floatRectUnion(addComponentToDisplayList(kv.second, tf), bounds_);
 
-    // Todo text scale depends on bounds.
-    auto& text = labels_.emplace_back(createText(component.part_number));
-    text.move(tf * sf::Vector2f(0, 0));
-  }
-
+  // Set-up initial viewport from bounds.
   scale_ = getInitialScale();
   translation_ = {-bounds_.left - 1.f / scale_, -bounds_.top - 1.f / scale_};
 
+  // Decide how big text should be.
   const float text_scale = 1.f / (TEXT_SIZE * getInitialScale());
-  printf("Initial scale: %f %f %f\n", getInitialScale(), 1.f / getInitialScale(), text_scale);
   for (auto& label : labels_)
-    label.setScale(text_scale, text_scale);
+    label.scale(text_scale, text_scale);
+
+  // Add routed paths.
+  auto paths = router_.route();
+  for (const auto& path : paths)
+    addShapeToDisplayList(path, tf, sf::Color::Black);
 }
 
-float Renderer::getInitialScale() {
+float Renderer::getInitialScale() const {
   return 1.5f / std::max(bounds_.width, bounds_.height);
 }
 

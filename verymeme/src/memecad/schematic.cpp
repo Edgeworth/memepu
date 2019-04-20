@@ -262,7 +262,7 @@ Point Schematic::SheetData::packBox(Point box_size) {
 Point Schematic::SheetData::packBoxesOffset(const std::vector<Rect>& rects) {
   Rect r;
   for (const auto& rect : rects)
-    r.merge(rect);
+    r.unionRect(rect);
   const Point loc = packBox({r.width(), r.height()});
   return loc - r.origin();
 }
