@@ -57,7 +57,7 @@ add_library(memecad_library
 add_library(memeroute_library
     src/memeroute/parser.cpp include/memeroute/parser.h
     src/memeroute/types.cpp include/memeroute/types.h
-    src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h src/memeroute/renderer.cpp include/memeroute/renderer.h)
+    src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h src/memeroute/renderer.cpp include/memeroute/renderer.h src/memeroute/router.cpp include/memeroute/router.h)
 
 # Add executables
 add_executable(memecad src/programs/memecad.cpp)

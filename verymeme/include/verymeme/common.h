@@ -72,7 +72,9 @@ struct Point {
   int y = 0;
 
   Point& operator+=(const Point& p);
+  Point operator+(const Point& p) const;
   Point operator-(const Point& p) const;
+  Point operator-() const;
   bool operator<(const Point& p) const;
 
   std::string toString() const { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
@@ -93,7 +95,7 @@ struct Rect {
     bottom -= h;
   }
 
-  void merge(const Rect& r) {
+  void unionRect(const Rect& r) {
     left = std::min(left, r.left);
     right = std::max(right, r.right);
     top = std::min(top, r.top);

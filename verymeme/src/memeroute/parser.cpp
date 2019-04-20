@@ -5,20 +5,6 @@ namespace memeroute {
 
 namespace {
 
-void verifyPcb(const Pcb& pcb) {
-  for (const auto& kv : pcb.images) {
-    const auto&[name, image] = kv;
-    for (const auto& pin : image.pins) {
-      verify_expr(pcb.padstacks.count(pin.padstack_id) > 0, "missing padstack '%s'",
-          pin.padstack_id.c_str());
-    }
-  }
-  for (const auto& component : pcb.components) {
-    verify_expr(pcb.images.count(component.image_id) > 0, "missing image '%s'",
-        component.image_id.c_str());
-  }
-}
-
 // Token is either: Paren, empty quotes, quoted string, non space/tab/newline/paren string.
 const std::regex TOKEN(R"(([()])|(\".*?[^\\]\")|(\"\")|([^ \t\n()]+))");
 
@@ -26,10 +12,9 @@ class PcbParser {
 public:
   explicit PcbParser(const std::string& data) : p_(data, TOKEN) {}
 
-
-  Pcb parsePcb() {
+  const Pcb parsePcb() {
     parse();
-    verifyPcb(pcb_);
+    pcb_.verifyAndSetup();
     return pcb_;
   }
 
@@ -106,7 +91,9 @@ private:
           image.outlines.push_back(parseShape());
           p_.expect({")"});
         } else if (child == "pin") {
-          image.pins.push_back(parsePin());
+          Pin pin = parsePin();
+          verify_expr(image.pins.count(pin.pin_id) == 0, "duplicate pin '%s'", pin.pin_id.c_str());
+          image.pins[pin.pin_id] = pin;
         } else if (child == "keepout") {
           p_.expect({"(", "keepout"});
           p_.next();  // Skip keepout name.
@@ -233,12 +220,29 @@ private:
       pcb_.padstacks[padstack.name] = padstack;
     } else if (name == "component") {
       const auto& components = parseComponents();
-      pcb_.components.insert(pcb_.components.end(), components.begin(), components.end());
+      for (const auto& component : components) {
+        verify_expr(pcb_.components.count(component.name) == 0, "duplicate component '%s'",
+            component.name.c_str());
+        pcb_.components[component.name] = component;
+      }
     } else if (name == "structure") {
       ignoreRestOfExpression();  // TODO: Don't ignore.
     } else if (name == "parser") {
       checkParseConfiguration();
-    } else if (name == "network") {
+    } else if (name == "net") {
+      p_.expect({"(", "net"});
+      auto& net = pcb_.nets.emplace_back();
+      net.name = p_.next();
+      p_.expect({"(", "pins"});
+      while (p_.peek() != ")") {
+        const std::string component_pin = p_.next();
+        const auto div = component_pin.find('-');
+        verify_expr(div != std::string::npos, "invalid component-pin specifier '%s'",
+            component_pin.c_str());
+        net.pin_ids.push_back({component_pin.substr(0, div), component_pin.substr(div + 1)});
+      }
+      p_.expect({")", ")"});
+    } else if (name == "class") {
       ignoreRestOfExpression();  // TODO: Don't ignore.
     } else if (name == "wiring") {
       ignoreRestOfExpression();  // TODO: Don't ignore.
@@ -249,7 +253,7 @@ private:
       p_.expect({")"});
     } else if (name == "unit") {
       ignoreRestOfExpression();  // Ignore for now.
-    } else if (name == "library" || name == "placement") {
+    } else if (name == "library" || name == "placement" || name == "network") {
       // Just process children.
       p_.expect({"(", name});
       while (p_.peek() != ")") parse();

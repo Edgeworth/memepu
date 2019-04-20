@@ -75,15 +75,14 @@ sf::FloatRect rectToFloatRect(const Rect& r) {
 }
 
 sf::VertexArray
-createCircle(float radius, bool filled, const sf::Transform& tf, const sf::Color& color) {
+createCircle(float radius, bool filled, sf::Transform tf, const sf::Color& color) {
   sf::CircleShape circle(radius);
   sf::VertexArray array(filled ? sf::PrimitiveType::TriangleFan : sf::PrimitiveType::LineStrip);
-  sf::Transform new_tf = tf;
-  new_tf.translate(-radius, -radius);
+  tf.translate(-radius, -radius);
   for (int i = 0; i < int(circle.getPointCount()); ++i)
-    array.append({new_tf * circle.getPoint(i), color});
+    array.append({tf * circle.getPoint(i), color});
   if (!filled)
-    array.append({new_tf * circle.getPoint(0), color});
+    array.append({tf * circle.getPoint(0), color});
   return array;
 }
 
@@ -99,7 +98,7 @@ createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& col
 }
 
 std::vector<sf::VertexArray>
-createVertexArraysFromShape(const Shape& shape, const sf::Transform& tf, const sf::Color& color) {
+createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Color& color) {
   switch (shape.type) {
     case Shape::Type::PATH: {
       std::vector<sf::Vector2f> points;
@@ -108,9 +107,8 @@ createVertexArraysFromShape(const Shape& shape, const sf::Transform& tf, const s
       return createPathWithThickness(points, shape.path.width, color);
     }
     case Shape::Type::CIRCLE: {
-      sf::Transform new_tf = tf;
-      new_tf.translate(pointToVector(shape.circle.p));
-      return {createCircle(shape.circle.diameter / 2.0f, false /* filled */, new_tf, color)};
+      tf.translate(pointToVector(shape.circle.p));
+      return {createCircle(shape.circle.diameter / 2.0f, false /* filled */, tf, color)};
     }
     case Shape::Type::RECT:
       return {createRect(rectToFloatRect(shape.rect), tf, color)};
