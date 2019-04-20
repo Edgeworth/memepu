@@ -23,8 +23,13 @@ createPathWithThickness(const std::vector<sf::Vector2f> points, float thickness,
     const sf::Color& color) {
   sf::VertexArray quads(sf::PrimitiveType::Quads);
   std::vector<sf::VertexArray> circles;
-  for (int i = 0; i < int(points.size()) - 1; ++i) {
+  for (int i = 0; i < int(points.size()); ++i) {
     const auto& p0 = points[i];
+    sf::Transform p0_tf;
+    p0_tf.translate(p0);
+    circles.push_back(createCircle(thickness / 2.0f, p0_tf, color, true /* filled */));
+    if (i + 1 >= int(points.size())) continue;
+
     const auto& p1 = points[i + 1];
     if (length(p0 - p1) > EP) {
       const auto& perp = getPerpendicular(p1 - p0);
@@ -34,14 +39,18 @@ createPathWithThickness(const std::vector<sf::Vector2f> points, float thickness,
       quads.append({p1 + thickness * perp / 2.0f, color});
       sf::Transform p1_tf;
       p1_tf.translate(p1);
-      circles.push_back(createCircle(thickness / 2.0f, true /* filled */, p1_tf, color));
+      circles.push_back(createCircle(thickness / 2.0f, p1_tf, color, true /* filled */));
     }
-    sf::Transform p0_tf;
-    p0_tf.translate(p0);
-    circles.push_back(createCircle(thickness / 2.0f, true /* filled */, p0_tf, color));
   }
   circles.push_back(std::move(quads));
   return circles;
+}
+
+sf::VertexArray createLineStrip(const std::vector<sf::Vector2f> points, const sf::Color& color) {
+  sf::VertexArray array(sf::PrimitiveType::LineStrip);
+  for (const auto& point : points)
+    array.append({point, color});
+  return array;
 }
 
 }  // namespace
@@ -75,7 +84,7 @@ sf::FloatRect rectToFloatRect(const Rect& r) {
 }
 
 sf::VertexArray
-createCircle(float radius, bool filled, sf::Transform tf, const sf::Color& color) {
+createCircle(float radius, sf::Transform tf, const sf::Color& color, bool filled) {
   sf::CircleShape circle(radius);
   sf::VertexArray array(filled ? sf::PrimitiveType::TriangleFan : sf::PrimitiveType::LineStrip);
   tf.translate(-radius, -radius);
@@ -87,31 +96,38 @@ createCircle(float radius, bool filled, sf::Transform tf, const sf::Color& color
 }
 
 sf::VertexArray
-createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color) {
-  sf::VertexArray array(sf::PrimitiveType::LineStrip);
+createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color, bool filled) {
+  sf::VertexArray array(filled ? sf::PrimitiveType::Quads : sf::PrimitiveType::LineStrip);
   array.append({tf * sf::Vector2f(r.left, r.top), color});
   array.append({tf * sf::Vector2f(r.left, r.top + r.height), color});
   array.append({tf * sf::Vector2f(r.left + r.width, r.top + r.height), color});
   array.append({tf * sf::Vector2f(r.left + r.width, r.top), color});
-  array.append({tf * sf::Vector2f(r.left, r.top), color});
+  if (!filled) array.append({tf * sf::Vector2f(r.left, r.top), color});
   return array;
 }
 
 std::vector<sf::VertexArray>
-createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Color& color) {
+createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Color& color,
+    bool filled) {
   switch (shape.type) {
     case Shape::Type::PATH: {
       std::vector<sf::Vector2f> points;
       for (const auto& p : shape.path.points)
         points.emplace_back(tf * pointToVector(p));
-      return createPathWithThickness(points, shape.path.width, color);
+      // Treat paths with width 0 as line strips so they are visible (width of >= 1 pixel).
+      // TODO: Support |filled| for path.
+      if (shape.path.width != 0)
+        return createPathWithThickness(points, shape.path.width, color);
+      else
+        return {createLineStrip(points, color)};
+
     }
     case Shape::Type::CIRCLE: {
       tf.translate(pointToVector(shape.circle.p));
-      return {createCircle(shape.circle.diameter / 2.0f, false /* filled */, tf, color)};
+      return {createCircle(shape.circle.diameter / 2.0f, tf, color, filled)};
     }
     case Shape::Type::RECT:
-      return {createRect(rectToFloatRect(shape.rect), tf, color)};
+      return {createRect(rectToFloatRect(shape.rect), tf, color, false)};
   }
   return {};
 }

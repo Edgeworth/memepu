@@ -28,7 +28,7 @@ private:
 
     Sheet sheet = {};
     Point cur;
-    int max_y = 0;
+    int64_t max_y = 0;
 
     Point packBox(Point box_size);
     Point packBoxesOffset(const std::vector<Rect>& rects);

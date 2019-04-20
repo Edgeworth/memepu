@@ -14,13 +14,14 @@ sf::FloatRect getVertexArraysBoundingBox(const std::vector<sf::VertexArray>& arr
 
 // Drawing routines:
 sf::VertexArray
-createCircle(float radius, bool filled, sf::Transform tf, const sf::Color& color);
+createCircle(float radius, sf::Transform tf, const sf::Color& color, bool filled);
 sf::VertexArray
-createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color);
+createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color, bool filled);
 
 
 std::vector<sf::VertexArray>
-createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Color& color);
+createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Color& color,
+    bool filled);
 
 // Conversion routines:
 sf::Vector2f pointToVector(const Point& p);
