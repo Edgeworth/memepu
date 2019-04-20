@@ -52,12 +52,20 @@ Point& Point::operator+=(const Point& p) {
   return *this;
 }
 
+Point Point::operator+(const Point& p) const {
+  return {x + p.x, y + p.y};
+}
+
 Point Point::operator-(const Point& p) const {
   return {x - p.x, y - p.y};
 }
 
 bool Point::operator<(const Point& p) const {
   return std::tie(x, y) < std::tie(p.x, p.y);
+}
+
+Point Point::operator-() const {
+  return {-x, -y};
 }
 
 Rect Rect::enclosing(const Point& a, const Point& b) {

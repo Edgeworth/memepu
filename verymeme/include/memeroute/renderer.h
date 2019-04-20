@@ -6,6 +6,7 @@
 #include "verymeme/common.h"
 #include "memeroute/types.h"
 #include "memeroute/render_shapes.h"
+#include "memeroute/router.h"
 
 namespace memeroute {
 
@@ -31,13 +32,15 @@ private:
 
   // Pcb:
   Pcb pcb_;
+  Router router_;
 
   sf::Text createText(const std::string& str);
-  sf::FloatRect addShapeToDisplayList(const Shape& shape, const sf::Transform& tf);
-  sf::FloatRect addImageToDisplayList(const Image& image, const sf::Transform& tf);
+  sf::FloatRect
+  addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, const sf::Color& color);
+  sf::FloatRect addComponentToDisplayList(const Component& component, sf::Transform tf);
   void initialiseDrawingState();
 
-  float getInitialScale();
+  float getInitialScale() const;
 
   template<typename T>
   sf::Vector2f windowToScreen(const T& mouse) {

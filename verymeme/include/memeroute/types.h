@@ -1,6 +1,9 @@
 #ifndef VERYMEME_MEMEROUTE_TYPES_H
 #define VERYMEME_MEMEROUTE_TYPES_H
 
+#include <unordered_map>
+#include <map>
+
 #include "verymeme/common.h"
 
 namespace memeroute {
@@ -42,7 +45,7 @@ struct Pin {
 struct Image {
   std::string name;
   std::vector<Shape> outlines;
-  std::vector<Pin> pins;
+  std::unordered_map<std::string, Pin> pins;
   std::vector<Shape> keepouts;
 };
 
@@ -53,13 +56,36 @@ struct Component {
   Side side;
   int rotation;
   std::string part_number;
+
+  Point localToWorld(const Point& local) const;
+};
+
+struct Net {
+  struct PinId {
+    std::string component_id;
+    std::string pin_id;
+
+    bool operator<(const PinId& o) const;
+    std::string toString() const;
+  };
+  std::string name;
+  std::vector<PinId> pin_ids;  // Of the form: ComponentId-PinId
 };
 
 struct Pcb {
   std::string name;
   std::unordered_map<std::string, Image> images;
   std::unordered_map<std::string, Padstack> padstacks;
-  std::vector<Component> components;
+  std::unordered_map<std::string, Component> components;
+  std::vector<Net> nets;
+
+  void verifyAndSetup();
+  const Net* getNetForPinId(const Net::PinId& pin_id) const;
+  const Component& getComponentForPinId(const Net::PinId& pin_id) const;
+  const Pin& getPinForPinId(const Net::PinId& pin_id) const;
+
+private:
+  std::map<Net::PinId, Net> pin_id_to_net_;
 };
 
 
