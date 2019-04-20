@@ -8,6 +8,47 @@ namespace {
 
 const std::string SIDE_MAPPING[] = {"front", "back"};
 
+Point transformPoint(const Point& p, Side side, const Point& translation, int rotation) {
+  Point world = p;
+  if (side == Side::BACK)
+    world = -world;
+  switch (rotation) {
+    case 0:
+      break;
+    case 90:
+      world = {-world.y, world.x};
+      break;
+    case 180:
+      world = {-world.x, -world.y};
+      break;
+    case 270:
+      world = {world.y, -world.x};
+      break;
+    default:
+      verify_expr(false, "only support axis aligned rotations, not '%d'", rotation);
+  }
+  return world + translation;
+}
+
+Shape transformShape(Shape s, Side side, const Point& translation, int rotation) {
+  switch (s.type) {
+    case Shape::Type::PATH:
+      for (auto& p : s.path.points)
+        p = transformPoint(p, side, translation, rotation);
+      break;
+    case Shape::Type::CIRCLE:
+      s.circle.p = transformPoint(s.circle.p, side, translation, rotation);
+      break;
+    case Shape::Type::RECT: {
+      const Point top_left = transformPoint(s.rect.origin(), side, translation, rotation);
+      const Point bottom_right = transformPoint(s.rect.bottom_right(), side, translation, rotation);
+      s.rect = Rect::enclosing(top_left, bottom_right);
+      break;
+    }
+  }
+  return s;
+}
+
 }  // namespace
 
 std::ostream& operator<<(std::ostream& str, const Side& o) {
@@ -26,25 +67,45 @@ std::string Net::PinId::toString() const {
   return component_id + "-" + pin_id;
 }
 
-Point Component::localToWorld(const Point& local) const {
-  Point world = local;
-  if (side == Side::BACK)
-    world = -world;
-  switch (rotation) {
-    case 0: break;
-    case 90:
-      world = {-world.y, world.x};
-      break;
-    case 180:
-      world = {-world.x, -world.y};
-      break;
-    case 270:
-      world = {world.y, -world.x};
-      break;
-    default:
-      verify_expr(false, "only support axis aligned rotations, not '%d'", rotation);
+Rect Shape::getBoundingBox() const {
+  switch (type) {
+    case Type::PATH: {
+      Rect bounds = {};
+      for (const auto& point : path.points) {
+        // Paths with zero width are treated as having a small non-zero width, so min.
+        const int radius_ceil = std::max(1, path.width / 2 + path.width % 2);
+        const Rect r = {point.x - radius_ceil, point.y - radius_ceil, point.x + radius_ceil,
+                        point.y + radius_ceil};
+        bounds.unionRect(r);
+      }
+      return bounds;
+    }
+    case Type::CIRCLE: {
+      const int radius_ceil = circle.diameter / 2 + circle.diameter % 2;
+      const Point radius = {radius_ceil, radius_ceil};
+      return Rect::enclosing(circle.p - radius, circle.p + radius);
+    }
+    case Type::RECT:
+      return rect;
   }
-  return world + p;
+  verify_expr(false, "BUG");
+  return {};
+}
+
+Point Pin::toParentCoord(const Point& local) const {
+  return local + p;
+}
+
+Shape Pin::toParentCoord(const Shape& local) const {
+  return transformShape(local, Side::FRONT, p, 0 /* rotation */);
+}
+
+Point Component::toParentCoord(const Point& local) const {
+  return transformPoint(local, side, p, rotation);
+}
+
+Shape Component::toParentCoord(const Shape& local) const {
+  return transformShape(local, side, p, rotation);
 }
 
 void Pcb::verifyAndSetup() {
