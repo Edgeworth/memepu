@@ -29,6 +29,8 @@ struct Shape {
   Path path = {};
   Circle circle = {};
   Rect rect = {};
+
+  Rect getBoundingBox() const;
 };
 
 struct Padstack {
@@ -40,6 +42,9 @@ struct Pin {
   std::string padstack_id;
   std::string pin_id;  // e.g. 1@1 format pin id can be string.
   Point p;
+
+  Point toParentCoord(const Point& local) const;
+  Shape toParentCoord(const Shape& local) const;
 };
 
 struct Image {
@@ -57,7 +62,8 @@ struct Component {
   int rotation;
   std::string part_number;
 
-  Point localToWorld(const Point& local) const;
+  Point toParentCoord(const Point& local) const;
+  Shape toParentCoord(const Shape& local) const;
 };
 
 struct Net {
@@ -68,12 +74,14 @@ struct Net {
     bool operator<(const PinId& o) const;
     std::string toString() const;
   };
+
   std::string name;
   std::vector<PinId> pin_ids;  // Of the form: ComponentId-PinId
 };
 
 struct Pcb {
   std::string name;
+  Shape boundary;
   std::unordered_map<std::string, Image> images;
   std::unordered_map<std::string, Padstack> padstacks;
   std::unordered_map<std::string, Component> components;

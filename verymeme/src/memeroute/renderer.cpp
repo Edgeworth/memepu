@@ -53,7 +53,7 @@ void Renderer::run() {
       win_->draw(text);
     sf::Transform mouse_tf;
     mouse_tf.translate(mouse_cursor);
-    win_->draw(createCircle(MOUSE_SIZE / scale_, true, mouse_tf, sf::Color::Black));
+    win_->draw(createCircle(MOUSE_SIZE / scale_, mouse_tf, sf::Color::Black, true /* filled */));
     win_->display();
 
     sf::Event ev{};
@@ -106,9 +106,11 @@ sf::Text Renderer::createText(const std::string& str) {
   return text;
 }
 
-sf::FloatRect Renderer::addShapeToDisplayList(const Shape& shape, const sf::Transform& tf,
-    const sf::Color& color) {
-  const auto& arrays = createVertexArraysFromShape(shape, tf, color);
+// Returns the bounds in world coordinates (no need to transform).
+sf::FloatRect
+Renderer::addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, const sf::Color& color,
+    bool filled) {
+  const auto& arrays = createVertexArraysFromShape(shape, tf, color, filled);
   for (const auto& array : arrays)
     dl_.add(array);
   return getVertexArraysBoundingBox(arrays);
@@ -124,7 +126,8 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
   const auto& image = pcb_.images[component.image_id];
 
   for (const auto& outline : image.outlines)
-    bounds = floatRectUnion(addShapeToDisplayList(outline, tf,  PRIMARY_COLOR[0]), bounds);
+    bounds = floatRectUnion(
+        addShapeToDisplayList(outline, tf, PRIMARY_COLOR[0], false /* filled */), bounds);
 
   for (const auto& kv : image.pins) {
     const auto& pin = kv.second;
@@ -140,9 +143,17 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
 
     auto padstack_iter = pcb_.padstacks.find(pin.padstack_id);
     for (const auto& shape : padstack_iter->second.shapes)
-      bounds = floatRectUnion(addShapeToDisplayList(shape, pin_tf, PRIMARY_COLOR[1]), bounds);
+      bounds = floatRectUnion(
+          addShapeToDisplayList(shape, pin_tf, PRIMARY_COLOR[1], true /* filled */),
+          bounds);
   }
-  dl_.add(createRect(bounds, {}, SECONDARY_COLOR[0]));
+
+  // Add keepouts.
+  for (const auto& keepout : image.keepouts)
+    bounds = floatRectUnion(
+        addShapeToDisplayList(keepout, tf, SECONDARY_COLOR[2], true /* filled */), bounds);
+
+  dl_.add(createRect(bounds, {}, SECONDARY_COLOR[0], false /* filled */));
 
   // Todo text scale depends on bounds.
   auto& text = labels_.emplace_back(createText(component.part_number));
@@ -172,7 +183,9 @@ void Renderer::initialiseDrawingState() {
   // Add routed paths.
   auto paths = router_.route();
   for (const auto& path : paths)
-    addShapeToDisplayList(path, tf, sf::Color::Black);
+    addShapeToDisplayList(path, tf, sf::Color::Black, false /* filled */);
+
+  addShapeToDisplayList(pcb_.boundary, tf, SECONDARY_COLOR[1], false /* filled */);
 }
 
 float Renderer::getInitialScale() const {

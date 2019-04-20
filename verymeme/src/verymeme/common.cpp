@@ -68,11 +68,19 @@ Point Point::operator-() const {
   return {-x, -y};
 }
 
+bool Point::operator!=(const Point& p) const {
+  return x != p.x || y != p.y;
+}
+int64_t Point::cross(const Point& p) const {
+  return x * p.y - y * p.x;
+}
+
 Rect Rect::enclosing(const Point& a, const Point& b) {
   Rect r{};
+  // Make one larger for right and bottom so |b| is inside.
   r.left = std::min(a.x, b.x);
-  r.right = std::max(a.x, b.x);
+  r.right = std::max(a.x, b.x) + 1;
   r.top = std::min(a.y, b.y);
-  r.bottom = std::max(a.y, b.y);
+  r.bottom = std::max(a.y, b.y) + 1;
   return r;
 }

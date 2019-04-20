@@ -68,14 +68,17 @@ inputEnum(std::istream& str, T& enumeration, const std::string (& mapping)[int(T
 }
 
 struct Point {
-  int x = 0;
-  int y = 0;
+  int64_t x = 0;
+  int64_t y = 0;
 
   Point& operator+=(const Point& p);
   Point operator+(const Point& p) const;
   Point operator-(const Point& p) const;
   Point operator-() const;
   bool operator<(const Point& p) const;
+  bool operator!=(const Point& p) const;
+
+  int64_t cross(const Point& p) const;
 
   std::string toString() const { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
 };
@@ -83,12 +86,12 @@ struct Point {
 std::ostream& operator<<(std::ostream& str, const Point& p);
 
 struct Rect {
-  int left = 0;
-  int top = 0;
-  int right = 0;
-  int bottom = 0;
+  int64_t left = 0;
+  int64_t top = 0;
+  int64_t right = 0;
+  int64_t bottom = 0;
 
-  void inset(int w, int h) {
+  void inset(int64_t w, int64_t h) {
     left += w;
     top += h;
     right -= w;
@@ -96,6 +99,11 @@ struct Rect {
   }
 
   void unionRect(const Rect& r) {
+    if (r.empty()) return;
+    if (empty()) {
+      *this = r;
+      return;
+    }
     left = std::min(left, r.left);
     right = std::max(right, r.right);
     top = std::min(top, r.top);
@@ -110,8 +118,14 @@ struct Rect {
   }
 
   constexpr Point origin() const { return {left, top}; }
-  constexpr int width() const { return right - left; }
-  constexpr int height() const { return bottom - top; }
+  constexpr Point bottom_right() const { return {right, bottom}; }
+  constexpr int64_t width() const { return right - left; }
+  constexpr int64_t height() const { return bottom - top; }
+
+  void set_width(int64_t width) { right = left + width; }
+  void set_height(int64_t height) { bottom = top + height; }
+
+  bool empty() const { return width() == 0 && height() == 0; }
 
   std::string toString() const {
     return "{" + std::to_string(left) + ", " + std::to_string(top) + ", " + std::to_string(right) +

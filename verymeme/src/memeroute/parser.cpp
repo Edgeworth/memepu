@@ -23,10 +23,10 @@ private:
   Pcb pcb_;
   int resolution_ = 2540000;  // Default value.
 
-  int parseDimension() {
+  int64_t parseDimension() {
     const float dim = p_.next<float>() * resolution_;
-    verify_expr(std::abs(dim - int(dim)) < EP, "coordinate conversion loses information");
-    return int(dim);
+    verify_expr(std::abs(dim - int64_t(dim)) < EP, "coordinate conversion loses information");
+    return int64_t(dim);
   }
 
   Point parsePoint() {
@@ -35,7 +35,6 @@ private:
 
   Shape parseShape() {
     Shape shape{};
-    printf("Parsing shape\n");
     p_.expect({"("});
     std::string type = p_.next();
     shape.layer_id = p_.next();
@@ -60,7 +59,6 @@ private:
       verify_expr(false, "unsupported shape type '%s'", type.c_str());
     }
     p_.expect({")"});
-    printf("Finished parsing shape\n");
     return shape;
   }
 
@@ -78,7 +76,6 @@ private:
     Image image{};
     p_.expect({"(", "image"});
     image.name = trim(p_.next(), "\"");
-    printf("Parsing image: %s\n", image.name.c_str());
     while (true) {
       const std::string& tok = p_.peek();
       if (tok == ")") {
@@ -179,9 +176,9 @@ private:
         break;
       } else {
         p_.expect({"("});
-        const std::string& child = p_.next();
+        const std::string& child = p_.peek();
         if (child == "string_quote")
-          p_.expect({"\"", ")"});
+          p_.expect({"string_quote", "\"", ")"});
         else if (child == "space_in_quoted_tokens" || child == "host_cad" ||
                  child == "host_version")
           ignoreRestOfExpression();
@@ -192,9 +189,31 @@ private:
     p_.expect({")"});
   }
 
+  void parseStructure() {
+    p_.expect({"(", "structure"});
+    while (true) {
+      const std::string& tok = p_.peek();
+      if (tok == ")") {
+        break;
+      } else {
+        p_.expect({"("});
+        const std::string& child = p_.peek();
+        if (child == "boundary") {
+          p_.expect({"boundary"});
+          pcb_.boundary = parseShape();
+          p_.expect({")"});
+        } else if (child == "layer" || child == "via" ||
+                   child == "rule")
+          ignoreRestOfExpression();  // TODO: Don't ignore these.
+        else
+          verify_expr(false, "unrecognised expression '%s'", tok.c_str());
+      }
+    }
+    p_.expect({")"});
+  }
+
   void parse() {
     std::string name = p_.peek(1);
-    printf("Parsing at %s\n", name.c_str());
     if (name == "pcb") {
       // TODO: support more expressions. Error if see unrecognised.
       p_.expect({"("});
@@ -226,7 +245,7 @@ private:
         pcb_.components[component.name] = component;
       }
     } else if (name == "structure") {
-      ignoreRestOfExpression();  // TODO: Don't ignore.
+      parseStructure();
     } else if (name == "parser") {
       checkParseConfiguration();
     } else if (name == "net") {

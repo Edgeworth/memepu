@@ -36,7 +36,8 @@ private:
 
   sf::Text createText(const std::string& str);
   sf::FloatRect
-  addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, const sf::Color& color);
+  addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, const sf::Color& color,
+      bool filled);
   sf::FloatRect addComponentToDisplayList(const Component& component, sf::Transform tf);
   void initialiseDrawingState();
 
