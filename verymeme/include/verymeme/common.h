@@ -15,9 +15,9 @@
       fprintf(stderr, "%s:%d: ", __func__, __LINE__); \
       fprintf(stderr, __VA_ARGS__);                   \
       fprintf(stderr, "\n");                          \
-      std::stringstream s; \
-      s << boost::stacktrace::stacktrace(); \
-      fprintf(stderr, "Stack:\n%s\n", s.str().c_str()); \
+      std::stringstream _s; \
+      _s << boost::stacktrace::stacktrace(); \
+      fprintf(stderr, "Stack:\n%s\n", _s.str().c_str()); \
       exit(1);                                        \
     }                                                 \
   } while (0)
@@ -34,6 +34,13 @@ void writeFile(const std::string& filename, const std::string& data, bool binary
 std::string basename(const std::string& filename);
 std::string stem(const std::string& filename);
 void checked_chdir(const std::string& path);
+
+template<typename M, typename K, typename V>
+V getDefault(const M& map, const K& key, const V& def) {
+  auto iter = map.find(key);
+  if (iter == map.end()) return def;
+  return iter->second;
+}
 
 template<typename T>
 std::vector<T> reverse(std::vector<T>&& vec) {

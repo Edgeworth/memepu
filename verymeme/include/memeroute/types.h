@@ -25,7 +25,7 @@ struct Shape {
     PATH, CIRCLE, RECT
   };
   Type type;
-  std::string layer_id = "";
+  int layer_id = -1;  // Layer id in Pcb::layers or -1.
   Path path = {};
   Circle circle = {};
   Rect rect = {};
@@ -85,12 +85,18 @@ struct Pcb {
   std::unordered_map<std::string, Image> images;
   std::unordered_map<std::string, Padstack> padstacks;
   std::unordered_map<std::string, Component> components;
+  std::unordered_map<std::string, int> layers;
   std::vector<Net> nets;
 
   void verifyAndSetup();
   const Net* getNetForPinId(const Net::PinId& pin_id) const;
   const Component& getComponentForPinId(const Net::PinId& pin_id) const;
   const Pin& getPinForPinId(const Net::PinId& pin_id) const;
+
+  int getLayer(Side side) const;
+
+  // Gets which layer |shape| part of |component| should be placed on.
+  int getLayer(const Component& component, const Shape& shape) const;
 
 private:
   std::map<Net::PinId, Net> pin_id_to_net_;
