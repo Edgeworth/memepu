@@ -121,8 +121,8 @@ void Pcb::verifyAndSetup() {
         kv.second.image_id.c_str());
   }
   std::set<Net::PinId> pin_ids;
-  for (const auto& net : nets) {
-    for (const auto& pin_id : net.pin_ids) {
+  for (const auto& kv : nets) {
+    for (const auto& pin_id : kv.second.pin_ids) {
       getPinForPinId(pin_id);  // Make sure the component and pin exists.
 
       verify_expr(pin_ids.count(pin_id) == 0, "pin '%s' in multiple nets",
@@ -132,9 +132,15 @@ void Pcb::verifyAndSetup() {
   }
 
   // Generate pin id to net map.
-  for (const auto& net : nets)
-    for (const auto& pin_id : net.pin_ids)
-      pin_id_to_net_[pin_id] = net;
+  for (const auto& kv : nets)
+    for (const auto& pin_id : kv.second.pin_ids)
+      pin_id_to_net_[pin_id] = kv.second;
+}
+
+const Net& Pcb::getNet(const std::string& net_name) const {
+  auto iter = nets.find(net_name);
+  verify_expr(iter != nets.end(), "unknown net '%s'", net_name.c_str());
+  return iter->second;
 }
 
 const Net* Pcb::getNetForPinId(const Net::PinId& pin_id) const {
@@ -159,6 +165,7 @@ const Pin& Pcb::getPinForPinId(const Net::PinId& pin_id) const {
       pin_id.toString().c_str());
   return pin_iter->second;
 }
+
 int Pcb::getLayer(Side side) const {
   const std::string layer_name = side == Side::FRONT ? "F.Cu" : "B.Cu";
   auto iter = layers.find(layer_name);

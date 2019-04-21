@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -O3")
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 project(verymeme)
 
@@ -12,6 +13,7 @@ find_package(Boost REQUIRED program_options stacktrace_backtrace)
 find_package(Verilator REQUIRED)
 find_package(Yosys REQUIRED)
 find_package(SFML COMPONENTS graphics window system REQUIRED)
+find_package(Threads REQUIRED)
 # Sanitizers via extra-cmake-modules.
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_DIR})
@@ -43,54 +45,55 @@ include(GoogleTest)
 add_subdirectory(verilog)
 
 # Add libraries.
-add_library(verymeme_library
+set(VERYMEME_SOURCES
     src/verymeme/common.cpp include/verymeme/common.h
     include/verymeme/firmware_constants.h
     src/verymeme/parser.cpp include/verymeme/parser.h)
-add_library(memecad_library
+set(MEMECAD_SOURCES
     src/memecad/parser.cpp include/memecad/parser.h
     src/memecad/types.cpp include/memecad/types.h
     src/memecad/mapper.cpp include/memecad/mapper.h
     src/memecad/yosys_module.cpp include/memecad/yosys_module.h
     src/memecad/util.cpp include/memecad/util.h
     src/memecad/schematic.cpp include/memecad/schematic.h)
-add_library(memeroute_library
+set(MEMEROUTE_SOURCES
     src/memeroute/parser.cpp include/memeroute/parser.h
     src/memeroute/types.cpp include/memeroute/types.h
-    src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h src/memeroute/renderer.cpp include/memeroute/renderer.h src/memeroute/router.cpp include/memeroute/router.h)
-
-# Add executables
-add_executable(memecad src/programs/memecad.cpp)
-add_executable(generate_firmware src/programs/generate_firmware.cpp)
-add_executable(tests src/tests/verilator_tests.cpp
-    src/programs/test_harness.cpp src/tests/memecad_tests.cpp
+    src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h
+    src/memeroute/renderer.cpp include/memeroute/renderer.h
+    src/memeroute/router.cpp include/memeroute/router.h src/memeroute/router_worker.cpp include/memeroute/router_worker.h)
+set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES}
+    src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
-add_executable(memeroute src/programs/memeroute.cpp src/programs/memeroute.cpp)
 
-# Verymeme library configuration:
-target_include_directories(verymeme_library PUBLIC
-    ${VERILATOR_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} include)
-target_link_directories(verymeme_library PUBLIC ${Boost_LIBRARY_DIRS})
-# -fPIC since it's used in a shared library.
-set_property(TARGET verymeme_library PROPERTY POSITION_INDEPENDENT_CODE ON)
+# generate_firmware:
+add_executable(generate_firmware ${VERYMEME_SOURCES} src/programs/generate_firmware.cpp)
+target_include_directories(generate_firmware PRIVATE ${Boost_INCLUDE_DIRS} include)
+target_link_directories(generate_firmware PRIVATE ${Boost_LIBRARY_DIRS})
+target_link_libraries(generate_firmware PRIVATE ${Boost_LIBRARIES})
 
-# Memecad library configuration:
-target_compile_options(memecad_library PUBLIC ${YOSYS_OPTIONS})
-target_link_options(memecad_library PUBLIC ${YOSYS_LDFLAGS})
+# memecad:
+add_executable(memecad ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} src/programs/memecad.cpp)
+target_include_directories(memecad PRIVATE ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memecad PRIVATE ${Boost_LIBRARY_DIRS})
+target_compile_options(memecad PRIVATE ${YOSYS_OPTIONS})
+target_link_options(memecad PRIVATE ${YOSYS_LDFLAGS})
+target_link_libraries(memecad PRIVATE ${YOSYS_LIBRARIES} ${Boost_LIBRARIES})
 
-# Memeroute library configuration:
-target_include_directories(memeroute_library PUBLIC ${SFML_INCLUDE_DIR})
+# memeroute:
+add_executable(memeroute ${VERYMEME_SOURCES} ${MEMEROUTE_SOURCES} src/programs/memeroute.cpp)
+target_include_directories(memeroute PRIVATE ${SFML_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memeroute PRIVATE ${Boost_LIBRARY_DIRS})
+target_link_libraries(memeroute PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${Boost_LIBRARIES}
+    Threads::Threads)
 
-# Link libraries.
-target_link_libraries(verymeme_library PUBLIC ${Boost_LIBRARIES})
-target_link_libraries(memecad_library PUBLIC ${YOSYS_LIBRARIES} verymeme_library)
-target_link_libraries(memeroute_library PUBLIC verymeme_library ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-
-# Link executables.
-target_link_libraries(tests PRIVATE gtest verymeme_library memecad_library
-    memeroute_library verilated_library)
-target_link_libraries(generate_firmware PRIVATE verymeme_library)
-target_link_libraries(memecad PRIVATE memecad_library)
-target_link_libraries(memeroute PRIVATE memeroute_library)
-
+# tests:
+add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)
+target_include_directories(tests PRIVATE ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS} include)
+target_link_directories(tests PRIVATE ${YOSYS_OPTIONS} ${Boost_LIBRARY_DIRS})
+target_compile_options(tests PRIVATE ${YOSYS_OPTIONS})
+target_link_options(tests PRIVATE ${YOSYS_LDFLAGS})
+target_link_libraries(tests PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${YOSYS_LIBRARIES}
+    gtest verilated_library ${Boost_LIBRARIES} Threads::Threads)
 gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
