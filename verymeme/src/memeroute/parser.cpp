@@ -258,7 +258,7 @@ private:
       checkParseConfiguration();
     } else if (name == "net") {
       p_.expect({"(", "net"});
-      auto& net = pcb_.nets.emplace_back();
+      Net net = {};
       net.name = p_.next();
       p_.expect({"(", "pins"});
       while (p_.peek() != ")") {
@@ -268,6 +268,9 @@ private:
             component_pin.c_str());
         net.pin_ids.push_back({component_pin.substr(0, div), component_pin.substr(div + 1)});
       }
+      verify_expr(pcb_.nets.count(net.name) == 0, "duplicate net description with name '%s'",
+          net.name.c_str());
+      pcb_.nets[net.name] = std::move(net);
       p_.expect({")", ")"});
     } else if (name == "class") {
       ignoreRestOfExpression();  // TODO: Don't ignore.

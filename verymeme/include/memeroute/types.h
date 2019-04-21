@@ -79,6 +79,7 @@ struct Net {
   std::vector<PinId> pin_ids;  // Of the form: ComponentId-PinId
 };
 
+// Consider all information in these structures read-only after initially reading / constructing.
 struct Pcb {
   std::string name;
   Shape boundary;
@@ -86,9 +87,10 @@ struct Pcb {
   std::unordered_map<std::string, Padstack> padstacks;
   std::unordered_map<std::string, Component> components;
   std::unordered_map<std::string, int> layers;
-  std::vector<Net> nets;
+  std::unordered_map<std::string, Net> nets;
 
   void verifyAndSetup();
+  const Net& getNet(const std::string& net_name) const;
   const Net* getNetForPinId(const Net::PinId& pin_id) const;
   const Component& getComponentForPinId(const Net::PinId& pin_id) const;
   const Pin& getPinForPinId(const Net::PinId& pin_id) const;
