@@ -5,19 +5,19 @@ namespace memeroute {
 namespace {
 
 const sf::Color PRIMARY_COLOR[5] = {
-    sf::Color(20, 55, 173),
-    sf::Color(89, 113, 193),
-    sf::Color(56, 84, 178),
-    sf::Color(14, 42, 133),
-    sf::Color(9, 31, 105),
+    sf::Color(20, 55, 173, 150),
+    sf::Color(89, 113, 193, 150),
+    sf::Color(56, 84, 178, 150),
+    sf::Color(14, 42, 133, 150),
+    sf::Color(9, 31, 105, 150),
 };
 
 const sf::Color SECONDARY_COLOR[5] = {
-    sf::Color(255, 44, 0),
-    sf::Color(255, 126, 99),
-    sf::Color(255, 91, 57),
-    sf::Color(197, 34, 0),
-    sf::Color(155, 27, 0),
+    sf::Color(255, 44, 0, 150),
+    sf::Color(255, 126, 99, 150),
+    sf::Color(255, 91, 57, 150),
+    sf::Color(197, 34, 0, 150),
+    sf::Color(155, 27, 0, 150),
 };
 
 const sf::Color LIGHT_GREY = sf::Color(240, 240, 240);
@@ -26,6 +26,11 @@ const float MOUSE_SIZE = 0.01f;
 const float TEXT_SIZE = 5000.f;
 const float MIN_SCALE_FACTOR = 0.5f;
 const float MAX_SCALE_FACTOR = 20.f;
+
+sf::Color layerToColor(int layer, int idx) {
+  if (layer == -1) return sf::Color::Black;
+  return layer ? SECONDARY_COLOR[idx] : PRIMARY_COLOR[idx];
+}
 
 }  // namespace
 
@@ -127,7 +132,8 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
 
   for (const auto& outline : image.outlines)
     bounds = floatRectUnion(
-        addShapeToDisplayList(outline, tf, PRIMARY_COLOR[0], false /* filled */), bounds);
+        addShapeToDisplayList(outline, tf, layerToColor(pcb_.getLayer(component, outline), 0),
+            false /* filled */), bounds);
 
   for (const auto& kv : image.pins) {
     const auto& pin = kv.second;
@@ -144,8 +150,8 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
     auto padstack_iter = pcb_.padstacks.find(pin.padstack_id);
     for (const auto& shape : padstack_iter->second.shapes)
       bounds = floatRectUnion(
-          addShapeToDisplayList(shape, pin_tf, PRIMARY_COLOR[1], true /* filled */),
-          bounds);
+          addShapeToDisplayList(shape, pin_tf, layerToColor(pcb_.getLayer(component, shape), 1),
+              true /* filled */), bounds);
   }
 
   // Add keepouts.
@@ -183,7 +189,7 @@ void Renderer::initialiseDrawingState() {
   // Add routed paths.
   auto paths = router_.route();
   for (const auto& path : paths)
-    addShapeToDisplayList(path, tf, sf::Color::Black, false /* filled */);
+    addShapeToDisplayList(path, tf, layerToColor(path.layer_id, 2), false /* filled */);
 
   addShapeToDisplayList(pcb_.boundary, tf, SECONDARY_COLOR[1], false /* filled */);
 }

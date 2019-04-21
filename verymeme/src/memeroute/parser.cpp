@@ -37,7 +37,8 @@ private:
     Shape shape{};
     p_.expect({"("});
     std::string type = p_.next();
-    shape.layer_id = p_.next();
+    const std::string layer_name = p_.next();
+    shape.layer_id = getDefault(pcb_.layers, layer_name, -1);
 
     if (type == "path") {
       shape.type = Shape::Type::PATH;
@@ -202,8 +203,15 @@ private:
           p_.expect({"boundary"});
           pcb_.boundary = parseShape();
           p_.expect({")"});
-        } else if (child == "layer" || child == "via" ||
-                   child == "rule")
+        } else if (child == "layer") {
+          p_.expect({"layer"});
+          const std::string name = p_.next();
+          p_.expect({"(", "type", "signal", ")", "(", "property", "(", "index"});
+          verify_expr(pcb_.layers.count(name) == 0, "duplicate layer '%s'", name.c_str());
+          pcb_.layers[name] = p_.next<int>();
+          p_.expect({")", ")", ")"});
+        } else if (child == "via" || child == "rule")
+          // TODO: Collect via and rules and propagate to router.
           ignoreRestOfExpression();  // TODO: Don't ignore these.
         else
           verify_expr(false, "unrecognised expression '%s'", tok.c_str());

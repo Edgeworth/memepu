@@ -159,5 +159,15 @@ const Pin& Pcb::getPinForPinId(const Net::PinId& pin_id) const {
       pin_id.toString().c_str());
   return pin_iter->second;
 }
+int Pcb::getLayer(Side side) const {
+  const std::string layer_name = side == Side::FRONT ? "F.Cu" : "B.Cu";
+  auto iter = layers.find(layer_name);
+  verify_expr(iter != layers.end(), "must contain front and back copper layers");
+  return iter->second;
+}
+
+int Pcb::getLayer(const Component& component, const Shape& shape) const {
+  return shape.layer_id != -1 ? shape.layer_id : getLayer(component.side);
+}
 
 }  // memeroute

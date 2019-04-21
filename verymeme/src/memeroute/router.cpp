@@ -9,59 +9,73 @@ namespace {
 
 constexpr int GRID_ROWS = 500;
 constexpr int GRID_COLS = 500;
-const Point DP8[8] = {{-1, -1},
-                      {-1, 0},
-                      {-1, 1},
-                      {0,  -1},
-                      {0,  1},
-                      {1,  -1},
-                      {1,  0},
-                      {1,  1}};
-//const Point DP[4] = {
-//    {0,  -1},
-//    {-1, 0},
-//    {0,  1},
-//    {1,  0}};
-// TODO: not thread safe.
-int blocked[GRID_ROWS][GRID_COLS];
-std::bitset<GRID_COLS> traces[GRID_ROWS];
-std::bitset<GRID_COLS> seen[GRID_ROWS];
-Point back[GRID_ROWS][GRID_COLS];
+constexpr int NUM_LAYERS = 2;
+const Router::State DP9[9] =
+    {{{-1, -1}, 0},
+     {{-1, 0},  0},
+     {{-1, 1},  0},
+     {{0,  -1}, 0},
+     {{0,  1},  0},
+     {{1,  -1}, 0},
+     {{1,  0},  0},
+     {{1,  1},  0},
+     {{0,  0},  1}};  // TODO: Needs to support more than 2 layers.
+int blocked[GRID_ROWS][GRID_COLS][NUM_LAYERS];
+uint8_t traces[GRID_ROWS][GRID_COLS][NUM_LAYERS];
+uint8_t seen[GRID_ROWS][GRID_COLS][NUM_LAYERS];
+Router::State back[GRID_ROWS][GRID_COLS][NUM_LAYERS];
 
 int64_t ceil_div(int64_t a, int64_t b) {
   return a / b + bool(a % b);
 }
 
-bool oob(const Point& p) {
-  return p.x < 0 || p.y < 0 || p.x >= GRID_COLS || p.y >= GRID_ROWS;
+bool oob(const Router::State& s) {
+  return s.p.x < 0 || s.p.y < 0 || s.p.x >= GRID_COLS || s.p.y >= GRID_ROWS || s.layer < 0 ||
+         s.layer >= NUM_LAYERS;
 }
 
 }  // namespace
 
 Router::Router(const Pcb& pcb) : pcb_(pcb) {}
 
+Router::State Router::State::transitionTo(const Router::State& s) const {
+  return {p + s.p, s.layer ? !layer : layer};  // TODO: Currently just flips layer.
+}
+
+bool Router::State::operator!=(const Router::State& s) const {
+  return p != s.p || layer != s.layer;
+}
+
+std::string Router::State::toString() const {
+  return "{" + p.toString() + ", " + std::to_string(layer) + "}";
+}
+
 std::vector<Shape> Router::route() {
   initializeGrid();
 
   std::vector<Shape> paths;
-  int idx = 0;
   for (const auto& net : pcb_.nets) {
-    std::vector<Point> grid_points;
+    printf("ROUTING: %s...", net.name.c_str());
+    std::vector<State> states;
     for (const auto& pin_id : net.pin_ids) {
       const auto& component = pcb_.getComponentForPinId(pin_id);
       const auto& pin = pcb_.getPinForPinId(pin_id);
-      grid_points.push_back(convertWorldToGrid(component.toParentCoord(pin.p)));
+      // TODO: Through hole components can start from any layer. Needs to check padstack.
+      states.push_back(
+          {convertWorldToGrid(component.toParentCoord(pin.p)), pcb_.getLayer(component.side)});
       markPinInGrid(component, pin, -1);  // Temporarily unmark pins in this net.
     }
-    const auto& routes = bfsAndAddToGrid(grid_points);
+    const auto& routes = bfsAndAddToGrid(states);
     paths.insert(paths.end(), routes.begin(), routes.end());
 
-    if (routes.empty()) printf("FAILED AT %d\n", idx);
+    if (routes.empty()) printf(" FAILED AT %d\n", idx_);
+    else printf("\n");
 
     // Put them back.
     for (const auto& pin_id : net.pin_ids)
       markPinInGrid(pcb_.getComponentForPinId(pin_id), pcb_.getPinForPinId(pin_id), 1);
-    if (idx++ > 5) break;
+//    if (idx_ > 5) break;
+    idx_++;
   }
 //  for (int r = 0; r < GRID_ROWS; ++r)
 //    for (int c = 0; c < GRID_COLS; ++c) {
@@ -91,7 +105,8 @@ void Router::initializeGrid() {
     for (const auto& kv2 : image.pins)
       markPinInGrid(component, kv2.second, 1);
     for (const auto& keepout : image.keepouts)
-      markFilledShapeInGrid(component.toParentCoord(keepout), 1);
+      markFilledShapeInGrid(component.toParentCoord(keepout),
+          pcb_.getLayer(component, keepout), 1);
   }
 }
 
@@ -99,17 +114,18 @@ void Router::markPinInGrid(const Component& component, const Pin& pin, int val) 
   const auto& padstack = pcb_.padstacks[pin.padstack_id];
   // Add padstacks. Convert from pin coord -> component coord -> pcb coord
   for (const auto& s : padstack.shapes)
-    markFilledShapeInGrid(component.toParentCoord(pin.toParentCoord(s)), val);
+    markFilledShapeInGrid(component.toParentCoord(pin.toParentCoord(s)),
+        pcb_.getLayer(component, s), val);
 }
 
-void Router::markFilledShapeInGrid(const Shape& shape, int val) {
+void Router::markFilledShapeInGrid(const Shape& shape, int layer, int val) {
   const Rect bbox = shape.getBoundingBox();  // TODO: For now just do bounding box.
   const Rect grid_bbox = Rect::enclosing(convertWorldToGrid(bbox.origin()),
       convertWorldToGrid(bbox.bottom_right()));
 
   for (int r = grid_bbox.top; r < grid_bbox.bottom; ++r)
     for (int c = grid_bbox.left; c < grid_bbox.right; ++c)
-      blocked[r][c] += val;
+      blocked[r][c][layer] += val;
 }
 
 Point Router::convertWorldToGrid(const Point& p) const {
@@ -126,16 +142,15 @@ Point Router::convertGridToWorld(const Point& p) const {
           (p.y * boundary_.height() + boundary_.height() / 2) / GRID_ROWS + boundary_.top};
 }
 
-std::vector<Shape> Router::bfsAndAddToGrid(const std::vector<Point>& grid_points) {
-  for (auto& row : traces) row.reset();  // Reset traces to zero.
-
-  traces[grid_points[0].y][grid_points[0].x] = true;  // Set-up initial connection point.
+std::vector<Shape> Router::bfsAndAddToGrid(const std::vector<State>& states) {
+  memset(traces, 0, sizeof(traces)); // Reset traces to zero
+  traces[states[0].p.y][states[0].p.x][states[0].layer] = true;  // Set-up initial connection point.
 
   // Start from the 2nd pad and try to connect to previous stuff so everything is connected.
   bool succeeded = true;
-  for (int i = 1; i < int(grid_points.size()); ++i) {
-    for (auto& row : seen) row.reset();  // Reset seen to zero.
-    if (!bfsOnce(grid_points[i])) {
+  for (int i = 1; i < int(states.size()); ++i) {
+    memset(seen, 0, sizeof(seen));  // Reset seen to zero
+    if (!bfsOnce(states[i])) {
       succeeded = false;
       break;
     }
@@ -146,99 +161,117 @@ std::vector<Shape> Router::bfsAndAddToGrid(const std::vector<Point>& grid_points
   // Don't cross traces for the next bfs.
   for (int r = 0; r < GRID_ROWS; ++r)
     for (int c = 0; c < GRID_COLS; ++c)
-      blocked[r][c] += int(traces[r][c]);
+      for (int l = 0; l < NUM_LAYERS; ++l)
+        blocked[r][c][l] += int(traces[r][c][l]);
 
-  return convertTraceArrayToShapes(grid_points[0]);
+  return convertTraceArrayToShapes(states[0]);
 }
 
 // Consider placing something directly next to something that is blocked an error.
 // This solves the case of diagonal lines intersecting.
-bool Router::canRouteOn(const Point& p) const {
-  if (blocked[p.y][p.x]) return false;
-  for (const auto& dp : DP8) {
-    const Point new_p = p + dp;
-    if (oob(new_p)) continue;
-    if (blocked[new_p.y][new_p.x]) return false;
+bool Router::canRouteOn(const State& s) const {
+  if (blocked[s.p.y][s.p.x][s.layer]) return false;
+  for (const auto& dp : DP9) {
+    const State new_s = s.transitionTo(dp);
+    // Don't let things on a different layer block us.
+    if (oob(new_s) || new_s.layer != s.layer) continue;
+    if (blocked[new_s.p.y][new_s.p.x][new_s.layer]) return false;
   }
   return true;
 }
 
-bool Router::bfsOnce(const Point& start) {
-  std::queue<Point> q;
+// TODO: Do dijkstra instead?
+bool Router::bfsOnce(const State& start) {
+  std::queue<State> q;
   q.push(start);
 
-  seen[start.y][start.x] = true;
+  seen[start.p.y][start.p.x][start.layer] = true;
   while (!q.empty()) {
-    const Point p = q.front();
+    const State s = q.front();
     q.pop();
-    const int cur_seen = seen[p.y][p.x];
+    const int cur_seen = seen[s.p.y][s.p.x][s.layer];
     verify_expr(cur_seen, "BUG, cur_seen is false");
 
-    for (const auto& dp : DP8) {
-      const Point new_p = p + dp;
-      if (oob(new_p) || !canRouteOn(new_p)) continue;
+    for (const auto& dp : DP9) {
+      const State new_s = s.transitionTo(dp);
+      if (oob(new_s) || !canRouteOn(new_s)) continue;
 
       // Found ourselves, ignore.
-      if (seen[new_p.y][new_p.x]) continue;
+      if (seen[new_s.p.y][new_s.p.x][new_s.layer]) continue;
 
       // Found a friend trace. Add this path to here
-      if (traces[new_p.y][new_p.x]) {
-        Point cur = p;
+      if (traces[new_s.p.y][new_s.p.x][new_s.layer]) {
+        State cur = s;
         // Collect points back to starting point.
         while (cur != start) {
-          traces[cur.y][cur.x] = true;
-          cur = back[cur.y][cur.x];
+          traces[cur.p.y][cur.p.x][cur.layer] = true;
+          cur = back[cur.p.y][cur.p.x][cur.layer];
         }
-        traces[start.y][start.x] = true;
+        traces[start.p.y][start.p.x][start.layer] = true;
         return true; // We are done.
       }
 
-      back[new_p.y][new_p.x] = p;  // Mark for backtracking.
-      seen[new_p.y][new_p.x] = true;  // Mark seen.
-      q.push(new_p);  // Keep searching.
+      back[new_s.p.y][new_s.p.x][new_s.layer] = s;  // Mark for backtracking.
+      seen[new_s.p.y][new_s.p.x][new_s.layer] = true;  // Mark seen.
+      q.push(new_s);  // Keep searching.
     }
   }
   return false;  // Unable to do.
 }
 
-void Router::convertTraceArrayToShapesInternal(Point p) {
-  tmp_points_.push_back(p);
-  seen[p.y][p.x] = true;
+void Router::convertTraceArrayToShapesInternal(const State s) {
+  tmp_states_.push_back(s);
+  seen[s.p.y][s.p.x][s.layer] = true;
   bool found = false;
-  for (const auto& dp : DP8) {
-    const Point next_p = p + dp;
-    if (oob(next_p) || seen[next_p.y][next_p.x]) continue;
-    if (traces[next_p.y][next_p.x]) {
-      convertTraceArrayToShapesInternal(next_p);
+  for (const auto& dp : DP9) {
+    const State new_s = s.transitionTo(dp);
+    if (oob(new_s) || seen[new_s.p.y][new_s.p.x][new_s.layer]) continue;
+    if (traces[new_s.p.y][new_s.p.x][new_s.layer]) {
+      convertTraceArrayToShapesInternal(new_s);
+      // Only let the first search down place a path for previous states. Everything after should
+      // just be branchs coming off the existing path.
+      tmp_states_.clear();
+      tmp_states_.push_back(s);
       found = true;
     }
   }
-  // At leaf, add the shape.
+
   if (!found) {
-    Shape path = {};
-    path.type = Shape::Type::PATH;
-    path.layer_id = "";  // TODO: Specify layer.
-    path.path.width = std::min(boundary_.width() / GRID_COLS, boundary_.height() / GRID_ROWS);
-    for (const auto& path_point : tmp_points_) {
-      const auto& grid_point = convertGridToWorld(path_point);
-      // Trim collinear lines.
-      if (path.path.points.size() >= 2u) {
-        const auto& a = path.path.points[path.path.points.size() - 2];
-        const auto& b = path.path.points.back();
-        if ((b - a).cross(grid_point - b) == 0)
-          path.path.points.pop_back();
+    // At leaf, add the shape.
+    Shape cur_path;
+    cur_path.type = Shape::Type::PATH;
+    cur_path.path.width = std::min(boundary_.width() / GRID_COLS, boundary_.height() / GRID_ROWS);
+    for (int idx = 0; idx < int(tmp_states_.size()); ++idx) {
+      // Needs a new path if we're just starting or jumped layers.
+      const bool needs_new_path = idx == 0 || tmp_states_[idx].layer != tmp_states_[idx - 1].layer;
+      if (needs_new_path) {
+        if (idx != 0) {
+          tmp_shapes_.push_back(cur_path);
+          cur_path.path.points.clear();
+          // TODO: Add via here because we switched layers.
+        }
+        cur_path.layer_id = tmp_states_[idx] .layer;
       }
-      path.path.points.push_back(grid_point);
+
+      const auto& grid_point = convertGridToWorld(tmp_states_[idx].p);
+      // Trim collinear lines.
+      if (cur_path.path.points.size() >= 2u) {
+        const auto& a = cur_path.path.points[cur_path.path.points.size() - 2];
+        const auto& b = cur_path.path.points.back();
+        if ((b - a).cross(grid_point - b) == 0)
+          cur_path.path.points.pop_back();
+      }
+      cur_path.path.points.push_back(grid_point);
     }
-    tmp_shapes_.push_back(std::move(path));
+    tmp_shapes_.push_back(cur_path);  // Push final path.
   }
-  tmp_points_.pop_back();
+  tmp_states_.pop_back();
 }
 
-std::vector<Shape> Router::convertTraceArrayToShapes(Point p) {
-  for (auto& row : seen) row.reset();
+std::vector<Shape> Router::convertTraceArrayToShapes(const State s) {
+  memset(seen, 0, sizeof(seen));  // Reset seen to zero
   tmp_shapes_.clear();
-  convertTraceArrayToShapesInternal(p);
+  convertTraceArrayToShapesInternal(s);
   return std::move(tmp_shapes_);
 }
 
