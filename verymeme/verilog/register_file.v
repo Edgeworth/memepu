@@ -9,8 +9,8 @@ module register_file(
 );
   // TODO: change to specific sram chip
   // 32 registers.
-  sram#(.DEPTH(5), .WIDTH(32)) registers(.ADDR(REG), .N_WE(N_WE), .N_OE(N_OE),
-    .IN_DATA(IN_DATA), .OUT_DATA(OUT_DATA));
+//  sram#(.DEPTH(5), .WIDTH(32)) registers(.ADDR(REG), .N_WE(N_WE), .N_OE(N_OE),
+//    .IN_DATA(IN_DATA), .OUT_DATA(OUT_DATA));
 
   `ifdef FORMAL
   `endif

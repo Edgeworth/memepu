@@ -109,6 +109,9 @@ Shape Component::toParentCoord(const Shape& local) const {
 }
 
 void Pcb::verifyAndSetup() {
+  verify_expr(padstacks.count(via_padstack_id), "via type '%s' padstack does not exist",
+      via_padstack_id.c_str());
+
   for (const auto& kv : images) {
     const auto&[name, image] = kv;
     for (const auto& kv2 : image.pins) {
@@ -130,6 +133,11 @@ void Pcb::verifyAndSetup() {
       pin_ids.insert(pin_id);
     }
   }
+
+  for (const auto& kv : padstacks)
+    for (const auto& shape : kv.second.shapes)
+      verify_expr(shape.layer_id != -1,
+          "padstack shapes must have specified layer id since they aren't associated with a component");
 
   // Generate pin id to net map.
   for (const auto& kv : nets)

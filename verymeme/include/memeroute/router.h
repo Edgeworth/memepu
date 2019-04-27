@@ -3,6 +3,7 @@
 
 #include "verymeme/common.h"
 #include "memeroute/types.h"
+#include "memeroute/router_worker.h"
 
 namespace memeroute {
 
@@ -10,11 +11,10 @@ class Router {
 public:
   explicit Router(const Pcb& pcb);
 
-  std::vector<Shape> route();
+  RouterWorker::RoutingResult route();
 
 private:
   Pcb pcb_;
-
 };
 
 }  // memeroute
