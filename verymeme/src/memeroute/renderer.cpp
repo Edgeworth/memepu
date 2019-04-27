@@ -121,6 +121,17 @@ Renderer::addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, con
   return getVertexArraysBoundingBox(arrays);
 }
 
+sf::FloatRect
+Renderer::addPadstackToDisplayList(const std::string& padstack_id, const sf::Transform& tf) {
+  sf::FloatRect bounds = {};
+  auto padstack_iter = pcb_.padstacks.find(padstack_id);
+  for (const auto& shape : padstack_iter->second.shapes)
+    bounds = floatRectUnion(
+        addShapeToDisplayList(shape, tf, layerToColor(shape.layer_id, 1), true /* filled */),
+        bounds);
+  return bounds;
+}
+
 sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf::Transform tf) {
   tf.translate(pointToVector(component.p));
   tf.rotate(component.rotation);
@@ -147,11 +158,7 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
       net_text.scale(0.25f, 0.25f);
     }
 
-    auto padstack_iter = pcb_.padstacks.find(pin.padstack_id);
-    for (const auto& shape : padstack_iter->second.shapes)
-      bounds = floatRectUnion(
-          addShapeToDisplayList(shape, pin_tf, layerToColor(pcb_.getLayer(component, shape), 1),
-              true /* filled */), bounds);
+    bounds = floatRectUnion(bounds, addPadstackToDisplayList(pin.padstack_id, pin_tf));
   }
 
   // Add keepouts.
@@ -187,10 +194,15 @@ void Renderer::initialiseDrawingState() {
     label.scale(text_scale, text_scale);
 
   // Add routed paths.
-  auto paths = router_.route();
-  for (const auto& path : paths)
+  auto result = router_.route();
+  for (const auto& path : result.traces)
     addShapeToDisplayList(path, tf, layerToColor(path.layer_id, 2), false /* filled */);
-
+  // Add routed vias:
+  for (const auto& via_position : result.vias) {
+    sf::Transform via_tf = tf;
+    via_tf.translate(pointToVector(via_position));
+    addPadstackToDisplayList(pcb_.via_padstack_id, via_tf);
+  }
   addShapeToDisplayList(pcb_.boundary, tf, SECONDARY_COLOR[1], false /* filled */);
 }
 

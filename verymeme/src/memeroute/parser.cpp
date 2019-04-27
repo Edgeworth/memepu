@@ -210,10 +210,14 @@ private:
           verify_expr(pcb_.layers.count(name) == 0, "duplicate layer '%s'", name.c_str());
           pcb_.layers[name] = p_.next<int>();
           p_.expect({")", ")", ")"});
-        } else if (child == "via" || child == "rule")
+        } else if (child == "via") {
+          p_.expect({"via"});
+          pcb_.via_padstack_id = p_.next();
+          p_.expect({")"});
+        } else if (child == "rule") {
           // TODO: Collect via and rules and propagate to router.
           ignoreRestOfExpression();  // TODO: Don't ignore these.
-        else
+        } else
           verify_expr(false, "unrecognised expression '%s'", tok.c_str());
       }
     }

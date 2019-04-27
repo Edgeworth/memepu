@@ -16,12 +16,15 @@ public:
   explicit RouterWorker(const Pcb& pcb);
 
   struct InvocationParams {
-    std::vector<std::string> net_names;
+    std::vector<std::string> net_names = {};
   };
 
   struct RoutingResult {
-    std::vector<Shape> traces;
-    int failed;
+    std::vector<Shape> traces = {};
+    std::vector<Point> vias = {};
+    int failed = 0;
+
+    void merge(const RoutingResult& result);
   };
 
   RoutingResult route(const InvocationParams& params);
@@ -51,11 +54,12 @@ private:
   // Routing state:
   std::vector<State> tmp_states_;
   std::vector<Shape> tmp_shapes_;
+  std::vector<Point> tmp_vias_;
 
-  int blocked[GRID_ROWS][GRID_COLS][NUM_LAYERS];
-  uint8_t traces[GRID_ROWS][GRID_COLS][NUM_LAYERS];
-  uint8_t seen[GRID_ROWS][GRID_COLS][NUM_LAYERS];
-  State back[GRID_ROWS][GRID_COLS][NUM_LAYERS];
+  int blocked_[GRID_ROWS][GRID_COLS][NUM_LAYERS]{};
+  uint8_t traces_[GRID_ROWS][GRID_COLS][NUM_LAYERS]{};
+  uint8_t seen_[GRID_ROWS][GRID_COLS][NUM_LAYERS]{};
+  State back_[GRID_ROWS][GRID_COLS][NUM_LAYERS];
 
   // Regular state:
   Pcb pcb_;
@@ -63,11 +67,11 @@ private:
 
   // Routing:
   void initializeGrid();
-  std::vector<Shape> bfsAndAddToGrid(const std::vector<State>& states);
+  RoutingResult bfsAndAddToGrid(const std::vector<State>& states);
   bool bfsOnce(const State& start);
 
-  std::vector<Shape> convertTraceArrayToShapes(const State s);
-  void convertTraceArrayToShapesInternal(const State s);
+  RoutingResult collectRoutes(const State s);
+  void collectRoutesInternal(const State s);
 
   // Helpers:
 
@@ -75,7 +79,9 @@ private:
   Point convertWorldToGrid(const Point& p) const;
   Point convertGridToWorld(const Point& p) const;
   void markPinInGrid(const Component& component, const Pin& pin, int val);
+  void markPadstackInGrid(const Point& p, const std::string& padstack_id);
   void markFilledShapeInGrid(const Shape& shape, int layer, int val);
+  bool isBlocked(const State& prev_s, const State& s);
 };
 
 }  // memeroute

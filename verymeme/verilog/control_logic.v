@@ -8,4 +8,4 @@ module control_logic(
 
   `ifdef FORMAL
   `endif
-endmodule : control_logic
+endmodule

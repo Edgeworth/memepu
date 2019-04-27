@@ -82,6 +82,7 @@ struct Net {
 // Consider all information in these structures read-only after initially reading / constructing.
 struct Pcb {
   std::string name;
+  std::string via_padstack_id;
   Shape boundary;
   std::unordered_map<std::string, Image> images;
   std::unordered_map<std::string, Padstack> padstacks;
