@@ -117,13 +117,17 @@ struct Rect {
     bottom = std::max(bottom, r.bottom);
   }
 
-  void offset(const Point& p) {
+  Rect& offset(const Point& p) {
     left += p.x;
     right += p.x;
     top += p.y;
     bottom += p.y;
+    return *this;
   }
 
+  constexpr bool contains(const Rect& r) const {
+    return left <= r.left && top <= r.top && right >= r.right && bottom >= r.bottom;
+  }
   constexpr Point origin() const { return {left, top}; }
   constexpr Point bottom_right() const { return {right, bottom}; }
   constexpr int64_t width() const { return right - left; }

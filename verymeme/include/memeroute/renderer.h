@@ -38,6 +38,8 @@ private:
   sf::FloatRect
   addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, const sf::Color& color,
       bool filled);
+  sf::FloatRect
+  addPadstackToDisplayList(const std::string& padstack_id, const sf::Transform& tf);
   sf::FloatRect addComponentToDisplayList(const Component& component, sf::Transform tf);
   void initialiseDrawingState();
 
