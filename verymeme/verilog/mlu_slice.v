@@ -4,13 +4,19 @@ module mlu_slice(
   input wire [3:0] B,
   input wire [2:0] OP,
   input wire C_IN,
-  output logic [7:0] OUT
+  output logic [7:0] OUT,
+  // Bootstrapping signals:
+  input wire [11:0] BOOTSTRAP_ADDR,
+  input wire [7:0] BOOTSTRAP_DATA,
+  input wire BOOTSTRAP_N_WE,
+  input wire N_BOOTED
 );
 
   `ifdef SCHEMATIC
   wire [7:0] unused = 0;
   sram#(.DEPTH(12), .WIDTH(8), .INITIAL("mlu_slice.hex")) slice_mem(
-    .ADDR({OP, C_IN, B, A}), .N_WE(1), .N_OE(0), .IN_DATA(unused), .OUT_DATA(OUT));
+    .ADDR({OP, C_IN, B, A}), .N_WE(BOOTSTRAP_DATA), .N_OE(BOOTSTRAP_DATA),
+    .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(OUT));
   `else
   logic [3:0] out_low;
   logic prop;
@@ -73,4 +79,4 @@ module mlu_slice(
     assert (f_zero == (f_out == 0));
   end
   `endif
-endmodule
+endmodule : mlu_slice

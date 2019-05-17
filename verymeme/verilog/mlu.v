@@ -8,7 +8,13 @@ module mlu(
   output logic [31:0] OUT,
   output logic Z,
   output logic C,
-  output logic N
+  output logic N,
+  // Bootstrapping flags:
+  input wire [7:0] BOOTSTRAP_DATA,
+  input wire [16:0] BOOTSTRAP_ADDR,
+  input wire N_BOOTED,
+  input wire BOOTSTRAP_MLU_SLICE_N_WE,
+  input wire BOOTSTRAP_MLU_LOOKAHEAD_N_WE
 );
   wire [7:0] slice_p, slice_g, slice_z, unused_slice;
   wire [8:0] carrys;
@@ -20,9 +26,10 @@ module mlu(
   generate
     genvar i;
     for (i = 0; i < 8; i = i+1) begin
-      mlu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP),
-        .C_IN(carrys[i]),
-        .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}));
+      mlu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP), .C_IN(carrys[i]),
+        .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}),
+        .BOOTSTRAP_ADDR(BOOTSTRAP_ADDR[11:0]), .BOOTSTRAP_DATA(BOOTSTRAP_DATA),
+        .BOOTSTRAP_N_WE(BOOTSTRAP_MLU_SLICE_N_WE), .N_BOOTED(N_BOOTED));
     end
   endgenerate
   mlu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys[8:1]));
@@ -54,4 +61,4 @@ module mlu(
     assert (Z == (OUT == 0));
   end
   `endif
-endmodule
+endmodule : mlu
