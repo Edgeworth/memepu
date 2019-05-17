@@ -69,6 +69,9 @@ Output plane - write these out onto the bus:
 Register plane - 5 bit:
 	which register to select in the register file
 
+Alu operation plane - 3 bit + 1 bit for carry:
+	which ALU operation to perform
+
 Microcode snippets:
 Fetch:
 	# Check interrupt flags
