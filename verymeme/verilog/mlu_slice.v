@@ -79,4 +79,4 @@ module mlu_slice(
     assert (f_zero == (f_out == 0));
   end
   `endif
-endmodule : mlu_slice
+endmodule
