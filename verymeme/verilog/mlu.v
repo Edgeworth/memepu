@@ -32,7 +32,9 @@ module mlu(
         .BOOTSTRAP_N_WE(BOOTSTRAP_MLU_SLICE_N_WE), .N_BOOTED(N_BOOTED));
     end
   endgenerate
-  mlu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys[8:1]));
+  mlu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys[8:1]),
+    .BOOTSTRAP_ADDR(BOOTSTRAP_ADDR), .BOOTSTRAP_DATA(BOOTSTRAP_DATA), .N_BOOTED(N_BOOTED),
+    .BOOTSTRAP_N_WE(BOOTSTRAP_MLU_LOOKAHEAD_N_WE));
 
   wire [3:0] z_level0;
   wire [1:0] z_level1;
