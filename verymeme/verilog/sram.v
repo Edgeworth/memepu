@@ -12,7 +12,7 @@ module sram(
   parameter INITIAL = "mlu_slice.hex";  // TODO remove.
   logic [WIDTH-1:0] mem [(1 << DEPTH)-1:0];
 
-  assign OUT_DATA = N_OE == 0 ? mem[ADDR]:8'bZ;
+  assign OUT_DATA = N_OE == 0 ? mem[ADDR]:{WIDTH{1'bZ}};
   always_ff @(negedge N_WE) mem[ADDR] <= IN_DATA;
 
   `ifdef SCHEMATIC
