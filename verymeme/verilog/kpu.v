@@ -21,23 +21,24 @@ module kpu(
     .OUT_DATA(reg_out));
 
   // Opcode word:
+  // Outputs:
   wire [5:0] op;  // 6 bit opcode
   wire [4:0] op_reg0_sel, op_reg1_sel;
   wire [15:0] op_offset;
-  register32 op_word(.CLK(), .IN(), .N_OE(0), .OUT({op_offset, op_reg1_sel, op_reg0_sel, op}));
+  register32 op_word(.CLK(CLK), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg1_sel, op_reg0_sel, op}));
 
-  // Microcode:
-  // TODO: change to specific sram chip
+  // Control logic:
+  // Outputs:
   wire [1:0] control_in_plane;
   wire [1:0] control_out_plane;
   wire [2:0] control_alu_plane;
-  wire [4:0] control_reg_plane;
+  wire [6:0] control_reg_plane;
   wire [19:0] control_unused;
-  wire [11:0] control_in_addr;
-  wire control_bootstrap_n_we;
-  sram#(.DEPTH(12), .WIDTH(32)) microcode(.ADDR(control_in_addr), .N_WE(control_bootstrap_n_we),
-    .N_OE(n_booted), .IN_DATA(bootstrap_data),
-    .OUT_DATA({control_in_plane, control_out_plane, control_alu_plane, control_unused}));
+  // TODO: change to specific sram chip
+  sram#(.DEPTH(6), .WIDTH(32)) microcode(.ADDR({op}), .N_WE(boostrap_control_n_we),
+    .N_OE(n_booted), .IN_DATA({bootstrap_data, 24'b0}),  // TODO(bootstrap): only feeding 8 bits in
+    .OUT_DATA({control_in_plane, control_out_plane, control_alu_plane, control_reg_plane,
+        control_unused}));
   // TODO: Need to latch on N_CLK(?)
 
   // Timer:
@@ -48,16 +49,11 @@ module kpu(
   wire [31:0] mlu_out;
   wire [2:0] mlu_op = 1, mlu_flags_out;
   wire mlu_c_in = 1, mlu_n_oe = 1;  // TODO feed this value in.
-
-  input wire N_BOOTED,
-  input wire [11:0] BOOTSTRAP_MLU_SLICE_ADDR,
-  input wire BOOTSTRAP_MLU_SLICE_N_WE,
-  input wire [16:0] BOOTSTRAP_MLU_LOOKAHEAD_ADDR,
-  input wire BOOTSTRAP_MLU_LOOKAHEAD_N_WE
-
   mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(mlu_op), .C_IN(mlu_c_in), .OUT(mlu_out),
     .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
-    .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr));
+    .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr),
+    .BOOTSTRAP_MLU_SLICE_N_WE(bootstrap_mlu_slice_n_we),
+    .BOOTSTRAP_MLU_LOOKAHEAD_N_WE(bootstrap_mlu_lookahead_n_we));
 
   // Shifter:
   wire [31:0] shifter_out;
@@ -77,20 +73,27 @@ module kpu(
   `endif
 
   // Bootstrapping code:
-  `ifdef SCHEMATIC
   wire n_booted;
   wire [7:0] bootstrap_data;
   wire [16:0] bootstrap_addr;
+  wire bootstrap_mlu_slice_n_we;
+  wire bootstrap_mlu_lookahead_n_we;
+  wire boostrap_control_n_we;
+  `ifdef BOOTSTRAP
   // Read data from EEPROMs into SRAMs in physical version.
   // Requires bootstrapping: MLU slices, MLU lookahead, microcode
   bootstrapper bootstrapper(.TIME(time_out), .CLK(CLK), .N_CLK(N_CLK),
     .DATA(control_bootstrap_data), .N_BOOTED(n_booted), .ADDR(bootstrap_addr),
-    .CONTROL_N_WE(control_bootstrap_n_we), .MLU_SLICE_N_WE(), .MLU_LOOKAHEAD_N_WE());
+    .CONTROL_N_WE(boostrap_control_n_we), .MLU_SLICE_N_WE(bootstrap_mlu_slice_n_we),
+    .MLU_LOOKAHEAD_N_WE(bootstrap_mlu_lookahead_n_we));
   `else
   // Otherwise, load from hex files.
-  wire n_booted = 0;
-  wire [7:0] bootstrap_data = 0;
-  wire [16:0] bootstrap_addr = 0;
+  assign n_booted = 0;
+  assign bootstrap_data = 0;
+  assign bootstrap_addr = 0;
+  assign bootstrap_mlu_slice_n_we = 1;
+  assign bootstrap_mlu_lookahead_n_we = 1;
+  assign boostrap_control_n_we = 1;
   `endif
 
   `ifdef FORMAL

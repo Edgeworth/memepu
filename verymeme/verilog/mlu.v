@@ -61,4 +61,4 @@ module mlu(
     assert (Z == (OUT == 0));
   end
   `endif
-endmodule : mlu
+endmodule

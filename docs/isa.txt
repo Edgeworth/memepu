@@ -66,8 +66,9 @@ Input plane - read into these from the bus:
 Output plane - write these out onto the bus:
 	NONE, MLU, SHIFTER, TMP0, TMP1
 
-Register plane - 5 bit:
+Register plane - 7 bit:
 	which register to select in the register file
+	REG0, REG1, or specify 5 bit index
 
 Alu operation plane - 3 bit + 1 bit for carry:
 	which ALU operation to perform

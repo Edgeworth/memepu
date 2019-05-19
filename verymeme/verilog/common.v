@@ -7,6 +7,8 @@ package common;
   // e.g. loading hex files into SRAMs, or tri-state logic muxes. Loading hex files makes formal
   // verification very slow, so disabling this will instead use in-verilog implementations.
 //  `define SCHEMATIC
+  // Defines whether or not to use bootstrapping for srams.
+//  `define BOOTSTRAP
 
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248
   localparam MLU_ADD = 0;
