@@ -4,13 +4,19 @@ module mlu_lookahead(
   input wire C_IN,
   input wire [7:0] P,
   input wire [7:0] G,
-  output logic [7:0] CARRYS
+  output logic [7:0] CARRYS,
+  // BOOTSTRAPPING flags:
+  input wire [16:0] BOOTSTRAP_ADDR,
+  input wire [7:0] BOOTSTRAP_DATA,
+  input wire N_BOOTED,
+  input wire BOOTSTRAP_N_WE
 );
 
   `ifdef SCHEMATIC
-  wire [7:0] unused = 0;
+  // TODO(bootstrapping): Use BOOTSTRAP_ADDR.
   sram17x8#(.INITIAL("mlu_lookahead.hex")) lookahead_mem(
-    .ADDR({C_IN, G, P}), .N_WE(1), .N_OE(0), .IN_DATA(unused), .OUT_DATA(CARRYS));
+    .ADDR({C_IN, G, P}), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
+    .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(CARRYS));
   `else
   logic prev_carry, carry;
   integer i;
@@ -22,6 +28,11 @@ module mlu_lookahead(
       prev_carry = carry;
     end
   end
+  `endif
+
+  `ifndef BOOTSTRAP
+  // Mark bootstrap signals as okay to not be used if not using bootstrapping.
+  wire _unused_ok = &{BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
   `endif
 
   `ifdef FORMAL
@@ -36,4 +47,4 @@ module mlu_lookahead(
     end
   end
   `endif
-endmodule
+endmodule : mlu_lookahead

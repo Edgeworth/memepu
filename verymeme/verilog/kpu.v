@@ -1,7 +1,8 @@
 `include "common.v"
+/* verilator lint_off UNUSED */  // TODO: Remove
 module kpu(
   input wire CLK,
-  input wire N_CLK,
+//  input wire N_CLK,
   input wire N_RST
 );
   // Bus.
@@ -14,7 +15,8 @@ module kpu(
 
   // Register file:
   wire [31:0] reg_out;
-  wire reg_n_we, reg_n_oe;
+  // TODO: Control from planes.
+  wire reg_n_we = 1, reg_n_oe = 0;
   register_file regs(.REG_SEL(control_reg_sel), .REG_SRC0(op_reg_src0), .REG_SRC1(op_reg_src1),
     .REG_SRC2(control_reg_src), .IN_DATA(bus), .N_WE(reg_n_we), .N_OE(reg_n_oe), .OUT_DATA(reg_out));
 
@@ -27,12 +29,14 @@ module kpu(
 
   // Control logic:
   // Outputs:
+  // In plane: NONE, REG
   wire [1:0] control_in_plane;
+  // Out plane: NONE, REG
   wire [1:0] control_out_plane;
+  // ALU plane:
   wire [2:0] control_alu_plane;
-  // Reg plane:
-  wire [1:0] control_reg_sel;
-  wire [4:0] control_reg_src;
+  wire [1:0] control_reg_sel;  // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
+  wire [4:0] control_reg_src;  // Control logic reg sel.
   wire [17:0] unused_control;
   // TODO: change to specific sram chip
   sram#(.DEPTH(6), .WIDTH(32)) microcode(.ADDR({op}), .N_WE(boostrap_control_n_we),
@@ -98,6 +102,7 @@ module kpu(
 
   `ifdef FORMAL
   always_comb begin
+    // TODO: Need to update this.
     assert (8'b0+!mlu_n_oe+!shifter_n_oe+!reg_n_oe <= 1);  // No conflict on busses.
     // TODO: Assert stuff about boot process
   end

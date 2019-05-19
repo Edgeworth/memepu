@@ -8,14 +8,15 @@ module mlu_slice(
   // Bootstrapping signals:
   input wire [11:0] BOOTSTRAP_ADDR,
   input wire [7:0] BOOTSTRAP_DATA,
-  input wire BOOTSTRAP_N_WE,
-  input wire N_BOOTED
+  input wire N_BOOTED,
+  input wire BOOTSTRAP_N_WE
 );
 
   `ifdef SCHEMATIC
   wire [7:0] unused = 0;
+  // TODO(bootstrapping): Use BOOTSTRAP_ADDR.
   sram#(.DEPTH(12), .WIDTH(8), .INITIAL("mlu_slice.hex")) slice_mem(
-    .ADDR({OP, C_IN, B, A}), .N_WE(BOOTSTRAP_DATA), .N_OE(BOOTSTRAP_DATA),
+    .ADDR({OP, C_IN, B, A}), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(OUT));
   `else
   logic [3:0] out_low;
@@ -45,6 +46,11 @@ module mlu_slice(
     endcase
     OUT = {1'b0, out_low == 0, gen, prop, out_low};
   end
+  `endif
+
+  `ifndef BOOTSTRAP
+  // Mark bootstrap signals as okay to not be used if not using bootstrapping.
+  wire _unused_ok = &{BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
   `endif
 
   `ifdef FORMAL
