@@ -1,4 +1,6 @@
 `include "common.v"
+/* verilator lint_off UNUSED */  // TODO REMOVE
+/* verilator lint_off UNDRIVEN */  // TODO REMOVE
 module bootstrapper(
   input wire [31:0] TIME,
   input wire CLK,
@@ -7,7 +9,7 @@ module bootstrapper(
   output wire [16:0] ADDR,
   output wire N_BOOTED,
   output wire CONTROL_N_WE,
-  output wire MLU_SLICE_N_WE,s
+  output wire MLU_SLICE_N_WE,
   output wire MLU_LOOKAHEAD_N_WE
 );
   // TODO: Need to use 2 bits to decide which write enable lines to enable.

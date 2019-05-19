@@ -1,5 +1,4 @@
 `include "common.v"
-/* verilator lint_off UNUSED */  // TODO REMOVE
 module kpu(
   input wire CLK,
   input wire N_CLK,
