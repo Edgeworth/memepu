@@ -15,30 +15,31 @@ module kpu(
 
   // Register file:
   wire [31:0] reg_out;
-  wire [4:0] reg_sel;  // TODO: need to mux between reg0sel, reg1sel, and microcode. Use 74245 ?
   wire reg_n_we, reg_n_oe;
-  register_file regs(.REG(reg_sel), .IN_DATA(bus), .N_WE(reg_n_we), .N_OE(reg_n_oe),
-    .OUT_DATA(reg_out));
+  register_file regs(.REG_SEL(control_reg_sel), .REG_SRC0(op_reg_src0), .REG_SRC1(op_reg_src1),
+    .REG_SRC2(control_reg_src), .IN_DATA(bus), .N_WE(reg_n_we), .N_OE(reg_n_oe), .OUT_DATA(reg_out));
 
   // Opcode word:
   // Outputs:
   wire [5:0] op;  // 6 bit opcode
-  wire [4:0] op_reg0_sel, op_reg1_sel;
+  wire [4:0] op_reg_src0, op_reg_src1;
   wire [15:0] op_offset;
-  register32 op_word(.CLK(CLK), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg1_sel, op_reg0_sel, op}));
+  register32 op_word(.CLK(CLK), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, op}));
 
   // Control logic:
   // Outputs:
   wire [1:0] control_in_plane;
   wire [1:0] control_out_plane;
   wire [2:0] control_alu_plane;
-  wire [6:0] control_reg_plane;
-  wire [19:0] control_unused;
+  // Reg plane:
+  wire [1:0] control_reg_sel;
+  wire [4:0] control_reg_src;
+  wire [17:0] unused_control;
   // TODO: change to specific sram chip
   sram#(.DEPTH(6), .WIDTH(32)) microcode(.ADDR({op}), .N_WE(boostrap_control_n_we),
     .N_OE(n_booted), .IN_DATA({bootstrap_data, 24'b0}),  // TODO(bootstrap): only feeding 8 bits in
-    .OUT_DATA({control_in_plane, control_out_plane, control_alu_plane, control_reg_plane,
-        control_unused}));
+    .OUT_DATA({control_in_plane, control_out_plane, control_alu_plane, control_reg_sel,
+        control_reg_src, unused_control}));
   // TODO: Need to latch on N_CLK(?)
 
   // Timer:
