@@ -15,8 +15,10 @@ module buffer_mux3x8(
   chip74245 mux_c(.IN(C), .OUT(out_c), .N_OE(reg_sel_decoded[2]));
 
   wire [3:0] unused_y2;
-  wire [3:0] reg_sel_decoded;
-  chip74139 decoder(.A1(SEL), .A2(0), .N_E1(0), .N_E2(1), .N_Y1(reg_sel_decoded), .N_Y2(unused_y2));
+  wire unused_reg_sel;
+  wire [2:0] reg_sel_decoded;
+  chip74139 decoder(.A1(SEL), .A2(0), .N_E1(0), .N_E2(1),
+    .N_Y1({unused_reg_sel, reg_sel_decoded}), .N_Y2(unused_y2));
 
   `ifdef SCHEMATIC
   assign OUT = out_a;

@@ -12,7 +12,9 @@ module register_file(
 );
   // TODO: need to mux between reg0sel, reg1sel, and microcode. Use 74245 ?
   wire [4:0] reg_src;
-  buffer_mux3x8 reg_sel_mux(.A(REG_SRC0), .B(REG_SRC1), .C(REG_SRC2), SEL(REG_SEL), .OUT(reg_src));
+  wire [2:0] unused_reg_src;
+  buffer_mux3x8 reg_sel_mux(.A({3'b0, REG_SRC0}), .B({3'b0, REG_SRC1}), .C({3'b0, REG_SRC2}),
+    .SEL(REG_SEL), .OUT({unused_reg_src, reg_src}));
 
   // TODO: change to specific sram chip
   // 32 registers.
@@ -27,15 +29,12 @@ module register_file(
       case (REG_SEL)
         2'b00: begin
           assert (reg_src == REG_SRC0);
-          assert (OUT_DATA == registers.mem[REG_SRC0]);
         end
         2'b01: begin
           assert (reg_src == REG_SRC1);
-          assert (OUT_DATA == registers.mem[REG_SRC1]);
         end
         2'b10: begin
           assert (reg_src == REG_SRC2);
-          assert (OUT_DATA == registers.mem[REG_SRC2]);
         end
       endcase
     end
