@@ -11,9 +11,8 @@ endif ()
 
 # Run verilator on verilog files.
 set(VERILATOR_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/verilator)
-set(VERILOG_MODULES buffer_mux.v  chip74LVC162244.v chip7400.v chip7404.v chip7408.v chip7432.v
-    chip7486.v chip74139.v chip74161.v chip74245.v chip74299.v chip7416374.v kpu.v mlu.v
-    mlu_lookahead.v mlu_slice.v register32.v shifter.v sram.v sram17x8.v timer.v)
+file(GLOB VERILOG_MODULES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.v)
+list(REMOVE_ITEM VERILOG_MODULES common.v workaround.v)  # Remove non-top level modules
 
 function(add_verilog_module VERILOG_MODULE)
   set(VERILOG_MODULE_SOURCES ${VERILOG_MODULE})
