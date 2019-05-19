@@ -6,7 +6,7 @@ module chip74LVC162244(
   input wire N_OE,
   output logic [15:0] OUT
 );
-  assign OUT = N_OE == 0 ? IN : 16'bZ;
+  assign OUT = N_OE == 0 ? IN:16'bZ;
 
   `ifdef FORMAL
   always_comb begin
