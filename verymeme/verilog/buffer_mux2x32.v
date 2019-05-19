@@ -1,16 +1,15 @@
 `include "common.v"
-// Yosys doesn't support tri-state logic, so concentrate the build-specific logic here.
-module buffer_mux(
-  input wire [15:0] A,
-  input wire [15:0] B,
+module buffer_mux2x32(
+  input wire [31:0] A,
+  input wire [31:0] B,
   input wire SEL_A,
   input wire N_SEL_A,
-  output logic [15:0] OUT
+  output logic [31:0] OUT
 );
-  wire [15:0] out_a;
-  wire [15:0] out_b;
-  chip74LVC162244 mux_a(.IN(A), .OUT(out_a), .N_OE(N_SEL_A));
-  chip74LVC162244 mux_b(.IN(B), .OUT(out_b), .N_OE(SEL_A));
+  wire [31:0] out_a;
+  wire [31:0] out_b;
+  buffer32 mux_a(.IN(A), .OUT(out_a), .N_OE(N_SEL_A));
+  buffer32 mux_b(.IN(B), .OUT(out_b), .N_OE(SEL_A));
 
   `ifdef SCHEMATIC
   assign OUT = out_a;
