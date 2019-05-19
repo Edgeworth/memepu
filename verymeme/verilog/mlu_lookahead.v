@@ -47,4 +47,4 @@ module mlu_lookahead(
     end
   end
   `endif
-endmodule : mlu_lookahead
+endmodule

@@ -9,6 +9,7 @@
 #include "Vchip7432.h"
 #include "Vchip7486.h"
 #include "Vchip74299.h"
+#include "Vkpu.h"
 #include "Vmlu.h"
 #include "Vregister_file.h"
 #include "Vshifter.h"
@@ -316,6 +317,19 @@ private:
 
 TEST_F(SemiExhaustiveRegisterFileTest, SemiExhaustiveRegisterFileTest) {
   run();
+}
+
+class KpuTest : public VerilatorTest {
+protected:
+  Vkpu kpu_;
+};
+
+TEST_F(KpuTest, BasicTest) {
+  kpu_.__Vclklast__TOP__CLK = 0;
+  kpu_.eval();
+
+  kpu_.__Vclklast__TOP__CLK = 1;
+  kpu_.eval();
 }
 
 }  // anonymous

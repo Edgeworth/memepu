@@ -35,7 +35,7 @@ module sram(
   end
 
   always_comb begin
-        `CONTRACT (N_OE || N_WE);
+    `CONTRACT (N_OE || N_WE);
     assert (f_verify_data == mem[f_verify_addr]);
   end
 

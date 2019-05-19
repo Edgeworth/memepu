@@ -8,8 +8,8 @@ module chip74139(
   output logic [3:0] N_Y1,
   output logic [3:0] N_Y2
 );
-  assign N_Y1 = N_E1 ? 4'bZ : ~(4'b1 << A1);
-  assign N_Y2 = N_E2 ? 4'bZ : ~(4'b1 << A2);
+  assign N_Y1 = N_E1 ? 4'bZ:~(4'b1 << A1);
+  assign N_Y2 = N_E2 ? 4'bZ:~(4'b1 << A2);
 
   `ifdef FORMAL
   always_comb begin
