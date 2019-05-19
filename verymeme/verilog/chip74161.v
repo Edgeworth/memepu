@@ -57,7 +57,7 @@ module chip74161(
   always_ff @(posedge CLK) begin
     if (f_past && N_CLR != 0) begin
       if ($past(N_LOAD) == 0) assert (Q == $past(PRESET));  // Preset should work.
-      else if ($past(ENP) && $past(ENT)) assert (Q == $past(Q) + 4'b1);  // Increment should work.
+      else if ($past(ENP) && $past(ENT)) assert (Q == $past(Q)+4'b1);  // Increment should work.
       else assert ($stable(Q));  // Otherwise shouldn't change.
     end
   end

@@ -106,8 +106,14 @@
     "verilog_name": "chip7416374",
     "kicad_name": "74LVC16374",
     "verilog_to_kicad_map": {
-      "0": ["GND", "GND_[7:2]"],
-      "1": ["VCC", "VCC_[4:2]"],
+      "0": [
+        "GND",
+        "GND_[7:2]"
+      ],
+      "1": [
+        "VCC",
+        "VCC_[4:2]"
+      ],
       "D1": "1D[8:1]",
       "D2": "2D[8:1]",
       "CLK1": "1CLK",

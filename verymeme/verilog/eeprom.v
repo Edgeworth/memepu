@@ -23,4 +23,4 @@ module eeprom(
     end
   end
   `endif
-endmodule : eeprom
+endmodule

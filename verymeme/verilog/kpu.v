@@ -2,7 +2,7 @@
 /* verilator lint_off UNUSED */  // TODO: Remove
 module kpu(
   input wire CLK,
-//  input wire N_CLK,
+  input wire N_CLK,
   input wire N_RST
 );
   // Bus.
@@ -28,22 +28,12 @@ module kpu(
   register32 op_word(.CLK(CLK), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, op}));
 
   // Control logic:
-  // Outputs:
-  // In plane: NONE, REG
-  wire [1:0] control_in_plane;
-  // Out plane: NONE, REG
-  wire [1:0] control_out_plane;
-  // ALU plane:
-  wire [2:0] control_alu_plane;
-  wire [1:0] control_reg_sel;  // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
-  wire [4:0] control_reg_src;  // Control logic reg sel.
-  wire [17:0] unused_control;
-  // TODO: change to specific sram chip
-  sram#(.DEPTH(6), .WIDTH(32)) microcode(.ADDR({op}), .N_WE(boostrap_control_n_we),
-    .N_OE(n_booted), .IN_DATA({bootstrap_data, 24'b0}),  // TODO(bootstrap): only feeding 8 bits in
-    .OUT_DATA({control_in_plane, control_out_plane, control_alu_plane, control_reg_sel,
-        control_reg_src, unused_control}));
-  // TODO: Need to latch on N_CLK(?)
+  wire [1:0] control_reg_sel;
+  wire [4:0] control_reg_src;
+  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .OPCODE(op), .REG_SEL(control_reg_sel),
+    .REG_SRC(control_reg_src),
+    .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr[11:0]),
+    .BOOTSTRAP_N_WE(bootstrap_control_n_we));
 
   // Timer:
   wire [31:0] time_out;
@@ -73,7 +63,7 @@ module kpu(
   assign bus = reg_out;
   `else
   assign bus = mlu_n_oe == 0 ? mlu_out : shifter_n_oe == 0 ? shifter_out :
-    reg_n_oe == 0 ? reg_out : 32'bZ;
+  reg_n_oe == 0 ? reg_out : 32'bZ;
   `endif
 
   // Bootstrapping code:
@@ -82,7 +72,7 @@ module kpu(
   wire [16:0] bootstrap_addr;
   wire bootstrap_mlu_slice_n_we;
   wire bootstrap_mlu_lookahead_n_we;
-  wire boostrap_control_n_we;
+  wire bootstrap_control_n_we;
   `ifdef BOOTSTRAP
   // Read data from EEPROMs into SRAMs in physical version.
   // Requires bootstrapping: MLU slices, MLU lookahead, microcode
@@ -97,7 +87,7 @@ module kpu(
   assign bootstrap_addr = 0;
   assign bootstrap_mlu_slice_n_we = 1;
   assign bootstrap_mlu_lookahead_n_we = 1;
-  assign boostrap_control_n_we = 1;
+  assign bootstrap_control_n_we = 1;
   `endif
 
   `ifdef FORMAL

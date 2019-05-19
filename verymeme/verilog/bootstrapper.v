@@ -31,4 +31,4 @@ module bootstrapper(
     end
   end
   `endif
-endmodule : bootstrapper
+endmodule

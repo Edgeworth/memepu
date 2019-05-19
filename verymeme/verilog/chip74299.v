@@ -24,7 +24,7 @@ module chip74299(
     else begin
       case (S)
         2'b11:  // Parallel load
-          shift_reg <= IO;
+            shift_reg <= IO;
         2'b01: begin  // Shift right (left from MSB is leftmost (datasheet) perspective)
           shift_reg <= shift_reg << 1;
           shift_reg[0] <= DSL;
