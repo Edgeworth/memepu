@@ -21,9 +21,9 @@
 	AND rD,rS,I - rD = rS & signext(I)
 	OR rD,rS,I - rD = rS | signext(I)
 	XOR rD,rS,I - rD = rS ^ signext(I)
-	SLL rD,rS,I - rD = rS << (I & 0x0F)
-	SRL rD,rS,I - rD = rS >> (I & 0x0F)
-	SRA rD,rS,I - rD = rS >>> (I & 0x0F)
+	SLL rD,rS,I - rD = rS << (I & 0x1F)
+	SRL rD,rS,I - rD = rS >> (I & 0x1F)
+	SRA rD,rS,I - rD = rS >>> (I & 0x1F)
 	BEQ rA,rB,I - if rA == rB: r31 = r31 + signext(I)
 	BNE rA,rB,I - if rA != rB: r31 = r31 + signext(I)
 	BLT rA,rB,I - if rA < rB: r31 = r31 + signext(I)
@@ -36,9 +36,9 @@
 	AND rD,rA,rB - rD = rA & rB
 	OR rD,rA,rB - rD = rA | rB
 	XOR rD,rA,rB - rD = rA ^ rB
-	SLL rD,rA,rB - rD = rA << (rB & 0x0F)
-	SRL rD,rA,rB - rD = rA >> (rB & 0x0F)
-	SRA rD,rA,rB - rD = rA >>> (rB & 0x0F)
+	SLL rD,rA,rB - rD = rA << (rB & 0x1F)
+	SRL rD,rA,rB - rD = rA >> (rB & 0x1F)
+	SRA rD,rA,rB - rD = rA >>> (rB & 0x1F)
 
 
 	SCALL
@@ -72,6 +72,26 @@ Register plane - 7 bit:
 
 Alu operation plane - 3 bit + 1 bit for carry:
 	which ALU operation to perform
+
+#### Status/Control SC register
+Interrupts Off/On, Paging Off/On, Privileged/Unprivileged, Secure/Not secure
+ALU STATUS: Carry, Zero, Negative - no need to save in actual status reg.
+
+#### Interrupt register -
+Level triggered, but latched on each falling clock, each device will assert until ack comes and it decides to stop asserting.
+Note this means devices need to assert the line until they get serviced (level triggered). Latch on the falling clock so that the control logic can start reacting to interrupt changes as soon as possible.
+- Timer
+- Software (e.g. syscall)
+- Keyboard
+- Mouse
+- Network
+- Storage?
+
+### TLB:
+5 bits of TLB stored in compressed instr / register,
+
+### Timer:
+74VHC161 x 14 for 56 bits of timer.
 
 Microcode snippets:
 Fetch:

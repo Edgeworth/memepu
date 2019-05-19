@@ -68,32 +68,32 @@ set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES}
 
 # generate_firmware:
 add_executable(generate_firmware ${VERYMEME_SOURCES} src/programs/generate_firmware.cpp)
-target_include_directories(generate_firmware PRIVATE ${Boost_INCLUDE_DIRS} include)
-target_link_directories(generate_firmware PRIVATE ${Boost_LIBRARY_DIRS})
-target_link_libraries(generate_firmware PRIVATE ${Boost_LIBRARIES})
+target_include_directories(generate_firmware PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_link_directories(generate_firmware PUBLIC ${Boost_LIBRARY_DIRS})
+target_link_libraries(generate_firmware PUBLIC ${Boost_LIBRARIES})
 
 # memecad:
 add_executable(memecad ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} src/programs/memecad.cpp)
-target_include_directories(memecad PRIVATE ${Boost_INCLUDE_DIRS} include)
-target_link_directories(memecad PRIVATE ${Boost_LIBRARY_DIRS})
-target_compile_options(memecad PRIVATE ${YOSYS_OPTIONS})
-target_link_options(memecad PRIVATE ${YOSYS_LDFLAGS})
-target_link_libraries(memecad PRIVATE ${YOSYS_LIBRARIES} ${Boost_LIBRARIES})
+target_include_directories(memecad PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memecad PUBLIC ${Boost_LIBRARY_DIRS})
+target_compile_options(memecad PUBLIC ${YOSYS_OPTIONS})
+target_link_options(memecad PUBLIC ${YOSYS_LDFLAGS})
+target_link_libraries(memecad PUBLIC ${YOSYS_LIBRARIES} ${Boost_LIBRARIES})
 
 # memeroute:
 add_executable(memeroute ${VERYMEME_SOURCES} ${MEMEROUTE_SOURCES} src/programs/memeroute.cpp)
-target_include_directories(memeroute PRIVATE ${SFML_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} include)
-target_link_directories(memeroute PRIVATE ${Boost_LIBRARY_DIRS})
-target_link_libraries(memeroute PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${Boost_LIBRARIES}
+target_include_directories(memeroute PUBLIC ${SFML_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memeroute PUBLIC ${Boost_LIBRARY_DIRS})
+target_link_libraries(memeroute PUBLIC ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${Boost_LIBRARIES}
     Threads::Threads)
 
 # tests:
 add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)
-target_include_directories(tests PRIVATE ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUDE_DIRS}
+target_include_directories(tests PUBLIC ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS} include)
-target_link_directories(tests PRIVATE ${YOSYS_OPTIONS} ${Boost_LIBRARY_DIRS})
-target_compile_options(tests PRIVATE ${YOSYS_OPTIONS})
-target_link_options(tests PRIVATE ${YOSYS_LDFLAGS})
-target_link_libraries(tests PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${YOSYS_LIBRARIES}
+target_link_directories(tests PUBLIC ${YOSYS_OPTIONS} ${Boost_LIBRARY_DIRS})
+target_compile_options(tests PUBLIC ${YOSYS_OPTIONS})
+target_link_options(tests PUBLIC ${YOSYS_LDFLAGS})
+target_link_libraries(tests PUBLIC ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${YOSYS_LIBRARIES}
     gtest verilated_library ${Boost_LIBRARIES} Threads::Threads)
 gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")

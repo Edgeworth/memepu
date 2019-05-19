@@ -10,6 +10,7 @@
 #include "Vchip7486.h"
 #include "Vchip74299.h"
 #include "Vmlu.h"
+#include "Vregister_file.h"
 #include "Vshifter.h"
 #include "verymeme/firmware_constants.h"
 
@@ -262,6 +263,58 @@ private:
 };
 
 TEST_F(SemiExhaustiveShifterTest, SemiExhaustiveShifterTest) {
+  run();
+}
+
+class SemiExhaustiveRegisterFileTest : public ExhaustiveVerilatorTest<5> {
+public:
+  void doTest() override {
+    const auto[REG_SRC] = param;
+    const int TEST_VAL = REG_SRC + 55;  // Use non-static value.
+    file_.REG_SEL = 0;
+    file_.REG_SRC0 = REG_SRC;
+    file_.REG_SRC1 = 4;
+    file_.REG_SRC2 = 2;
+    file_.N_WE = 1;
+    file_.N_OE = 1;
+    file_.IN_DATA = TEST_VAL;
+    file_.eval();
+
+    file_.N_WE = 0; // Write value in.
+    file_.eval();
+
+    file_.REG_SEL = 0;
+    file_.REG_SRC0 = REG_SRC;
+    file_.REG_SRC1 = 8;
+    file_.REG_SRC2 = 2;
+    file_.N_WE = 1; // Read value out.
+    file_.N_OE = 0;
+    file_.eval();
+    EXPECT_EQ(TEST_VAL, file_.OUT_DATA);
+
+    file_.REG_SEL = 1;
+    file_.REG_SRC0 = 5;
+    file_.REG_SRC1 = REG_SRC;
+    file_.REG_SRC2 = 2;
+    file_.N_WE = 1; // Read value out.
+    file_.N_OE = 0;
+    file_.eval();
+    EXPECT_EQ(TEST_VAL, file_.OUT_DATA);
+
+    file_.REG_SEL = 2;
+    file_.REG_SRC0 = 5;
+    file_.REG_SRC1 = 4;
+    file_.REG_SRC2 = REG_SRC;
+    file_.N_WE = 1; // Read value out.
+    file_.N_OE = 0;
+    file_.eval();
+    EXPECT_EQ(TEST_VAL, file_.OUT_DATA);
+  }
+private:
+  Vregister_file file_;
+};
+
+TEST_F(SemiExhaustiveRegisterFileTest, SemiExhaustiveRegisterFileTest) {
   run();
 }
 

@@ -2,9 +2,11 @@
 #### memecad
 - Check TODOs in codebase
 
+#### Verilator tests
+- Timer test
+
 #### kpu
 - Implement EEPROM hexfile load.
-- Add verilator test for shifter, chips, timer
 
 #### memeroute
 - Finish DSN parsing. Better displaying.
