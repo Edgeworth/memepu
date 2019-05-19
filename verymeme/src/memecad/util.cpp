@@ -41,7 +41,7 @@ std::string getIdForSigBit(const Yosys::SigBit& bit) {
   if (bit.wire) {
     parent_label = std::string(bit.wire->name.c_str() + 1);
 
-    // Empty string as special case for unused.
+    // Empty string as special case for unused. This will be mapped to no-connect.
     if (parent_label.substr(0, 6) == "unused")
       return "";
 
