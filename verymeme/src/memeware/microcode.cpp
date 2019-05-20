@@ -1,11 +1,7 @@
-#include <boost/program_options.hpp>
-#include <iostream>
-#include <iomanip>
+#include "memeware/microcode.h"
+#include "memeware/constants.h"
 
-#include "verymeme/common.h"
-#include "verymeme/firmware_constants.h"
-
-namespace po = boost::program_options;
+namespace memeware {
 
 uint8_t generateSumOutput(uint32_t sum, uint32_t carry_in) {
   // Out, Propagate, Generate, Zero
@@ -68,46 +64,4 @@ std::vector<uint8_t> generateMicrocodeFirmware() {
   return data;
 }
 
-std::string convertToHex(const std::vector<uint8_t>& input) {
-  std::stringstream stream;
-  int count = 0;
-  for (auto c : input) {
-    stream << std::hex << std::setw(2) << std::setfill('0') << int(c);
-    if (++count == 40) {
-      stream << "\n";
-      count = 0;
-    } else {
-      stream << " ";
-    }
-  }
-  if (count) stream << "\n";
-  return stream.str();
-}
-
-int main(int argc, char* argv[]) {
-  std::string output;
-  try {
-    po::options_description desc{"Options"};
-    desc.add_options()
-        ("help,h", "Help screen")
-        ("output_path,o", po::value<std::string>()->required());
-
-    po::variables_map vm;
-    po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
-    po::notify(vm);
-
-    if (vm.count("help")) {
-      std::cout << desc << '\n';
-      return 0;
-    }
-
-    output = vm["output_path"].as<std::string>();
-  } catch (const po::error& ex) {
-    std::cerr << ex.what() << '\n';
-    return 1;
-  }
-
-  writeFile(output + "/mlu_slice.hex", convertToHex(generateMluSliceFirmware()));
-  writeFile(output + "/mlu_lookahead.hex", convertToHex(generateMluLookaheadFirmware()));
-  writeFile(output + "/microcode.hex", convertToHex(generateMicrocodeFirmware()));
-}
+}  // memeware
