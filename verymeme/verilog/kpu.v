@@ -8,6 +8,27 @@ module kpu(
   // Bus.
   wire [31:0] bus;
 
+  // Timer:
+  wire [31:0] time_out;
+  timer timer(.CLK(CLK), .N_RST(N_RST), .TIME(time_out));
+
+  // MLU:
+  wire [31:0] mlu_val, mlu_out;
+  wire [2:0] mlu_flags_out;
+  mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(control_alu_plane[2:0]), .C_IN(control_alu_plane[3]),
+    .OUT(mlu_val), .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
+    .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr),
+    .BOOTSTRAP_MLU_SLICE_N_WE(bootstrap_mlu_slice_n_we),
+    .BOOTSTRAP_MLU_LOOKAHEAD_N_WE(bootstrap_mlu_lookahead_n_we));
+  // TODO(optimisation): maybe can remove buffer by pushing output enable signals down to mlu slices.
+  buffer32 mlu_buf(.IN(mlu_val), .OUT(mlu_out), .N_OE(control_mlu_n_out));
+
+  // Shifter:
+  wire [31:0] shifter_val, shifter_out;
+  shifter shifter(.IN(tmp0_val), .SHFT(tmp1_val[4:0]), .LEFT(control_alu_plane[0]),
+    .ARITH(control_alu_plane[1]), .OUT(shifter_val));
+  buffer32 shifter_buf(.IN(shifter_val), .OUT(shifter_out), .N_OE(control_shifter_n_out));
+
   // Scratch registers - invisible to running code.
   wire [31:0] tmp0_val, tmp0_out;
   wire [31:0] tmp1_val, tmp1_out;
@@ -42,35 +63,17 @@ module kpu(
   wire control_tmp1_n_out;
   wire control_mlu_n_out;
   wire control_shifter_n_out;
+  // ALU plane:
+  wire [3:0] control_alu_plane;
   control_logic control(.CLK(CLK), .N_CLK(N_CLK), .OPCODE(op), .REG_SEL(control_reg_sel),
-    .REG_SRC(control_reg_src), .CONTROL_REG_N_IN(control_reg_n_in), .CONTROL_TMP0_N_IN(control_tmp0_n_in),
-    .CONTROL_TMP1_N_IN(control_tmp1_n_in),
-    .CONTROL_REG_N_OUT(control_reg_n_out), .CONTROL_TMP0_N_OUT(control_tmp0_n_out),
-    .CONTROL_TMP1_N_OUT(control_tmp1_n_out), .CONTROL_MLU_N_OUT(control_mlu_n_out),
-    .CONTROL_SHIFTER_N_OUT(control_shifter_n_out),
+    .REG_SRC(control_reg_src), .ALU_PLANE(control_alu_plane), .REG_N_IN(control_reg_n_in),
+    .TMP0_N_IN(control_tmp0_n_in),
+    .TMP1_N_IN(control_tmp1_n_in),
+    .REG_N_OUT(control_reg_n_out), .TMP0_N_OUT(control_tmp0_n_out),
+    .TMP1_N_OUT(control_tmp1_n_out), .MLU_N_OUT(control_mlu_n_out),
+    .SHIFTER_N_OUT(control_shifter_n_out),
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr[11:0]),
     .BOOTSTRAP_N_WE(bootstrap_control_n_we));
-
-  // Timer:
-  wire [31:0] time_out;
-  timer timer(.CLK(CLK), .N_RST(N_RST), .TIME(time_out));
-
-  // MLU:
-  wire [31:0] mlu_out;
-  wire [2:0] mlu_op = 1, mlu_flags_out;
-  wire mlu_c_in = 1, mlu_n_oe = 1;  // TODO feed this value in.
-  mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(mlu_op), .C_IN(mlu_c_in), .OUT(mlu_out),
-    .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
-    .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr),
-    .BOOTSTRAP_MLU_SLICE_N_WE(bootstrap_mlu_slice_n_we),
-    .BOOTSTRAP_MLU_LOOKAHEAD_N_WE(bootstrap_mlu_lookahead_n_we));
-
-  // Shifter:
-  wire [31:0] shifter_out;
-  wire [1:0] shifter_op = 0;  // TODO feed this value in.
-  wire shifter_n_oe = 0;  // TODO set this
-  shifter shifter(.IN(tmp0_val), .SHFT(tmp1_val[4:0]), .LEFT(shifter_op[0]), .ARITH(shifter_op[1]),
-    .OUT(shifter_out));
 
   // Bus mux:
   `ifdef SCHEMATIC

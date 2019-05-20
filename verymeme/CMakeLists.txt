@@ -47,7 +47,6 @@ add_subdirectory(verilog)
 # Add libraries.
 set(VERYMEME_SOURCES
     src/verymeme/common.cpp include/verymeme/common.h
-    include/verymeme/firmware_constants.h
     src/verymeme/parser.cpp include/verymeme/parser.h)
 set(MEMECAD_SOURCES
     src/memecad/parser.cpp include/memecad/parser.h
@@ -61,16 +60,19 @@ set(MEMEROUTE_SOURCES
     src/memeroute/types.cpp include/memeroute/types.h
     src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h
     src/memeroute/renderer.cpp include/memeroute/renderer.h
-    src/memeroute/router.cpp include/memeroute/router.h src/memeroute/router_worker.cpp include/memeroute/router_worker.h)
+    src/memeroute/router.cpp include/memeroute/router.h
+    src/memeroute/router_worker.cpp include/memeroute/router_worker.h)
+set(MEMEWARE_SOURCES
+    include/memeware/constants.h src/memeware/microcode.cpp include/memeware/microcode.h src/memeware/util.cpp include/memeware/util.h)
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
 
-# generate_firmware:
-add_executable(generate_firmware ${VERYMEME_SOURCES} src/programs/generate_firmware.cpp)
-target_include_directories(generate_firmware PUBLIC ${Boost_INCLUDE_DIRS} include)
-target_link_directories(generate_firmware PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(generate_firmware PUBLIC ${Boost_LIBRARIES})
+# memeware:
+add_executable(memeware ${VERYMEME_SOURCES} ${MEMEWARE_SOURCES} src/programs/memeware.cpp)
+target_include_directories(memeware PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memeware PUBLIC ${Boost_LIBRARY_DIRS})
+target_link_libraries(memeware PUBLIC ${Boost_LIBRARIES})
 
 # memecad:
 add_executable(memecad ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} src/programs/memecad.cpp)

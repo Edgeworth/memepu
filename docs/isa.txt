@@ -64,14 +64,16 @@ Input plane - read into these from the bus:
 	NONE, REG, TMP0, TMP1
 
 Output plane - write these out onto the bus:
-	NONE, MLU, SHIFTER, TMP0, TMP1
+	NONE, REG, TMP0, TMP1, MLU, SHIFTER
 
 Register plane - 7 bit:
 	which register to select in the register file
+	First 2 bits: 00 = Opcode reg 0, 01 = OPcode reg 1, 10 = Microcode reg sel.
 	REG0, REG1, or specify 5 bit index
 
 Alu operation plane - 3 bit + 1 bit for carry:
 	which ALU operation to perform
+	First 2 bits also fed into the shifter for op.
 
 #### Status/Control SC register
 Interrupts Off/On, Paging Off/On, Privileged/Unprivileged, Secure/Not secure
