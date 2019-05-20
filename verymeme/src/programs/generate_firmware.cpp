@@ -61,6 +61,13 @@ std::vector<uint8_t> generateMluLookaheadFirmware() {
   return data;
 }
 
+std::vector<uint8_t> generateMicrocodeFirmware() {
+  std::vector<uint8_t> data(1 << 6);
+  for (uint32_t i = 0; i < data.size(); ++i)
+    data[i] = 0;
+  return data;
+}
+
 std::string convertToHex(const std::vector<uint8_t>& input) {
   std::stringstream stream;
   int count = 0;
@@ -102,4 +109,5 @@ int main(int argc, char* argv[]) {
 
   writeFile(output + "/mlu_slice.hex", convertToHex(generateMluSliceFirmware()));
   writeFile(output + "/mlu_lookahead.hex", convertToHex(generateMluLookaheadFirmware()));
+  writeFile(output + "/microcode.hex", convertToHex(generateMicrocodeFirmware()));
 }

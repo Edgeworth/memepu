@@ -15,8 +15,8 @@ module sram(
   assign OUT_DATA = N_OE == 0 ? mem[ADDR]:{WIDTH{1'bZ}};
   always_ff @(negedge N_WE) mem[ADDR] <= IN_DATA;
 
-  `ifdef SCHEMATIC
-  // TODO: Bootstrapping
+  // Load initial data if not bootstrapping.
+  `ifndef BOOTSTRAP
   initial begin
     $readmemh(INITIAL, mem);
   end
@@ -39,7 +39,8 @@ module sram(
     assert (f_verify_data == mem[f_verify_addr]);
   end
 
-  `ifdef SCHEMATIC
+  // Assume data doesn't change if not bootstrapping.
+  `ifndef BOOTSTRAP
   logic [WIDTH-1:0] f_mem [(1 << DEPTH)-1:0];
   integer f_i;
   always_comb begin
