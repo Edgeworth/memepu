@@ -31,8 +31,9 @@ module control_logic(
   wire [2:0] control_alu_plane;
   wire [15:0] unused_control;
   // TODO: change to specific sram chip
-  sram#(.DEPTH(6), .WIDTH(32)) microcode(.ADDR({OPCODE}), .N_WE(BOOTSTRAP_N_WE),
-    .N_OE(N_BOOTED), .IN_DATA({BOOTSTRAP_DATA, 24'b0}),  // TODO(bootstrap): only feeding 8 bits in
+  sram#(.DEPTH(6), .WIDTH(32), .INITIAL("microcode.hex")) microcode(.ADDR({OPCODE}),
+    .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
+    .IN_DATA({BOOTSTRAP_DATA, 24'b0}),  // TODO(bootstrap): only feeding 8 bits in
     .OUT_DATA({control_in_plane, control_out_plane, control_alu_plane, REG_SEL,
         REG_SRC, unused_control}));
   // TODO: Need to latch on N_CLK(?)
@@ -53,6 +54,14 @@ module control_logic(
   `ifdef FORMAL
   // TODO: More testing.
   always_comb begin
+    // TODO: Create microcode, until then some basic asserts:
+    assert (REG_SEL != 2'b11);
+
+    // Don't try to write and read to the same thing:
+    assert (CONTROL_REG_N_IN || CONTROL_REG_N_OUT);
+    assert (CONTROL_TMP0_N_IN || CONTROL_TMP0_N_OUT);
+    assert (CONTROL_TMP1_N_IN || CONTROL_TMP1_N_OUT);
+
     if (!N_BOOTED) `CONTRACT(BOOTSTRAP_N_WE);  // Don't write after boot.
   end
   `endif

@@ -126,6 +126,7 @@ shifter.v
 sram.v
 sram17x8.v
 timer.v
+microcode.hex
 mlu_slice.hex
 mlu_lookahead.hex
 common.v
