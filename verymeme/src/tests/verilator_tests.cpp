@@ -186,28 +186,28 @@ void testMluOps(Vmlu& mlu, uint64_t a, uint64_t b, uint64_t c_in) {
   mlu.B = uint32_t(b);
   mlu.C_IN = uint8_t(c_in);
 
-  mlu.OP = memeware::Mlu::ADD;
+  mlu.OP = memeware::MLU_ADD;
   mlu.eval();
   TEST_MLU_OP(a + b + c_in);
 
-  mlu.OP = memeware::Mlu::AND;
+  mlu.OP = memeware::MLU_AND;
   mlu.eval();
   TEST_MLU_OP(a & b);
 
-  mlu.OP = memeware::Mlu::OR;
+  mlu.OP = memeware::MLU_OR;
   mlu.eval();
   TEST_MLU_OP(a | b);
 
-  mlu.OP = memeware::Mlu::XOR;
+  mlu.OP = memeware::MLU_XOR;
   mlu.eval();
   TEST_MLU_OP(a ^ b);
 
-  mlu.OP = memeware::Mlu::NOT;
+  mlu.OP = memeware::MLU_NOT;
   mlu.eval();
   TEST_MLU_OP((~a) & 0xFFFFFFFF);
 
   mlu.C_IN = 1;  // SUB only valid for C_IN == 1.
-  mlu.OP = memeware::Mlu::SUB;
+  mlu.OP = memeware::MLU_SUB;
   mlu.eval();
   TEST_MLU_OP(a + ((~b) & 0xFFFFFFFF) + 1);
 }

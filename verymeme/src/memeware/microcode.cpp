@@ -22,14 +22,14 @@ std::vector<uint8_t> generateMluSliceFirmware() {
     for (uint32_t b = 0; b < (1 << 4); ++b) {
       for (uint32_t c_in = 0; c_in < 2; ++c_in) {
         uint32_t addr = a | (b << 4) | (c_in << 8);
-        data[(Mlu::ADD << 9) | addr] = generateSumOutput(a + b, c_in);
-        data[(Mlu::SUB << 9) | addr] = generateSumOutput(a + ((~b) & 0x0F), c_in);
-        data[(Mlu::AND << 9) | addr] = generateGeneralOutput(a & b);
-        data[(Mlu::OR << 9) | addr] = generateGeneralOutput(a | b);
-        data[(Mlu::XOR << 9) | addr] = generateGeneralOutput(a ^ b);
-        data[(Mlu::NOT << 9) | addr] = generateGeneralOutput(~a);
-        data[(Mlu::NOP0 << 9) | addr] = generateGeneralOutput(0);
-        data[(Mlu::NOP1 << 9) | addr] = generateGeneralOutput(0);
+        data[(MLU_ADD << 9) | addr] = generateSumOutput(a + b, c_in);
+        data[(MLU_SUB << 9) | addr] = generateSumOutput(a + ((~b) & 0x0F), c_in);
+        data[(MLU_AND << 9) | addr] = generateGeneralOutput(a & b);
+        data[(MLU_OR << 9) | addr] = generateGeneralOutput(a | b);
+        data[(MLU_XOR << 9) | addr] = generateGeneralOutput(a ^ b);
+        data[(MLU_NOT << 9) | addr] = generateGeneralOutput(~a);
+        data[(MLU_NOP0 << 9) | addr] = generateGeneralOutput(0);
+        data[(MLU_NOP1 << 9) | addr] = generateGeneralOutput(0);
       }
     }
   }

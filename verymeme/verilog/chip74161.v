@@ -50,7 +50,7 @@ module chip74161(
 
   // If there was an asynchronous reset, can't rely on the values in the last clock cycle.
   always_ff @(posedge CLK or negedge N_CLR) begin
-    if (N_CLR == 0) f_past <= N_CLR ? 1:0;
+    if (!N_CLR) f_past <= 0;
     else f_past <= 1;
   end
 

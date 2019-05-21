@@ -2,7 +2,7 @@
 module eeprom(
   input wire [DEPTH-1:0] ADDR,
   input wire N_OE,
-  output wire [WIDTH-1:0] OUT_DATA
+  output logic [WIDTH-1:0] OUT_DATA
 );
   parameter DEPTH = 17;
   parameter WIDTH = 8;

@@ -1,6 +1,7 @@
 ### TODO soon
 #### memecad
 - Check TODOs in codebase
+- Can somehow use cell libraries instead of memecad?
 
 #### Verilator tests
 - Timer test
