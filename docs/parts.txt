@@ -12,12 +12,13 @@
 74HC153 - Dual 4-input data selector/multiplexer
 74HC154 - 4 to 16 decoder, inverted outputs
 74HC157 - select 4 bits from two data sources
-74HC161 - 4 bit binary counter, synchronous
+74HC161 - 4 bit binary counter, synchronous, async reset
 74HC193 - 4 bit binary counter, up/down, synchronous, reset
 74HC245 - Octal bidirectional bus transceiver
 74HC273 - 8 bit register with unfortunate pinout
 74HC283 - 4 bit binary full adder
 74HC574 - 8 bit register
+74HC590 - 8 bit binary counter, tri-state
 74HC595 - 8 bit shift register
 
 Digikey costs:

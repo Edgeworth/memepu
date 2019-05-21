@@ -6,7 +6,11 @@
 namespace memeware {
 
 enum Mlu {
-  ADD, SUB, AND, OR, XOR, NOT, NOP0, NOP1
+  MLU_ADD, MLU_SUB, MLU_AND, MLU_OR, MLU_XOR, MLU_NOT, MLU_NOP0, MLU_NOP1
+};
+
+enum Opcode {
+  OP_ADD,
 };
 
 }  // memeware

@@ -4,25 +4,29 @@ module control_logic(
   input wire [5:0] OPCODE,
   input wire CLK,
   input wire N_CLK,
-  output wire [1:0] REG_SEL, // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
-  output wire [4:0] REG_SRC, // Control logic reg src.
-  output wire [3:0] ALU_PLANE,
+  output logic [1:0] REG_SEL, // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
+  output logic [4:0] REG_SRC, // Control logic reg src.
+  output logic [3:0] ALU_PLANE,
   // In plane signals:
-  output wire REG_N_IN,
-  output wire TMP0_N_IN,
-  output wire TMP1_N_IN,
+  output logic REG_N_IN,
+  output logic TMP0_N_IN,
+  output logic TMP1_N_IN,
   // Out plane signals:
-  output wire REG_N_OUT,
-  output wire TMP0_N_OUT,
-  output wire TMP1_N_OUT,
-  output wire MLU_N_OUT,
-  output wire SHIFTER_N_OUT,
+  output logic REG_N_OUT,
+  output logic TMP0_N_OUT,
+  output logic TMP1_N_OUT,
+  output logic MLU_N_OUT,
+  output logic SHIFTER_N_OUT,
   // Bootstrapping signals:
   input wire [11:0] BOOTSTRAP_ADDR,
   input wire [7:0] BOOTSTRAP_DATA,
   input wire N_BOOTED,
   input wire BOOTSTRAP_N_WE
 );
+  // TODO: Micro-op counter:
+  microop_counter counter();
+
+
   // Outputs:
   // In plane: NONE, REG, TMP0, TMP1
   wire [2:0] control_in_plane;
