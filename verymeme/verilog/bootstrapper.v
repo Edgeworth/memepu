@@ -5,12 +5,12 @@ module bootstrapper(
   input wire [31:0] TIME,
   input wire CLK,
   input wire N_CLK,
-  output wire [7:0] DATA,
-  output wire [16:0] ADDR,
-  output wire N_BOOTED,
-  output wire CONTROL_N_WE,
-  output wire MLU_SLICE_N_WE,
-  output wire MLU_LOOKAHEAD_N_WE
+  output logic [7:0] DATA,
+  output logic [16:0] ADDR,
+  output logic N_BOOTED,
+  output logic CONTROL_N_WE,
+  output logic MLU_SLICE_N_WE,
+  output logic MLU_LOOKAHEAD_N_WE
 );
   // TODO: Need to use 2 bits to decide which write enable lines to enable.
   // TODO: Use 2=>4 decoder, one of the signals is latch booted, goes to JK flipflop.

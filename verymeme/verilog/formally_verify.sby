@@ -21,8 +21,10 @@ chip74139
 chip74161
 chip74245
 chip74299
+chip74590
 chip7416374
 control_logic
+microop_counter
 kpu
 mlu
 mlu_lookahead
@@ -65,11 +67,16 @@ chip74245: read -formal -D CONTRACT=assume chip74245.v
 chip74245: prep -top chip74245
 chip74299: read -formal -D CONTRACT=assume chip74299.v
 chip74299: prep -top chip74299
+chip74590: read -formal -D CONTRACT=assume chip74590.v
+chip74590: prep -top chip74590
 chip7416374: read -formal -D CONTRACT=assume chip7416374.v
 chip7416374: prep -top chip7416374
 control_logic: read -formal -D CONTRACT=assume control_logic.v
 control_logic: read -formal -D CONTRACT=assert chip74138.v sram.v
 control_logic: prep -top control_logic
+microop_counter: read -formal -D CONTRACT=assume microop_counter.v
+microop_counter: read -formal -D CONTRACT=assert chip74590.v
+microop_counter: prep -top microop_counter
 kpu: read -formal -D CONTRACT=assume kpu.v
 kpu: read -formal -D CONTRACT=assert buffer32.v buffer_mux2x32.v buffer_mux3x8.v chip74LVC162244.v chip7404.v chip7408.v chip74138.v chip74139.v chip74161.v chip74245.v chip7416374.v control_logic.v mlu.v mlu_slice.v mlu_lookahead.v register_file.v register32.v shifter.v sram.v timer.v
 kpu: prep -top kpu
@@ -114,9 +121,11 @@ chip74139.v
 chip74161.v
 chip74245.v
 chip74299.v
+chip74590.v
 chip7416374.v
 control_logic.v
 kpu.v
+microop_counter.v
 mlu.v
 mlu_lookahead.v
 mlu_slice.v
