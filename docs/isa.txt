@@ -61,7 +61,7 @@
 		set up instruction compression data
 
 Input plane - read into these from the bus:
-	NONE, REG, TMP0, TMP1
+	NONE, REG, TMP0, TMP1, OPCODE
 
 Output plane - write these out onto the bus:
 	NONE, REG, TMP0, TMP1, MLU, SHIFTER
