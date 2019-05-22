@@ -19,6 +19,7 @@ chip7486
 chip74138
 chip74139
 chip74161
+chip74238
 chip74245
 chip74299
 chip74590
@@ -38,9 +39,10 @@ timer
 
 [script]
 buffer32: read -formal -D CONTRACT=assume buffer32.v
+buffer32: read -formal -D CONTRACT=assert chip74LVC162244.v
 buffer32: prep -top buffer32
 buffer_mux2x32: read -formal -D CONTRACT=assume buffer_mux2x32.v
-buffer_mux2x32: read -formal -D CONTRACT=assert buffer32.v
+buffer_mux2x32: read -formal -D CONTRACT=assert buffer32.v chip74LVC162244.v
 buffer_mux2x32: prep -top buffer_mux2x32
 buffer_mux3x8: read -formal -D CONTRACT=assume buffer_mux3x8.v
 buffer_mux3x8: read -formal -D CONTRACT=assert chip74139.v chip74245.v
@@ -63,6 +65,8 @@ chip74139: read -formal -D CONTRACT=assume chip74139.v
 chip74139: prep -top chip74139
 chip74161: read -formal -D CONTRACT=assume chip74161.v
 chip74161: prep -top chip74161
+chip74238: read -formal -D CONTRACT=assume chip74238.v
+chip74238: prep -top chip74238
 chip74245: read -formal -D CONTRACT=assume chip74245.v
 chip74245: prep -top chip74245
 chip74299: read -formal -D CONTRACT=assume chip74299.v
@@ -119,6 +123,7 @@ chip7486.v
 chip74138.v
 chip74139.v
 chip74161.v
+chip74238.v
 chip74245.v
 chip74299.v
 chip74590.v

@@ -8,8 +8,8 @@ module chip74139(
   output logic [3:0] N_Y1,
   output logic [3:0] N_Y2
 );
-  assign N_Y1 = N_E1 ? 4'bZ:~(4'b1 << A1);
-  assign N_Y2 = N_E2 ? 4'bZ:~(4'b1 << A2);
+  assign N_Y1 = N_E1 ? 4'b1111:~(4'b1 << A1);
+  assign N_Y2 = N_E2 ? 4'b1111:~(4'b1 << A2);
 
   `ifdef FORMAL
   always_comb begin
@@ -20,6 +20,8 @@ module chip74139(
         2'b10: begin assert (N_Y1 == 4'b1011); end
         2'b11: begin assert (N_Y1 == 4'b0111); end
       endcase
+    end else begin
+      assert (N_Y1 == 4'b1111);
     end
     if (!N_E2) begin
       case (A2)
@@ -28,6 +30,8 @@ module chip74139(
         2'b10: begin assert (N_Y2 == 4'b1011); end
         2'b11: begin assert (N_Y2 == 4'b0111); end
       endcase
+    end else begin
+      assert (N_Y2 == 4'b1111);
     end
   end
   `endif
