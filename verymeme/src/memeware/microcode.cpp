@@ -58,7 +58,7 @@ std::vector<uint8_t> generateMluLookaheadFirmware() {
 }
 
 std::vector<uint8_t> generateMicrocodeFirmware() {
-  std::vector<uint8_t> data(1 << 6);
+  std::vector<uint8_t> data(1 << 11);
   for (uint32_t i = 0; i < data.size(); ++i)
     data[i] = 0;
   return data;
