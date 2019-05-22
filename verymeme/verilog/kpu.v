@@ -32,6 +32,7 @@ module kpu(
   // Scratch registers - invisible to running code.
   wire [31:0] tmp0_val, tmp0_out;
   wire [31:0] tmp1_val, tmp1_out;
+  // TODO: Don't read on every clock.
   register32 tmp0(.CLK(CLK), .IN(bus), .N_OE(0), .OUT(tmp0_val));
   buffer32 tmp0_buf(.IN(tmp0_val), .OUT(tmp0_out), .N_OE(control_tmp0_n_out));
   register32 tmp1(.CLK(CLK), .IN(bus), .N_OE(0), .OUT(tmp1_val));
@@ -48,6 +49,7 @@ module kpu(
   wire [5:0] op;  // 6 bit opcode
   wire [4:0] op_reg_src0, op_reg_src1;
   wire [15:0] op_offset;
+  // TODO: Don't read on every clock.
   register32 op_word(.CLK(CLK), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, op}));
 
   // Control logic:
@@ -65,7 +67,7 @@ module kpu(
   wire control_shifter_n_out;
   // ALU plane:
   wire [3:0] control_alu_plane;
-  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .OPCODE(op), .REG_SEL(control_reg_sel),
+  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(N_RST), .OPCODE(op), .REG_SEL(control_reg_sel),
     .REG_SRC(control_reg_src), .ALU_PLANE(control_alu_plane), .REG_N_IN(control_reg_n_in),
     .TMP0_N_IN(control_tmp0_n_in),
     .TMP1_N_IN(control_tmp1_n_in),
