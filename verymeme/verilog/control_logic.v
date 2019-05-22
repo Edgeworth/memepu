@@ -1,9 +1,10 @@
 `include "common.v"
 /* verilator lint_off UNUSED */  // TODO: Remove
 module control_logic(
-  input wire [5:0] OPCODE,
   input wire CLK,
   input wire N_CLK,
+  input wire N_RST,
+  input wire [5:0] OPCODE,
   output logic [1:0] REG_SEL, // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
   output logic [4:0] REG_SRC, // Control logic reg src.
   output logic [3:0] ALU_PLANE,
@@ -24,8 +25,8 @@ module control_logic(
   input wire BOOTSTRAP_N_WE
 );
   // TODO: Micro-op counter:
-  microop_counter counter();
-
+  wire [4:0] microop_count;
+  microop_counter counter(.CLK(CLK), .N_RST(N_RST), .COUNT(microop_count));
 
   // Outputs:
   // In plane: NONE, REG, TMP0, TMP1
@@ -37,11 +38,10 @@ module control_logic(
   //   For shifter: 2 bits for direction and arithmetic or not.
   wire [14:0] unused_control;
   // TODO: change to specific sram chip
-  sram#(.DEPTH(6), .WIDTH(32), .INITIAL("microcode.hex")) microcode(.ADDR({OPCODE}),
+  sram#(.DEPTH(11), .WIDTH(32), .INITIAL("microcode.hex")) microcode(.ADDR({OPCODE, microop_count}),
     .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA({BOOTSTRAP_DATA, 24'b0}),  // TODO(bootstrap): only feeding 8 bits in
-    .OUT_DATA({control_in_plane, control_out_plane, ALU_PLANE, REG_SEL,
-        REG_SRC, unused_control}));
+    .OUT_DATA({control_in_plane, control_out_plane, ALU_PLANE, REG_SEL, REG_SRC, unused_control}));
   // TODO: Need to latch on N_CLK(?)
 
   // In plane decoder (inverting outputs):
@@ -72,7 +72,11 @@ module control_logic(
 
     // TODO: Make sure subtract provides carry.
 
+    `ifdef BOOTSTRAP
     if (!N_BOOTED) `CONTRACT(BOOTSTRAP_N_WE);  // Don't write after boot.
+    `else
+    `CONTRACT(BOOTSTRAP_N_WE);  // Don't write if we're not bootstrapping.
+    `endif
   end
   `endif
 endmodule

@@ -18,7 +18,6 @@ module chip74590(
     else count <= count + 8'b1;
   end
 
-
   `ifdef FORMAL
   integer f_past = 0;
 
