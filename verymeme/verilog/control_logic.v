@@ -9,9 +9,10 @@ module control_logic(
   output logic [4:0] REG_SRC, // Control logic reg src.
   output logic [3:0] ALU_PLANE,
   // In plane signals:
-  output logic REG_N_IN,
-  output logic TMP0_N_IN,
-  output logic TMP1_N_IN,
+  output logic REG_IN_CLK,
+  output logic TMP0_IN_CLK,
+  output logic TMP1_IN_CLK,
+  output logic OPCODE_IN_CLK,
   // Out plane signals:
   output logic REG_N_OUT,
   output logic TMP0_N_OUT,
@@ -44,11 +45,11 @@ module control_logic(
     .OUT_DATA({control_in_plane, control_out_plane, ALU_PLANE, REG_SEL, REG_SRC, unused_control}));
   // TODO: Need to latch on N_CLK(?)
 
-  // In plane decoder (inverting outputs):
+  // In plane decoder - enable on CLK to do pulse.
   wire unused_in_none;
-  wire [3:0] unused_in_plane;
-  chip74138 in_plane_decoder(.A(control_in_plane), .N_E1(0), .N_E2(0), .E3(1),
-    .N_Y({unused_in_plane, TMP1_N_IN, TMP0_N_IN, REG_N_IN, unused_in_none}));
+  wire [2:0] unused_in_plane;
+  chip74238 in_plane_decoder(.A(control_in_plane), .N_E1(0), .N_E2(0), .E3(CLK),
+    .Y({unused_in_plane, OPCODE_IN_CLK, TMP1_IN_CLK, TMP0_IN_CLK, REG_IN_CLK, unused_in_none}));
 
   // Out plane decoder:
   wire unused_out_none;
@@ -63,9 +64,9 @@ module control_logic(
     assert (REG_SEL != 2'b11);  // Not a valid register selector option.
 
     // Don't try to write and read to the same thing:
-    assert (REG_N_IN || REG_N_OUT);
-    assert (TMP0_N_IN || TMP0_N_OUT);
-    assert (TMP1_N_IN || TMP1_N_OUT);
+    assert (!REG_IN_CLK || REG_N_OUT);
+    assert (!TMP0_IN_CLK || TMP0_N_OUT);
+    assert (!TMP1_IN_CLK || TMP1_N_OUT);
 
     // Don't try to do a left-arithmetic shift, it doesn't make sense.
     if (SHIFTER_N_OUT) assert (ALU_PLANE[1:0] != 2'b11);

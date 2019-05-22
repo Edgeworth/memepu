@@ -7,7 +7,7 @@ module chip74138(
   input wire E3,
   output logic [7:0] N_Y
 );
-  assign N_Y = !N_E1 && !N_E2 &&  E3 ? ~(8'b1 << A) : 8'bZ;
+  assign N_Y = !N_E1 && !N_E2 && E3 ? ~(8'b1 << A) : 8'hFF;
 
   `ifdef FORMAL
   always_comb begin
@@ -22,6 +22,8 @@ module chip74138(
         3'b110: begin assert (N_Y == 8'b10111111); end
         3'b111: begin assert (N_Y == 8'b01111111); end
       endcase
+    end else begin
+      assert (N_Y == 8'hFF);
     end
   end
   `endif

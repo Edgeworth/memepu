@@ -325,11 +325,12 @@ protected:
 };
 
 TEST_F(KpuTest, BasicTest) {
-  kpu_.__Vclklast__TOP__CLK = 0;
+  kpu_.N_RST = 0;  // Asynchronous reset.
+  kpu_.CLK = 0;
+  kpu_.N_CLK = !kpu_.CLK;
   kpu_.eval();
 
-  kpu_.__Vclklast__TOP__CLK = 1;
-  kpu_.eval();
+  // TODO: Test asynch reset.
 }
 
 }  // anonymous
