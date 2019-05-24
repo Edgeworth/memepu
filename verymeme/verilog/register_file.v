@@ -10,13 +10,13 @@ module register_file(
   input wire N_OE,
   output logic [31:0] OUT_DATA
 );
-  // TODO: need to mux between reg0sel, reg1sel, and microcode. Use 74245 ?
   wire [4:0] reg_src;
   wire [2:0] unused_reg_src;
   buffer_mux3x8 reg_sel_mux(.A({3'b0, REG_SRC0}), .B({3'b0, REG_SRC1}), .C({3'b0, REG_SRC2}),
     .SEL(REG_SEL), .OUT({unused_reg_src, reg_src}));
 
-  // TODO: change to specific sram chip
+  // TODO: change to specific sram chip, one that doesn't use bootstrap.
+  // TODO: Maybe make bootstrapped_sram ?
   // 32 registers.
   sram#(.DEPTH(5), .WIDTH(32)) registers(.ADDR(reg_src), .N_WE(N_WE), .N_OE(N_OE),
     .IN_DATA(IN_DATA), .OUT_DATA(OUT_DATA));
