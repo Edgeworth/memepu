@@ -9,7 +9,7 @@ module control_logic(
   output logic [4:0] REG_SRC, // Control logic reg src.
   output logic [3:0] ALU_PLANE,
   // In plane signals:
-  output logic REG_IN_CLK,
+  output logic REG_N_IN_CLK,
   output logic TMP0_IN_CLK,
   output logic TMP1_IN_CLK,
   output logic OPCODE_IN_CLK,
@@ -47,9 +47,14 @@ module control_logic(
 
   // In plane decoder - enable on CLK to do pulse.
   wire unused_in_none;
+  wire reg_in_clk;
   wire [2:0] unused_in_plane;
   chip74238 in_plane_decoder(.A(control_in_plane), .N_E1(0), .N_E2(0), .E3(CLK),
-    .Y({unused_in_plane, OPCODE_IN_CLK, TMP1_IN_CLK, TMP0_IN_CLK, REG_IN_CLK, unused_in_none}));
+    .Y({unused_in_plane, OPCODE_IN_CLK, TMP1_IN_CLK, TMP0_IN_CLK, reg_in_clk, unused_in_none}));
+
+  // Inverter:
+  wire [4:0] unused_inverter;
+  chip7404 inverter(.A({5'b0, reg_in_clk}), .Y({unused_inverter, REG_N_IN_CLK}));
 
   // Out plane decoder:
   wire unused_out_none;

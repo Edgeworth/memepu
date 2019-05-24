@@ -17,7 +17,7 @@
 74HC238 - 3 to 8 decoder
 74HC245 - Octal bidirectional bus transceiver
 74HC254 - 4 to 16 decoder, inverting outputs
-74HC273 - 8 bit register with unfortunate pinout
+74HC273 - 8 bit register, asynchronous clear, bad pinout
 74HC283 - 4 bit binary full adder
 74HC574 - 8 bit register
 74HC590 - 8 bit binary counter, tri-state

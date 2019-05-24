@@ -40,7 +40,7 @@ module kpu(
   // Register file:
   wire [31:0] reg_out;
   register_file regs(.REG_SEL(control_reg_sel), .REG_SRC0(op_reg_src0), .REG_SRC1(op_reg_src1),
-    .REG_SRC2(control_reg_src), .IN_DATA(bus), .N_WE(control_reg_n_in), .N_OE(control_reg_n_out),
+    .REG_SRC2(control_reg_src), .IN_DATA(bus), .N_WE(control_reg_n_in_clk), .N_OE(control_reg_n_out),
     .OUT_DATA(reg_out));
 
   // Opcode word:
@@ -48,13 +48,13 @@ module kpu(
   wire [5:0] op;  // 6 bit opcode
   wire [4:0] op_reg_src0, op_reg_src1;
   wire [15:0] op_offset;
-  register32 op_word(.CLK(CLK), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, op}));
+  register32 op_word(.CLK(control_opcode_in_clk), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, op}));
 
   // Control logic:
   wire [1:0] control_reg_sel;
   wire [4:0] control_reg_src;
   // In plane:
-  wire control_reg_n_in;
+  wire control_reg_n_in_clk;
   wire control_tmp0_in_clk;
   wire control_tmp1_in_clk;
   wire control_opcode_in_clk;
@@ -68,7 +68,7 @@ module kpu(
   wire [3:0] control_alu_plane;
   control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(N_RST), .OPCODE(op), .REG_SEL(control_reg_sel),
     .REG_SRC(control_reg_src), .ALU_PLANE(control_alu_plane),
-    .REG_IN_CLK(control_reg_n_in),
+    .REG_N_IN_CLK(control_reg_n_in_clk),
     .TMP0_IN_CLK(control_tmp0_in_clk),
     .TMP1_IN_CLK(control_tmp1_in_clk),
     .OPCODE_IN_CLK(control_opcode_in_clk),
