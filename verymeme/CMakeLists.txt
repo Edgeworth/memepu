@@ -48,34 +48,37 @@ add_subdirectory(verilog)
 set(VERYMEME_SOURCES
     src/verymeme/common.cpp include/verymeme/common.h
     src/verymeme/parser.cpp include/verymeme/parser.h)
-set(MEMECAD_SOURCES
+set(MEMECAD_SOURCES ${VERYMEME_SOURCES}
     src/memecad/parser.cpp include/memecad/parser.h
     src/memecad/types.cpp include/memecad/types.h
     src/memecad/mapper.cpp include/memecad/mapper.h
     src/memecad/yosys_module.cpp include/memecad/yosys_module.h
     src/memecad/util.cpp include/memecad/util.h
     src/memecad/schematic.cpp include/memecad/schematic.h)
-set(MEMEROUTE_SOURCES
+set(MEMEROUTE_SOURCES ${VERYMEME_SOURCES}
     src/memeroute/parser.cpp include/memeroute/parser.h
     src/memeroute/types.cpp include/memeroute/types.h
     src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h
     src/memeroute/renderer.cpp include/memeroute/renderer.h
     src/memeroute/router.cpp include/memeroute/router.h
     src/memeroute/router_worker.cpp include/memeroute/router_worker.h)
-set(MEMEWARE_SOURCES
-    include/memeware/constants.h src/memeware/microcode.cpp include/memeware/microcode.h src/memeware/util.cpp include/memeware/util.h)
+set(MEMEWARE_SOURCES ${VERYMEME_SOURCES}
+    include/memeware/constants.h
+    src/memeware/microcode.cpp include/memeware/microcode.h
+    src/memeware/util.cpp include/memeware/util.h)
+set(MEMESIM_SOURCES ${VERYMEME_SOURCES})
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
 
 # memeware:
-add_executable(memeware ${VERYMEME_SOURCES} ${MEMEWARE_SOURCES} src/programs/memeware.cpp)
+add_executable(memeware ${MEMEWARE_SOURCES} src/programs/memeware.cpp)
 target_include_directories(memeware PUBLIC ${Boost_INCLUDE_DIRS} include)
 target_link_directories(memeware PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(memeware PUBLIC ${Boost_LIBRARIES})
 
 # memecad:
-add_executable(memecad ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} src/programs/memecad.cpp)
+add_executable(memecad ${MEMECAD_SOURCES} src/programs/memecad.cpp)
 target_include_directories(memecad PUBLIC ${Boost_INCLUDE_DIRS} include)
 target_link_directories(memecad PUBLIC ${Boost_LIBRARY_DIRS})
 target_compile_options(memecad PUBLIC ${YOSYS_OPTIONS})
@@ -83,11 +86,17 @@ target_link_options(memecad PUBLIC ${YOSYS_LDFLAGS})
 target_link_libraries(memecad PUBLIC ${YOSYS_LIBRARIES} ${Boost_LIBRARIES})
 
 # memeroute:
-add_executable(memeroute ${VERYMEME_SOURCES} ${MEMEROUTE_SOURCES} src/programs/memeroute.cpp)
+add_executable(memeroute ${MEMEROUTE_SOURCES} src/programs/memeroute.cpp)
 target_include_directories(memeroute PUBLIC ${SFML_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} include)
 target_link_directories(memeroute PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(memeroute PUBLIC ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${Boost_LIBRARIES}
     Threads::Threads)
+
+# memesim:
+add_executable(memesim ${MEMESIM_SOURCES} src/programs/memesim.cpp)
+target_include_directories(memesim PUBLIC ${VERILATOR_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memesim PUBLIC ${Boost_LIBRARY_DIRS})
+target_link_libraries(memesim PUBLIC verilated_library ${Boost_LIBRARIES})
 
 # tests:
 add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)

@@ -8,6 +8,8 @@
 #include <sstream>
 #include <boost/stacktrace/stacktrace.hpp>
 #include <boost/lexical_cast.hpp>
+#include <regex>
+#include "verymeme/common.h"
 
 #define verify_expr(expr, ...)                        \
   do {                                                \
@@ -91,6 +93,8 @@ struct Point {
 };
 
 std::ostream& operator<<(std::ostream& str, const Point& p);
+
+std::string trim(const std::string& data, const std::string& c);
 
 struct Rect {
   int64_t left = 0;

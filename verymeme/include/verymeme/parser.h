@@ -5,8 +5,6 @@
 
 #include "verymeme/common.h"
 
-std::string trim(const std::string& data, const std::string& c);
-
 class Parser {
 public:
   Parser(const std::string& data, const std::regex& token);

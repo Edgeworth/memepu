@@ -18,7 +18,7 @@ module register_file(
   // TODO: change to specific sram chip, one that doesn't use bootstrap.
   // TODO: Maybe make bootstrapped_sram ?
   // 32 registers.
-  sram#(.DEPTH(5), .WIDTH(32)) registers(.ADDR(reg_src), .N_WE(N_WE), .N_OE(N_OE),
+  sram#(.DEPTH(5), .WIDTH(32), .INITIAL("")) registers(.ADDR(reg_src), .N_WE(N_WE), .N_OE(N_OE),
     .IN_DATA(IN_DATA), .OUT_DATA(OUT_DATA));
 
   `ifdef FORMAL

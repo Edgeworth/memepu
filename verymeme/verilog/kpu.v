@@ -45,10 +45,15 @@ module kpu(
 
   // Opcode word:
   // Outputs:
-  wire [5:0] op;  // 6 bit opcode
+  wire [5:0] opword_opcode;  // 6 bit opcode
   wire [4:0] op_reg_src0, op_reg_src1;
   wire [15:0] op_offset;
-  register32 op_word(.CLK(control_opcode_in_clk), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, op}));
+  register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, opword_opcode}));
+  // TODO(idea): Can have control logic write into this to do micro-op functions.
+  wire [1:0] unused_opcode;
+  wire [5:0] opcode;
+  chip74273 opcode_reg(.D({2'b0, opword_opcode}), .N_MR(N_RST), .CP(control_opcode_in_clk),
+    .Q({unused_opcode, opcode}));
 
   // Control logic:
   wire [1:0] control_reg_sel;
@@ -57,6 +62,7 @@ module kpu(
   wire control_reg_n_in_clk;
   wire control_tmp0_in_clk;
   wire control_tmp1_in_clk;
+  wire control_opword_in_clk;
   wire control_opcode_in_clk;
   // Out plane
   wire control_reg_n_out;
@@ -66,11 +72,12 @@ module kpu(
   wire control_shifter_n_out;
   // ALU plane:
   wire [3:0] control_alu_plane;
-  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(N_RST), .OPCODE(op), .REG_SEL(control_reg_sel),
-    .REG_SRC(control_reg_src), .ALU_PLANE(control_alu_plane),
+  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(N_RST), .OPCODE(opcode),
+    .REG_SEL(control_reg_sel), .REG_SRC(control_reg_src), .ALU_PLANE(control_alu_plane),
     .REG_N_IN_CLK(control_reg_n_in_clk),
     .TMP0_IN_CLK(control_tmp0_in_clk),
     .TMP1_IN_CLK(control_tmp1_in_clk),
+    .OPWORD_IN_CLK(control_opword_in_clk),
     .OPCODE_IN_CLK(control_opcode_in_clk),
     .REG_N_OUT(control_reg_n_out), .TMP0_N_OUT(control_tmp0_n_out),
     .TMP1_N_OUT(control_tmp1_n_out), .MLU_N_OUT(control_mlu_n_out),
