@@ -13,7 +13,7 @@ std::vector<uint8_t> generateMluSliceFirmware();
 
 std::vector<uint8_t> generateMluLookaheadFirmware();
 
-std::vector<uint8_t> generateMicrocodeFirmware();
+std::vector<uint32_t> generateMicrocodeFirmware();
 
 }  // memeware
 

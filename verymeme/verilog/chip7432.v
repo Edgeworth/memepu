@@ -1,5 +1,6 @@
 `include "common.v"
 
+// OR
 module chip7432(
   input wire [3:0] A,
   input wire [3:0] B,

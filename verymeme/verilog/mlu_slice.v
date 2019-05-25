@@ -1,4 +1,5 @@
 `include "common.v"
+/* verilator lint_off UNOPTFLAT */
 module mlu_slice(
   input wire [3:0] A,
   input wire [3:0] B,

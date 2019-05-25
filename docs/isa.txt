@@ -64,7 +64,7 @@ Input plane - read into these from the bus:
 	NONE, REG, TMP0, TMP1, OPWORD, OPCODE
 
 Output plane - write these out onto the bus:
-	NONE, REG, TMP0, TMP1, MLU, SHIFTER
+	NONE, REG, TMP0, TMP1, MLU, SHIFTER, TIMER
 
 Register plane - 7 bit:
 	which register to select in the register file
@@ -76,7 +76,7 @@ Alu operation plane - 3 bit + 1 bit for carry:
 	First 2 bits also fed into the shifter for op.
 
 Misc oepration plane -
-	Reset micro-op counter
+	NONE, Reset micro-op counter
 
 #### Status/Control SC register
 Interrupts Off/On, Paging Off/On, Privileged/Unprivileged, Secure/Not secure

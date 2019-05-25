@@ -61,18 +61,34 @@ class Microcode {
 public:
   Microcode() : data_(SIZE, 0) {}
 
-#define WRITE(opcode, ...) { \
+#define WRITE(opcode, ...) do { \
   uint32_t microops[] = {__VA_ARGS__}; \
   writeMicroops(opcode, microops, sizeof(microops) / sizeof(microops[0])); \
-}
-  std::vector<uint8_t> get() {
-    WRITE(OP_RESET, 0);
+} while (0)
+  std::vector<uint32_t> get() {
+    WRITE(OP_RESET,
+        out(OUT_TIMER) | in(IN_REG) | reg_src(0) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(1) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(2) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(3) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(4) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(5) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(6) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(7) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(8) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(9) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(10) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(11) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(12) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(13) | reg_sel(REG_SEL_CONTROL),
+        out(OUT_TIMER) | in(IN_REG) | reg_src(14) | reg_sel(REG_SEL_CONTROL),
+        misc(MISC_RESET_MICROOP_COUNTER));
     return data_;
   }
 #undef WRITE
 
 private:
-  std::vector<uint8_t> data_;
+  std::vector<uint32_t> data_;
   static constexpr size_t NUM_BITS = 11u;
   static constexpr size_t SIZE = 1u << NUM_BITS;
   static constexpr size_t MICROOP_BITS = 5u;
@@ -80,7 +96,7 @@ private:
   static constexpr size_t NUM_REG = 32;
 
   uint32_t reg_src(int reg) {
-    verify_expr(reg < NUM_REG, "BUG");
+    verify_expr(reg < int(NUM_REG), "BUG");
     return reg;
   };
 
@@ -98,6 +114,10 @@ private:
 
   uint32_t in(InPlane i) {
     return uint32_t(i) << 14u;
+  }
+
+  uint32_t misc(MiscPlane m) {
+    return uint32_t(m) << 17u;
   }
 
   uint32_t addr_opcode(Opcode opcode) { return static_cast<uint32_t>(opcode) << MICROOP_BITS; }
@@ -122,9 +142,8 @@ private:
 //          "last micro-op must reset micro-op count, opcode: %d", static_cast<int>(opcode));
 
       // For unused portions, reset uop count for debug purposes.
-      if (microop_idx < num)
-        write(opcode, microop_idx, microops[microop_idx]);
-//    else write(opcode, microop_idx, multi(MULTI_N_RESET_UOP_COUNT));
+      if (microop_idx < num) write(opcode, microop_idx, microops[microop_idx]);
+      else write(opcode, microop_idx, misc(MISC_RESET_MICROOP_COUNTER));
     }
   }
 
@@ -137,7 +156,7 @@ private:
 };
 
 
-std::vector<uint8_t> generateMicrocodeFirmware() {
+std::vector<uint32_t> generateMicrocodeFirmware() {
   return Microcode().get();
 }
 

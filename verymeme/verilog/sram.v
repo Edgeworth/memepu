@@ -1,5 +1,5 @@
 `include "common.v"
-
+/* verilator lint_off UNOPTFLAT */
 module sram(
   input wire [DEPTH-1:0] ADDR,
   input wire N_WE,

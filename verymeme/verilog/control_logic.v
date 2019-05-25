@@ -20,30 +20,36 @@ module control_logic(
   output logic TMP1_N_OUT,
   output logic MLU_N_OUT,
   output logic SHIFTER_N_OUT,
+  output logic TIMER_N_OUT,
   // Bootstrapping signals:
   input wire [11:0] BOOTSTRAP_ADDR,
   input wire [7:0] BOOTSTRAP_DATA,
   input wire N_BOOTED,
   input wire BOOTSTRAP_N_WE
 );
-  // TODO: Micro-op counter:
+  wire [2:0] unused_and;
+  wire counter_combined_n_rst;
+  chip7408 and_gate(.A({3'b0, microop_counter_n_rst}), .B({3'b0, N_RST}),
+    .Y({unused_and, counter_combined_n_rst}));
   wire [4:0] microop_count /*verilator public*/;
-  microop_counter counter(.CLK(CLK), .N_RST(N_RST), .COUNT(microop_count));
+  microop_counter counter(.CLK(CLK), .N_RST(counter_combined_n_rst), .COUNT(microop_count));
 
   // Outputs:
   // In plane: NONE, REG, TMP0, TMP1
-  wire [2:0] control_in_plane;
-  // Out plane: NONE, REG, TMP0, TMP1, MLU, SHIFTER
-  wire [2:0] control_out_plane;
+  wire [2:0] control_in_plane /*verilator public*/;
+  // Out plane: NONE, REG, TMP0, TMP1, MLU, SHIFTER, TIMER
+  wire [2:0] control_out_plane /*verilator public*/;
   // ALU plane:
   //   For MLU: 3 bits for op select, 1 bit for carry.
   //   For shifter: 2 bits for direction and arithmetic or not.
-  wire [14:0] unused_control;
+  // Misc plane: Micro-op counter reset
+  wire control_misc_plane /*verilator public*/;
+  wire [13:0] unused_control;
   // TODO: change to specific sram chip
   sram#(.DEPTH(11), .WIDTH(32), .INITIAL("microcode.hex")) microcode(.ADDR({OPCODE, microop_count}),
     .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA({BOOTSTRAP_DATA, 24'b0}),  // TODO(bootstrap): only feeding 8 bits in
-    .OUT_DATA({unused_control, control_in_plane, control_out_plane, ALU_PLANE, REG_SEL, REG_SRC}));
+    .OUT_DATA({unused_control, control_misc_plane, control_in_plane, control_out_plane, ALU_PLANE, REG_SEL, REG_SRC}));
   // TODO: Need to latch on N_CLK(?)
 
   // In plane decoder - enable on CLK to do pulse.
@@ -60,10 +66,18 @@ module control_logic(
 
   // Out plane decoder:
   wire unused_out_none;
-  wire [1:0] unused_out_plane;
+  wire unused_out_plane;
   chip74138 out_plane_decoder(.A(control_out_plane), .N_E1(0), .N_E2(0), .E3(1),
-    .N_Y({unused_out_plane, SHIFTER_N_OUT, MLU_N_OUT, TMP1_N_OUT,
+    .N_Y({unused_out_plane, TIMER_N_OUT, SHIFTER_N_OUT, MLU_N_OUT, TMP1_N_OUT,
         TMP0_N_OUT, REG_N_OUT, unused_out_none}));
+
+  // Misc plane decoder
+  // TODO(optimisation): Can reduce size? 2=>4 decoder (dual).
+  wire unused_misc_none;
+  wire [5:0] unused_misc_plane;
+  wire microop_counter_n_rst;
+  chip74138 misc_plane_decoder(.A({2'b0, control_misc_plane}), .N_E1(0), .N_E2(0), .E3(1),
+    .N_Y({unused_misc_plane, microop_counter_n_rst, unused_misc_none}));
 
   `ifdef FORMAL
   // TODO: More testing.
@@ -87,4 +101,4 @@ module control_logic(
     `endif
   end
   `endif
-endmodule
+endmodule : control_logic
