@@ -98,10 +98,11 @@ std::string trim(const std::string& data, const std::string& c);
 
 template<typename T>
 std::string convertToHex(const std::vector<T>& input, int width = 40) {
+  static_assert(sizeof(T) <= sizeof(uint64_t), "input type too large");
   std::stringstream stream;
   int count = 0;
   for (auto c : input) {
-    stream << std::hex << std::setw(2 * sizeof(T)) << std::setfill('0') << int(c);
+    stream << std::hex << std::setw(2 * sizeof(T)) << std::setfill('0') << uint64_t(c);
     if (++count == width) {
       stream << "\n";
       count = 0;
