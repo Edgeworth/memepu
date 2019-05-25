@@ -64,8 +64,7 @@ set(MEMEROUTE_SOURCES ${VERYMEME_SOURCES}
     src/memeroute/router_worker.cpp include/memeroute/router_worker.h)
 set(MEMEWARE_SOURCES ${VERYMEME_SOURCES}
     include/memeware/constants.h
-    src/memeware/microcode.cpp include/memeware/microcode.h
-    src/memeware/util.cpp include/memeware/util.h)
+    src/memeware/microcode.cpp include/memeware/microcode.h)
 set(MEMESIM_SOURCES ${VERYMEME_SOURCES})
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
