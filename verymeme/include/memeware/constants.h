@@ -23,7 +23,11 @@ enum InPlane {
 };
 
 enum OutPlane {
-  OUT_NONE, OUT_REG, OUT_TMP0, OUT_TMP1, OUT_MLU
+  OUT_NONE, OUT_REG, OUT_TMP0, OUT_TMP1, OUT_MLU, OUT_SHIFTER, OUT_TIMER
+};
+
+enum MiscPlane {
+  MISC_NONE, MISC_RESET_MICROOP_COUNTER
 };
 
 }  // memeware

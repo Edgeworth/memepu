@@ -1,5 +1,6 @@
 `include "common.v"
 
+// AND
 module chip7408(
   input wire [3:0] A,
   input wire [3:0] B,

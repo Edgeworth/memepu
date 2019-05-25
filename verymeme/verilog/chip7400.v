@@ -1,5 +1,6 @@
 `include "common.v"
 
+// NAND
 module chip7400(
   input wire [3:0] A,
   input wire [3:0] B,

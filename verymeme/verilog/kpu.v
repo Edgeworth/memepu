@@ -9,8 +9,9 @@ module kpu(
   wire [31:0] bus /*verilator public*/;
 
   // Timer:
-  wire [31:0] time_out;
-  timer timer(.CLK(CLK), .N_RST(N_RST), .TIME(time_out));
+  wire [31:0] timer_val, timer_out;
+  timer timer(.CLK(CLK), .N_RST(N_RST), .TIME(timer_val));
+  buffer32 timer_buf(.IN(timer_val), .OUT(timer_out), .N_OE(control_timer_n_out));
 
   // MLU:
   wire [31:0] mlu_val /*verilator public*/, mlu_out;
@@ -70,6 +71,7 @@ module kpu(
   wire control_tmp1_n_out;
   wire control_mlu_n_out;
   wire control_shifter_n_out;
+  wire control_timer_n_out;
   // ALU plane:
   wire [3:0] control_alu_plane;
   control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(N_RST), .OPCODE(opcode),
@@ -81,7 +83,7 @@ module kpu(
     .OPCODE_IN_CLK(control_opcode_in_clk),
     .REG_N_OUT(control_reg_n_out), .TMP0_N_OUT(control_tmp0_n_out),
     .TMP1_N_OUT(control_tmp1_n_out), .MLU_N_OUT(control_mlu_n_out),
-    .SHIFTER_N_OUT(control_shifter_n_out),
+    .SHIFTER_N_OUT(control_shifter_n_out), .TIMER_N_OUT(control_timer_n_out),
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr[11:0]),
     .BOOTSTRAP_N_WE(bootstrap_control_n_we));
 
@@ -92,10 +94,11 @@ module kpu(
   assign bus = tmp1_out;
   assign bus = mlu_out;
   assign bus = shifter_out;
+  assign bus = timer_out;
   `else
   assign bus = !control_reg_n_out ? reg_out : !control_tmp0_n_out ? tmp0_out :
     !control_tmp1_n_out ? tmp1_out : !control_mlu_n_out ? mlu_out : !control_shifter_n_out ?
-    shifter_out : 32'bZ;
+    shifter_out : !control_timer_n_out ? timer_out : 32'bZ;
   `endif
 
   // Bootstrapping code:
