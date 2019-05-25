@@ -30,8 +30,8 @@ module kpu(
   buffer32 shifter_buf(.IN(shifter_val), .OUT(shifter_out), .N_OE(control_shifter_n_out));
 
   // Scratch registers - invisible to running code.
-  wire [31:0] tmp0_val, tmp0_out;
-  wire [31:0] tmp1_val, tmp1_out;
+  wire [31:0] tmp0_val /*verilator public*/, tmp0_out;
+  wire [31:0] tmp1_val /*verilator public*/, tmp1_out;
   register32 tmp0(.CLK(control_tmp0_in_clk), .IN(bus), .N_OE(0), .OUT(tmp0_val));
   buffer32 tmp0_buf(.IN(tmp0_val), .OUT(tmp0_out), .N_OE(control_tmp0_n_out));
   register32 tmp1(.CLK(control_tmp1_in_clk), .IN(bus), .N_OE(0), .OUT(tmp1_val));

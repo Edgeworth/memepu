@@ -1,4 +1,3 @@
-#include "verymeme/parser.h"
 #include "verymeme/common.h"
 
 namespace {

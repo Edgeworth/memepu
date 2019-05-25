@@ -9,6 +9,7 @@
 #include <boost/stacktrace/stacktrace.hpp>
 #include <boost/lexical_cast.hpp>
 #include <regex>
+#include <iomanip>
 #include "verymeme/common.h"
 
 #define verify_expr(expr, ...)                        \
@@ -93,8 +94,29 @@ struct Point {
 };
 
 std::ostream& operator<<(std::ostream& str, const Point& p);
-
 std::string trim(const std::string& data, const std::string& c);
+
+template<typename T>
+std::string convertToHex(const std::vector<T>& input, int width = 40) {
+  std::stringstream stream;
+  int count = 0;
+  for (auto c : input) {
+    stream << std::hex << std::setw(2 * sizeof(T)) << std::setfill('0') << int(c);
+    if (++count == width) {
+      stream << "\n";
+      count = 0;
+    } else {
+      stream << " ";
+    }
+  }
+  if (count) stream << "\n";
+  return stream.str();
+}
+
+template <typename T, std::size_t N>
+std::string convertToHex(const T (&input)[N], int width = 40) {
+  return convertToHex(std::vector<T>(input, input + N), width);
+}
 
 struct Rect {
   int64_t left = 0;
