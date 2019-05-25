@@ -18,7 +18,7 @@ module sram(
   // Load initial data if not bootstrapping.
   `ifndef BOOTSTRAP
   initial begin
-    $readmemh(INITIAL, mem);
+    if ($size(INITIAL) > 1) $readmemh(INITIAL, mem);
   end
   `endif
 

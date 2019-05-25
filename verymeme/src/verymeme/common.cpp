@@ -1,3 +1,4 @@
+#include "verymeme/parser.h"
 #include "verymeme/common.h"
 
 namespace {
@@ -44,6 +45,13 @@ void checked_chdir(const std::string& path) {
 
 std::ostream& operator<<(std::ostream& str, const Point& p) {
   return str << p.x << " " << p.y;
+}
+
+std::string trim(const std::string& data, const std::string& c) {
+  const std::regex trim("^" + c + "*((\n|.)*?)" + c + "*$");
+  std::smatch sm;
+  verify_expr(std::regex_match(data, sm, trim), "BUG");
+  return sm[1].str();
 }
 
 Point& Point::operator+=(const Point& p) {
