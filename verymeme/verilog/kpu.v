@@ -6,14 +6,14 @@ module kpu(
   input wire N_RST
 );
   // Bus.
-  wire [31:0] bus;
+  wire [31:0] bus /*verilator public*/;
 
   // Timer:
   wire [31:0] time_out;
   timer timer(.CLK(CLK), .N_RST(N_RST), .TIME(time_out));
 
   // MLU:
-  wire [31:0] mlu_val, mlu_out;
+  wire [31:0] mlu_val /*verilator public*/, mlu_out;
   wire [2:0] mlu_flags_out;
   mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(control_alu_plane[2:0]), .C_IN(control_alu_plane[3]),
     .OUT(mlu_val), .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
@@ -51,7 +51,7 @@ module kpu(
   register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, opword_opcode}));
   // TODO(idea): Can have control logic write into this to do micro-op functions.
   wire [1:0] unused_opcode;
-  wire [5:0] opcode;
+  wire [5:0] opcode /*verilator public*/;
   chip74273 opcode_reg(.D({2'b0, opword_opcode}), .N_MR(N_RST), .CP(control_opcode_in_clk),
     .Q({unused_opcode, opcode}));
 
