@@ -27,7 +27,7 @@ module control_logic(
   input wire BOOTSTRAP_N_WE
 );
   // TODO: Micro-op counter:
-  wire [4:0] microop_count;
+  wire [4:0] microop_count /*verilator public*/;
   microop_counter counter(.CLK(CLK), .N_RST(N_RST), .COUNT(microop_count));
 
   // Outputs:
