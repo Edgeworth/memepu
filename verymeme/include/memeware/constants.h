@@ -10,6 +10,7 @@ enum Mlu {
 };
 
 enum Opcode {
+  OP_RESET,
   OP_ADD,
 };
 

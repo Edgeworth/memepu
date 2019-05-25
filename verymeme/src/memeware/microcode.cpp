@@ -57,11 +57,66 @@ std::vector<uint8_t> generateMluLookaheadFirmware() {
   return data;
 }
 
+class Microcode {
+public:
+  Microcode() : data_(SIZE, 0) {}
+
+#define WRITE(opcode, ...) { \
+  uint32_t microops[] = {__VA_ARGS__}; \
+  writeMicroops(opcode, microops, sizeof(microops) / sizeof(microops[0])); \
+}
+  std::vector<uint8_t> get() {
+    WRITE(OP_RESET, 0);
+    return data_;
+  }
+#undef WRITE
+
+private:
+  std::vector<uint8_t> data_;
+  static constexpr size_t NUM_BITS = 11u;
+  static constexpr size_t SIZE = 1u << NUM_BITS;
+  static constexpr size_t MICROOP_BITS = 5u;
+  static constexpr size_t MAX_MICROOPS = 1u << MICROOP_BITS;
+
+  uint32_t addr_opcode(Opcode opcode) { return static_cast<uint32_t>(opcode) << MICROOP_BITS; }
+  uint32_t addr_microop(int idx) {
+    verify_expr(idx < int(MAX_MICROOPS), "too many microops");
+    return idx;
+  }
+
+  void put(uint32_t addr, uint32_t output) {
+    verify_expr((addr & (SIZE - 1)) == addr, "only %lu bits for address", NUM_BITS);
+    data_[addr] = output;
+  }
+
+  void writeMicroops(Opcode opcode, uint32_t* microops, int num) {
+    verify_expr(num <= int(MAX_MICROOPS),
+        "no more than %lu microops for opcode %d, has %d microops",
+        MAX_MICROOPS, static_cast<int>(opcode), num);
+    for (int microop_idx = 0; microop_idx < int(MAX_MICROOPS); ++microop_idx) {
+      // Verify last micro-op resets micro-op counter, unless it's the final micro-op.
+//    if (microop_idx == num - 1 && microop_idx != MAX_MICROOPS - 1)
+//      verify_expr(multi_from_microop(microops[microop_idx]) == MULTI_N_RESET_UOP_COUNT,
+//          "last micro-op must reset micro-op count, opcode: %d", static_cast<int>(opcode));
+
+      // For unused portions, reset uop count for debug purposes.
+      if (microop_idx < num)
+        write(opcode, microop_idx, microops[microop_idx]);
+//    else write(opcode, microop_idx, multi(MULTI_N_RESET_UOP_COUNT));
+    }
+  }
+
+  void write(Opcode opcode, int microop_idx, uint32_t microop_data) {
+    uint32_t addr = 0;
+    addr |= addr_opcode(opcode);
+    addr |= addr_microop(microop_idx);
+    put(addr, microop_data);
+  }
+};
+
+
 std::vector<uint8_t> generateMicrocodeFirmware() {
-  std::vector<uint8_t> data(1 << 11);
-  for (uint32_t i = 0; i < data.size(); ++i)
-    data[i] = 0;
-  return data;
+  return Microcode().get();
 }
 
 }  // memeware
