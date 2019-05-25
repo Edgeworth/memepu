@@ -10,7 +10,7 @@ module sram(
   parameter DEPTH = 12;
   parameter WIDTH = 8;
   parameter INITIAL = "mlu_slice.hex";
-  logic [WIDTH-1:0] mem [(1 << DEPTH)-1:0];
+  logic [WIDTH-1:0] mem [(1 << DEPTH)-1:0] /*verilator public*/;
 
   assign OUT_DATA = N_OE == 0 ? mem[ADDR]:{WIDTH{1'bZ}};
   always_ff @(negedge N_WE) mem[ADDR] <= IN_DATA;

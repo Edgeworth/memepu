@@ -77,6 +77,28 @@ private:
   static constexpr size_t SIZE = 1u << NUM_BITS;
   static constexpr size_t MICROOP_BITS = 5u;
   static constexpr size_t MAX_MICROOPS = 1u << MICROOP_BITS;
+  static constexpr size_t NUM_REG = 32;
+
+  uint32_t reg_src(int reg) {
+    verify_expr(reg < NUM_REG, "BUG");
+    return reg;
+  };
+
+  uint32_t reg_sel(RegisterSelect sel) {
+    return uint32_t(sel) << 5u;
+  }
+
+  uint32_t alu() {
+    return 0; // TODO
+  }
+
+  uint32_t out(OutPlane o) {
+    return uint32_t(o) << 11u;
+  }
+
+  uint32_t in(InPlane i) {
+    return uint32_t(i) << 14u;
+  }
 
   uint32_t addr_opcode(Opcode opcode) { return static_cast<uint32_t>(opcode) << MICROOP_BITS; }
   uint32_t addr_microop(int idx) {

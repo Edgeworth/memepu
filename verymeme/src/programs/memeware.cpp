@@ -3,7 +3,6 @@
 
 #include "verymeme/common.h"
 #include "memeware/microcode.h"
-#include "memeware/util.h"
 
 namespace po = boost::program_options;
 
@@ -30,8 +29,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  writeFile(output + "/mlu_slice.hex", memeware::convertToHex(memeware::generateMluSliceFirmware()));
-  writeFile(output + "/mlu_lookahead.hex",
-      memeware::convertToHex(memeware::generateMluLookaheadFirmware()));
-  writeFile(output + "/microcode.hex", memeware::convertToHex(memeware::generateMicrocodeFirmware()));
+  writeFile(output + "/mlu_slice.hex", convertToHex(memeware::generateMluSliceFirmware()));
+  writeFile(output + "/mlu_lookahead.hex", convertToHex(memeware::generateMluLookaheadFirmware()));
+  writeFile(output + "/microcode.hex", convertToHex(memeware::generateMicrocodeFirmware()));
 }
