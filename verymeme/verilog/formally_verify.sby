@@ -17,6 +17,7 @@ chip7404
 chip7408
 chip7432
 chip7486
+chip74107
 chip74138
 chip74139
 chip74161
@@ -66,6 +67,8 @@ chip7432: read -formal -D CONTRACT=assume chip7432.v
 chip7432: prep -top chip7432
 chip7486: read -formal -D CONTRACT=assume chip7486.v
 chip7486: prep -top chip7486
+chip74107: read -formal -D CONTRACT=assume chip74107.v
+chip74107: prep -top chip74107
 chip74138: read -formal -D CONTRACT=assume chip74138.v
 chip74138: prep -top chip74138
 chip74139: read -formal -D CONTRACT=assume chip74139.v
@@ -137,6 +140,7 @@ chip7404.v
 chip7408.v
 chip7432.v
 chip7486.v
+chip74107.v
 chip74138.v
 chip74139.v
 chip74161.v

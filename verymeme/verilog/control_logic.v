@@ -54,7 +54,8 @@ module control_logic(
   // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
   // on rising clock.
   register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(0),
-    .OUT({unused_control, control_misc_plane, control_in_plane, control_out_plane, ALU_PLANE, REG_SEL, REG_SRC}));
+    .OUT({unused_control, control_misc_plane, control_in_plane, control_out_plane,
+        ALU_PLANE, REG_SEL, REG_SRC}));
 
   // In plane decoder - enable on CLK to do pulse.
   wire unused_in_none;

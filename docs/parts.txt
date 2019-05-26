@@ -5,7 +5,7 @@
 74HC32 - OR gate
 74HC74 - D flipflop
 74HC86 - XOR gate
-74HC107 - Dual JK flipflop with reset
+74HC107 - Dual JK flipflop with reset, negative edge trigger.
 74HC138 - 3 to 8 decoder, inverted outputs
 74HC139 - 2 to 4 decoder, inverted outputs
 74HC151 - 8-line to 1-line data selector/multiplexer
