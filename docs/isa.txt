@@ -60,6 +60,11 @@
 		set up alu
 		set up instruction compression data
 
+Initialisation:
+	Reset must force clock HIGH so no changes happen until microcode latch
+	is propery set-up on first falling edge. After that falling edge, consider
+	it to be a valid state.
+
 Input plane - read into these from the bus:
 	NONE, REG, TMP0, TMP1, OPWORD, OPCODE
 
