@@ -14,7 +14,7 @@ module mlu_lookahead(
 
   `ifdef SCHEMATIC
   // TODO(bootstrapping): Use BOOTSTRAP_ADDR.
-  sram17x8#(.INITIAL("mlu_lookahead.hex")) lookahead_mem(
+  lut17x8#(.INITIAL("mlu_lookahead.hex")) lookahead_mem(
     .ADDR({C_IN, G, P}), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(CARRYS));
   `else

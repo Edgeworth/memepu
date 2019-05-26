@@ -15,10 +15,9 @@ module register_file(
   buffer_mux3x8 reg_sel_mux(.A({3'b0, REG_SRC0}), .B({3'b0, REG_SRC1}), .C({3'b0, REG_SRC2}),
     .SEL(REG_SEL), .OUT({unused_reg_src, reg_src}));
 
-  // TODO: change to specific sram chip, one that doesn't use bootstrap.
-  // TODO: Maybe make bootstrapped_sram ?
+  // TODO: change to specific sram chip.
   // 32 registers.
-  sram#(.DEPTH(5), .WIDTH(32), .INITIAL("")) registers(.ADDR(reg_src), .N_WE(N_WE), .N_OE(N_OE),
+  sram#(.DEPTH(5), .WIDTH(32)) registers(.ADDR(reg_src), .N_WE(N_WE), .N_OE(N_OE),
     .IN_DATA(IN_DATA), .OUT_DATA(OUT_DATA));
 
   `ifdef FORMAL
