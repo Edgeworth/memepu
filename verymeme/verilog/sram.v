@@ -7,9 +7,9 @@ module sram(
   input wire [WIDTH-1:0] IN_DATA,
   output logic [WIDTH-1:0] OUT_DATA
 );
-  parameter DEPTH = 12;
+  parameter DEPTH = 2;
   parameter WIDTH = 8;
-  parameter INITIAL = "mlu_slice.hex";
+  parameter INITIAL = "formal.hex";
   logic [WIDTH-1:0] mem [(1 << DEPTH)-1:0] /*verilator public*/;
 
   assign OUT_DATA = N_OE == 0 ? mem[ADDR]:{WIDTH{1'bZ}};
@@ -39,14 +39,16 @@ module sram(
     assert (f_verify_data == mem[f_verify_addr]);
   end
 
-  // Assume data doesn't change if not bootstrapping.
+  // Assume data doesn't change if not bootstrapping and there is an initial file specified.
   `ifndef BOOTSTRAP
   logic [WIDTH-1:0] f_mem [(1 << DEPTH)-1:0];
   integer f_i;
   always_comb begin
-    `CONTRACT (N_WE);
-    $readmemh(INITIAL, f_mem);
-    for (f_i = 0; f_i < (1 << DEPTH); f_i = f_i+1) assert (mem[f_i] == f_mem[f_i]);
+    if ($size(INITIAL) > 1) begin
+      `CONTRACT (N_WE);
+      $readmemh(INITIAL, f_mem);
+      for (f_i = 0; f_i < (1 << DEPTH); f_i = f_i+1) assert (mem[f_i] == f_mem[f_i]);
+    end
   end
   `endif
   `endif
