@@ -136,7 +136,7 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
   tf.translate(pointToVector(component.p));
   tf.rotate(component.rotation);
   if (component.side == Side::BACK)
-    tf.scale(-1.f, -1.f);  // TODO is it correct to flip both axes?
+    tf.scale(-1.f, -1.f);  // TODO(check): is it correct to flip both axes?
 
   sf::FloatRect bounds{};
   const auto& image = pcb_.images[component.image_id];
@@ -168,7 +168,7 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
 
   dl_.add(createRect(bounds, {}, SECONDARY_COLOR[0], false /* filled */));
 
-  // Todo text scale depends on bounds.
+  // TODO(improvement): text scale depends on bounds.
   auto& text = labels_.emplace_back(createText(component.part_number));
   text.move(tf * sf::Vector2f(0, 0));
 

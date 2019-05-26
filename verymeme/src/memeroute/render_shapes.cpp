@@ -115,7 +115,7 @@ createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Colo
       for (const auto& p : shape.path.points)
         points.emplace_back(tf * pointToVector(p));
       // Treat paths with width 0 as line strips so they are visible (width of >= 1 pixel).
-      // TODO: Support |filled| for path.
+      // TODO(improvement): Support |filled| for path.
       if (shape.path.width != 0)
         return createPathWithThickness(points, shape.path.width, color);
       else

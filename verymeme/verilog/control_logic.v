@@ -40,8 +40,7 @@ module control_logic(
     .ADDR({OPCODE, microop_count}), .OUT_DATA(microcode_val),
     .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
-  // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
-  // on rising clock.
+
   // In plane: NONE, REG, TMP0, TMP1
   wire [2:0] control_in_plane /*verilator public*/;
   // Out plane: NONE, REG, TMP0, TMP1, MLU, SHIFTER, TIMER
@@ -52,6 +51,8 @@ module control_logic(
   // Misc plane: Micro-op counter reset
   wire control_misc_plane /*verilator public*/;
   wire [13:0] unused_control;
+  // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
+  // on rising clock.
   register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(0),
     .OUT({unused_control, control_misc_plane, control_in_plane, control_out_plane, ALU_PLANE, REG_SEL, REG_SRC}));
 
@@ -85,6 +86,8 @@ module control_logic(
   `ifdef FORMAL
   // TODO: More testing.
   always_comb begin
+    `CONTRACT(CLK != N_CLK);  // Must be opposites.
+
     assert (REG_SEL != 2'b11);  // Not a valid register selector option.
 
     // Don't try to write and read to the same thing:

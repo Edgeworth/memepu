@@ -38,7 +38,7 @@ module chip74299(
     end
   end
 
-  // TODO finish
+  // TODO(improvement) finish
   `ifdef FORMAL
   always_comb begin
     assert (Q0 == shift_reg[0]);

@@ -123,7 +123,7 @@ private:
           p_.expect({")"});
         } else {
           verify_expr(child == "attach", "unknown token '%s", child.c_str());
-          ignoreRestOfExpression();  // TODO: Ignore for now.
+          ignoreRestOfExpression();  // TODO(improvement): Ignore for now.
         }
       }
     }
@@ -215,8 +215,8 @@ private:
           pcb_.via_padstack_id = p_.next();
           p_.expect({")"});
         } else if (child == "rule") {
-          // TODO: Collect via and rules and propagate to router.
-          ignoreRestOfExpression();  // TODO: Don't ignore these.
+          // TODO(improvement): Collect via and rules and propagate to router.
+          ignoreRestOfExpression();  // TODO(improvement): Don't ignore these.
         } else
           verify_expr(false, "unrecognised expression '%s'", tok.c_str());
       }
@@ -227,7 +227,7 @@ private:
   void parse() {
     std::string name = p_.peek(1);
     if (name == "pcb") {
-      // TODO: support more expressions. Error if see unrecognised.
+      // TODO(improvement): support more expressions. Error if see unrecognised.
       p_.expect({"("});
       p_.next();  // ignore name for this expr.
       while (true) {
@@ -277,9 +277,9 @@ private:
       pcb_.nets[net.name] = std::move(net);
       p_.expect({")", ")"});
     } else if (name == "class") {
-      ignoreRestOfExpression();  // TODO: Don't ignore.
+      ignoreRestOfExpression();  // TODO(improvement): Don't ignore.
     } else if (name == "wiring") {
-      ignoreRestOfExpression();  // TODO: Don't ignore.
+      ignoreRestOfExpression();  // TODO(improvement): Don't ignore.
     } else if (name == "resolution") {
       p_.expect({"(", "resolution"});
       p_.next();  // Ignore unit for now.
