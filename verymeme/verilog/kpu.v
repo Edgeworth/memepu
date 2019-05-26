@@ -4,14 +4,22 @@
 module kpu(
   input wire CLK,
   input wire N_CLK,
-  input wire N_RST
+  input wire N_RST_ASYNC
 );
   // Bus.
   wire [31:0] bus /*verilator public*/;
 
+  // Synchronously deassert reset on 2nd falling edge.
+  wire n_rst /*verilator public*/;
+  // 0 when N_RST_ASYNC is low. Back to 1 upon deasserting N_RST_ASYNC and negedge of CLK.
+  wire n_rst_first_edge;
+  wire [1:0] unused_n_q;
+  chip74107 jkflip(.J({n_rst_first_edge, 1'b1}), .K(0), .N_CP({CLK, CLK}),
+    .N_R({N_RST_ASYNC, N_RST_ASYNC}), .Q({n_rst, n_rst_first_edge}), .N_Q(unused_n_q));
+
   // Timer:
   wire [31:0] timer_val, timer_out;
-  timer timer(.CLK(CLK), .N_RST(N_RST), .TIME(timer_val));
+  timer timer(.CLK(CLK), .N_RST(n_rst), .TIME(timer_val));
   buffer32 timer_buf(.IN(timer_val), .OUT(timer_out), .N_OE(control_timer_n_out));
 
   // MLU:
@@ -42,8 +50,8 @@ module kpu(
   // Register file:
   wire [31:0] reg_out;
   register_file regs(.REG_SEL(control_reg_sel), .REG_SRC0(op_reg_src0), .REG_SRC1(op_reg_src1),
-    .REG_SRC2(control_reg_src), .IN_DATA(bus), .N_WE(control_reg_n_in_clk), .N_OE(control_reg_n_out),
-    .OUT_DATA(reg_out));
+    .REG_SRC2(control_reg_src), .IN_DATA(bus), .N_WE(control_reg_n_in_clk),
+    .N_OE(control_reg_n_out), .N_RST(n_rst), .OUT_DATA(reg_out));
 
   // Opcode word:
   // Outputs:
@@ -54,7 +62,7 @@ module kpu(
   // TODO(idea): Can have control logic write into this to do micro-op functions.
   wire [1:0] unused_opcode;
   wire [5:0] opcode /*verilator public*/;
-  chip74273 opcode_reg(.D({2'b0, opword_opcode}), .N_MR(N_RST), .CP(control_opcode_in_clk),
+  chip74273 opcode_reg(.D({2'b0, opword_opcode}), .N_MR(n_rst), .CP(control_opcode_in_clk),
     .Q({unused_opcode, opcode}));
 
   // Control logic:
@@ -75,7 +83,7 @@ module kpu(
   wire control_timer_n_out;
   // ALU plane:
   wire [3:0] control_alu_plane;
-  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(N_RST), .OPCODE(opcode),
+  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(n_rst), .OPCODE(opcode),
     .REG_SEL(control_reg_sel), .REG_SRC(control_reg_src), .ALU_PLANE(control_alu_plane),
     .REG_N_IN_CLK(control_reg_n_in_clk),
     .TMP0_IN_CLK(control_tmp0_in_clk),
@@ -131,8 +139,9 @@ module kpu(
     `CONTRACT(CLK != N_CLK);  // Must be opposites.
     // TODO: Need to update this.
     assert (8'b0+!control_reg_n_out+!control_tmp0_n_out+!control_tmp1_n_out+!control_mlu_n_out +
-      !control_shifter_n_out <= 1);  // No conflict on busses.
+      !control_shifter_n_out + !control_timer_n_out <= 1);  // No conflict on busses.
     // TODO(bootstrapping): Assert stuff about boot process
+    // TODO(testing): Test reset deassert.
   end
   `endif
 endmodule

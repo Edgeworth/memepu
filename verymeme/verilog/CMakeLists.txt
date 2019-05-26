@@ -29,7 +29,10 @@ function(add_verilog_module VERILOG_MODULE)
   execute_process(
       COMMAND verilator --report-unoptflat -Wall -CFLAGS "${CMAKE_CXX_FLAGS}"
       --cc ${VERILOG_MODULE_SOURCES} -Mdir ${VERILATOR_OUTPUT_DIR}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} RESULT_VARIABLE retcode)
+  if(NOT ${retcode} STREQUAL "0")
+    message(FATAL_ERROR "Verilator failed")
+  endif()
 
   # Rewrite outputs with everything we got.
   file(GLOB VERILATOR_OUTPUT_H "${VERILATOR_OUTPUT_DIR}/V${MODULE_NAME}*.h")
