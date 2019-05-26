@@ -85,24 +85,17 @@ module control_logic(
     .N_Y({unused_misc_plane, microop_counter_n_rst, unused_misc_none}));
 
   `ifdef FORMAL
-  integer f_past = 0;
+  // Contract that N_RST is deasserted after at least 2 falling edges.
+  integer f_past_n_clk = 0;
+  always_ff @(posedge N_CLK or negedge N_RST) begin
+    if (!N_RST) f_past_n_clk <= 0;
+    else f_past_n_clk = f_past_n_clk == 2 ? 2 : (f_past_n_clk + 1);
+  end
 
   always_ff @($global_clock) begin
-    if (!N_RST) f_past <= 0;
-    else begin
-      // CLK must be high when coming out of reset so microcode latch is latched on the next
-      // falling edge and has valid output on first rising edge. State changes only happen on the
-      // rising edge so it's okay for microcode latch to have random data if CLK is already high.
-      `CONTRACT (CLK);
-      f_past <= 1;
-    end
-
-    // Ready if there's no reset and we had a falling edge.
-    if (f_past == 1 && N_CLK) f_past <= 2;
-
     // Only do these checks after coming out of a reset and having the first falling edge to set-up
     // state.
-    if (f_past == 2) begin
+    if (f_past_n_clk == 2) begin
       assert ($past(REG_SEL) != 2'b11);  // Not a valid register selector option.
       // Don't try to do a left-arithmetic shift, it doesn't make sense.
       if ($past(SHIFTER_N_OUT)) assert ($past(ALU_PLANE[1:0]) != 2'b11);

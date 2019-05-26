@@ -5,6 +5,7 @@ module buffer_mux3x8(
   input wire [7:0] B,
   input wire [7:0] C,
   input wire [1:0] SEL,
+  input wire N_RST,
   output logic [7:0] OUT
 );
   wire [7:0] out_a;
@@ -30,12 +31,14 @@ module buffer_mux3x8(
 
   `ifdef FORMAL
   always_comb begin
-   `CONTRACT (SEL != 2'b11);  // Only support 3 inputs.
+   if (N_RST) `CONTRACT (SEL != 2'b11);  // Only support 3 inputs.
     case (SEL)
       2'b00: begin assert (OUT == A); end
       2'b01: begin assert (OUT == B); end
       2'b10: begin assert (OUT == C); end
     endcase
   end
+  `else
+  wire _unused_ok = &{N_RST};
   `endif
 endmodule

@@ -10,11 +10,6 @@
 
 namespace po = boost::program_options;
 
-void resetKpu(Vkpu& kpu) {
-  kpu.N_RST = 0;
-  kpu.eval();
-  kpu.N_RST = 1;
-}
 
 void clockKpu(Vkpu& kpu) {
   kpu.CLK = 0;
@@ -23,6 +18,15 @@ void clockKpu(Vkpu& kpu) {
 
   kpu.CLK = 1;
   kpu.N_CLK = 0;
+  kpu.eval();
+}
+
+void resetKpu(Vkpu& kpu) {
+  kpu.CLK = 0;
+  kpu.N_CLK = 1;
+  kpu.N_RST_ASYNC = 0;
+  kpu.eval();
+  kpu.N_RST_ASYNC = 1;
   kpu.eval();
 }
 
