@@ -84,21 +84,40 @@ module control_logic(
     .N_Y({unused_misc_plane, microop_counter_n_rst, unused_misc_none}));
 
   `ifdef FORMAL
-  // TODO: More testing.
+  integer f_past = 0;
+
+  always_ff @($global_clock) begin
+    if (!N_RST) f_past <= 0;
+    else begin
+      // CLK must be high when coming out of reset so microcode latch is latched on the next
+      // falling edge and has valid output on first rising edge. State changes only happen on the
+      // rising edge so it's okay for microcode latch to have random data if CLK is already high.
+      `CONTRACT (CLK);
+      f_past <= 1;
+    end
+
+    // Ready if there's no reset and we had a falling edge.
+    if (f_past == 1 && N_CLK) f_past <= 2;
+
+    // Only do these checks after coming out of a reset and having the first falling edge to set-up
+    // state.
+    if (f_past == 2) begin
+      assert ($past(REG_SEL) != 2'b11);  // Not a valid register selector option.
+      // Don't try to do a left-arithmetic shift, it doesn't make sense.
+      if ($past(SHIFTER_N_OUT)) assert ($past(ALU_PLANE[1:0]) != 2'b11);
+
+      // Don't try to write and read to the same thing:
+      assert ($past(REG_N_IN_CLK) || $past(REG_N_OUT));
+      assert ($past(!TMP0_IN_CLK) || $past(TMP0_N_OUT));
+      assert ($past(!TMP1_IN_CLK) || $past(TMP1_N_OUT));
+    end
+  end
+
+  // TODO(testing): More testing.
   always_comb begin
     `CONTRACT(CLK != N_CLK);  // Must be opposites.
 
-    assert (REG_SEL != 2'b11);  // Not a valid register selector option.
-
-    // Don't try to write and read to the same thing:
-    assert (REG_N_IN_CLK || REG_N_OUT);
-    assert (!TMP0_IN_CLK || TMP0_N_OUT);
-    assert (!TMP1_IN_CLK || TMP1_N_OUT);
-
-    // Don't try to do a left-arithmetic shift, it doesn't make sense.
-    if (SHIFTER_N_OUT) assert (ALU_PLANE[1:0] != 2'b11);
-
-    // TODO: Make sure subtract provides carry.
+    // TODO(testing): Make sure subtract provides carry.
 
     `ifdef BOOTSTRAP
     if (!N_BOOTED) `CONTRACT(BOOTSTRAP_N_WE);  // Don't write after boot.
