@@ -13,6 +13,7 @@
 #include "Vmlu.h"
 #include "Vregister_file.h"
 #include "Vshifter.h"
+#include "Vtimer.h"
 #include "memeware/constants.h"
 
 namespace {
@@ -331,6 +332,40 @@ TEST_F(KpuTest, BasicTest) {
   kpu_.eval();
 
   // TODO: Test asynch reset.
+}
+
+class TimerTest : public VerilatorTest {
+protected:
+  Vtimer timer_;
+};
+
+TEST_F(TimerTest, Increments) {
+  uint32_t prev_time = timer_.TIME;
+
+  for (int i = 0; i < 100; ++i) {
+    timer_.CLK = 0;
+    timer_.N_RST = 1;
+    timer_.eval();
+
+    timer_.CLK = 1;
+    timer_.eval();
+    EXPECT_EQ(prev_time + 1, timer_.TIME);
+    prev_time = timer_.TIME;
+  }
+}
+
+TEST_F(TimerTest, AsynchronousReset) {
+  timer_.CLK = 0;
+  timer_.N_RST = 1;
+  timer_.eval();
+
+  timer_.CLK = 1;
+  timer_.eval();
+  EXPECT_NE(0, timer_.TIME);
+
+  timer_.N_RST = 0;
+  timer_.eval();
+  EXPECT_EQ(0, timer_.TIME);
 }
 
 }  // anonymous

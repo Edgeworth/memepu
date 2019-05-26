@@ -12,22 +12,29 @@ endif ()
 # Run verilator on verilog files.
 set(VERILATOR_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/verilator)
 file(GLOB VERILOG_MODULES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.v)
+
+foreach (VERILOG_MODULE ${VERILOG_MODULES})
+  # Make CMake watch these for changes.
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+      "${CMAKE_CURRENT_SOURCE_DIR}/${VERILOG_MODULE}")
+endforeach ()
+
 list(REMOVE_ITEM VERILOG_MODULES common.v workaround.v)  # Remove non-top level modules
 
 function(add_verilog_module VERILOG_MODULE)
   set(VERILOG_MODULE_SOURCES ${VERILOG_MODULE})
   get_filename_component(MODULE_NAME ${VERILOG_MODULE} NAME_WE)
 
+  message("Running verilator for ${VERILOG_MODULE}")
+  execute_process(
+      COMMAND verilator --report-unoptflat -Wall -CFLAGS "${CMAKE_CXX_FLAGS}"
+      --cc ${VERILOG_MODULE_SOURCES} -Mdir ${VERILATOR_OUTPUT_DIR}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+  # Rewrite outputs with everything we got.
   file(GLOB VERILATOR_OUTPUT_H "${VERILATOR_OUTPUT_DIR}/V${MODULE_NAME}*.h")
   file(GLOB VERILATOR_OUTPUT_CPP "${VERILATOR_OUTPUT_DIR}/V${MODULE_NAME}*.cpp")
   set(VERILATOR_OUTPUTS ${VERILATOR_OUTPUT_H} ${VERILATOR_OUTPUT_CPP})
-
-  add_custom_command(OUTPUT ${VERILATOR_OUTPUTS}
-      COMMAND verilator --report-unoptflat -Wall -CFLAGS "${CMAKE_CXX_FLAGS}"
-      --cc ${VERILOG_MODULE_SOURCES} -Mdir ${VERILATOR_OUTPUT_DIR}
-      DEPENDS ${VERILOG_MODULES} common.v
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMENT "Running verilator for ${VERILOG_MODULE}")
 
   set(ALL_VERILATOR_OUTPUTS ${ALL_VERILATOR_OUTPUTS} ${VERILATOR_OUTPUTS} PARENT_SCOPE)
 endfunction()
