@@ -1,5 +1,6 @@
 `include "common.v"
-/* verilator lint_off UNUSED */  // TODO: Remove
+/* verilator lint_off UNUSED */  // TODO(cleanup): Remove
+// TODO(improvement): Also define models for CLK, RST.
 module kpu(
   input wire CLK,
   input wire N_CLK,
