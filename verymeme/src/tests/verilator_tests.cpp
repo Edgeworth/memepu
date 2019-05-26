@@ -331,7 +331,7 @@ TEST_F(KpuTest, BasicTest) {
   kpu_.N_CLK = !kpu_.CLK;
   kpu_.eval();
 
-  // TODO: Test asynch reset.
+  // TODO(testing): Test asynch reset.
 }
 
 class TimerTest : public VerilatorTest {

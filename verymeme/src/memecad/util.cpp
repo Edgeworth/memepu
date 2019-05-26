@@ -32,7 +32,7 @@ std::string parentModuleType(const Yosys::Cell& cell) {
 }
 
 std::string modulePath(const Yosys::Cell& cell) {
-  // TODO: Output full path somehow?
+  // TODO(improvement): Output full path somehow?
   return parentModuleType(cell) + "/" + moduleName(cell) + "(" + moduleType(cell) + ")";
 }
 

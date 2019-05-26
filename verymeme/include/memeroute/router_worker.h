@@ -6,7 +6,7 @@
 
 namespace memeroute {
 
-// TODO: move to invocationparams.
+// TODO(improvement): move to invocationparams.
 constexpr int GRID_ROWS = 500;
 constexpr int GRID_COLS = 500;
 constexpr int NUM_LAYERS = 2;
@@ -39,7 +39,7 @@ private:
     std::string toString() const;
   };
 
-  // TODO: Needs to support more than 2 layers.
+  // TODO(improvement): Needs to support more than 2 layers.
   static constexpr State DP9[9] =
       {{{-1, -1}, 0},
        {{-1, 0},  0},
