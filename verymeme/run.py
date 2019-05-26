@@ -1,8 +1,50 @@
 #!/usr/bin/env python3
 import argparse
 import glob
+import multiprocessing
 import os
+import subprocess
 import sys
+import time
+
+
+class WorkerQueue:
+  def __init__(self):
+    self.popens = {}
+    self.max_procs = multiprocessing.cpu_count()
+
+  def run_one_process(self, command):
+    print('Running command "%s".' % command)
+    return subprocess.Popen(command, shell=True, stdin=subprocess.DEVNULL,
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+  def cleanup(self):
+    for command, popen in self.popens.items():
+      popen.terminate()
+    self.popens = {}
+
+  def run(self, commands):
+    while len(commands) > 0 or len(self.popens) > 0:
+      while len(self.popens) < self.max_procs and len(commands) > 0:
+        command = commands.pop()
+        self.popens[command] = self.run_one_process(command)
+
+      keys = list(self.popens.keys())
+      something_happened = False
+      for command in keys:
+        popen = self.popens[command]
+        ret = popen.poll()
+        if ret is not None:
+          something_happened = True
+          if ret != 0:
+            self.cleanup()
+            print('Running command "%s" failed.' % command)
+            sys.exit(1)
+          else:
+            del self.popens[command]
+            print('Command "%s" succeeded.' % command)
+      if not something_happened:
+        time.sleep(0.1)
 
 
 def run_command(command):
@@ -45,11 +87,13 @@ def run_synths():
 def run_formal_verification():
   IGNORES = ["workaround.v", "common.v"]
   files = glob.glob("*.v")
+  commands = []
   for file in files:
     if file in IGNORES:
       continue
     name = os.path.splitext(os.path.basename(file))[0]
-    run_command('sby -t formally_verify.sby %s' % name)
+    commands.append('sby -t formally_verify.sby %s' % name)
+  WorkerQueue().run(commands)
 
 
 parser = argparse.ArgumentParser()

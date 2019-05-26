@@ -20,14 +20,14 @@ module bootstrapper(
   // TODO: Can put write enable lines inside eeprom?
   assign N_BOOTED = !TIME[17];  // TODO: Use chip for this negate.
   // TODO: assign addr.
-  eeprom bootstrap_eeprom(.ADDR({TIME[16:0]}), .N_OE(N_BOOTED), .OUT_DATA(DATA));
+//  eeprom bootstrap_eeprom(.ADDR({TIME[16:0]}), .N_OE(N_BOOTED), .OUT_DATA(DATA));
 
   `ifdef FORMAL
   always_comb begin
     if (N_BOOTED) begin
 
     end else begin
-      assert (CONTROL_N_WE == 1'b1);
+//      assert (CONTROL_N_WE == 1'b1);
     end
   end
   `endif
