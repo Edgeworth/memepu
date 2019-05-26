@@ -6,8 +6,7 @@
 #include "Vkpu_kpu.h"
 #include "Vkpu_control_logic.h"
 #include "Vkpu_register_file.h"
-#include "Vkpu_sram__D5_W20_I0.h"
-#include "Vkpu_sram__pi1.h"
+#include "Vkpu_sram__D5_W20.h"
 
 namespace po = boost::program_options;
 

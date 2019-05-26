@@ -16,7 +16,7 @@ module mlu_slice(
   `ifdef SCHEMATIC
   wire [7:0] unused = 0;
   // TODO(bootstrapping): Use BOOTSTRAP_ADDR.
-  sram#(.DEPTH(12), .WIDTH(8), .INITIAL("mlu_slice.hex")) slice_mem(
+  lut#(.DEPTH(12), .WIDTH(8), .INITIAL("mlu_slice.hex")) slice_mem(
     .ADDR({OP, C_IN, B, A}), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(OUT));
   `else
