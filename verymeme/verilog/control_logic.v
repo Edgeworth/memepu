@@ -89,7 +89,7 @@ module control_logic(
     assert (REG_SEL != 2'b11);  // Not a valid register selector option.
 
     // Don't try to write and read to the same thing:
-    assert (!REG_IN_CLK || REG_N_OUT);
+    assert (REG_N_IN_CLK || REG_N_OUT);
     assert (!TMP0_IN_CLK || TMP0_N_OUT);
     assert (!TMP1_IN_CLK || TMP1_N_OUT);
 
@@ -105,4 +105,4 @@ module control_logic(
     `endif
   end
   `endif
-endmodule : control_logic
+endmodule
