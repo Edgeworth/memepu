@@ -19,7 +19,7 @@ void RouterWorker::RoutingResult::merge(const RouterWorker::RoutingResult& resul
 }
 
 RouterWorker::State RouterWorker::State::transitionTo(const RouterWorker::State& s) const {
-  return {p + s.p, s.layer ? !layer : layer};  // TODO: Currently just flips layer.
+  return {p + s.p, s.layer ? !layer : layer};  // TODO(improvement): Currently just flips layer.
 }
 
 bool RouterWorker::State::operator!=(const RouterWorker::State& s) const {
@@ -62,7 +62,7 @@ void RouterWorker::markPinInGrid(const Component& component, const Pin& pin, int
 void RouterWorker::markPadstackInGrid(const Point& p, const std::string& padstack_id) {
   const auto& padstack = pcb_.padstacks[padstack_id];
   for (const auto& shape : padstack.shapes) {
-    // TODO: For now just do bounding box.
+    // TODO(improvement): For now just do bounding box.
     const Rect bbox = shape.getBoundingBox().offset(convertGridToWorld(p));
     // Move to current state location (put via there).
     const Rect grid_bbox = Rect::enclosing(convertWorldToGrid(bbox.origin()),
@@ -74,7 +74,7 @@ void RouterWorker::markPadstackInGrid(const Point& p, const std::string& padstac
 }
 
 void RouterWorker::markFilledShapeInGrid(const Shape& shape, int layer, int val) {
-  const Rect bbox = shape.getBoundingBox();  // TODO: For now just do bounding box.
+  const Rect bbox = shape.getBoundingBox();  // TODO(improvement): For now just do bounding box.
   const Rect grid_bbox = Rect::enclosing(convertWorldToGrid(bbox.origin()),
       convertWorldToGrid(bbox.bottom_right()));
 
@@ -87,10 +87,10 @@ void RouterWorker::markFilledShapeInGrid(const Shape& shape, int layer, int val)
 bool RouterWorker::isBlocked(const State& prev_s, const State& s) {
   // No via case.
   if (prev_s.layer == s.layer) return blocked_[s.p.y][s.p.x][s.layer];
-  // TODO: Consolidate logic with markPinInGrid etc
+  // TODO(cleanup): Consolidate logic with markPinInGrid etc
   const auto& padstack = pcb_.padstacks[pcb_.via_padstack_id];
   for (const auto& shape : padstack.shapes) {
-    // TODO: For now just do bounding box.
+    // TODO(improvement): For now just do bounding box.
     const Rect bbox = shape.getBoundingBox().offset(convertGridToWorld(s.p));
     if (!boundary_.contains(bbox)) return true;  // Goes outside boundary.
     // Move to current state location (put via there).
@@ -105,7 +105,7 @@ bool RouterWorker::isBlocked(const State& prev_s, const State& s) {
 }
 
 void RouterWorker::initializeGrid() {
-  // TODO: Allow incremental changes to routing?
+  // TODO(improvement): Allow incremental changes to routing?
   memset(blocked_, 0, sizeof(blocked_));
   memset(traces_, 0, sizeof(traces_));
   memset(seen_, 0, sizeof(seen_));
@@ -139,7 +139,7 @@ RouterWorker::RoutingResult RouterWorker::route(const RouterWorker::InvocationPa
     for (const auto& pin_id : net.pin_ids) {
       const auto& component = pcb_.getComponentForPinId(pin_id);
       const auto& pin = pcb_.getPinForPinId(pin_id);
-      // TODO: Through hole components can start from any layer. Needs to check padstack.
+      // TODO(improvement): Through hole components can start from any layer. Needs to check padstack.
       states.push_back(
           {convertWorldToGrid(component.toParentCoord(pin.p)), pcb_.getLayer(component.side)});
       markPinInGrid(component, pin, -1);  // Temporarily unmark pins in this net.
@@ -178,8 +178,8 @@ RouterWorker::RoutingResult RouterWorker::bfsAndAddToGrid(const std::vector<Stat
     for (int c = 0; c < GRID_COLS; ++c) {
       for (int l = 0; l < NUM_LAYERS; ++l) {
         // Do a cross block around traces[r][c][l] to prevent diagonal lines crossing.
-        // TODO: Removing this restriction or doing it only for diagonal lines could improve routing.
-        // TODO: Handle trace width.
+        // TODO(improvement): Removing this restriction or doing it only for diagonal lines could improve routing.
+        // TODO(improvement): Handle trace width.
         blocked_[r][c][l] += int(traces_[r][c][l]);
         if (r > 0) blocked_[r - 1][c][l] += int(traces_[r][c][l]);
         if (r + 1 < GRID_ROWS) blocked_[r + 1][c][l] += int(traces_[r][c][l]);
@@ -195,7 +195,7 @@ RouterWorker::RoutingResult RouterWorker::bfsAndAddToGrid(const std::vector<Stat
   return collectRoutes(states[0]);
 }
 
-// TODO: Do dijkstra instead? Take into account diagonal length cost and via cost.
+// TODO(improvement): Do dijkstra instead? Take into account diagonal length cost and via cost.
 bool RouterWorker::bfsOnce(const State& start) {
   memset(seen_, 0, sizeof(seen_));  // Reset seen to zero
 
@@ -211,7 +211,7 @@ bool RouterWorker::bfsOnce(const State& start) {
 
     for (const auto& dp : DP9) {
       const State& new_s = s.transitionTo(dp);
-      // TODO: Handle vias and trace thickness.
+      // TODO(improvement): Handle vias and trace thickness.
       if (oob(new_s) || isBlocked(s, new_s)) continue;
 
       // Found ourselves, ignore.

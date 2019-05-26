@@ -105,7 +105,7 @@ private:
   }
 
   uint32_t alu() {
-    return 0; // TODO
+    return 0; // TODO(improvement)
   }
 
   uint32_t out(OutPlane o) {

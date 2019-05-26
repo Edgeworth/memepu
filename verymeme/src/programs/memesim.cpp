@@ -27,15 +27,16 @@ void clockKpu(Vkpu& kpu) {
 }
 
 void printKpu(Vkpu& kpu) {
-  // TODO: make /* verilator public */
   std::cout <<
-      "BUS: " << std::hex << uint32_t(kpu.kpu->bus) << " TMP0: " << uint32_t(kpu.kpu->tmp0_val) <<
-      " TMP1: " << uint32_t(kpu.kpu->tmp1_val) << " MLU output: " << uint32_t(kpu.kpu->mlu_val) <<
-      " opcode: " << uint32_t(kpu.kpu->opcode) << " microop counter: " <<
-      uint32_t(kpu.kpu->control->microop_count) << " in: " <<
-      uint32_t(kpu.kpu->control->control_in_plane) << " out: " <<
-      uint32_t(kpu.kpu->control->control_out_plane) << " misc: " <<
-      uint32_t(kpu.kpu->control->control_misc_plane) << "\n";
+            "BUS: " << std::hex << uint32_t(kpu.kpu->bus) << " TMP0: "
+            << uint32_t(kpu.kpu->tmp0_val) <<
+            " TMP1: " << uint32_t(kpu.kpu->tmp1_val) << " MLU output: "
+            << uint32_t(kpu.kpu->mlu_val) <<
+            " opcode: " << uint32_t(kpu.kpu->opcode) << " microop counter: " <<
+            uint32_t(kpu.kpu->control->microop_count) << " in: " <<
+            uint32_t(kpu.kpu->control->control_in_plane) << " out: " <<
+            uint32_t(kpu.kpu->control->control_out_plane) << " misc: " <<
+            uint32_t(kpu.kpu->control->control_misc_plane) << "\n";
   std::cout << convertToHex(kpu.kpu->regs->registers->mem, 8) << "\n";
 }
 

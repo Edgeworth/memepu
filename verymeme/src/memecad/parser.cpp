@@ -213,7 +213,7 @@ private:
         p_.next();
         p_.next();  // Name text size, num text size.
         pin.subcomponent = p_.next<int>() - 1;
-        // TODO: Pins common to all subcomponents (==0) are just put in the first one for now.
+        // TODO(improvement): Pins common to all subcomponents (==0) are just put in the first one for now.
         if (pin.subcomponent == -1) pin.subcomponent = 0;
         p_.next();  // convert
         pin.type = p_.next<PinType>();

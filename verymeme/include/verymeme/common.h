@@ -114,8 +114,8 @@ std::string convertToHex(const std::vector<T>& input, int width = 40) {
   return stream.str();
 }
 
-template <typename T, std::size_t N>
-std::string convertToHex(const T (&input)[N], int width = 40) {
+template<typename T, std::size_t N>
+std::string convertToHex(const T (& input)[N], int width = 40) {
   return convertToHex(std::vector<T>(input, input + N), width);
 }
 

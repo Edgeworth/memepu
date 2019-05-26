@@ -9,7 +9,8 @@ namespace memecad {
 namespace {
 
 constexpr int PADDING = 500;
-// Sizes for A3. TODO: Size schematic dynamically?
+// Sizes for A3.
+// TODO(improvement): Size schematic dynamically?
 constexpr int SHEET_WIDTH = 14000;
 constexpr int SHEET_HEIGHT = 8000;
 constexpr int SHEET_MARGIN = 1000;
@@ -27,7 +28,7 @@ Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
   if (bit.wire && bit.wire->port_id != 0) {
     // Signal supplied from a higher up module.
     parent_label.type = Sheet::Label::Type::HIERARCHICAL;
-    // TODO: check direction compared to kicad
+    // TODO(improvement): check direction compared to kicad
     parent_label.net_type = bit.wire->port_input ? Sheet::Label::NetType::INPUT
                                                  : Sheet::Label::NetType::OUTPUT;
   } else if (bit.wire) {
@@ -51,7 +52,7 @@ std::vector<Schematic::SchematicFile> Schematic::writeHierarchy() {
   for (auto& kv : sheets_) {
     auto&[sheet_name, sheet_data] = kv;
     sheet_data.sheet.title = sheet_name;
-    sheet_data.sheet.id = 1;  // TODO sheet index.
+    sheet_data.sheet.id = 1;  // TODO(improvement): sheet index.
 
     files.push_back({sheet_name + ".sch", writeSheet(sheet_data.sheet)});
   }
@@ -116,7 +117,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   }
 
   // Pack child sheet and offset accordingly.
-  // TODO: Dynamically size width for child sheets.
+  // TODO(improvement): Dynamically size width for child sheets.
   Point offset = parent.packBoxesOffset(aabbs);
   ref.offset(offset);
   for (auto& label : labels) {
@@ -228,7 +229,7 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
     }
     if (labels.empty()) continue;
 
-    // TODO: Compute actual width.
+    // TODO(improvement): Compute actual width.
     Point offset = data.packBox({500, height});
     for (auto& label : labels) {
       label.p += offset;
@@ -247,7 +248,7 @@ Point Schematic::SheetData::packBox(Point box_size) {
   if (cur.x > SHEET_MARGIN + SHEET_WIDTH) {
     cur.x = SHEET_MARGIN;
     cur.y += max_y;
-    // TODO: Dynamically size sheets.
+    // TODO(improvement): Dynamically size sheets.
     if (cur.y > SHEET_MARGIN + SHEET_HEIGHT)
       printf("WARNING: ran out of space on sheet");
     max_y = 0;
