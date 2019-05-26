@@ -5,6 +5,7 @@ module sram(
   input wire N_WE,
   input wire N_OE,
   input wire [WIDTH-1:0] IN_DATA,
+  input wire N_RST,
   output logic [WIDTH-1:0] OUT_DATA
 );
   parameter DEPTH = 2;
@@ -27,8 +28,10 @@ module sram(
   end
 
   always_comb begin
-    `CONTRACT (N_OE || N_WE);
+    if (N_RST) `CONTRACT (N_OE || N_WE);
     assert (f_verify_data == mem[f_verify_addr]);
   end
+  `else
+  wire _unused_ok = &{N_RST};
   `endif
 endmodule

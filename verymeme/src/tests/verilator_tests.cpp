@@ -10,6 +10,7 @@
 #include "Vchip7486.h"
 #include "Vchip74299.h"
 #include "Vkpu.h"
+#include "Vkpu_kpu.h"
 #include "Vmlu.h"
 #include "Vregister_file.h"
 #include "Vshifter.h"
@@ -325,13 +326,61 @@ protected:
   Vkpu kpu_;
 };
 
-TEST_F(KpuTest, BasicTest) {
-  kpu_.N_RST = 0;  // Asynchronous reset.
+TEST_F(KpuTest, AsyncResetFromLowClk) {
+  // Asynchronous reset from low CLK.
+  kpu_.N_RST_ASYNC = 0;
   kpu_.CLK = 0;
-  kpu_.N_CLK = !kpu_.CLK;
+  kpu_.N_CLK = 1;
   kpu_.eval();
+  EXPECT_FALSE(kpu_.kpu->n_rst);
 
-  // TODO(testing): Test asynch reset.
+  kpu_.N_RST_ASYNC = 1;
+  kpu_.CLK = 1;
+  kpu_.N_CLK = 0;
+  kpu_.eval();
+  EXPECT_FALSE(kpu_.kpu->n_rst);
+
+  kpu_.CLK = 0;
+  kpu_.N_CLK = 1;
+  kpu_.eval();
+  // Only one falling edge, should still be reset.
+  EXPECT_FALSE(kpu_.kpu->n_rst);
+
+  kpu_.CLK = 1;
+  kpu_.N_CLK = 0;
+  kpu_.eval();
+  EXPECT_FALSE(kpu_.kpu->n_rst);
+
+  kpu_.CLK = 0;
+  kpu_.N_CLK = 1;
+  kpu_.eval();
+  EXPECT_TRUE(kpu_.kpu->n_rst);
+}
+
+TEST_F(KpuTest, AsyncResetFromHighClk) {
+  // Asynchronous reset from high CLK.
+  kpu_.N_RST_ASYNC = 0;
+  kpu_.CLK = 1;
+  kpu_.N_CLK = 0;
+  kpu_.eval();
+  EXPECT_FALSE(kpu_.kpu->n_rst);
+
+  kpu_.N_RST_ASYNC = 1;
+  kpu_.CLK = 0;
+  kpu_.N_CLK = 1;
+  kpu_.eval();
+  // Only one falling edge, should still be reset.
+  EXPECT_FALSE(kpu_.kpu->n_rst);
+
+  kpu_.CLK = 1;
+  kpu_.N_CLK = 0;
+  kpu_.eval();
+  EXPECT_FALSE(kpu_.kpu->n_rst);
+
+  kpu_.CLK = 0;
+  kpu_.N_CLK = 1;
+  kpu_.eval();
+  EXPECT_TRUE(kpu_.kpu->n_rst);
 }
 
 class TimerTest : public VerilatorTest {
