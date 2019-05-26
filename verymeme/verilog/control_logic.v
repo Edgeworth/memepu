@@ -34,10 +34,9 @@ module control_logic(
   wire [4:0] microop_count /*verilator public*/;
   microop_counter counter(.CLK(CLK), .N_RST(counter_combined_n_rst), .COUNT(microop_count));
 
-
-  // TODO: change to specific sram chip
+  // TODO: change to specific lut chip
   wire [31:0] microcode_val;
-  sram#(.DEPTH(11), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
+  lut#(.DEPTH(11), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
     .ADDR({OPCODE, microop_count}), .OUT_DATA(microcode_val),
     .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
