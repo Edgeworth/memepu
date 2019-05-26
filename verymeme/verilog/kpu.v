@@ -128,10 +128,11 @@ module kpu(
 
   `ifdef FORMAL
   always_comb begin
+    `CONTRACT(CLK != N_CLK);  // Must be opposites.
     // TODO: Need to update this.
     assert (8'b0+!control_reg_n_out+!control_tmp0_n_out+!control_tmp1_n_out+!control_mlu_n_out +
       !control_shifter_n_out <= 1);  // No conflict on busses.
-    // TODO: Assert stuff about boot process
+    // TODO(bootstrapping): Assert stuff about boot process
   end
   `endif
 endmodule
