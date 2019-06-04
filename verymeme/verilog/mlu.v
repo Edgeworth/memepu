@@ -5,6 +5,7 @@ module mlu(
   input wire [31:0] B,
   input wire [2:0] OP,
   input wire C_IN,
+  input wire N_RST,
   output logic [31:0] OUT,
   output logic Z,
   output logic C,
@@ -45,22 +46,26 @@ module mlu(
 
   `ifdef FORMAL
   always_comb begin
-    case (OP)
-      common::MLU_ADD: begin assert (OUT == A+B+{31'b0, C_IN}); end
-      common::MLU_SUB: begin
-        // Implementation must set carry when doing subtraction.
-        `CONTRACT (C_IN == 1'b1);
-        assert (OUT == (A-B));
-      end
-      common::MLU_AND: begin assert (OUT == (A & B)); end
-      common::MLU_OR: begin assert (OUT == (A | B)); end
-      common::MLU_XOR: begin assert (OUT == (A ^ B)); end
-      common::MLU_NOT: begin assert (OUT == ~A); end
-      common::MLU_NOP0: begin assert (OUT == 0); end
-      common::MLU_NOP1: begin assert (OUT == 0); end
-      default: begin assert (0); end
-    endcase
-    assert (Z == (OUT == 0));
+    if (N_RST) begin
+      case (OP)
+        common::MLU_ADD: begin assert (OUT == A+B+{31'b0, C_IN}); end
+        common::MLU_SUB: begin
+          // Implementation must set carry when doing subtraction.
+          `CONTRACT (C_IN == 1'b1);
+          assert (OUT == (A-B));
+        end
+        common::MLU_AND: begin assert (OUT == (A & B)); end
+        common::MLU_OR: begin assert (OUT == (A | B)); end
+        common::MLU_XOR: begin assert (OUT == (A ^ B)); end
+        common::MLU_NOT: begin assert (OUT == ~A); end
+        common::MLU_NOP0: begin assert (OUT == 0); end
+        common::MLU_NOP1: begin assert (OUT == 0); end
+        default: begin assert (0); end
+      endcase
+      assert (Z == (OUT == 0));
+    end
   end
+  `else
+  wire _unused_ok = &{N_RST};
   `endif
 endmodule

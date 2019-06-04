@@ -31,12 +31,15 @@ module buffer_mux3x8(
 
   `ifdef FORMAL
   always_comb begin
-   if (N_RST) `CONTRACT (SEL != 2'b11);  // Only support 3 inputs.
-    case (SEL)
-      2'b00: begin assert (OUT == A); end
-      2'b01: begin assert (OUT == B); end
-      2'b10: begin assert (OUT == C); end
-    endcase
+    if (N_RST) begin
+      `CONTRACT(SEL != 2'b11);  // Only support 3 inputs.
+      case (SEL)
+        2'b00: begin assert (OUT == A); end
+        2'b01: begin assert (OUT == B); end
+        2'b10: begin assert (OUT == C); end
+        2'b11: begin assert (0); end
+      endcase
+    end
   end
   `else
   wire _unused_ok = &{N_RST};
