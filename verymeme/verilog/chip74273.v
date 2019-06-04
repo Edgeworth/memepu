@@ -17,7 +17,8 @@ module chip74273(
   end
 
   `ifdef FORMAL
-  integer f_past = 0;
+  integer f_past;
+  initial f_past = 0;
 
   // If there was an asynchronous reset, can't rely on the values in the last clock cycle.
   always_ff @($global_clock) begin

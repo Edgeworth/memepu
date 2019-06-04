@@ -21,8 +21,8 @@ module buffer_mux2x32(
   `ifdef FORMAL
   always_comb begin
     `CONTRACT (SEL_A ^ N_SEL_A);  // N_SEL must be opposite of SEL.
-    if (SEL_A) assert (OUT == A);
-    else assert (OUT == B);
+    if (SEL_A) begin assert (OUT == A); end
+    else begin assert (OUT == B); end
   end
   `endif
 endmodule
