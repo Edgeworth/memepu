@@ -26,7 +26,7 @@ module kpu(
   wire [31:0] mlu_val /*verilator public*/, mlu_out;
   wire [2:0] mlu_flags_out;
   mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(control_alu_plane[2:0]), .C_IN(control_alu_plane[3]),
-    .OUT(mlu_val), .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
+    .N_RST(n_rst), .OUT(mlu_val), .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr),
     .BOOTSTRAP_MLU_SLICE_N_WE(bootstrap_mlu_slice_n_we),
     .BOOTSTRAP_MLU_LOOKAHEAD_N_WE(bootstrap_mlu_lookahead_n_we));
@@ -36,7 +36,7 @@ module kpu(
   // Shifter:
   wire [31:0] shifter_val, shifter_out;
   shifter shifter(.IN(tmp0_val), .SHFT(tmp1_val[4:0]), .LEFT(control_alu_plane[0]),
-    .ARITH(control_alu_plane[1]), .OUT(shifter_val));
+    .ARITH(control_alu_plane[1]), .N_RST(n_rst), .OUT(shifter_val));
   buffer32 shifter_buf(.IN(shifter_val), .OUT(shifter_out), .N_OE(control_shifter_n_out));
 
   // Scratch registers - invisible to running code.
@@ -135,11 +135,14 @@ module kpu(
   `endif
 
   `ifdef FORMAL
+  // Assume starting state is reset. Turning on is undefined so need to reset anyway.
+  initial assume (!N_RST_ASYNC);
+
   always_comb begin
     `CONTRACT(CLK != N_CLK);  // Must be opposites.
     // TODO: Need to update this.
-    assert (8'b0+!control_reg_n_out+!control_tmp0_n_out+!control_tmp1_n_out+!control_mlu_n_out +
-      !control_shifter_n_out + !control_timer_n_out <= 1);  // No conflict on busses.
+    assert (8'b0+!control_reg_n_out+!control_tmp0_n_out+!control_tmp1_n_out+!control_mlu_n_out+
+        !control_shifter_n_out+!control_timer_n_out <= 1);  // No conflict on busses.
     // TODO(bootstrapping): Assert stuff about boot process
     // TODO(testing): Test reset deassert.
   end

@@ -7,7 +7,7 @@ module chip74238(
   input wire E3,
   output logic [7:0] Y
 );
-  assign Y = !N_E1 && !N_E2 && E3 ? 8'b1 << A : 0;
+  assign Y = !N_E1 && !N_E2 && E3 ? 8'b1 << A:0;
 
   `ifdef FORMAL
   always_comb begin

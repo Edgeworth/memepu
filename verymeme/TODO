@@ -8,6 +8,7 @@
 
 #### kpu
 - Implement EEPROM hexfile load.
+- Define LUT behaviour entirely in verilog. Generate firmware by probing using verilator.
 
 #### memeroute
 - Finish DSN parsing. Better displaying.
