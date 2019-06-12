@@ -1,9 +1,7 @@
 `include "common.v"
 /* verilator lint_off UNOPTFLAT */
 module mlu_lookahead(
-  input wire C_IN,
-  input wire [7:0] P,
-  input wire [7:0] G,
+  input wire [16:0] ADDR,
   output logic [7:0] CARRYS,
   // BOOTSTRAPPING flags:
   input wire [16:0] BOOTSTRAP_ADDR,
@@ -11,13 +9,16 @@ module mlu_lookahead(
   input wire N_BOOTED,
   input wire BOOTSTRAP_N_WE
 );
-
-  `ifdef SCHEMATIC
+  `ifdef HEXFILE
   // TODO(bootstrapping): Use BOOTSTRAP_ADDR.
   lut17x8#(.INITIAL("mlu_lookahead.hex")) lookahead_mem(
-    .ADDR({C_IN, G, P}), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
+    .ADDR(ADDR), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(CARRYS));
   `else
+  wire C_IN = ADDR[0];
+  wire [7:0] P = ADDR[8:1];
+  wire [7:0] G = ADDR[16:9];
+
   logic prev_carry, carry;
   integer i;
   always_comb begin
