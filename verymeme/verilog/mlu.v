@@ -27,13 +27,13 @@ module mlu(
   generate
     genvar i;
     for (i = 0; i < 8; i = i+1) begin
-      mlu_slice slice(.A(A[i*4+3:i*4]), .B(B[i*4+3:i*4]), .OP(OP), .C_IN(carrys[i]),
+      mlu_slice slice(.ADDR({carrys[i], OP, B[i*4+3:i*4], A[i*4+3:i*4]}),
         .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}),
         .BOOTSTRAP_ADDR(BOOTSTRAP_ADDR[11:0]), .BOOTSTRAP_DATA(BOOTSTRAP_DATA),
         .BOOTSTRAP_N_WE(BOOTSTRAP_MLU_SLICE_N_WE), .N_BOOTED(N_BOOTED));
     end
   endgenerate
-  mlu_lookahead lookahead(.C_IN(C_IN), .P(slice_p), .G(slice_g), .CARRYS(carrys[8:1]),
+  mlu_lookahead lookahead(.ADDR({slice_g, slice_p, C_IN}), .CARRYS(carrys[8:1]),
     .BOOTSTRAP_ADDR(BOOTSTRAP_ADDR), .BOOTSTRAP_DATA(BOOTSTRAP_DATA), .N_BOOTED(N_BOOTED),
     .BOOTSTRAP_N_WE(BOOTSTRAP_MLU_LOOKAHEAD_N_WE));
 

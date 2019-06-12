@@ -1,10 +1,7 @@
 `include "common.v"
 /* verilator lint_off UNOPTFLAT */
 module mlu_slice(
-  input wire [3:0] A,
-  input wire [3:0] B,
-  input wire [2:0] OP,
-  input wire C_IN,
+  input wire [11:0] ADDR,
   output logic [7:0] OUT,
   // Bootstrapping signals:
   input wire [11:0] BOOTSTRAP_ADDR,
@@ -13,13 +10,18 @@ module mlu_slice(
   input wire BOOTSTRAP_N_WE
 );
 
-  `ifdef SCHEMATIC
+  `ifdef HEXFILE
   wire [7:0] unused = 0;
   // TODO(bootstrapping): Use BOOTSTRAP_ADDR.
   lut#(.DEPTH(12), .WIDTH(8), .INITIAL("mlu_slice.hex")) slice_mem(
-    .ADDR({OP, C_IN, B, A}), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
+    .ADDR(ADDR), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(OUT));
   `else
+  wire [3:0] A = ADDR[3:0];
+  wire [3:0] B = ADDR[7:4];
+  wire [2:0] OP = ADDR[10:8];
+  wire C_IN = ADDR[11];
+
   logic [3:0] out_low;
   logic prop;
   logic gen;
