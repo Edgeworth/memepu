@@ -54,11 +54,11 @@ def run_command(command):
     sys.exit(1)
 
 
-def create_build_config(schematic):
+def create_build_config(hexfile):
   path = 'build/autogen'
-  # TODO(testing): Actually use |schematic| value.
-  if schematic:
-    path += '_schematic'
+  # TODO(testing): Actually use |hexfile| value.
+  if hexfile:
+    path += '_hexfile'
   exists = os.path.exists(path)
   if not exists:
     os.makedirs(path)
@@ -104,9 +104,9 @@ parser.add_argument('-a', '--all', action='store_true', default=False, required=
 args = parser.parse_args()
 
 if args.unit or args.all:
-  for schematic in [False, True]:
-    print('Running test with schematic=%s' % str(schematic))
-    path = create_build_config(schematic=schematic)
+  for hexfile in [False, True]:
+    print('Running test with hexfile=%s' % str(hexfile))
+    path = create_build_config(hexfile=hexfile)
     run_tests(path)
 
 if args.synths or args.all:

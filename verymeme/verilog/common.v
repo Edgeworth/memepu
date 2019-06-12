@@ -4,9 +4,12 @@ package common;
   // Must explicitly specify net types:
   `default_nettype none
   // This should be defined for generating schematics. This will enable schematic specific features
-  // e.g. loading hex files into SRAMs, or tri-state logic muxes. Loading hex files makes formal
-  // verification very slow, so disabling this will instead use in-verilog implementations.
+  // e.g. tri-state logic muxes.
 //  `define SCHEMATIC
+  // This enables hex files for look up tables. Using hex files makes formal
+  // verification very slow, so disabling this will instead use in-verilog implementations.
+  // Hexfiles are generated from probing in-verilog implementation behaviour using verilator.
+//  `define HEXFILE
   // Defines whether or not to use bootstrapping for srams. TODO: Finish implementing.
 //  `define BOOTSTRAP
 

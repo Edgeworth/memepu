@@ -72,9 +72,9 @@ set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES}
 
 # memeware:
 add_executable(memeware ${MEMEWARE_SOURCES} src/programs/memeware.cpp)
-target_include_directories(memeware PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_include_directories(memeware PUBLIC ${Boost_INCLUDE_DIRS} ${VERILATOR_INCLUDE_DIRS} include)
 target_link_directories(memeware PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(memeware PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(memeware PUBLIC verilated_library ${Boost_LIBRARIES})
 
 # memecad:
 add_executable(memecad ${MEMECAD_SOURCES} src/programs/memecad.cpp)

@@ -34,12 +34,10 @@ module control_logic(
   wire [4:0] microop_count /*verilator public*/;
   microop_counter counter(.CLK(CLK), .N_RST(counter_combined_n_rst), .COUNT(microop_count));
 
-  // TODO: change to specific lut chip
   wire [31:0] microcode_val;
-  lut#(.DEPTH(11), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
-    .ADDR({OPCODE, microop_count}), .OUT_DATA(microcode_val),
-    .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
-    .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
+  microcode microcode(.ADDR({OPCODE, microop_count}), .OUT(microcode_val),
+    .BOOTSTRAP_ADDR(BOOTSTRAP_ADDR), .BOOTSTRAP_DATA(BOOTSTRAP_DATA),
+    .N_BOOTED(N_BOOTED), .BOOTSTRAP_N_WE(BOOTSTRAP_N_WE));
 
   // In plane: NONE, REG, TMP0, TMP1
   wire [2:0] control_in_plane /*verilator public*/;
@@ -99,7 +97,7 @@ module control_logic(
 
     // Only do these checks after coming out of a reset and having the first falling edge to set-up
     // state.
-    if ($past(f_past_n_clk) == 2 && N_RST) begin
+    if ($past(f_past_n_clk) == 2 && f_past_n_clk == 2 && N_RST) begin
       assert ($past(REG_SEL) != 2'b11);  // Not a valid register selector option.
       // Don't try to do a left-arithmetic shift, it doesn't make sense.
       if ($past(!SHIFTER_N_OUT)) assert ($past(ALU_PLANE[1:0]) != 2'b11);
