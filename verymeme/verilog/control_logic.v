@@ -1,23 +1,24 @@
 `include "common.v"
-/* verilator lint_off UNUSED */  // TODO: Remove
 module control_logic(
   input wire CLK,
   input wire N_CLK,
   input wire N_RST,
-  input wire [5:0] OPCODE,
-  output logic [4:0] REG_SRC, // Control logic reg src.
-  output logic [1:0] REG_SEL, // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
-  output logic [3:0] ALU_PLANE,
-  // In plane signals:
+  input wire [5:0] OPWORD_OPCODE,
+  // Grouped signals
+  output logic [5:0] CTRL_DATA,
+  output logic [1:0] REG_SEL,
+  output logic [3:0] MISC2_PLANE,
+  // Decoded in plane signals:
   output logic REG_N_IN_CLK,
   output logic TMP0_IN_CLK,
   output logic TMP1_IN_CLK,
+  output logic MMU_N_IN_CLK,
   output logic OPWORD_IN_CLK,
-  output logic OPCODE_IN_CLK,
-  // Out plane signals:
+  // Decoded out plane signals:
   output logic REG_N_OUT,
   output logic TMP0_N_OUT,
   output logic TMP1_N_OUT,
+  output logic MMU_N_OUT,
   output logic MLU_N_OUT,
   output logic SHIFTER_N_OUT,
   output logic TIMER_N_OUT,
@@ -27,51 +28,65 @@ module control_logic(
   input wire N_BOOTED,
   input wire BOOTSTRAP_N_WE
 );
+  // Inverter:
+  wire [2:0] unused_inverter;
+  chip7404 inverter(.A({3'b0, MISC2_PLANE[0], mmu_in_clk, reg_in_clk}),
+    .Y({unused_inverter, n_opcode_sel, MMU_N_IN_CLK, REG_N_IN_CLK}));
+
+  // Ander:
   wire [2:0] unused_and;
   wire counter_combined_n_rst;
   chip7408 and_gate(.A({3'b0, microop_counter_n_rst}), .B({3'b0, N_RST}),
     .Y({unused_and, counter_combined_n_rst}));
+
+  // Microop counter:
   wire [4:0] microop_count /*verilator public*/;
   microop_counter counter(.CLK(CLK), .N_RST(counter_combined_n_rst), .COUNT(microop_count));
 
+  // Opcode mux:
+  wire [1:0] unused_opcode_mux_val;
+  wire [5:0] opcode_mux_val;
+  wire n_opcode_sel;
+  buffer_mux2x8 opcode_mux(.A({2'b0, CTRL_DATA}), .B({2'b0, OPWORD_OPCODE}),
+    .SEL_A(MISC2_PLANE[0]), .N_SEL_A(n_opcode_sel), .OUT({unused_opcode_mux_val, opcode_mux_val}));
+
+  // Opcode storage:
+  // TODO(idea): Can have control logic write into this to do micro-op functions.
+  wire [1:0] unused_opcode;
+  wire [5:0] opcode /*verilator public*/;
+  chip74273 opcode_reg(.D({2'b0, opcode_mux_val}), .N_MR(N_RST), .CP(opcode_in_clk),
+    .Q({unused_opcode, opcode}));
+
+  // Microcode:
   wire [31:0] microcode_val;
-  microcode microcode(.ADDR({OPCODE, microop_count}), .OUT(microcode_val),
+  microcode microcode(.ADDR({opcode, microop_count}), .OUT(microcode_val),
     .BOOTSTRAP_ADDR(BOOTSTRAP_ADDR), .BOOTSTRAP_DATA(BOOTSTRAP_DATA),
     .N_BOOTED(N_BOOTED), .BOOTSTRAP_N_WE(BOOTSTRAP_N_WE));
 
-  // In plane: NONE, REG, TMP0, TMP1
   wire [2:0] control_in_plane /*verilator public*/;
-  // Out plane: NONE, REG, TMP0, TMP1, MLU, SHIFTER, TIMER
   wire [2:0] control_out_plane /*verilator public*/;
-  // ALU plane:
-  //   For MLU: 3 bits for op select, 1 bit for carry.
-  //   For shifter: 2 bits for direction and arithmetic or not.
-  // Misc plane: Micro-op counter reset
   wire control_misc_plane /*verilator public*/;
-  wire [13:0] unused_control;
+  wire [12:0] unused_control;
   // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
   // on rising clock.
   register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(0),
-    .OUT({unused_control, control_misc_plane, control_in_plane, control_out_plane,
-        ALU_PLANE, REG_SEL, REG_SRC}));
+    .OUT({unused_control, MISC2_PLANE, control_misc_plane, control_in_plane,
+          control_out_plane, REG_SEL, CTRL_DATA}));
 
   // In plane decoder - enable on CLK to do pulse.
   wire unused_in_none;
   wire reg_in_clk;
-  wire [1:0] unused_in_plane;
+  wire mmu_in_clk;
+  wire opcode_in_clk;
+  wire unused_in_plane;
   chip74238 in_plane_decoder(.A(control_in_plane), .N_E1(0), .N_E2(0), .E3(CLK),
-    .Y({unused_in_plane, OPCODE_IN_CLK, OPWORD_IN_CLK, TMP1_IN_CLK, TMP0_IN_CLK, reg_in_clk,
-        unused_in_none}));
-
-  // Inverter:
-  wire [4:0] unused_inverter;
-  chip7404 inverter(.A({5'b0, reg_in_clk}), .Y({unused_inverter, REG_N_IN_CLK}));
+    .Y({unused_in_plane, opcode_in_clk, OPWORD_IN_CLK, mmu_in_clk, TMP1_IN_CLK, TMP0_IN_CLK,
+        reg_in_clk, unused_in_none}));
 
   // Out plane decoder:
   wire unused_out_none;
-  wire unused_out_plane;
   chip74138 out_plane_decoder(.A(control_out_plane), .N_E1(0), .N_E2(0), .E3(1),
-    .N_Y({unused_out_plane, TIMER_N_OUT, SHIFTER_N_OUT, MLU_N_OUT, TMP1_N_OUT,
+    .N_Y({TIMER_N_OUT, SHIFTER_N_OUT, MLU_N_OUT, MMU_N_OUT, TMP1_N_OUT,
         TMP0_N_OUT, REG_N_OUT, unused_out_none}));
 
   // Misc plane decoder
@@ -100,12 +115,13 @@ module control_logic(
     if ($past(f_past_n_clk) == 2 && f_past_n_clk == 2 && N_RST) begin
       assert ($past(REG_SEL) != 2'b11);  // Not a valid register selector option.
       // Don't try to do a left-arithmetic shift, it doesn't make sense.
-      if ($past(!SHIFTER_N_OUT)) assert ($past(ALU_PLANE[1:0]) != 2'b11);
+      if ($past(!SHIFTER_N_OUT)) assert ($past(MISC2_PLANE[1:0]) != 2'b11);
 
       // Don't try to write and read to the same thing:
       assert ($past(REG_N_IN_CLK) || $past(REG_N_OUT));
       assert ($past(!TMP0_IN_CLK) || $past(TMP0_N_OUT));
       assert ($past(!TMP1_IN_CLK) || $past(TMP1_N_OUT));
+      assert ($past(MMU_N_IN_CLK) || $past(MMU_N_OUT));
     end
   end
 
