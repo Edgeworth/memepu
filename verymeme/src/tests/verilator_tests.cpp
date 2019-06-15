@@ -11,6 +11,7 @@
 #include "Vchip74299.h"
 #include "Vkpu.h"
 #include "Vkpu_kpu.h"
+#include "Vkpu_control_logic.h"
 #include "Vmlu.h"
 #include "Vregister_file.h"
 #include "Vshifter.h"
@@ -324,9 +325,31 @@ TEST_F(SemiExhaustiveRegisterFileTest, SemiExhaustiveRegisterFileTest) {
 class KpuTest : public VerilatorTest {
 protected:
   Vkpu kpu_;
+
+  void resetKpu() {
+    kpu_.eval();  // Extra eval to make all signals defined.
+    // Asynchronous reset from high CLK.
+    kpu_.N_RST_ASYNC = 0;
+    kpu_.CLK = 1;
+    kpu_.N_CLK = 0;
+    kpu_.eval();
+    kpu_.N_RST_ASYNC = 1;
+    kpu_.CLK = 0;
+    kpu_.N_CLK = 1;
+    kpu_.eval();
+    kpu_.CLK = 1;
+    kpu_.N_CLK = 0;
+    kpu_.eval();
+    kpu_.CLK = 0;
+    kpu_.N_CLK = 1;
+    kpu_.eval();
+    EXPECT_TRUE(kpu_.kpu->n_rst);
+  }
 };
 
 TEST_F(KpuTest, AsyncResetFromLowClk) {
+  kpu_.eval();
+
   // Asynchronous reset from low CLK.
   kpu_.N_RST_ASYNC = 0;
   kpu_.CLK = 0;
@@ -358,6 +381,8 @@ TEST_F(KpuTest, AsyncResetFromLowClk) {
 }
 
 TEST_F(KpuTest, AsyncResetFromHighClk) {
+  kpu_.eval();
+
   // Asynchronous reset from high CLK.
   kpu_.N_RST_ASYNC = 0;
   kpu_.CLK = 1;
@@ -383,17 +408,34 @@ TEST_F(KpuTest, AsyncResetFromHighClk) {
   EXPECT_TRUE(kpu_.kpu->n_rst);
 }
 
+TEST_F(KpuTest, TimerIsReset) {
+  resetKpu();
+  EXPECT_EQ(0u, kpu_.kpu->timer_val);
+}
+
+TEST_F(KpuTest, MicroopCounterIsReset) {
+  resetKpu();
+  EXPECT_EQ(0u, kpu_.kpu->control->microop_count);
+}
+
+TEST_F(KpuTest, OpcodeIsReset) {
+  resetKpu();
+  EXPECT_EQ(0u, kpu_.kpu->control->opcode);
+}
+
 class TimerTest : public VerilatorTest {
 protected:
   Vtimer timer_;
 };
 
 TEST_F(TimerTest, Increments) {
+  timer_.CLK = 0;
+  timer_.N_RST = 1;
+  timer_.eval();
   uint32_t prev_time = timer_.TIME;
 
   for (int i = 0; i < 100; ++i) {
     timer_.CLK = 0;
-    timer_.N_RST = 1;
     timer_.eval();
 
     timer_.CLK = 1;

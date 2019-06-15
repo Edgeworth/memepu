@@ -17,7 +17,7 @@ module kpu(
     .N_R({N_RST_ASYNC, N_RST_ASYNC}), .Q({n_rst, n_rst_first_edge}), .N_Q(unused_n_q));
 
   // Timer:
-  wire [31:0] timer_val, timer_out;
+  wire [31:0] timer_val /*verilator public*/, timer_out;
   timer timer(.CLK(CLK), .N_RST(n_rst), .TIME(timer_val));
   buffer32 timer_buf(.IN(timer_val), .OUT(timer_out), .N_OE(control_timer_n_out));
 
