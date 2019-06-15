@@ -24,6 +24,7 @@ class WorkerQueue:
     self.popens = {}
 
   def run(self, commands):
+    total_num_commands = len(commands)
     while len(commands) > 0 or len(self.popens) > 0:
       while len(self.popens) < self.max_procs and len(commands) > 0:
         command = commands.pop()
@@ -42,7 +43,9 @@ class WorkerQueue:
             sys.exit(1)
           else:
             del self.popens[command]
-            print('Command "%s" succeeded.' % command)
+            finished_commands = total_num_commands - len(commands) - len(self.popens)
+            print(
+              'Command "%s" succeeded. (%d/%d)' % (command, finished_commands, total_num_commands))
       if not something_happened:
         time.sleep(0.1)
 
@@ -55,10 +58,11 @@ def run_command(command):
 
 
 def create_build_config(hexfile):
+  COMMON_FILE = 'verilog/common.v'
   path = 'build/autogen'
-  # TODO(testing): Actually use |hexfile| value.
   if hexfile:
     path += '_hexfile'
+    run_command("sed -i 's://\\s*`define HEXFILE:`define HEXFILE:' %s" % COMMON_FILE)
   exists = os.path.exists(path)
   if not exists:
     os.makedirs(path)
@@ -66,7 +70,14 @@ def create_build_config(hexfile):
   run_command('cmake BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release ../..')
   run_command('make -j $(nproc)')
   os.chdir('../..')
+  if hexfile:
+    run_command("sed -i 's:`define HEXFILE:// `define HEXFILE:' %s" % COMMON_FILE)
   return path
+
+
+def generate_firmware():
+  path = create_build_config(hexfile=False)
+  run_command('%s --output_path=./verilog' % os.path.join(path, 'memeware'))
 
 
 def run_tests(path):
@@ -74,7 +85,7 @@ def run_tests(path):
 
 
 def run_synth(synth_cmd):
-  pass
+  pass # TODO
 
 
 def run_synths():
@@ -97,11 +108,22 @@ def run_formal_verification():
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--formal', action='store_true', default=False, required=False)
-parser.add_argument('-u', '--unit', action='store_true', default=False, required=False)
-parser.add_argument('-s', '--synths', action='store_true', default=False, required=False)
-parser.add_argument('-a', '--all', action='store_true', default=False, required=False)
+parser.add_argument('-f', '--formal', action='store_true', default=False, required=False,
+                    help='Run formal verification.')
+parser.add_argument('-u', '--unit', action='store_true', default=False, required=False,
+                    help='Run unit tests.')
+parser.add_argument('-w', '--memeware', action='store_true', default=False, required=False,
+                    help='Generate firmware.')
+parser.add_argument('-s', '--synths', action='store_true', default=False, required=False,
+                    help='Run synthesis for various hardware.')
+parser.add_argument('-g', '--generate_schematic', action='store_true', default=False,
+                    required=False, help='Verifies schematics can be generated')
+parser.add_argument('-a', '--all', action='store_true', default=False, required=False,
+                    help='Run all.')
 args = parser.parse_args()
+
+if args.memeware or args.all:
+  generate_firmware()
 
 if args.unit or args.all:
   for hexfile in [False, True]:
@@ -118,3 +140,6 @@ if args.formal or args.all:
   os.chdir('verilog')
   run_formal_verification()
   os.chdir('..')
+
+if args.generate_schematic or args.all:
+  pass # TODO

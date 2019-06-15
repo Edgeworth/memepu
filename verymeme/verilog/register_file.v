@@ -1,5 +1,4 @@
 `include "common.v"
-/* verilator lint_off UNUSED */
 module register_file(
   input wire [1:0] REG_SEL,
   input wire [4:0] REG_SRC0,

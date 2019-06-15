@@ -76,7 +76,6 @@ module mlu_slice(
         assert (f_prop == (A+(~B) == 4'hF));
         assert (f_gen == ({1'b0, A}+{1'b0, ~B} > 5'hF));
       end
-      // TODO: yosys bug means need begin/end here
       common::MLU_AND: begin assert (f_out == (A & B)); end
       common::MLU_OR: begin assert (f_out == (A | B)); end
       common::MLU_XOR: begin assert (f_out == (A ^ B)); end

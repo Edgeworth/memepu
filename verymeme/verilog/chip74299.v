@@ -1,5 +1,5 @@
 `include "common.v"
-
+// Shift register.
 module chip74299(
   input wire [1:0] S,
   input wire [1:0] N_OE,

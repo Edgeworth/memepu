@@ -9,6 +9,7 @@ smtbmc --progress
 [tasks]
 bootstrapper
 buffer32
+buffer_mux2x8
 buffer_mux2x32
 buffer_mux3x8
 chip74LVC162244
@@ -50,6 +51,9 @@ bootstrapper: prep -top bootstrapper
 buffer32: read -formal -D CONTRACT=assume buffer32.v
 buffer32: read -formal -D CONTRACT=assert chip74LVC162244.v
 buffer32: prep -top buffer32
+buffer_mux2x8: read -formal -D CONTRACT=assume buffer_mux2x8.v
+buffer_mux2x8: read -formal -D CONTRACT=assert chip74245.v
+buffer_mux2x8: prep -top buffer_mux2x8
 buffer_mux2x32: read -formal -D CONTRACT=assume buffer_mux2x32.v
 buffer_mux2x32: read -formal -D CONTRACT=assert buffer32.v chip74LVC162244.v
 buffer_mux2x32: prep -top buffer_mux2x32
@@ -89,12 +93,12 @@ chip74590: prep -top chip74590
 chip7416374: read -formal -D CONTRACT=assume chip7416374.v
 chip7416374: prep -top chip7416374
 control_logic: read -formal -D CONTRACT=assume control_logic.v
-control_logic: read -formal -D CONTRACT=assert chip7404.v chip7408.v chip74138.v chip74238.v chip74590.v chip7416374.v lut.v microcode.v microop_counter.v register32.v
+control_logic: read -formal -D CONTRACT=assert buffer_mux2x8.v chip7404.v chip7408.v chip74138.v chip74238.v chip74245.v chip74273.v chip74590.v chip7416374.v lut.v microcode.v microop_counter.v register32.v
 control_logic: prep -top control_logic
 eeprom: read -formal -D CONTRACT=assume eeprom.v
 eeprom: prep -top eeprom
 kpu: read -formal -D CONTRACT=assume kpu.v
-kpu: read -formal -D CONTRACT=assert buffer32.v buffer_mux2x32.v buffer_mux3x8.v chip74LVC162244.v chip7404.v chip7408.v chip74107.v chip74138.v chip74139.v chip74161.v chip74238.v chip74245.v chip74273.v chip74590.v chip7416374.v control_logic.v lut.v microcode.v microop_counter.v mlu.v mlu_slice.v mlu_lookahead.v register_file.v register32.v shifter.v sram.v timer.v
+kpu: read -formal -D CONTRACT=assert buffer32.v buffer_mux2x8.v buffer_mux2x32.v buffer_mux3x8.v chip74LVC162244.v chip7404.v chip7408.v chip74107.v chip74138.v chip74139.v chip74161.v chip74238.v chip74245.v chip74273.v chip74590.v chip7416374.v control_logic.v lut.v microcode.v microop_counter.v mlu.v mlu_slice.v mlu_lookahead.v mmu.v register_file.v register32.v shifter.v sram.v timer.v
 kpu: prep -top kpu
 lut: read -formal -D CONTRACT=assume lut.v
 lut: prep -top lut
@@ -136,6 +140,7 @@ timer: prep -top timer
 [files]
 bootstrapper.v
 buffer32.v
+buffer_mux2x8.v
 buffer_mux2x32.v
 buffer_mux3x8.v
 chip74LVC162244.v

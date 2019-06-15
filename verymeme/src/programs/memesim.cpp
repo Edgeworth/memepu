@@ -10,7 +10,6 @@
 
 namespace po = boost::program_options;
 
-
 void clockKpu(Vkpu& kpu) {
   kpu.CLK = 0;
   kpu.N_CLK = 1;
@@ -36,7 +35,7 @@ void printKpu(Vkpu& kpu) {
             << uint32_t(kpu.kpu->tmp0_val) <<
             " TMP1: " << uint32_t(kpu.kpu->tmp1_val) << " MLU output: "
             << uint32_t(kpu.kpu->mlu_val) <<
-            " opcode: " << uint32_t(kpu.kpu->opcode) << " microop counter: " <<
+            " opcode: " << uint32_t(kpu.kpu->control->opcode) << " microop counter: " <<
             uint32_t(kpu.kpu->control->microop_count) << " in: " <<
             uint32_t(kpu.kpu->control->control_in_plane) << " out: " <<
             uint32_t(kpu.kpu->control->control_out_plane) << " misc: " <<
