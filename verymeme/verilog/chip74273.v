@@ -11,6 +11,13 @@ module chip74273(
 
   assign Q = value;
 
+  // Make sure async reset works on startup for verilator.
+  `ifdef verilator
+  initial begin
+    if (!N_MR) value = 0;
+  end
+  `endif
+
   always_ff @(posedge CP or negedge N_MR) begin
     if (!N_MR) value <= 0;
     else value <= D;

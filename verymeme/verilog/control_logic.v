@@ -110,6 +110,11 @@ module control_logic(
     // Force CLK or RST to change every time, so induction passes.
     assume (CLK != $past(CLK) || N_RST != $past(N_RST));
 
+    // When we just came out of reset:
+    if ($past(f_past_n_clk) == 1 && $past(!N_RST) && f_past_n_clk == 2) begin
+      assert (opcode == 0);  // Opcode should be 0 coming out of reset.
+    end
+
     // Only do these checks after coming out of a reset and having the first falling edge to set-up
     // state.
     if ($past(f_past_n_clk) == 2 && f_past_n_clk == 2 && N_RST) begin
@@ -128,6 +133,8 @@ module control_logic(
   // TODO(testing): More testing.
   always_comb begin
     `CONTRACT(CLK != N_CLK);  // Must be opposites.
+
+    if (!N_RST) assert (opcode == 0);
 
     // TODO(testing): Make sure subtract provides carry.
 
