@@ -17,6 +17,13 @@ module chip74107(
       assign Q[i] = data;
       assign N_Q[i] = ~data;
 
+      // Make sure async reset works on startup for verilator.
+      `ifdef verilator
+      initial begin
+        if (!N_R[i]) data = 0;
+      end
+      `endif
+
       always_ff @(negedge N_CP[i] or negedge N_R[i]) begin
         if (!N_R[i]) data <= 0;
         else begin

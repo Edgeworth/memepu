@@ -9,6 +9,7 @@ package common;
   // This enables hex files for look up tables. Using hex files makes formal
   // verification very slow, so disabling this will instead use in-verilog implementations.
   // Hexfiles are generated from probing in-verilog implementation behaviour using verilator.
+  // This line is modified by a sed expression by the build system so be careful.
 // `define HEXFILE
   // Defines whether or not to use bootstrapping for srams. TODO: Finish implementing.
 //  `define BOOTSTRAP

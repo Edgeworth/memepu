@@ -64,7 +64,12 @@ int main(int argc, char* argv[]) {
 
   checked_chdir("verilog");
 
+  Verilated::commandArgs(argc, argv);
+  Verilated::randReset(2);
+  Verilated::debug(2);
+
   Vkpu kpu;
+  kpu.eval();  // Eval once to set up all signals (X => defined value).
   resetKpu(kpu);
   while (true) {
     std::string cmd;
