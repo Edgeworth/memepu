@@ -6,10 +6,10 @@ module control_logic(
   input wire [7:0] BUS,
   input wire [5:0] OPWORD,
   // Grouped signals
-  output logic [5:0] CTRL_DATA,
-  output logic [1:0] REG_SEL,
-  output logic [3:0] MLU_PLANE,
-  output logic [1:0] SHIFTER_PLANE,
+  output logic [5:0] CTRL_DATA /*verilator public*/,
+  output logic [1:0] REG_SEL /*verilator public*/,
+  output logic [3:0] MLU_PLANE /*verilator public*/,
+  output logic [1:0] SHIFTER_PLANE /*verilator public*/,
   // Decoded in plane signals:
   output logic REG_N_IN_CLK,
   output logic TMP0_IN_CLK,

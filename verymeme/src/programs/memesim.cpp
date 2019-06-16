@@ -31,35 +31,85 @@ void resetKpu(Vkpu& kpu) {
   kpu.eval();
 }
 
-const std::map<char, TermColor> COLOR_MAP = {
-    {'0', TermColor::FG_WHITE}
+const std::map<char, std::tuple<TermColor, TermColor, TermStyle>> COLOR_MAP = {
+    {'0', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'1', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'2', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'3', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'4', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'5', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'6', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'7', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'8', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'9', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'a', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'b', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'c', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'d', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'e', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
+    {'f', {TermColor::FG_RED,   TermColor::BG_DEFAULT, TermStyle::BOLD}},
 };
 
 std::string prettyPrintNumbers(const std::string& s) {
-
+  std::string pretty;
+  for (char c : s) {
+    auto iter = COLOR_MAP.find(c);
+    if (iter != COLOR_MAP.end()) {
+      pretty += convertToColor(std::string(1, c), std::get<0>(iter->second),
+          std::get<1>(iter->second), std::get<2>(iter->second));
+    } else {
+      pretty += c;
+    }
+  }
+  return pretty;
 }
 
 void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
+  constexpr int MAX_FIELD = 13;
+  constexpr int MAX_COL = 70;
+  int col = 0;
+  bool first = true;
+  for (const auto&[name, val] : table) {
+    col += MAX_FIELD;
+    if (!first) {
+      if (col > MAX_COL) {
+        col = MAX_FIELD;
+        putchar('\n');
+      } else {
+        putchar(' ');
+      }
+    }
+    first = false;
 
+    const int SPACING = MAX_FIELD - name.length() - val.length();
+    fputs(name.c_str(), stdout);
+    putchar(':');
+    for (int i = 0; i < SPACING; ++i) putchar(' ');
+    fputs(prettyPrintNumbers(val).c_str(), stdout);
+  }
+  putchar('\n');
 }
 
 void printKpu(Vkpu& kpu) {
   const std::vector<std::pair<std::string, std::string>> table = {
-      {"bus",        convertToHex(kpu.kpu->bus)},
-      {"tmp0",       convertToHex(kpu.kpu->tmp0_val)},
-      {"tmp1",       convertToHex(kpu.kpu->tmp1_val)},
-      {"opword",     convertToHex(kpu.kpu->opword_val)},
-      {"mlu",        convertToHex(kpu.kpu->mlu_val)},
-      {"opcode",     convertToHex(kpu.kpu->control->opcode)},
-      {"microop",    convertToHex(kpu.kpu->control->microop_count)},
-      {"ctrl data",  convertToHex(kpu.kpu->control->CTRL_DATA__out)},
-      {"reg sel",    convertToHex(kpu.kpu->control->REG_SEL__out)},
-      {"out",        convertToBinary<4>(kpu.kpu->control->control_out_plane)},
-      {"in",         convertToBinary<3>(kpu.kpu->control->control_in_plane)},
-      {"misc",       convertToBinary<1>(kpu.kpu->control->control_misc_plane)},
-      {"mlu",        convertToBinary<4>(kpu.kpu->control->MLU_PLANE__out)},
-      {"shifter",    convertToBinary<2>(kpu.kpu->control->SHIFTER_PLANE__out)},
-      {"opcode sel", convertToHex(kpu.kpu->control->control_opcode_sel)},
+      {"bus",        convertToHex(uint32_t(kpu.kpu->bus))},
+      {"tmp0",       convertToHex(uint32_t(kpu.kpu->tmp0_val))},
+      {"tmp1",       convertToHex(uint32_t(kpu.kpu->tmp1_val))},
+      {"ow op",      convertToHex(uint32_t(kpu.kpu->opword_val))},
+      {"ow reg0",    convertToHex(uint32_t(kpu.kpu->op_reg_src0))},
+      {"ow reg1",    convertToHex(uint32_t(kpu.kpu->op_reg_src1))},
+      {"ow offset",  convertToHex(uint32_t(kpu.kpu->op_offset))},
+      {"mlu",        convertToHex(uint32_t(kpu.kpu->mlu_val))},
+      {"opcode",     convertToHex(uint32_t(kpu.kpu->control->opcode))},
+      {"microop",    convertToHex(uint32_t(kpu.kpu->control->microop_count))},
+      {"ctrl data",  convertToHex(uint32_t(kpu.kpu->control->CTRL_DATA))},
+      {"reg sel",    convertToHex(uint32_t(kpu.kpu->control->REG_SEL))},
+      {"out",        convertToHex(uint32_t(kpu.kpu->control->control_out_plane))},
+      {"in",         convertToHex(uint32_t(kpu.kpu->control->control_in_plane))},
+      {"misc",       convertToHex(uint32_t(kpu.kpu->control->control_misc_plane))},
+      {"mlu",        convertToBinary<4>(kpu.kpu->control->MLU_PLANE)},
+      {"shifter",    convertToBinary<2>(kpu.kpu->control->SHIFTER_PLANE)},
+      {"opcode sel", convertToHex(uint32_t(kpu.kpu->control->control_opcode_sel))},
   };
   printTable(table);
   printf("%s\n", prettyPrintNumbers(hexdump(kpu.kpu->regs->registers->mem, 8)).c_str());
@@ -91,6 +141,7 @@ int main(int argc, char* argv[]) {
   Verilated::debug(2);
 
   Vkpu kpu;
+  kpu.N_RST_ASYNC = 1;
   kpu.eval();  // Eval once to set up all signals (X => defined value).
   resetKpu(kpu);
   while (true) {
