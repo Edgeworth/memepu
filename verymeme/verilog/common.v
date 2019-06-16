@@ -14,6 +14,11 @@ package common;
   // Defines whether or not to use bootstrapping for srams. TODO: Finish implementing.
 //  `define BOOTSTRAP
 
+  // Schematics must use LUTs, so enable HEXFILE.
+  `ifdef SCHEMATIC
+  `define HEXFILE
+  `endif
+
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248
   localparam MLU_ADD = 0;
   localparam MLU_SUB = 1;
