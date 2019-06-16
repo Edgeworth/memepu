@@ -38,7 +38,7 @@ module timer(
 
   // If there was an asynchronous reset, can't rely on the values in the last clock cycle.
   always_ff @(posedge CLK or negedge N_RST) begin
-    if (N_RST == 0) f_past <= N_RST ? 1:0;
+    if (!N_RST) f_past <= N_RST ? 1:0;
     else f_past <= 1;
   end
 

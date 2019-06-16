@@ -1,6 +1,7 @@
 #include <queue>
 
 #include "memeroute/router_worker.h"
+#include "verymeme/geom.h"
 
 namespace memeroute {
 

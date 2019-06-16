@@ -3,6 +3,7 @@
 
 #include "memeroute/renderer.h"
 #include "memeroute/parser.h"
+#include "verymeme/file.h"
 
 namespace po = boost::program_options;
 
