@@ -2,13 +2,14 @@
 
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/lexical_cast.hpp>
+#include <utility>
 #include <kernel/sigtools.h>
 
 namespace memecad {
 
 namespace {
 
-const pt::ptree* findMappingForModuleType(const std::string module_type, const pt::ptree& root) {
+const pt::ptree* findMappingForModuleType(const std::string& module_type, const pt::ptree& root) {
   // Discard $gen$ or $paramod$, look for the user-specified part of the name.
   const auto pos = module_type.find('\\');
   if (pos == std::string::npos) return nullptr;
@@ -126,7 +127,7 @@ getConnectionsForSignal(const std::string& pin_spec, const Yosys::RTLIL::Cell& c
 
 }  // namespace
 
-Mapper::Mapper(const std::string& memecad_json, const std::vector<Lib>& libs) : libs_(libs) {
+Mapper::Mapper(const std::string& memecad_json, std::vector<Lib> libs) : libs_(std::move(libs)) {
   std::stringstream s(memecad_json);
   pt::read_json(s, root_);
 }

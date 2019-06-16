@@ -3,7 +3,7 @@
 #include <mutex>
 #include <queue>
 #include <random>
-
+#include <utility>
 #include "memeroute/router_worker.h"
 #include "memeroute/router.h"
 
@@ -153,7 +153,7 @@ RouterWorker::InvocationParams invocationParamsFromGene(const std::vector<std::s
 
 }
 
-Router::Router(const Pcb& pcb) : pcb_(pcb) {}
+Router::Router(Pcb pcb) : pcb_(std::move(pcb)) {}
 
 RouterWorker::RoutingResult Router::route() {
   ConcurrentQueue<WorkMessage> work_queue;

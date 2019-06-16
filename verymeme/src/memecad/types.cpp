@@ -1,6 +1,5 @@
 #include "memecad/types.h"
-
-#include <boost/lexical_cast.hpp>
+#include "verymeme/geom.h"
 
 namespace memecad {
 

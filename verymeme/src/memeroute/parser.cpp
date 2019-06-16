@@ -1,5 +1,6 @@
 #include "verymeme/parser.h"
 #include "memeroute/parser.h"
+#include "verymeme/geom.h"
 
 namespace memeroute {
 

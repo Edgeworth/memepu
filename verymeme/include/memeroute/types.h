@@ -5,6 +5,7 @@
 #include <map>
 
 #include "verymeme/common.h"
+#include "verymeme/geom.h"
 
 namespace memeroute {
 

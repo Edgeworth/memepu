@@ -3,6 +3,7 @@
 
 #include "verymeme/common.h"
 #include "memeroute/types.h"
+#include "verymeme/geom.h"
 
 namespace memeroute {
 
@@ -13,7 +14,7 @@ constexpr int NUM_LAYERS = 2;
 
 class RouterWorker {
 public:
-  explicit RouterWorker(const Pcb& pcb);
+  explicit RouterWorker(Pcb pcb);
 
   struct InvocationParams {
     std::vector<std::string> net_names = {};
@@ -70,8 +71,8 @@ private:
   RoutingResult bfsAndAddToGrid(const std::vector<State>& states);
   bool bfsOnce(const State& start);
 
-  RoutingResult collectRoutes(const State s);
-  void collectRoutesInternal(const State s);
+  RoutingResult collectRoutes(State s);
+  void collectRoutesInternal(State s);
 
   // Helpers:
 

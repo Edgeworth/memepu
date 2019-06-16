@@ -85,7 +85,7 @@ def run_tests(path):
 
 
 def run_synth(synth_cmd):
-  pass # TODO
+  pass  # TODO
 
 
 def run_synths():
@@ -142,4 +142,4 @@ if args.formal or args.all:
   os.chdir('..')
 
 if args.generate_schematic or args.all:
-  pass # TODO
+  pass  # TODO

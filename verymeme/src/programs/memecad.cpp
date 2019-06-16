@@ -4,6 +4,7 @@
 #include "memecad/mapper.h"
 #include "memecad/parser.h"
 #include "memecad/yosys_module.h"
+#include "verymeme/file.h"
 
 namespace po = boost::program_options;
 
