@@ -17,17 +17,18 @@
 #include "Vshifter.h"
 #include "Vtimer.h"
 #include "memeware/constants.h"
+#include "verymeme/file.h"
 
 namespace {
 
 class VerilatorTest : public ::testing::Test {
 public:
   void SetUp() override {
-    checked_chdir("verilog");
+    checkedChdir("verilog");
   }
 
   void TearDown() override {
-    checked_chdir("..");
+    checkedChdir("..");
   }
 };
 

@@ -24,7 +24,7 @@ module kpu(
   // MLU:
   wire [31:0] mlu_val /*verilator public*/, mlu_out;
   wire [2:0] mlu_flags_out;
-  mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(control_misc2_plane[2:0]), .C_IN(control_misc2_plane[3]),
+  mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(control_mlu_plane[2:0]), .C_IN(control_mlu_plane[3]),
     .N_RST(n_rst), .OUT(mlu_val), .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr),
     .BOOTSTRAP_MLU_SLICE_N_WE(bootstrap_mlu_slice_n_we),
@@ -37,8 +37,8 @@ module kpu(
 
   // Shifter:
   wire [31:0] shifter_val, shifter_out;
-  shifter shifter(.IN(tmp0_val), .SHFT(tmp1_val[4:0]), .LEFT(control_misc2_plane[0]),
-    .ARITH(control_misc2_plane[1]), .N_RST(n_rst), .OUT(shifter_val));
+  shifter shifter(.IN(tmp0_val), .SHFT(tmp1_val[4:0]), .LEFT(control_shifter_plane[0]),
+    .ARITH(control_shifter_plane[1]), .N_RST(n_rst), .OUT(shifter_val));
   buffer32 shifter_buf(.IN(shifter_val), .OUT(shifter_out), .N_OE(control_shifter_n_out));
 
   // MMU:
@@ -62,17 +62,19 @@ module kpu(
 
   // Opcode word:
   // Outputs:
-  wire [5:0] opword_opcode;  // 6 bit opcode
+  wire [5:0] opword_val /*verilator public*/;  // 6 bit opcode
   wire [4:0] op_reg_src0, op_reg_src1;
   wire [15:0] op_offset;
   // TODO(improvement): Use op_offset.
   wire _unused_ok_op_offset = &{op_offset};
-  register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(0), .OUT({op_offset, op_reg_src1, op_reg_src0, opword_opcode}));
+  register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(0),
+    .OUT({op_offset, op_reg_src1, op_reg_src0, opword_val}));
 
   // Control logic:
-  wire [1:0] control_reg_sel;
   wire [5:0] control_ctrl_data;
-  wire _unused_ok_ctrl_data = &{control_ctrl_data[5]};  // We only use the first 5 bits here.
+  wire [1:0] control_reg_sel;
+  wire [3:0] control_mlu_plane;
+  wire [1:0] control_shifter_plane;
   // In plane:
   wire control_reg_n_in_clk;
   wire control_tmp0_in_clk;
@@ -87,13 +89,14 @@ module kpu(
   wire control_mlu_n_out;
   wire control_shifter_n_out;
   wire control_timer_n_out;
-  // MISC2 plane:
-  wire [3:0] control_misc2_plane;
+  wire control_ctrl_data_n_out;
   control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(n_rst),
-    .OPWORD_OPCODE(opword_opcode),
-    .REG_SEL(control_reg_sel),
+    .BUS(bus[7:0]),
+    .OPWORD(opword_val),
     .CTRL_DATA(control_ctrl_data),
-    .MISC2_PLANE(control_misc2_plane),
+    .REG_SEL(control_reg_sel),
+    .MLU_PLANE(control_mlu_plane),
+    .SHIFTER_PLANE(control_shifter_plane),
     .REG_N_IN_CLK(control_reg_n_in_clk),
     .TMP0_IN_CLK(control_tmp0_in_clk),
     .TMP1_IN_CLK(control_tmp1_in_clk),
@@ -106,6 +109,7 @@ module kpu(
     .MLU_N_OUT(control_mlu_n_out),
     .SHIFTER_N_OUT(control_shifter_n_out),
     .TIMER_N_OUT(control_timer_n_out),
+    .CTRL_DATA_N_OUT(control_ctrl_data_n_out),
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr[11:0]),
     .BOOTSTRAP_N_WE(bootstrap_control_n_we));
 
@@ -118,10 +122,12 @@ module kpu(
   assign bus = shifter_out;
   assign bus = timer_out;
   assign bus = mmu_out;
+  assign bus[5:0] = control_ctrl_data;
   `else
   assign bus = !control_reg_n_out ? reg_out : !control_tmp0_n_out ? tmp0_out :
     !control_tmp1_n_out ? tmp1_out : !control_mlu_n_out ? mlu_out : !control_shifter_n_out ?
-    shifter_out : !control_timer_n_out ? timer_out : !control_mmu_n_out ? mmu_out : 32'b0;
+    shifter_out : !control_timer_n_out ? timer_out : !control_mmu_n_out ? mmu_out :
+    !control_ctrl_data_n_out ? {26'b0, control_ctrl_data} : 32'b0;
   `endif
 
   // Bootstrapping code:
@@ -154,11 +160,10 @@ module kpu(
 
   always_comb begin
     `CONTRACT(CLK != N_CLK);  // Must be opposites.
-    // TODO: Need to update this.
+    // No conflict on busses.
     assert (8'b0+!control_reg_n_out+!control_tmp0_n_out+!control_tmp1_n_out+!control_mlu_n_out+
-        !control_shifter_n_out+!control_timer_n_out+!control_mmu_n_out <= 1);  // No conflict on busses.
+        !control_shifter_n_out+!control_timer_n_out+!control_mmu_n_out+!control_ctrl_data_n_out <= 1);
     // TODO(bootstrapping): Assert stuff about boot process
-    // TODO(testing): Test reset deassert.
   end
 
   always_ff @($global_clock) begin
