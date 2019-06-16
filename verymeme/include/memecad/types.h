@@ -5,6 +5,7 @@
 #include <string>
 
 #include "verymeme/common.h"
+#include "verymeme/geom.h"
 
 namespace memecad {
 

@@ -14,7 +14,7 @@ namespace pt = boost::property_tree;
 class Mapper {
 public:
   Mapper() = default;
-  Mapper(const std::string& memecad_json, const std::vector<Lib>& libs);
+  Mapper(const std::string& memecad_json, std::vector<Lib> libs);
 
   void addCell(const Yosys::RTLIL::Cell& cell);
   void addModule(const Yosys::Module& module);

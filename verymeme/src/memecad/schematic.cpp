@@ -1,8 +1,6 @@
-
-#include <memecad/schematic.h>
-#include <boost/lexical_cast.hpp>
-
 #include "memecad/parser.h"
+#include "memecad/schematic.h"
+#include "verymeme/geom.h"
 
 namespace memecad {
 

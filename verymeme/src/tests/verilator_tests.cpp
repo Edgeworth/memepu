@@ -17,17 +17,18 @@
 #include "Vshifter.h"
 #include "Vtimer.h"
 #include "memeware/constants.h"
+#include "verymeme/file.h"
 
 namespace {
 
 class VerilatorTest : public ::testing::Test {
 public:
-  void SetUp() override {
-    checked_chdir("verilog");
+  VerilatorTest() {
+    checkedChdir("verilog");
   }
 
-  void TearDown() override {
-    checked_chdir("..");
+  ~VerilatorTest() override {
+    checkedChdir("..");
   }
 };
 
@@ -182,7 +183,7 @@ TEST_F(Chip74299Test, Exhaustive) {
   EXPECT_EQ(uint32_t(result), mlu.OUT); \
   EXPECT_EQ(((result) & 0x100000000ull) >> 32u, mlu.C); \
   EXPECT_EQ(uint32_t(result) ? 0 : 1, mlu.Z); \
-  EXPECT_EQ((result) & 0x80000000u ? 1 : 0, mlu.N); \
+  EXPECT_EQ((result) & 0x80000000u ? 1 : 0, mlu.N) \
 
 void testMluOps(Vmlu& mlu, uint64_t a, uint64_t b, uint64_t c_in) {
   mlu.A = uint32_t(a);
@@ -219,6 +220,13 @@ void testMluOps(Vmlu& mlu, uint64_t a, uint64_t b, uint64_t c_in) {
 
 class SemiExhaustiveMluTest : public ExhaustiveVerilatorTest<10, 10, 1> {
 public:
+  SemiExhaustiveMluTest() {
+    mlu_.N_BOOTED = 0;
+    mlu_.N_RST = 1;
+    mlu_.BOOTSTRAP_MLU_LOOKAHEAD_N_WE = 1;
+    mlu_.BOOTSTRAP_MLU_SLICE_N_WE = 1;
+  }
+
   void doTest() override {
     const auto[A, B, C_IN] = param;
     testMluOps(mlu_, A, B, C_IN);
@@ -234,6 +242,14 @@ TEST_F(SemiExhaustiveMluTest, SemiExhaustiveMluTest) {
 class MluTest
     : public VerilatorTest,
       public ::testing::WithParamInterface<std::tuple<uint32_t, uint32_t, uint32_t>> {
+public:
+  MluTest() {
+    mlu_.N_BOOTED = 0;
+    mlu_.N_RST = 1;
+    mlu_.BOOTSTRAP_MLU_LOOKAHEAD_N_WE = 1;
+    mlu_.BOOTSTRAP_MLU_SLICE_N_WE = 1;
+  }
+
 protected:
   Vmlu mlu_;
 };

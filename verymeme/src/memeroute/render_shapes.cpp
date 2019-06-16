@@ -1,4 +1,5 @@
 #include "memeroute/render_shapes.h"
+#include "verymeme/geom.h"
 
 namespace memeroute {
 

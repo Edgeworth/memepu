@@ -1,6 +1,7 @@
 #include "verymeme/common.h"
 
 #include "gtest/gtest.h"
+#include "verymeme/file.h"
 
 namespace {
 

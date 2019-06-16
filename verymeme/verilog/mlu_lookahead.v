@@ -3,7 +3,7 @@
 module mlu_lookahead(
   input wire [16:0] ADDR,
   output logic [7:0] CARRYS,
-  // BOOTSTRAPPING flags:
+  // Bootstrapping signals:
   input wire [16:0] BOOTSTRAP_ADDR,
   input wire [7:0] BOOTSTRAP_DATA,
   input wire N_BOOTED,

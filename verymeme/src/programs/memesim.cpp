@@ -7,6 +7,8 @@
 #include "Vkpu_control_logic.h"
 #include "Vkpu_register_file.h"
 #include "Vkpu_sram__D5_W20.h"
+#include "verymeme/file.h"
+#include "verymeme/term.h"
 
 namespace po = boost::program_options;
 
@@ -29,18 +31,38 @@ void resetKpu(Vkpu& kpu) {
   kpu.eval();
 }
 
+const std::map<char, TermColor> COLOR_MAP = {
+    {'0', TermColor::FG_WHITE}
+};
+
+std::string prettyPrintNumbers(const std::string& s) {
+
+}
+
+void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
+
+}
+
 void printKpu(Vkpu& kpu) {
-  std::cout <<
-            "BUS: " << std::hex << uint32_t(kpu.kpu->bus) << " TMP0: "
-            << uint32_t(kpu.kpu->tmp0_val) <<
-            " TMP1: " << uint32_t(kpu.kpu->tmp1_val) << " MLU output: "
-            << uint32_t(kpu.kpu->mlu_val) <<
-            " opcode: " << uint32_t(kpu.kpu->control->opcode) << " microop counter: " <<
-            uint32_t(kpu.kpu->control->microop_count) << " in: " <<
-            uint32_t(kpu.kpu->control->control_in_plane) << " out: " <<
-            uint32_t(kpu.kpu->control->control_out_plane) << " misc: " <<
-            uint32_t(kpu.kpu->control->control_misc_plane) << "\n";
-  std::cout << convertToHex(kpu.kpu->regs->registers->mem, 8) << "\n";
+  const std::vector<std::pair<std::string, std::string>> table = {
+      {"bus",        convertToHex(kpu.kpu->bus)},
+      {"tmp0",       convertToHex(kpu.kpu->tmp0_val)},
+      {"tmp1",       convertToHex(kpu.kpu->tmp1_val)},
+      {"opword",     convertToHex(kpu.kpu->opword_val)},
+      {"mlu",        convertToHex(kpu.kpu->mlu_val)},
+      {"opcode",     convertToHex(kpu.kpu->control->opcode)},
+      {"microop",    convertToHex(kpu.kpu->control->microop_count)},
+      {"ctrl data",  convertToHex(kpu.kpu->control->CTRL_DATA__out)},
+      {"reg sel",    convertToHex(kpu.kpu->control->REG_SEL__out)},
+      {"out",        convertToBinary<4>(kpu.kpu->control->control_out_plane)},
+      {"in",         convertToBinary<3>(kpu.kpu->control->control_in_plane)},
+      {"misc",       convertToBinary<1>(kpu.kpu->control->control_misc_plane)},
+      {"mlu",        convertToBinary<4>(kpu.kpu->control->MLU_PLANE__out)},
+      {"shifter",    convertToBinary<2>(kpu.kpu->control->SHIFTER_PLANE__out)},
+      {"opcode sel", convertToHex(kpu.kpu->control->control_opcode_sel)},
+  };
+  printTable(table);
+  printf("%s\n", prettyPrintNumbers(hexdump(kpu.kpu->regs->registers->mem, 8)).c_str());
 }
 
 int main(int argc, char* argv[]) {
@@ -62,7 +84,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  checked_chdir("verilog");
+  checkedChdir("verilog");
 
   Verilated::commandArgs(argc, argv);
   Verilated::randReset(2);
