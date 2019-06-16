@@ -1,6 +1,7 @@
 #include <set>
 
 #include "memeroute/types.h"
+#include "verymeme/geom.h"
 
 namespace memeroute {
 

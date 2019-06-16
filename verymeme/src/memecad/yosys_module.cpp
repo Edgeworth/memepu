@@ -2,6 +2,7 @@
 
 #include <kernel/sigtools.h>
 #include "memecad/parser.h"
+#include "verymeme/file.h"
 
 namespace memecad {
 USING_YOSYS_NAMESPACE

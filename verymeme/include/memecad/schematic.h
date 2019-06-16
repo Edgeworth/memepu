@@ -4,6 +4,7 @@
 #include "verymeme/common.h"
 #include "memecad/types.h"
 #include "memecad/util.h"
+#include "verymeme/geom.h"
 
 namespace memecad {
 

@@ -9,7 +9,7 @@ namespace memeroute {
 
 class Router {
 public:
-  explicit Router(const Pcb& pcb);
+  explicit Router(Pcb pcb);
 
   RouterWorker::RoutingResult route();
 

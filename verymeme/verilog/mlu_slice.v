@@ -9,7 +9,6 @@ module mlu_slice(
   input wire N_BOOTED,
   input wire BOOTSTRAP_N_WE
 );
-
   `ifdef HEXFILE
   wire [7:0] unused = 0;
   // TODO(bootstrapping): Use BOOTSTRAP_ADDR.

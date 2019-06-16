@@ -1,6 +1,7 @@
 #include <queue>
-
+#include <utility>
 #include "memeroute/router_worker.h"
+#include "verymeme/geom.h"
 
 namespace memeroute {
 
@@ -30,7 +31,7 @@ std::string RouterWorker::State::toString() const {
   return "{" + p.toString() + ", " + std::to_string(layer) + "}";
 }
 
-RouterWorker::RouterWorker(const Pcb& pcb) : pcb_(pcb) {}
+RouterWorker::RouterWorker(Pcb pcb) : pcb_(std::move(pcb)) {}
 
 bool RouterWorker::oob(const RouterWorker::State& s) const {
   return s.p.x < 0 || s.p.y < 0 || s.p.x >= GRID_COLS || s.p.y >= GRID_ROWS || s.layer < 0 ||
