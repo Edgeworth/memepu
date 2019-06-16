@@ -63,8 +63,8 @@ module kpu(
   // Opcode word:
   // Outputs:
   wire [5:0] opword_val /*verilator public*/;  // 6 bit opcode
-  wire [4:0] op_reg_src0, op_reg_src1;
-  wire [15:0] op_offset;
+  wire [4:0] op_reg_src0 /*verilator public*/, op_reg_src1 /*verilator public*/;
+  wire [15:0] op_offset /*verilator public*/;
   // TODO(improvement): Use op_offset.
   wire _unused_ok_op_offset = &{op_offset};
   register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(0),
