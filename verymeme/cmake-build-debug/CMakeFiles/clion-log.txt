@@ -1,0 +1,58 @@
+/home/miles/software/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/miles/Dropbox/code/memepu/verymeme
+-- Boost version: 1.65.1
+-- Found the following Boost libraries:
+--   program_options
+--   stacktrace_backtrace
+-- Found SFML .. in /usr/include
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-download
+[ 11%] Performing update step for 'googletest'
+Current branch master is up to date.
+[ 22%] No configure step for 'googletest'
+[ 33%] No build step for 'googletest'
+[ 44%] No install step for 'googletest'
+[ 55%] No test step for 'googletest'
+[ 66%] Completed 'googletest'
+[100%] Built target googletest
+Running verilator for bootstrapper.v
+Running verilator for buffer32.v
+Running verilator for buffer_mux2x32.v
+Running verilator for buffer_mux2x8.v
+Running verilator for buffer_mux3x8.v
+Running verilator for chip7400.v
+Running verilator for chip7404.v
+Running verilator for chip7408.v
+Running verilator for chip74107.v
+Running verilator for chip74138.v
+Running verilator for chip74139.v
+Running verilator for chip74154.v
+Running verilator for chip74161.v
+Running verilator for chip7416374.v
+Running verilator for chip74238.v
+Running verilator for chip74245.v
+Running verilator for chip74273.v
+Running verilator for chip74299.v
+Running verilator for chip7432.v
+Running verilator for chip74590.v
+Running verilator for chip7486.v
+Running verilator for chip74LVC162244.v
+Running verilator for control_logic.v
+Running verilator for eeprom.v
+Running verilator for kpu.v
+Running verilator for lut.v
+Running verilator for lut17x8.v
+Running verilator for microcode.v
+Running verilator for microop_counter.v
+Running verilator for mlu.v
+Running verilator for mlu_lookahead.v
+Running verilator for mlu_slice.v
+Running verilator for mmu.v
+Running verilator for register32.v
+Running verilator for register_file.v
+Running verilator for shifter.v
+Running verilator for sram.v
+Running verilator for timer.v
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug

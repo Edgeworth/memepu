@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--****************************************-->
+<!--   File    : cpu.fsproj                 -->
+<!--   Format  : TopoR Project file         -->
+<!--   Version : 2                          -->
+<!--   Program : TopoR 32 Layer 7.0.18508   -->
+<!--   Date    : Friday, September 21, 2018 -->
+<!--   Time    : 21:41                      -->
+<!--****************************************-->
+
+<Project>
+   <Version current="2"/>
+   <GUID>{81453017-440B-4F9C-8D46-84425870EB93}</GUID>
+   <Documents>
+      <Section name="PCB" isExpanded="true">
+         <File path=".\cpu.fsx" isopened="0" dateChange="2018-09-21 21:41:15"/>
+      </Section>
+      <Section name="AutoRouting" isExpanded="true"/>
+   </Documents>
+   <Import>
+      <Specctra>
+         <Path name="C:\Users\Miles\Dropbox\code\memepu\pcb\cpu.dsn"/>
+      </Specctra>
+   </Import>
+</Project>

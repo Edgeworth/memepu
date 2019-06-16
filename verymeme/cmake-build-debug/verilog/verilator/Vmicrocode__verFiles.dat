@@ -1,0 +1,13 @@
+# DESCRIPTION: Verilator output: Timestamp data for --skip-identical.  Delete at will.
+C "--report-unoptflat --assert -Wall -CFLAGS  -Wall -Wextra -pedantic --cc microcode.v -Mdir /home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator"
+T     14012  2231572  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode.cpp"
+T      2659  2231571  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode.h"
+T      1481  2231574  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode.mk"
+T       545  2231570  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode__Syms.cpp"
+T       733  2231569  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode__Syms.h"
+T       739  2231575  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode__ver.d"
+T         0        0  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode__verFiles.dat"
+T      1254  2231573  1560652104   823756713  1560652104   823756713 "/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/verilog/verilator/Vmicrocode_classes.mk"
+S   6638072  5113236  1560568903   482541686  1560568903   482541686 "/usr/local/bin/verilator_bin"
+S      1095  2097519  1560568994   914832601  1560568994   902832577 "common.v"
+S      4383  2098963  1560652097   175906227  1560652097   155906618 "microcode.v"

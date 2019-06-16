@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -pedantic -g   CMakeFiles/run_test.dir/src/programs/test.cpp.o  -o run_test libmemepu_utils.a 

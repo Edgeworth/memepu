@@ -1,0 +1,1612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/verilog/result" />
+    </excludeRoots>
+  </component>
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="SVCompilerDirectivesDefines">
+    <option name="define">
+      <map>
+        <entry key="C">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CO">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="COIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="COMMON_INCLUDED">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="32" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CON">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONT">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTR">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTRA">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTRAC">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTRACIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTRACT">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="167" />
+                    <option name="replacementList" value="assume" />
+                    <option name="source" value="workaround.v" />
+                  </Body>
+                  <Body>
+                    <option name="offset" value="646" />
+                    <option name="replacementList" value="assume" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="alu.v" />
+                  <option value="sram.v" />
+                  <option value="sram17x8.v" />
+                  <option value="shifter.v" />
+                  <option value="buffer_mux.v" />
+                  <option value="kpu.v" />
+                  <option value="mlu.v" />
+                  <option value="bootstrapper.v" />
+                  <option value="buffer_mux8.v" />
+                  <option value="buffer_mux3x8.v" />
+                  <option value="register_file.v" />
+                  <option value="control_logic.v" />
+                  <option value="buffer32.v" />
+                  <option value="buffer_mux32.v" />
+                  <option value="buffer_mux2x32.v" />
+                  <option value="chip74590.v" />
+                  <option value="eeprom.v" />
+                  <option value="lut.v" />
+                  <option value="lut17x8.v" />
+                  <option value="microcode.v" />
+                  <option value="mmu.v" />
+                  <option value="buffer_mux2x8.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTRAIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="CONTRIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="596" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="control_logic.v" />
+                  <option value="mmu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="F">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FO">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FOIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FOR">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FORIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FORM">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FORMA">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FORMAIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FORMAL">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="55" />
+                    <option name="source" value="workaround.v" />
+                  </Body>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="chip74299.v" />
+                  <option value="alu_slice.v" />
+                  <option value="chip7416374.v" />
+                  <option value="alu_lookahead.v" />
+                  <option value="alu.v" />
+                  <option value="sram.v" />
+                  <option value="sram17x8.v" />
+                  <option value="chip7408.v" />
+                  <option value="shifter.v" />
+                  <option value="chip7400.v" />
+                  <option value="chip74LVC162244.v" />
+                  <option value="chip7404.v" />
+                  <option value="chip7486.v" />
+                  <option value="buffer_mux.v" />
+                  <option value="kpu.v" />
+                  <option value="chip74161.v" />
+                  <option value="timer.v" />
+                  <option value="mlu.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                  <option value="chip7432.v" />
+                  <option value="register32.v" />
+                  <option value="control_logic.v" />
+                  <option value="register_file.v" />
+                  <option value="bootstrapper.v" />
+                  <option value="eeprom.v" />
+                  <option value="buffer_mux8.v" />
+                  <option value="chip74254.v" />
+                  <option value="buffer_mux3x8.v" />
+                  <option value="chip74138.v" />
+                  <option value="chip74139.v" />
+                  <option value="chip74245.v" />
+                  <option value="buffer32.v" />
+                  <option value="buffer_mux32.v" />
+                  <option value="buffer_mux2x32.v" />
+                  <option value="microop_counter.v" />
+                  <option value="chip74590.v" />
+                  <option value="chip74238.v" />
+                  <option value="chip74273.v" />
+                  <option value="mmu.v" />
+                  <option value="lut.v" />
+                  <option value="lut17x8.v" />
+                  <option value="chip7473.v" />
+                  <option value="chip74107.v" />
+                  <option value="microcode.v" />
+                  <option value="buffer_mux2x8.v" />
+                  <option value="chip74154.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="FORMIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="559" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="H">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HE">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEX">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXF">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXFI">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXFIIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXFIL">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXFILE">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                  <Body>
+                    <option name="offset" value="8" />
+                    <option name="source" value="hexfile_build_config.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="alu_slice.v" />
+                  <option value="alu_lookahead.v" />
+                  <option value="sram.v" />
+                  <option value="sram17x8.v" />
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXFILEIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXFILIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXFIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HEXIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="HIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="271" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="microcode.v" />
+                  <option value="mlu_lookahead.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="S">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                  <option value="chip74273.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SC">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCH">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHE">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEM">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMA">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMAIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMAT">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMATI">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMATIC">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="sram.v" />
+                  <option value="sram17x8.v" />
+                  <option value="alu_lookahead.v" />
+                  <option value="alu_slice.v" />
+                  <option value="buffer_mux.v" />
+                  <option value="kpu.v" />
+                  <option value="mlu_lookahead.v" />
+                  <option value="mlu_slice.v" />
+                  <option value="control_logic.v" />
+                  <option value="bootstrapper.v" />
+                  <option value="eeprom.v" />
+                  <option value="buffer_mux8.v" />
+                  <option value="buffer_mux3x8.v" />
+                  <option value="buffer32.v" />
+                  <option value="buffer_mux32.v" />
+                  <option value="buffer_mux2x32.v" />
+                  <option value="lut17x8.v" />
+                  <option value="microcode.v" />
+                  <option value="buffer_mux2x8.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMATICIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="control_logic.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMATIIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMATIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHEMIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCHIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SCIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="SIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="350" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+              <option name="dependencies">
+                <set>
+                  <option value="kpu.v" />
+                  <option value="chip74273.v" />
+                </set>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="Z">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZE">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZER">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERO">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZEROIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERO_">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERO_A">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERO_AL">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERO_ALIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERO_ALL">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="parameters">
+                      <list>
+                        <Parameter />
+                        <Parameter />
+                      </list>
+                    </option>
+                    <option name="replacementList" value="{ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_plane, shifter_plane, opcode_sel} = 0" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZERO_ALLIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="ZIntellijIdeaRulezzz">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="HEXFILEA" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="2251" />
+                    <option name="source" value="microcode.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="_VERILATED_V_">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="897" />
+                    <option name="replacementList" value="1" />
+                    <option name="source" value="verilated.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="coverage_block_off">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="inclusionDependencies">
+                      <list>
+                        <InclusionDependency>
+                          <option name="name" value="VERILATOR" />
+                          <option name="rule" value="NOT_DEFINED" />
+                        </InclusionDependency>
+                      </list>
+                    </option>
+                    <option name="offset" value="992" />
+                    <option name="source" value="verilated.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="global_clock">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="672" />
+                    <option name="replacementList" value="0" />
+                    <option name="source" value="common.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+        <entry key="verilator_file_descriptor">
+          <value>
+            <Define>
+              <option name="definitions">
+                <list>
+                  <Body>
+                    <option name="offset" value="1099" />
+                    <option name="replacementList" value="integer" />
+                    <option name="source" value="verilated.v" />
+                  </Body>
+                </list>
+              </option>
+            </Define>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="version" value="195" />
+  </component>
+</project>

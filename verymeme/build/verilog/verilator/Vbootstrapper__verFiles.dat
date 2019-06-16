@@ -1,0 +1,13 @@
+# DESCRIPTION: Verilator output: Timestamp data for --skip-identical.  Delete at will.
+C "--report-unoptflat --assert -Wall -CFLAGS  -Wall -Wextra -pedantic --cc bootstrapper.v -Mdir /home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator"
+T      5155  2230416  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper.cpp"
+T      2690  2230415  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper.h"
+T      1496  2230418  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper.mk"
+T       560  2230414  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper__Syms.cpp"
+T       754  2230413  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper__Syms.h"
+T       679  2230419  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper__ver.d"
+T         0        0  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper__verFiles.dat"
+T      1263  2230417  1560585008   674363151  1560585008   674363151 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vbootstrapper_classes.mk"
+S   6638072  5113236  1560568903   482541686  1560568903   482541686 "/usr/local/bin/verilator_bin"
+S      1115  2099176  1558835185   154197884  1558835185   110198372 "bootstrapper.v"
+S      1095  2097519  1560568994   914832601  1560568994   902832577 "common.v"

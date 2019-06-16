@@ -1,0 +1,13 @@
+# DESCRIPTION: Verilator output: Timestamp data for --skip-identical.  Delete at will.
+C "--report-unoptflat --assert -Wall -CFLAGS  -Wall -Wextra -pedantic --cc eeprom.v -Mdir /home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator"
+T      5468  2230619  1560585009   826356433  1560585009   826356433 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom.cpp"
+T      2587  2230618  1560585009   826356433  1560585009   826356433 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom.h"
+T      1466  2230621  1560585009   826356433  1560585009   826356433 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom.mk"
+T       530  2230617  1560585009   822356456  1560585009   822356456 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom__Syms.cpp"
+T       712  2230616  1560585009   822356456  1560585009   822356456 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom__Syms.h"
+T       631  2230622  1560585009   826356433  1560585009   826356433 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom__ver.d"
+T         0        0  1560585009   826356433  1560585009   826356433 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom__verFiles.dat"
+T      1245  2230620  1560585009   826356433  1560585009   826356433 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Veeprom_classes.mk"
+S   6638072  5113236  1560568903   482541686  1560568903   482541686 "/usr/local/bin/verilator_bin"
+S      1095  2097519  1560568994   914832601  1560568994   902832577 "common.v"
+S       638  2097549  1558835101   775114435  1558835101   759114609 "eeprom.v"

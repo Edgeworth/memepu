@@ -1,0 +1,1020 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/memecad/types.cpp" description="field.p += loc - p;" line="106" />
+    <bookmark url="file://$PROJECT_DIR$/src/memeroute/router.cpp" line="92" mnemonic="0" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="verymeme" targetName="memeware" />
+      <config projectName="verymeme" targetName="memecad" />
+      <config projectName="verymeme" targetName="verymeme_library" />
+      <config projectName="verymeme" targetName="gmock_main" />
+      <config projectName="verymeme" targetName="tests" />
+      <config projectName="verymeme" targetName="memesim" />
+      <config projectName="verymeme" targetName="gtest_main" />
+      <config projectName="verymeme" targetName="verilated_library" />
+      <config projectName="verymeme" targetName="gmock" />
+      <config projectName="verymeme" targetName="verymeme_verilated" />
+      <config projectName="verymeme" targetName="memeroute" />
+      <config projectName="verymeme" targetName="memecad_library" />
+      <config projectName="verymeme" targetName="gtest" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="79af9048-4902-459c-acce-09f4ba79d191" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/include/verymeme/file.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/verymeme/geom.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/verymeme/term.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/verymeme/file.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/verymeme/geom.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/verilog/chip74154.v" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/parts.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/parts.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/memecad/schematic.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/memecad/schematic.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/memecad/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/memecad/types.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/memeroute/render_shapes.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/memeroute/render_shapes.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/memeroute/router_worker.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/memeroute/router_worker.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/memeroute/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/memeroute/types.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/verymeme/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/verymeme/common.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memecad/schematic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memecad/schematic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memecad/types.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memecad/types.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memecad/yosys_module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memecad/yosys_module.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memeroute/parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memeroute/parser.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memeroute/render_shapes.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memeroute/render_shapes.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memeroute/renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memeroute/renderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memeroute/router_worker.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memeroute/router_worker.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memeroute/types.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/memeroute/types.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/programs/memecad.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/programs/memecad.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/programs/memeroute.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/programs/memeroute.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/programs/memesim.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/programs/memesim.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/programs/memeware.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/programs/memeware.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/common_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/common_tests.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/memecad_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/memecad_tests.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/verilator_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/verilator_tests.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/verymeme/common.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/verymeme/common.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verilog/control_logic.v" beforeDir="false" afterPath="$PROJECT_DIR$/verilog/control_logic.v" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verilog/formally_verify.sby" beforeDir="false" afterPath="$PROJECT_DIR$/verilog/formally_verify.sby" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verilog/kpu.v" beforeDir="false" afterPath="$PROJECT_DIR$/verilog/kpu.v" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verilog/microcode.v" beforeDir="false" afterPath="$PROJECT_DIR$/verilog/microcode.v" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verilog/timer.v" beforeDir="false" afterPath="$PROJECT_DIR$/verilog/timer.v" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/cmake-build-release/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/memecad/schematic.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="108">
+              <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/memecad/types.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="7" column="18" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/memeroute/render_shapes.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/memeroute/router_worker.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/memeroute/types.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="18" column="30" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+              <folding>
+                <element signature="e#67#91#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/verymeme/common.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="468">
+              <caret line="26" selection-start-line="26" selection-end-line="26" />
+              <folding>
+                <element signature="e#51#68#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/verymeme/geom.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="26" column="13" lean-forward="true" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/programs/memesim.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="495">
+              <caret line="58" column="43" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#36#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/verymeme/geom.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="810">
+              <caret line="45" selection-start-line="45" selection-end-line="45" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="48" column="51" lean-forward="true" selection-start-line="48" selection-start-column="51" selection-end-line="48" selection-end-column="51" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="SystemVerilog File" />
+        <option value="CMakeLists.txt" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>VL_DEBUG</find>
+      <find>_change_request</find>
+      <find>change_r</find>
+      <find>CHANGE:</find>
+      <find>flip</find>
+      <find>jkflip</find>
+      <find>increments</find>
+      <find>time</find>
+      <find>kpu-&gt;control</find>
+      <find>__PVT__opcode_reg__DOT__value</find>
+      <find>_sequent__TOP__kpu__control__6</find>
+      <find>__Vclklast__TOP____VinpClk__TOP__kpu__n_rst</find>
+      <find>_ctor_var</find>
+      <find>printf</find>
+      <find>value</find>
+      <find>opcode</find>
+      <find>CTRL_DATA</find>
+      <find>CTRL_D</find>
+      <find>ctrl_da</find>
+      <find>control_misc2_plane</find>
+      <find>misc2</find>
+      <find>misc</find>
+      <find>opword</find>
+      <find>ctrl_data</find>
+      <find>opcode_se</find>
+      <find>SHIFTER_PLANE_</find>
+      <find>shifter</find>
+      <find>lexical</find>
+      <find>geom.h</find>
+      <find>EP</find>
+    </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/src</dir>
+      <dir>$PROJECT_DIR$/include</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/include/memeware/constants.h" />
+        <option value="$PROJECT_DIR$/verilog/mlu_lookahead.v" />
+        <option value="$PROJECT_DIR$/verilog/lut17x8.v" />
+        <option value="$PROJECT_DIR$/verilog/buffer_mux2x8.v" />
+        <option value="$PROJECT_DIR$/verilog/chip74299.v" />
+        <option value="$PROJECT_DIR$/verilog/mlu_slice.v" />
+        <option value="$PROJECT_DIR$/verilog/register_file.v" />
+        <option value="$PROJECT_DIR$/verilog/mmu.v" />
+        <option value="$PROJECT_DIR$/run.py" />
+        <option value="$PROJECT_DIR$/verilog/common.v" />
+        <option value="$PROJECT_DIR$/src/programs/test_harness.cpp" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu_control_logic.cpp" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu.cpp" />
+        <option value="$PROJECT_DIR$/verilog/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/verilog/chip74107.v" />
+        <option value="$PROJECT_DIR$/verilog/chip74273.v" />
+        <option value="$PROJECT_DIR$/verilog/chip74254.v" />
+        <option value="$PROJECT_DIR$/verilog/formally_verify.sby" />
+        <option value="$PROJECT_DIR$/verilog/chip74154.v" />
+        <option value="$PROJECT_DIR$/verilog/timer.v" />
+        <option value="$PROJECT_DIR$/verilog/mlu.v" />
+        <option value="$PROJECT_DIR$/verilog/kpu.v" />
+        <option value="$PROJECT_DIR$/verilog/microcode.v" />
+        <option value="$PROJECT_DIR$/verilog/control_logic.v" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu_control_logic.h" />
+        <option value="$PROJECT_DIR$/include/verymeme/term.h" />
+        <option value="$PROJECT_DIR$/include/verymeme/file.h" />
+        <option value="$PROJECT_DIR$/src/memecad/yosys_module.cpp" />
+        <option value="$PROJECT_DIR$/src/programs/memecad.cpp" />
+        <option value="$PROJECT_DIR$/src/programs/memeroute.cpp" />
+        <option value="$PROJECT_DIR$/src/tests/common_tests.cpp" />
+        <option value="$PROJECT_DIR$/src/tests/verilator_tests.cpp" />
+        <option value="$PROJECT_DIR$/src/verymeme/file.cpp" />
+        <option value="$PROJECT_DIR$/src/verymeme/common.cpp" />
+        <option value="$PROJECT_DIR$/src/memecad/schematic.cpp" />
+        <option value="$PROJECT_DIR$/src/memecad/types.cpp" />
+        <option value="$PROJECT_DIR$/src/memeroute/render_shapes.cpp" />
+        <option value="$PROJECT_DIR$/src/memeroute/router_worker.cpp" />
+        <option value="$PROJECT_DIR$/src/memeroute/types.cpp" />
+        <option value="$PROJECT_DIR$/src/memeroute/parser.cpp" />
+        <option value="$PROJECT_DIR$/src/memeroute/renderer.cpp" />
+        <option value="$PROJECT_DIR$/include/memecad/schematic.h" />
+        <option value="$PROJECT_DIR$/include/memecad/types.h" />
+        <option value="$PROJECT_DIR$/include/memeroute/render_shapes.h" />
+        <option value="$PROJECT_DIR$/include/memeroute/router_worker.h" />
+        <option value="$PROJECT_DIR$/include/memeroute/types.h" />
+        <option value="$PROJECT_DIR$/include/verymeme/common.h" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/include/verymeme/geom.h" />
+        <option value="$PROJECT_DIR$/src/verymeme/geom.cpp" />
+        <option value="$PROJECT_DIR$/src/programs/memesim.cpp" />
+      </list>
+    </option>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-memeware" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="29" />
+    <option name="width" value="1914" />
+    <option name="height" value="1093" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="include" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="include" type="462c0819:PsiDirectoryNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="memecad" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="memeroute" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="memeware" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="programs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="b2602c69:ProjectViewProjectNode" />
+              <item name="verilog" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="verymeme" type="462c0819:PsiDirectoryNode" />
+              <item name="verilog" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="verymeme" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="verymeme" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="verilog" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.advertisement.text.has.clang-format" value="true" />
+    <property name="editor.config.ad.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="OPEN_URL_DIALOG">
+      <recent name="file://$PROJECT_DIR$/../pcb/dram_test/dram_test.dsn" />
+      <recent name="file://$PROJECT_DIR$/../pcb/dram_test" />
+      <recent name="file:///usr/lib/kicad-nightly/share/kicad/library/74xx.lib" />
+      <recent name="file:///usr/lib/kicad-nightly/share/kicad/library/Memory_RAM.lib" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test_data/hierarchical0" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/memeware" />
+      <recent name="$PROJECT_DIR$/include/memeware" />
+      <recent name="$PROJECT_DIR$/src/memeroute" />
+      <recent name="$PROJECT_DIR$/src/verymeme" />
+      <recent name="$PROJECT_DIR$/src/programs" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="CMake Application.All">
+    <configuration name="All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="memecad" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="verymeme" TARGET_NAME="memecad" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="verymeme" RUN_TARGET_NAME="memecad">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="memeroute" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="verymeme" TARGET_NAME="memeroute" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="verymeme" RUN_TARGET_NAME="memeroute">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="memesim" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="verymeme" TARGET_NAME="memesim" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="verymeme" RUN_TARGET_NAME="memesim">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="memeware" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="verymeme" TARGET_NAME="memeware" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="verymeme" RUN_TARGET_NAME="memeware">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tests" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="verymeme" TARGET_NAME="tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="verymeme" RUN_TARGET_NAME="tests">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="verilated_library" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="verymeme" TARGET_NAME="verilated_library" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.All" />
+      <item itemvalue="CMake Application.memecad" />
+      <item itemvalue="CMake Application.memeroute" />
+      <item itemvalue="CMake Application.memesim" />
+      <item itemvalue="CMake Application.memeware" />
+      <item itemvalue="CMake Application.tests" />
+      <item itemvalue="CMake Application.verilated_library" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="79af9048-4902-459c-acce-09f4ba79d191" name="Default Changelist" comment="" />
+      <created>1549101855461</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1549101855461</updated>
+      <workItem from="1549101856674" duration="564000" />
+      <workItem from="1549102430355" duration="14878000" />
+      <workItem from="1549117681853" duration="17345000" />
+      <workItem from="1549456934972" duration="145000" />
+      <workItem from="1549457224439" duration="4461000" />
+      <workItem from="1549461779842" duration="3547000" />
+      <workItem from="1549640260675" duration="282000" />
+      <workItem from="1549640552988" duration="66165000" />
+      <workItem from="1550293376485" duration="3485000" />
+      <workItem from="1550302081338" duration="11198000" />
+      <workItem from="1550936034010" duration="34483000" />
+      <workItem from="1551502373835" duration="828000" />
+      <workItem from="1551504676637" duration="5061000" />
+      <workItem from="1551519877337" duration="21327000" />
+      <workItem from="1551590832054" duration="5324000" />
+      <workItem from="1551877585699" duration="243000" />
+      <workItem from="1551877843305" duration="363000" />
+      <workItem from="1551878543891" duration="32000" />
+      <workItem from="1551878637238" duration="46000" />
+      <workItem from="1551878695369" duration="323000" />
+      <workItem from="1551879041886" duration="179000" />
+      <workItem from="1551879516920" duration="9572000" />
+      <workItem from="1551966982019" duration="13873000" />
+      <workItem from="1552150762984" duration="4826000" />
+      <workItem from="1552193230736" duration="2817000" />
+      <workItem from="1552196320876" duration="30559000" />
+      <workItem from="1552485764568" duration="22124000" />
+      <workItem from="1552702593889" duration="27928000" />
+      <workItem from="1552984260624" duration="4256000" />
+      <workItem from="1552991558579" duration="13524000" />
+      <workItem from="1553134924464" duration="18126000" />
+      <workItem from="1553240416417" duration="1943000" />
+      <workItem from="1553391118337" duration="85000" />
+      <workItem from="1553391212995" duration="36029000" />
+      <workItem from="1553682579798" duration="44301000" />
+      <workItem from="1554007347154" duration="65637000" />
+      <workItem from="1554723001613" duration="636000" />
+      <workItem from="1554906746563" duration="36070000" />
+      <workItem from="1555340653534" duration="16993000" />
+      <workItem from="1555684447663" duration="63530000" />
+      <workItem from="1556353923739" duration="2400000" />
+      <workItem from="1557601984408" duration="7000" />
+      <workItem from="1557602015592" duration="455000" />
+      <workItem from="1557602507398" duration="1043000" />
+      <workItem from="1557637951276" duration="11731000" />
+      <workItem from="1558179638658" duration="567000" />
+      <workItem from="1558180227459" duration="928000" />
+      <workItem from="1558224985262" duration="2500000" />
+      <workItem from="1558227507074" duration="11794000" />
+      <workItem from="1558263754690" duration="41413000" />
+      <workItem from="1558766300548" duration="48677000" />
+      <workItem from="1559984977203" duration="604000" />
+      <workItem from="1560047311446" duration="1753000" />
+      <workItem from="1560336539759" duration="22000" />
+      <workItem from="1560336583423" duration="6000" />
+      <workItem from="1560336624057" duration="38784000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="765818000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-1" y="29" width="2562" height="1416" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.696934" visible="true" weight="0.23982441" />
+      <window_info id="Structure" order="1" sideWeight="0.30306605" side_tool="true" weight="0.21667998" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Designer" order="3" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4924182" weight="0.22037914" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.19984202" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.5019952" weight="0.25039494" />
+      <window_info anchor="bottom" id="Database Changes" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50758183" side_tool="true" weight="0.32684824" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="CMake" order="11" sideWeight="0.4960096" weight="0.19194312" />
+      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.575419" visible="true" weight="0.20616114" />
+      <window_info active="true" anchor="bottom" id="Inspection Results" order="13" visible="true" weight="0.32938388" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32960895" />
+      <window_info anchor="right" id="Compiler Explorer" order="4" side_tool="true" />
+      <window_info anchor="right" id="Maven" order="5" />
+      <window_info anchor="right" id="Palette" order="6" />
+      <window_info anchor="right" id="Capture Analysis" order="7" />
+      <window_info anchor="right" id="Palette&#9;" order="8" />
+      <window_info anchor="right" id="Theme Preview" order="9" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.cpp" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/build/googletest-src" />
+      <path value="$PROJECT_DIR$/test_build/googletest-src" />
+      <path value="$PROJECT_DIR$/cmake-build-debug/googletest-src" />
+      <path value="$PROJECT_DIR$/cmake-build-release/googletest-src" />
+      <path value="$PROJECT_DIR$/build_release/googletest-src" />
+      <path value="$PROJECT_DIR$/build/asan/googletest-src" />
+      <path value="$PROJECT_DIR$/build/debug/googletest-src" />
+      <path value="$PROJECT_DIR$/build/release/googletest-src" />
+      <path value="$PROJECT_DIR$/build/autogen/googletest-src" />
+      <path value="$PROJECT_DIR$/build/autogen_schematic/googletest-src" />
+      <path value="$PROJECT_DIR$/build/autogen_hexfile/googletest-src" />
+    </ignored-roots>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/verilog/mmu.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="18" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/workaround.v">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/hexfile_build_config.v">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="87" column="13" selection-start-line="87" selection-start-column="13" selection-end-line="87" selection-end-column="13" />
+          <folding>
+            <element signature="e#23#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/share/verilator/include/verilated.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1771" column="16" selection-start-line="1771" selection-start-column="16" selection-end-line="1771" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/programs/test_harness.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu_kpu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="592">
+          <caret line="2641" column="84" selection-start-line="2641" selection-start-column="84" selection-end-line="2641" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu__Syms.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="132" column="78" selection-start-line="132" selection-start-column="78" selection-end-line="132" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/chip74107.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="20" column="22" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/chip74273.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="415">
+          <caret line="28" column="31" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/common.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/chip74138.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="38" selection-end-line="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/formally_verify.sby">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="98" column="109" selection-start-line="98" selection-start-column="109" selection-end-line="98" selection-end-column="109" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/chip74154.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="14" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/timer.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="40" column="9" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/mlu.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="48" column="13" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/microcode.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="57" column="25" selection-start-line="57" selection-start-column="25" selection-end-line="57" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/kpu.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-29">
+          <caret line="64" column="19" selection-start-line="64" selection-start-column="13" selection-end-line="64" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verilog/control_logic.v">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="34" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu_control_logic.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="604">
+          <caret line="581" column="16" selection-start-line="581" selection-start-column="16" selection-end-line="581" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu_kpu.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2556">
+          <caret line="143" column="16" selection-start-line="143" selection-start-column="9" selection-end-line="143" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/verilog/verilator/Vkpu_control_logic.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="50" column="35" selection-start-line="50" selection-start-column="35" selection-end-line="50" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/verymeme/term.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/verymeme/file.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memecad/yosys_module.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/programs/memecad.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/programs/memeroute.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tests/common_tests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="18" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tests/verilator_tests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/verymeme/file.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="11" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/verymeme/common.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memecad/schematic.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memecad/types.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memeroute/render_shapes.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="18" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memeroute/router_worker.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="18" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memeroute/types.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="18" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memeroute/parser.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/memeroute/renderer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="30" column="44" selection-start-line="30" selection-start-column="44" selection-end-line="30" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/memecad/schematic.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/memecad/types.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="18" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/memeroute/render_shapes.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/memeroute/router_worker.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/memeroute/types.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="30" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+          <folding>
+            <element signature="e#67#91#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/verymeme/common.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
+          <folding>
+            <element signature="e#51#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="48" column="51" lean-forward="true" selection-start-line="48" selection-start-column="51" selection-end-line="48" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/verymeme/geom.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="810">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/verymeme/geom.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="26" column="13" lean-forward="true" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/programs/memesim.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="58" column="43" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="memepu"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="run_test">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/run_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 run_test"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="run_test/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/run_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 run_test/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="assembler">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/assembler" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 assembler"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="assembler/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/assembler" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 assembler/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="memepu_utils">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/libmemepu_utils.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 memepu_utils"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="memepu_utils/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/libmemepu_utils.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 memepu_utils/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="eeprom">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/eeprom" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 eeprom"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="eeprom/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/eeprom" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/memepu/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 eeprom/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/include/asm.h">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/include/common.h">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/include/control.h">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/include/control_constants.h">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/include/led.h">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/include/mlu.h">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/asm.cpp">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/common.cpp">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/control.cpp">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/led.cpp">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/mlu.cpp">
+			<Option target="memepu_utils"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/programs/assembler.cpp">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/programs/eeprom.cpp">
+			<Option target="eeprom"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/src/programs/test.cpp">
+			<Option target="run_test"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/memepu/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,6 @@
+/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/CMakeFiles/run_test.dir
+/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/CMakeFiles/assembler.dir
+/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/CMakeFiles/memepu_utils.dir
+/home/miles/Dropbox/code/memepu/memepu/cmake-build-debug/CMakeFiles/eeprom.dir

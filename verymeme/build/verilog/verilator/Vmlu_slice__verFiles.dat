@@ -1,0 +1,13 @@
+# DESCRIPTION: Verilator output: Timestamp data for --skip-identical.  Delete at will.
+C "--report-unoptflat --assert -Wall -CFLAGS  -Wall -Wextra -pedantic --cc mlu_slice.v -Mdir /home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator"
+T      8320  2230712  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice.cpp"
+T      2730  2230711  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice.h"
+T      1481  2230714  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice.mk"
+T       545  2230710  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice__Syms.cpp"
+T       733  2230709  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice__Syms.h"
+T       655  2230715  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice__ver.d"
+T         0        0  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice__verFiles.dat"
+T      1254  2230713  1560585010   370353259  1560585010   370353259 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vmlu_slice_classes.mk"
+S   6638072  5113236  1560568903   482541686  1560568903   482541686 "/usr/local/bin/verilator_bin"
+S      1095  2097519  1560568994   914832601  1560568994   902832577 "common.v"
+S      2652  2098856  1560564459   899712169  1560564459   863712625 "mlu_slice.v"

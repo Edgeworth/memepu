@@ -1,0 +1,13 @@
+# DESCRIPTION: Verilator output: Timestamp data for --skip-identical.  Delete at will.
+C "--report-unoptflat --assert -Wall -CFLAGS  -Wall -Wextra -pedantic --cc chip7416374.v -Mdir /home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator"
+T      6738  2230521  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374.cpp"
+T      2970  2230520  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374.h"
+T      1491  2230523  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374.mk"
+T       555  2230519  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374__Syms.cpp"
+T       747  2230518  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374__Syms.h"
+T       671  2230524  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374__ver.d"
+T         0        0  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374__verFiles.dat"
+T      1260  2230522  1560585009   262359722  1560585009   262359722 "/home/miles/Dropbox/code/memepu/verymeme/build/verilog/verilator/Vchip7416374_classes.mk"
+S   6638072  5113236  1560568903   482541686  1560568903   482541686 "/usr/local/bin/verilator_bin"
+S       676  2097494  1554469170   114401423  1554469170    86401693 "chip7416374.v"
+S      1095  2097519  1560568994   914832601  1560568994   902832577 "common.v"

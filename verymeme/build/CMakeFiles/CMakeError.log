@@ -1,0 +1,35 @@
+Determining if the pthread_kill exist failed with the following output:
+Change Dir: /home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_6dfaa/fast 
+/usr/bin/make -f CMakeFiles/cmTC_6dfaa.dir/build.make CMakeFiles/cmTC_6dfaa.dir/build
+make[1]: Entering directory '/home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6dfaa.dir/CheckSymbolExists.c.o
+/usr/lib/icecc/bin/cc    -o CMakeFiles/cmTC_6dfaa.dir/CheckSymbolExists.c.o   -c /home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: ‘pthread_kill’ undeclared (first use in this function); did you mean ‘pthread_self’?
+   return ((int*)(&pthread_kill))[argc];
+                   ^~~~~~~~~~~~
+                   pthread_self
+/home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: note: each undeclared identifier is reported only once for each function it appears in
+CMakeFiles/cmTC_6dfaa.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_6dfaa.dir/CheckSymbolExists.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_6dfaa.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_6dfaa/fast' failed
+make: *** [cmTC_6dfaa/fast] Error 2
+
+File /home/miles/Dropbox/code/memepu/verymeme/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_kill
+  return ((int*)(&pthread_kill))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

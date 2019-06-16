@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="googletest-distribution"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\googletest-src\;CMake Files\cmake-build-debug\googletest-src\googlemock\;CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\;CMake Files\cmake-build-debug\googletest-src\googletest\;CMake Files\cmake-build-debug\googletest-src\googletest\cmake\;CMake Files\cmake\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\share\;CMake Files\..\..\..\..\..\..\usr\share\ECM\;CMake Files\..\..\..\..\..\..\usr\share\ECM\cmake\;CMake Files\..\..\..\..\..\..\usr\share\ECM\modules\;CMake Files\verilog\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gmock_main">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgmock_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock_main"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gmock_main/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgmock_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock_main/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gmock">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgmockd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gmock/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgmockd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 gmock/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googlemock/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest_main">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 gtest_main"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest_main/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgtest_maind.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 gtest_main/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 gtest"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gtest/fast">
+				<Option output="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/lib/libgtestd.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/include"/>
+					<Add directory="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 gtest/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-build/googletest/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/src/gmock-all.cc">
+			<Option target="gmock"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/src/gmock_main.cc">
+			<Option target="gmock_main"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/src/gtest-all.cc">
+			<Option target="gtest"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/src/gtest_main.cc">
+			<Option target="gtest_main"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/cmake/gmock.pc.in">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googlemock/cmake/gmock_main.pc.in">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googlemock\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/cmake/Config.cmake.in">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/cmake/gtest.pc.in">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/cmake/gtest_main.pc.in">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake-build-debug/googletest-src/googletest/cmake/internal_utils.cmake">
+			<Option virtualFolder="CMake Files\cmake-build-debug\googletest-src\googletest\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake/DownloadGTest.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake/FindSFML.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake/FindVerilator.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/cmake/FindYosys.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/../../../../../../usr/share/ECM/cmake/ECMConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\share\ECM\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/../../../../../../usr/share/ECM/cmake/ECMConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\share\ECM\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/../../../../../../usr/share/ECM/modules/ECMEnableSanitizers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\share\ECM\modules\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/../../../../../../usr/share/ECM/modules/ECMUseFindModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\usr\share\ECM\modules\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/bootstrapper.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/buffer32.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/buffer_mux2x32.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/buffer_mux2x8.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/buffer_mux3x8.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip7400.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip7404.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip7408.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74107.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74138.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74139.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74154.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74161.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip7416374.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74238.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74245.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74273.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74299.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip7432.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74590.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip7486.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/chip74LVC162244.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/common.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/control_logic.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/eeprom.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/kpu.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/lut.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/lut17x8.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/microcode.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/microop_counter.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/mlu.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/mlu_lookahead.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/mlu_slice.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/mmu.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/register32.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/register_file.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/shifter.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/sram.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/timer.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+		<Unit filename="/home/miles/Dropbox/code/memepu/verymeme/verilog/workaround.v">
+			<Option virtualFolder="CMake Files\verilog\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

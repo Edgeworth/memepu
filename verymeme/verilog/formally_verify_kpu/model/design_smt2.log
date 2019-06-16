@@ -1,0 +1,744 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2018  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.8+531 (git sha1 4185c254, gcc 7.4.0-1ubuntu1~18.04.1 -fPIC -O2 -march=native)
+
+
+-- Executing script file `design_smt2.ys' --
+
+1. Executing ILANG frontend.
+Input filename: design.il
+
+2. Printing statistics.
+
+=== timer ===
+
+   Number of wires:                 39
+   Number of wire bits:            233
+   Number of public wires:           7
+   Number of public wire bits:      46
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 45
+     $add                            1
+     $and                            1
+     $anyseq                         2
+     $assert                         2
+     $assume                         1
+     $eq                             1
+     $eqx                            1
+     $ff                            11
+     $logic_and                      1
+     $logic_not                      1
+     $mux                           11
+     $ne                             1
+     $not                            2
+     $or                             1
+     chip74161                       8
+
+=== shifter ===
+
+   Number of wires:                 52
+   Number of wire bits:            434
+   Number of public wires:          17
+   Number of public wire bits:     306
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 48
+     $anyseq                         9
+     $assert                         4
+     $eq                             3
+     $logic_and                      1
+     $logic_not                      1
+     $mux                           18
+     $shl                            1
+     $shr                            1
+     $sshr                           1
+     buffer_mux2x32                  7
+     chip7404                        1
+     chip7408                        1
+
+=== register_file ===
+
+   Number of wires:                 42
+   Number of wire bits:            123
+   Number of public wires:          11
+   Number of public wire bits:      92
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 38
+     $anyseq                         8
+     $assert                         5
+     $eq                             5
+     $logic_not                      1
+     $logic_or                       1
+     $mux                           15
+     $ne                             1
+     $paramod\sram\DEPTH=5\WIDTH=32      1
+     buffer_mux3x8                   1
+
+=== register32 ===
+
+   Number of wires:                  4
+   Number of wire bits:             66
+   Number of public wires:           4
+   Number of public wire bits:      66
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     chip7416374                     2
+
+=== mmu ===
+
+   Number of wires:                 11
+   Number of wire bits:            104
+   Number of public wires:           7
+   Number of public wire bits:     100
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     $anyseq                         1
+     $assert                         1
+     $logic_or                       1
+     $mux                            2
+     $paramod\sram\DEPTH=10\WIDTH=32      1
+
+=== mlu_slice ===
+
+   Number of wires:                 89
+   Number of wire bits:            177
+   Number of public wires:          19
+   Number of public wire bits:      72
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 89
+     $add                            6
+     $and                            1
+     $anyseq                        16
+     $assert                        14
+     $eq                            19
+     $gt                             2
+     $logic_not                      2
+     $mux                           20
+     $not                            2
+     $or                             1
+     $pmux                           3
+     $reduce_or                      2
+     $xor                            1
+
+=== mlu_lookahead ===
+
+   Number of wires:                 24
+   Number of wire bits:            146
+   Number of public wires:          16
+   Number of public wire bits:     138
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 17
+     $assert                         1
+     $logic_and                      8
+     $logic_or                       8
+
+=== mlu ===
+
+   Number of wires:                101
+   Number of wire bits:            476
+   Number of public wires:          22
+   Number of public wire bits:     180
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                101
+     $add                            2
+     $and                            1
+     $anyseq                        20
+     $assert                        11
+     $eq                            14
+     $logic_not                      2
+     $mux                           36
+     $not                            1
+     $or                             1
+     $sub                            1
+     $xor                            1
+     chip7408                        2
+     mlu_lookahead                   1
+     mlu_slice                       8
+
+=== microop_counter ===
+
+   Number of wires:                  5
+   Number of wire bits:             11
+   Number of public wires:           5
+   Number of public wire bits:      11
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     chip74590                       1
+
+=== microcode ===
+
+   Number of wires:                 32
+   Number of wire bits:            134
+   Number of public wires:          17
+   Number of public wire bits:     100
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 20
+     $eq                             3
+     $logic_not                      2
+     $mux                            5
+     $pmux                           9
+     $reduce_or                      1
+
+=== kpu ===
+
+   Number of wires:                 83
+   Number of wire bits:           1051
+   Number of public wires:          49
+   Number of public wire bits:     516
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 54
+     $add                            8
+     $assert                         1
+     $assume                         3
+     $ff                             4
+     $initstate                      1
+     $le                             1
+     $logic_not                      9
+     $logic_or                       1
+     $mux                            8
+     $ne                             3
+     buffer32                        5
+     chip74107                       1
+     control_logic                   1
+     mlu                             1
+     mmu                             1
+     register32                      3
+     register_file                   1
+     shifter                         1
+     timer                           1
+
+=== control_logic ===
+
+   Number of wires:                131
+   Number of wire bits:            465
+   Number of public wires:          52
+   Number of public wire bits:     198
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                101
+     $add                            1
+     $anyseq                         9
+     $assert                        10
+     $assume                         1
+     $eq                             3
+     $eqx                            1
+     $ff                            30
+     $logic_and                      4
+     $logic_not                      5
+     $logic_or                       5
+     $mux                           17
+     $ne                             5
+     buffer_mux2x8                   1
+     chip7404                        1
+     chip7408                        1
+     chip74138                       1
+     chip74154                       1
+     chip74238                       1
+     chip74273                       1
+     microcode                       1
+     microop_counter                 1
+     register32                      1
+
+=== chip74LVC162244 ===
+
+   Number of wires:                  7
+   Number of wire bits:             37
+   Number of public wires:           3
+   Number of public wire bits:      33
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     $anyseq                         1
+     $assert                         1
+     $eq                             1
+     $mux                            3
+
+=== chip74590 ===
+
+   Number of wires:                 45
+   Number of wire bits:            225
+   Number of public wires:           7
+   Number of public wire bits:      52
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 46
+     $add                            3
+     $anyseq                         4
+     $assert                         4
+     $eq                             5
+     $eqx                            1
+     $ff                             9
+     $ge                             1
+     $logic_and                      2
+     $logic_not                      1
+     $mux                           14
+     $ne                             2
+
+=== chip74273 ===
+
+   Number of wires:                 27
+   Number of wire bits:            131
+   Number of public wires:           6
+   Number of public wire bits:      58
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $anyseq                         2
+     $assert                         3
+     $eq                             1
+     $eqx                            1
+     $ff                             7
+     $logic_and                      3
+     $logic_not                      2
+     $mux                            7
+
+=== chip74245 ===
+
+   Number of wires:                  7
+   Number of wire bits:             21
+   Number of public wires:           3
+   Number of public wire bits:      17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     $anyseq                         1
+     $assert                         1
+     $eq                             1
+     $mux                            3
+
+=== chip74238 ===
+
+   Number of wires:                 78
+   Number of wire bits:            118
+   Number of public wires:           5
+   Number of public wire bits:      14
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 83
+     $anyseq                        17
+     $assert                         9
+     $eq                            15
+     $logic_and                      2
+     $logic_not                      4
+     $mux                           35
+     $shl                            1
+
+=== chip7416374 ===
+
+   Number of wires:                 36
+   Number of wire bits:            106
+   Number of public wires:          10
+   Number of public wire bits:      52
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 34
+     $anyseq                         2
+     $assert                         4
+     $eq                             2
+     $eqx                            2
+     $ff                            12
+     $mux                           12
+
+=== chip74161 ===
+
+   Number of wires:                 97
+   Number of wire bits:            142
+   Number of public wires:          12
+   Number of public wire bits:      21
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 96
+     $add                            2
+     $anyseq                         9
+     $assert                         5
+     $assume                         1
+     $eq                             5
+     $eqx                            1
+     $ff                            29
+     $logic_and                      4
+     $logic_not                      1
+     $logic_or                       1
+     $mux                           36
+     $ne                             2
+
+=== chip74154 ===
+
+   Number of wires:                141
+   Number of wire bits:            189
+   Number of public wires:           4
+   Number of public wire bits:      22
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                155
+     $anyseq                        33
+     $assert                        17
+     $eq                            32
+     $logic_and                      1
+     $logic_not                      3
+     $mux                           67
+     $not                            1
+     $shl                            1
+
+=== chip74139 ===
+
+   Number of wires:                 82
+   Number of wire bits:            102
+   Number of public wires:           6
+   Number of public wire bits:      14
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 88
+     $anyseq                        18
+     $assert                        10
+     $eq                            16
+     $logic_not                      2
+     $mux                           38
+     $not                            2
+     $shl                            2
+
+=== chip74138 ===
+
+   Number of wires:                 79
+   Number of wire bits:            102
+   Number of public wires:           5
+   Number of public wire bits:      14
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 84
+     $anyseq                        17
+     $assert                         9
+     $eq                            16
+     $logic_and                      2
+     $logic_not                      3
+     $mux                           35
+     $not                            1
+     $shl                            1
+
+=== chip74107 ===
+
+   Number of wires:                176
+   Number of wire bits:            244
+   Number of public wires:           6
+   Number of public wire bits:      12
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                186
+     $anyseq                        36
+     $assert                        12
+     $eq                             2
+     $eqx                            2
+     $ff                            30
+     $logic_and                     10
+     $logic_not                      4
+     $logic_or                       2
+     $mux                           82
+     $ne                             4
+     $not                            2
+
+=== chip7408 ===
+
+   Number of wires:                  3
+   Number of wire bits:             12
+   Number of public wires:           3
+   Number of public wire bits:      12
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $and                            1
+     $assert                         1
+
+=== chip7404 ===
+
+   Number of wires:                  2
+   Number of wire bits:             12
+   Number of public wires:           2
+   Number of public wire bits:      12
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $assert                         1
+     $not                            1
+
+=== buffer_mux3x8 ===
+
+   Number of wires:                 49
+   Number of wire bits:            166
+   Number of public wires:          12
+   Number of public wire bits:      67
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 47
+     $anyseq                         9
+     $assert                         5
+     $eq                             6
+     $logic_not                      1
+     $mux                           21
+     $ne                             1
+     chip74139                       1
+     chip74245                       3
+
+=== buffer_mux2x8 ===
+
+   Number of wires:                 16
+   Number of wire bits:             51
+   Number of public wires:           7
+   Number of public wire bits:      42
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 15
+     $anyseq                         2
+     $assert                         3
+     $eq                             2
+     $mux                            5
+     $xor                            1
+     chip74245                       2
+
+=== buffer_mux2x32 ===
+
+   Number of wires:                 16
+   Number of wire bits:            171
+   Number of public wires:           7
+   Number of public wire bits:     162
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 15
+     $anyseq                         2
+     $assert                         3
+     $eq                             2
+     $mux                            5
+     $xor                            1
+     buffer32                        2
+
+=== buffer32 ===
+
+   Number of wires:                  7
+   Number of wire bits:             69
+   Number of public wires:           3
+   Number of public wire bits:      65
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  7
+     $anyseq                         1
+     $assert                         1
+     $eq                             1
+     $mux                            2
+     chip74LVC162244                 2
+
+=== $paramod\sram\DEPTH=5\WIDTH=32 ===
+
+   Number of wires:                 26
+   Number of wire bits:            379
+   Number of public wires:           8
+   Number of public wire bits:     109
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 23
+     $anyconst                       1
+     $anyseq                         1
+     $assert                         2
+     $assume                         1
+     $eq                             2
+     $eqx                            1
+     $ff                             6
+     $initstate                      1
+     $logic_or                       1
+     $mem                            1
+     $mux                            6
+
+=== $paramod\sram\DEPTH=10\WIDTH=32 ===
+
+   Number of wires:                 26
+   Number of wire bits:            394
+   Number of public wires:           8
+   Number of public wire bits:     119
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 23
+     $anyconst                       1
+     $anyseq                         1
+     $assert                         2
+     $assume                         1
+     $eq                             2
+     $eqx                            1
+     $ff                             6
+     $initstate                      1
+     $logic_or                       1
+     $mem                            1
+     $mux                            6
+
+=== design hierarchy ===
+
+   kpu                               1
+     buffer32                        5
+       chip74LVC162244               2
+     chip74107                       1
+     control_logic                   1
+       buffer_mux2x8                 1
+         chip74245                   2
+       chip7404                      1
+       chip7408                      1
+       chip74138                     1
+       chip74154                     1
+       chip74238                     1
+       chip74273                     1
+       microcode                     1
+       microop_counter               1
+         chip74590                   1
+       register32                    1
+         chip7416374                 2
+     mlu                             1
+       chip7408                      2
+       mlu_lookahead                 1
+       mlu_slice                     8
+     mmu                             1
+       $paramod\sram\DEPTH=10\WIDTH=32      1
+     register32                      3
+       chip7416374                   2
+     register_file                   1
+       $paramod\sram\DEPTH=5\WIDTH=32      1
+       buffer_mux3x8                 1
+         chip74139                   1
+         chip74245                   3
+     shifter                         1
+       buffer_mux2x32                7
+         buffer32                    2
+           chip74LVC162244           2
+       chip7404                      1
+       chip7408                      1
+     timer                           1
+       chip74161                     8
+
+   Number of wires:               3619
+   Number of wire bits:          13033
+   Number of public wires:         872
+   Number of public wire bits:    7414
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               3352
+     $add                           79
+     $and                           14
+     $anyconst                       2
+     $anyseq                       481
+     $assert                       384
+     $assume                        15
+     $eq                           412
+     $eqx                           32
+     $ff                           431
+     $ge                             1
+     $gt                            16
+     $initstate                      3
+     $le                             1
+     $logic_and                     66
+     $logic_not                     65
+     $logic_or                      28
+     $mem                            2
+     $mux                         1174
+     $ne                            33
+     $not                           27
+     $or                            10
+     $pmux                          33
+     $reduce_or                     17
+     $shl                            6
+     $shr                            1
+     $sshr                           1
+     $sub                            1
+     $xor                           17
+
+3. Executing SMT2 backend.
+Creating SMT-LIBv2 representation of module $paramod\sram\DEPTH=10\WIDTH=32.
+Creating SMT-LIBv2 representation of module $paramod\sram\DEPTH=5\WIDTH=32.
+Creating SMT-LIBv2 representation of module chip7404.
+Creating SMT-LIBv2 representation of module chip7408.
+Creating SMT-LIBv2 representation of module chip74107.
+Creating SMT-LIBv2 representation of module chip74138.
+Creating SMT-LIBv2 representation of module chip74139.
+Creating SMT-LIBv2 representation of module chip74154.
+Creating SMT-LIBv2 representation of module chip74161.
+Creating SMT-LIBv2 representation of module chip7416374.
+Creating SMT-LIBv2 representation of module chip74238.
+Creating SMT-LIBv2 representation of module chip74245.
+Creating SMT-LIBv2 representation of module chip74273.
+Creating SMT-LIBv2 representation of module chip74590.
+Creating SMT-LIBv2 representation of module chip74LVC162244.
+Creating SMT-LIBv2 representation of module microcode.
+Creating SMT-LIBv2 representation of module mlu_lookahead.
+Creating SMT-LIBv2 representation of module mlu_slice.
+Creating SMT-LIBv2 representation of module buffer32.
+Creating SMT-LIBv2 representation of module buffer_mux2x8.
+Creating SMT-LIBv2 representation of module buffer_mux3x8.
+Creating SMT-LIBv2 representation of module microop_counter.
+Creating SMT-LIBv2 representation of module mlu.
+Creating SMT-LIBv2 representation of module mmu.
+Creating SMT-LIBv2 representation of module register32.
+Creating SMT-LIBv2 representation of module timer.
+Creating SMT-LIBv2 representation of module buffer_mux2x32.
+Creating SMT-LIBv2 representation of module control_logic.
+Creating SMT-LIBv2 representation of module register_file.
+Creating SMT-LIBv2 representation of module shifter.
+Creating SMT-LIBv2 representation of module kpu.
+
+End of script. Logfile hash: c1eeadc187
+CPU: user 0.06s system 0.00s, MEM: 45.39 MB total, 15.32 MB resident
+Yosys 0.8+531 (git sha1 4185c254, gcc 7.4.0-1ubuntu1~18.04.1 -fPIC -O2 -march=native)
+Time spent: 65% 2x write_smt2 (0 sec), 32% 2x read_ilang (0 sec), ...

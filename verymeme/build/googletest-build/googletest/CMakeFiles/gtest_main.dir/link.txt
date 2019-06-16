@@ -1,0 +1,1 @@
+/usr/lib/icecc/bin/c++ -fPIC  -Wall -Wextra -pedantic -O2 -g -DNDEBUG  -shared -Wl,-soname,libgtest_main.so -o ../../lib/libgtest_main.so CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -Wl,-rpath,/home/miles/Dropbox/code/memepu/verymeme/build/lib: ../../lib/libgtest.so -pthread 

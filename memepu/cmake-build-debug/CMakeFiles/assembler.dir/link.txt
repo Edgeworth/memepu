@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -pedantic -g   CMakeFiles/assembler.dir/src/programs/assembler.cpp.o  -o assembler libmemepu_utils.a 

@@ -1,0 +1,1 @@
+/usr/lib/icecc/bin/c++ -fPIC  -Wall -Wextra -pedantic -O2 -g -DNDEBUG  -shared -Wl,-soname,libgtest.so -o ../../lib/libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o -pthread 

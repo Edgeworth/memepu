@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites disabled="0" errors="0" failures="0" tests="1" time="6">
+<testsuite disabled="0" errors="0" failures="0" name="formally_verify" skipped="0" tests="1" time="6">
+<properties>
+<property name="os" value="posix"/>
+</properties>
+<testcase classname="formally_verify" name="kpu" status="PASS" time="6">
+<system-out>SBY 11:11:31 [formally_verify_kpu] Removing direcory 'formally_verify_kpu'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'bootstrapper.v' to 'formally_verify_kpu/src/bootstrapper.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'buffer32.v' to 'formally_verify_kpu/src/buffer32.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'buffer_mux2x8.v' to 'formally_verify_kpu/src/buffer_mux2x8.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'buffer_mux2x32.v' to 'formally_verify_kpu/src/buffer_mux2x32.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'buffer_mux3x8.v' to 'formally_verify_kpu/src/buffer_mux3x8.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74LVC162244.v' to 'formally_verify_kpu/src/chip74LVC162244.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip7400.v' to 'formally_verify_kpu/src/chip7400.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip7404.v' to 'formally_verify_kpu/src/chip7404.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip7408.v' to 'formally_verify_kpu/src/chip7408.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip7432.v' to 'formally_verify_kpu/src/chip7432.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip7486.v' to 'formally_verify_kpu/src/chip7486.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74107.v' to 'formally_verify_kpu/src/chip74107.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74138.v' to 'formally_verify_kpu/src/chip74138.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74139.v' to 'formally_verify_kpu/src/chip74139.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74154.v' to 'formally_verify_kpu/src/chip74154.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74161.v' to 'formally_verify_kpu/src/chip74161.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74238.v' to 'formally_verify_kpu/src/chip74238.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74245.v' to 'formally_verify_kpu/src/chip74245.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74273.v' to 'formally_verify_kpu/src/chip74273.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74299.v' to 'formally_verify_kpu/src/chip74299.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip74590.v' to 'formally_verify_kpu/src/chip74590.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'chip7416374.v' to 'formally_verify_kpu/src/chip7416374.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'control_logic.v' to 'formally_verify_kpu/src/control_logic.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'eeprom.v' to 'formally_verify_kpu/src/eeprom.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'kpu.v' to 'formally_verify_kpu/src/kpu.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'lut.v' to 'formally_verify_kpu/src/lut.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'lut17x8.v' to 'formally_verify_kpu/src/lut17x8.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'microcode.v' to 'formally_verify_kpu/src/microcode.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'microop_counter.v' to 'formally_verify_kpu/src/microop_counter.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'mlu.v' to 'formally_verify_kpu/src/mlu.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'mlu_lookahead.v' to 'formally_verify_kpu/src/mlu_lookahead.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'mlu_slice.v' to 'formally_verify_kpu/src/mlu_slice.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'mmu.v' to 'formally_verify_kpu/src/mmu.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'register32.v' to 'formally_verify_kpu/src/register32.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'register_file.v' to 'formally_verify_kpu/src/register_file.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'shifter.v' to 'formally_verify_kpu/src/shifter.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'sram.v' to 'formally_verify_kpu/src/sram.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'timer.v' to 'formally_verify_kpu/src/timer.v'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'formal.hex' to 'formally_verify_kpu/src/formal.hex'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'microcode.hex' to 'formally_verify_kpu/src/microcode.hex'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'mlu_slice.hex' to 'formally_verify_kpu/src/mlu_slice.hex'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'mlu_lookahead.hex' to 'formally_verify_kpu/src/mlu_lookahead.hex'.
+SBY 11:11:31 [formally_verify_kpu] Copy 'common.v' to 'formally_verify_kpu/src/common.v'.
+SBY 11:11:31 [formally_verify_kpu] engine_0: smtbmc --progress
+SBY 11:11:31 [formally_verify_kpu] base: starting process &quot;cd formally_verify_kpu/src; yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Yosys has only limited support for tri-state logic at the moment. (chip74LVC162244.v:9)
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Yosys has only limited support for tri-state logic at the moment. (chip74245.v:10)
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Yosys has only limited support for tri-state logic at the moment. (chip74590.v:10)
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Yosys has only limited support for tri-state logic at the moment. (chip7416374.v:16)
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Yosys has only limited support for tri-state logic at the moment. (chip7416374.v:17)
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Yosys has only limited support for tri-state logic at the moment. (lut.v:15)
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Yosys has only limited support for tri-state logic at the moment. (sram.v:15)
+SBY 11:11:31 [formally_verify_kpu] base: Warning: Async reset value `$ternary$timer.v:41$1481_Y [0]' is not constant!
+SBY 11:11:31 [formally_verify_kpu] base: finished (returncode=0)
+SBY 11:11:31 [formally_verify_kpu] smt2: starting process &quot;cd formally_verify_kpu/model; yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 11:11:31 [formally_verify_kpu] smt2: finished (returncode=0)
+SBY 11:11:31 [formally_verify_kpu] engine_0.basecase: starting process &quot;cd formally_verify_kpu; yosys-smtbmc --presat --unroll -t 4 --append 0 --dump-vcd engine_0/trace.vcd --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 11:11:31 [formally_verify_kpu] engine_0.induction: starting process &quot;cd formally_verify_kpu; yosys-smtbmc --presat --unroll -i -t 4 --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2&quot;
+SBY 11:11:31 [formally_verify_kpu] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 11:11:31 [formally_verify_kpu] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 11:11:32 [formally_verify_kpu] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 11:11:32 [formally_verify_kpu] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 11:11:32 [formally_verify_kpu] engine_0.induction: ##   0:00:00  Trying induction in step 4..
+SBY 11:11:32 [formally_verify_kpu] engine_0.induction: ##   0:00:00  Trying induction in step 3..
+SBY 11:11:32 [formally_verify_kpu] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY 11:11:32 [formally_verify_kpu] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY 11:11:32 [formally_verify_kpu] engine_0.induction: ##   0:00:00  Trying induction in step 2..
+SBY 11:11:32 [formally_verify_kpu] engine_0.induction: ##   0:00:01  Trying induction in step 1..
+SBY 11:11:33 [formally_verify_kpu] engine_0.induction: ##   0:00:01  Trying induction in step 0..
+SBY 11:11:33 [formally_verify_kpu] engine_0.basecase: ##   0:00:01  Checking assumptions in step 2..
+SBY 11:11:33 [formally_verify_kpu] engine_0.basecase: ##   0:00:01  Checking assertions in step 2..
+SBY 11:11:33 [formally_verify_kpu] engine_0.induction: ##   0:00:01  Temporal induction successful.
+SBY 11:11:33 [formally_verify_kpu] engine_0.induction: ##   0:00:01  Status: PASSED
+SBY 11:11:33 [formally_verify_kpu] engine_0.induction: finished (returncode=0)
+SBY 11:11:33 [formally_verify_kpu] engine_0: Status returned by engine for induction: PASS
+SBY 11:11:34 [formally_verify_kpu] engine_0.basecase: ##   0:00:02  Checking assumptions in step 3..
+SBY 11:11:34 [formally_verify_kpu] engine_0.basecase: ##   0:00:02  Checking assertions in step 3..
+SBY 11:11:34 [formally_verify_kpu] engine_0.basecase: ##   0:00:02  Status: PASSED
+SBY 11:11:34 [formally_verify_kpu] engine_0.basecase: finished (returncode=0)
+SBY 11:11:34 [formally_verify_kpu] engine_0: Status returned by engine for basecase: PASS
+SBY 11:11:34 [formally_verify_kpu] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:03 (3)
+SBY 11:11:34 [formally_verify_kpu] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:06 (6)
+SBY 11:11:34 [formally_verify_kpu] summary: engine_0 (smtbmc --progress) returned PASS for induction
+SBY 11:11:34 [formally_verify_kpu] summary: engine_0 (smtbmc --progress) returned PASS for basecase
+SBY 11:11:34 [formally_verify_kpu] summary: successful proof by k-induction.
+SBY 11:11:34 [formally_verify_kpu] DONE (PASS, rc=0)
+</system-out></testcase></testsuite></testsuites>

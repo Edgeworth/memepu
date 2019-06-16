@@ -1,0 +1,1 @@
+/usr/lib/icecc/bin/c++ -fPIC  -Wall -Wextra -pedantic -O2 -g -DNDEBUG  -shared -Wl,-soname,libgmock.so -o ../../lib/libgmock.so CMakeFiles/gmock.dir/src/gmock-all.cc.o -Wl,-rpath,/home/miles/Dropbox/code/memepu/verymeme/build/lib: ../../lib/libgtest.so -pthread 

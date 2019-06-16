@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -pedantic -g   CMakeFiles/eeprom.dir/src/programs/eeprom.cpp.o  -o eeprom libmemepu_utils.a 
