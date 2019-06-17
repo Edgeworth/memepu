@@ -7,6 +7,7 @@
 #include "Vkpu_control_logic.h"
 #include "Vkpu_register_file.h"
 #include "Vkpu_sram__D5_W20.h"
+#include "Vkpu_microcode.h"
 #include "verymeme/file.h"
 #include "verymeme/term.h"
 
@@ -90,6 +91,21 @@ void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
   putchar('\n');
 }
 
+template<std::size_t N>
+std::string convertToString(const WData (&data)[N]) {
+  std::string str;
+  str.reserve(N * sizeof(WData));
+  static_assert(sizeof(WData) == 4, "bug");
+  for (WData c : data) {
+    str += char(c & 0xFF);
+    str += char((c >> 8) & 0xFF);
+    str += char((c >> 16) & 0xFF);
+    str += char((c >> 24) & 0xFF);
+  }
+  std::string trimmed(str.c_str());  // Cut off at first 0 byte.
+  return std::string(trimmed.rbegin(), trimmed.rend()); // Reverse
+}
+
 void printKpu(Vkpu& kpu) {
   const std::vector<std::pair<std::string, std::string>> table = {
       {"bus",        convertToHex(uint32_t(kpu.kpu->bus))},
@@ -110,6 +126,7 @@ void printKpu(Vkpu& kpu) {
       {"mlu",        convertToBinary<4>(kpu.kpu->control->MLU_PLANE)},
       {"shifter",    convertToBinary<2>(kpu.kpu->control->SHIFTER_PLANE)},
       {"opcode sel", convertToHex(uint32_t(kpu.kpu->control->control_opcode_sel))},
+      {"asm",        convertToString(kpu.kpu->control->microcode->mnemonic)},
   };
   printTable(table);
   printf("%s\n", prettyPrintNumbers(hexdump(kpu.kpu->regs->registers->mem, 8)).c_str());
