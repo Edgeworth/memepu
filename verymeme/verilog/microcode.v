@@ -8,12 +8,14 @@ module microcode(
   input wire N_BOOTED,
   input wire BOOTSTRAP_N_WE
 );
+  logic [8*20:0] mnemonic /*verilator public*/;
+
   `ifdef HEXFILEA // TODO undo
   // TODO: change to specific lut chip
   lut#(.DEPTH(11), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
-    .ADDR(ADDR), .OUT_DATA(OUT),
-    .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
-    .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
+  .ADDR(ADDR), .OUT_DATA(OUT),
+  .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
+  .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
   `else
   // These assignments must be kept up to date with control_logic.v.
   wire [5:0] opcode = ADDR[10:5];
@@ -40,8 +42,6 @@ module microcode(
   assign OUT[22] = opcode_sel;
   assign OUT[31:23] = 0;
 
-  // r31 is program counter.
-
   localparam OP_RESET = 0;
   localparam OP_FETCH = 1;
   // [Opcode 6][rD 5][rS 5][Offset 16]
@@ -67,12 +67,15 @@ module microcode(
   localparam OPCODE_SEL_OPCODE_FROM_OPWORD = 0;
   localparam OPCODE_SEL_OPCODE_FROM_BUS = 1;
 
-  localparam REG_PC = 31;
+  localparam REG_PC = 31; // r31 is program counter.
 
   `define ZERO_ALL() {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_carry, shifter_plane, opcode_sel} = 0
+  `define SET_MNEMONIC(s) `ifdef verilator mnemonic = $size(mnemonic)'(s); `endif
   always_comb begin
-    case (opcode)
-      OP_RESET: begin
+  case (opcode)
+    OP_RESET: begin
+        `SET_MNEMONIC("RESET")
+        // TODO: maybe can build model of assembler instructions by outputting a string e.g. JMP $a and probing it in memeware.
         case (microop_count)
           0: begin  // Set program counter to zero.
             ctrl_data = REG_PC;
@@ -93,6 +96,7 @@ module microcode(
         endcase
       end
       OP_FETCH: begin
+        `SET_MNEMONIC("FETCH")
         case (microop_count)
           0: begin  // Copy the program counter into TMP0 to access memory.
             ctrl_data = REG_PC;
@@ -130,15 +134,15 @@ module microcode(
           end
           default: `ZERO_ALL();
         endcase
-      end
-      default: `ZERO_ALL();
-    endcase
+        end
+    default: `ZERO_ALL();
+  endcase
   end
   `endif
 
   `ifndef BOOTSTRAP
   // Mark bootstrap signals as okay to not be used if not using bootstrapping.
-  wire _unused_ok = &{BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
+  wire _unused_ok = & {BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
   `endif
 
   `ifdef FORMAL
