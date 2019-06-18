@@ -1,19 +1,18 @@
 `include "common.v"
-// Yosys doesn't support tri-state logic, so concentrate the build-specific logic here.
-module buffer_mux3x8(
-  input wire [7:0] A,
-  input wire [7:0] B,
-  input wire [7:0] C,
+module buffer_mux3x32(
+  input wire [31:0] A,
+  input wire [31:0] B,
+  input wire [31:0] C,
   input wire [1:0] SEL,
   input wire N_RST,
-  output logic [7:0] OUT
+  output logic [31:0] OUT
 );
-  wire [7:0] out_a;
-  wire [7:0] out_b;
-  wire [7:0] out_c;
-  buffer8 mux_a(.IN(A), .OUT(out_a), .N_OE(reg_sel_decoded[0]));
-  buffer8 mux_b(.IN(B), .OUT(out_b), .N_OE(reg_sel_decoded[1]));
-  buffer8 mux_c(.IN(C), .OUT(out_c), .N_OE(reg_sel_decoded[2]));
+  wire [31:0] out_a;
+  wire [31:0] out_b;
+  wire [31:0] out_c;
+  buffer32 mux_a(.IN(A), .OUT(out_a), .N_OE(reg_sel_decoded[0]));
+  buffer32 mux_b(.IN(B), .OUT(out_b), .N_OE(reg_sel_decoded[1]));
+  buffer32 mux_c(.IN(C), .OUT(out_c), .N_OE(reg_sel_decoded[2]));
 
   wire [3:0] unused_y2;
   wire unused_reg_sel;

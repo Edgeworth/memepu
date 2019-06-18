@@ -4,7 +4,7 @@ module control_logic(
   input wire N_CLK,
   input wire N_RST,
   input wire [7:0] BUS,
-  input wire [5:0] OPWORD,
+  input wire [5:0] OPWORD_OPCODE,
   // Grouped signals
   output logic [5:0] CTRL_DATA /*verilator public*/,
   output logic [1:0] REG_SEL /*verilator public*/,
@@ -25,6 +25,7 @@ module control_logic(
   output logic SHIFTER_N_OUT,
   output logic TIMER_N_OUT,
   output logic CTRL_DATA_N_OUT,
+  output logic OPWORD_IMMEDIATE_N_OUT,
   // Bootstrapping signals:
   input wire [11:0] BOOTSTRAP_ADDR,
   input wire [7:0] BOOTSTRAP_DATA,
@@ -50,7 +51,7 @@ module control_logic(
   wire [1:0] unused_opcode_mux_val;
   wire [5:0] opcode_mux_val;
   wire n_control_opcode_sel;
-  buffer_mux2x8 opcode_mux(.A(BUS[7:0]), .B({2'b0, OPWORD}), .SEL_A(control_opcode_sel),
+  buffer_mux2x8 opcode_mux(.A(BUS[7:0]), .B({2'b0, OPWORD_OPCODE}), .SEL_A(control_opcode_sel),
     .N_SEL_A(n_control_opcode_sel), .OUT({unused_opcode_mux_val, opcode_mux_val}));
 
   // Opcode storage:
@@ -78,6 +79,7 @@ module control_logic(
           control_in_plane, control_out_plane, REG_SEL, CTRL_DATA}));
 
   // In plane decoder - enable on CLK to do pulse.
+  // This must be updated if the signals in microcode.v are changed.
   wire unused_in_none;
   wire reg_in_clk;
   wire mmu_in_clk;
@@ -88,11 +90,12 @@ module control_logic(
         reg_in_clk, unused_in_none}));
 
   // Out plane decoder:
+  // This must be updated if the signals in microcode.v are changed.
   wire unused_out_none;
-  wire [6:0] unused_out_plane;
+  wire [5:0] unused_out_plane;
   chip74154 out_plane_decoder(.A(control_out_plane), .N_E1(0), .N_E2(0),
-    .N_Y({unused_out_plane, CTRL_DATA_N_OUT, TIMER_N_OUT, SHIFTER_N_OUT, MLU_N_OUT, MMU_N_OUT,
-        TMP1_N_OUT, TMP0_N_OUT, REG_N_OUT, unused_out_none}));
+    .N_Y({unused_out_plane, OPWORD_IMMEDIATE_N_OUT, CTRL_DATA_N_OUT, TIMER_N_OUT, SHIFTER_N_OUT,
+        MLU_N_OUT, MMU_N_OUT, TMP1_N_OUT, TMP0_N_OUT, REG_N_OUT, unused_out_none}));
 
   // Misc plane decoder
   // TODO(optimisation): Can reduce size? 2=>4 decoder (dual).
@@ -123,7 +126,6 @@ module control_logic(
     // Only do these checks after coming out of a reset and having the first falling edge to set-up
     // state.
     if ($past(f_past_n_clk) == 2 && f_past_n_clk == 2 && N_RST) begin
-      assert ($past(REG_SEL) != 2'b11);  // Not a valid register selector option.
       // Don't try to do a left-arithmetic shift, it doesn't make sense.
       if ($past(!SHIFTER_N_OUT)) assert ($past(SHIFTER_PLANE[1:0]) != 2'b11);
 
