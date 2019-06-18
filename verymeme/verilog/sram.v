@@ -10,10 +10,16 @@ module sram(
 );
   parameter DEPTH = 2;
   parameter WIDTH = 8;
+  parameter INITIAL = "";
   logic [WIDTH-1:0] mem [(1 << DEPTH)-1:0] /*verilator public*/;
 
   assign OUT_DATA = N_OE == 0 ? mem[ADDR]:{WIDTH{1'bZ}};
   always_ff @(negedge N_WE) mem[ADDR] <= IN_DATA;
+
+  // For simulation purposes, allow some initial setting (but don't affect formal verification).
+  initial begin
+    if ($size(INITIAL) > 1) $readmemh(INITIAL, mem);
+  end
 
   `ifdef FORMAL
   // Consider any arbitrary address, and say that the value stored in the memory should be the

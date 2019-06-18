@@ -22,7 +22,7 @@ module microcode(
   wire [4:0] microop_count = ADDR[4:0];
   logic [5:0] ctrl_data;
   logic [1:0] reg_sel; // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
-  logic [3:0] out_plane; // Out plane: NONE, REG, TMP0, TMP1, MMU, MLU, SHIFTER, TIMER, CTRL_DATA
+  logic [3:0] out_plane;
   logic [2:0] in_plane; // In plane: NONE, REG, TMP0, TMP1, MMU, OPWORD, OPCODE
   logic misc_plane; // Misc plane: Micro-op counter reset
   // Could merge these, but it's confusing, makes routing harder, and causes more switching.
@@ -44,17 +44,26 @@ module microcode(
 
   localparam OP_RESET = 0;
   localparam OP_FETCH = 1;
-  // [Opcode 6][rD 5][rS 5][Offset 16]
-  localparam OP_LW = 2;  // LW rD, [rS + Offset sign ext] - load 32-bit
+  // [Opcode 6][rD 5][unused 5][immediate 16]
+  localparam OP_LHU = 2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
 
-  localparam REG_SEL_CONTROL = 2;
+  // [Opcode 6][rD 5][rS 5][Offset 16]
+
+  localparam REG_SEL_OPWORD0 = 0;
+  localparam REG_SEL_OPWORD1 = 1;
+  localparam REG_SEL_OPWORD2 = 2;
+  localparam REG_SEL_CONTROL = 3;
 
   localparam OUT_NONE = 0;
   localparam OUT_REG = 1;
+  localparam OUT_TMP0 = 2;
+  localparam OUT_TMP1 = 3;
   localparam OUT_MMU = 4;
   localparam OUT_MLU = 5;
+  localparam OUT_SHIFTER = 6;
   localparam OUT_TIMER = 7;
   localparam OUT_CTRL_DATA = 8;
+  localparam OUT_OPWORD_IMMEDIATE = 9;
 
   localparam IN_REG = 1;
   localparam IN_TMP0 = 2;
@@ -71,70 +80,84 @@ module microcode(
 
   `define ZERO_ALL() {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_carry, shifter_plane, opcode_sel} = 0
   `define SET_MNEMONIC(s) `ifdef verilator mnemonic = $size(mnemonic)'(s); `endif
+  // Set opcode to fetch and reset micro-op counter.
+  `define GO_FETCH() \
+      begin ctrl_data = OP_FETCH; \
+      out_plane = OUT_CTRL_DATA; \
+      in_plane = IN_OPCODE; \
+      misc_plane = MISC_RESET_MICROOP_COUNTER; \
+      opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; \
+      {reg_sel, mlu_op, mlu_carry, shifter_plane} = 0; end
   always_comb begin
   case (opcode)
     OP_RESET: begin
-        `SET_MNEMONIC("RESET")
-        // TODO: maybe can build model of assembler instructions by outputting a string e.g. JMP $a and probing it in memeware.
-        case (microop_count)
-          0: begin  // Set program counter to zero.
-            ctrl_data = REG_PC;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_NONE;
-            in_plane = IN_REG;
-            {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
-          end
-          1: begin // Set opcode to fetch and reset micro-op counter.
-            ctrl_data = OP_FETCH;
-            out_plane = OUT_CTRL_DATA;
-            in_plane = IN_OPCODE;
-            misc_plane = MISC_RESET_MICROOP_COUNTER;
-            opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS;
-            {reg_sel, mlu_op, mlu_carry, shifter_plane} = 0;
-          end
-          default: `ZERO_ALL();
-        endcase
-      end
-      OP_FETCH: begin
-        `SET_MNEMONIC("FETCH")
-        case (microop_count)
-          0: begin  // Copy the program counter into TMP0 to access memory.
-            ctrl_data = REG_PC;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP0;
-            {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
-          end
-          1: begin // Read MMU data onto opword.
-            out_plane = OUT_MMU;
-            in_plane = IN_OPWORD;
-            {ctrl_data, reg_sel, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
-          end
-          2: begin // Write 1 into TMP1 for incrementing the program counter. TODO(optimization): Faster increment.
-            ctrl_data = 1;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_CTRL_DATA;
-            in_plane = IN_TMP1;
-            {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
-          end
-          3: begin // Increment the program counter.
-            ctrl_data = REG_PC;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_MLU;
-            in_plane = IN_REG;
-            mlu_op = common::MLU_ADD;
-            mlu_carry = 0;
-            {shifter_plane, opcode_sel} = 0;
-          end
-          4: begin // Copy the opword opcode to the opcode reg, and reset the microop counter.
-            in_plane = IN_OPCODE;
-            misc_plane = MISC_RESET_MICROOP_COUNTER;
-            opcode_sel = OPCODE_SEL_OPCODE_FROM_OPWORD;
-            {ctrl_data, out_plane, mlu_op, mlu_carry, shifter_plane} = 0;
-          end
-          default: `ZERO_ALL();
-        endcase
+      `SET_MNEMONIC("RESET")
+      // TODO: maybe can build model of assembler instructions by outputting a string e.g. JMP $a and probing it in memeware.
+      case (microop_count)
+        0: begin  // Set program counter to zero.
+          ctrl_data = REG_PC;
+          reg_sel = REG_SEL_CONTROL;
+          out_plane = OUT_NONE;
+          in_plane = IN_REG;
+          {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
+        1: `GO_FETCH()
+        default: `ZERO_ALL();
+      endcase
+    end
+    OP_FETCH: begin
+      `SET_MNEMONIC("FETCH")
+      case (microop_count)
+        0: begin  // Copy the program counter into TMP0 to access memory.
+          ctrl_data = REG_PC;
+          reg_sel = REG_SEL_CONTROL;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP0;
+          {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        1: begin // Read MMU data onto opword.
+          out_plane = OUT_MMU;
+          in_plane = IN_OPWORD;
+          {ctrl_data, reg_sel, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        2: begin // Write 4 into TMP1 for incrementing the program counter. TODO(optimization): Faster increment.
+          ctrl_data = 4;
+          reg_sel = REG_SEL_CONTROL;
+          out_plane = OUT_CTRL_DATA;
+          in_plane = IN_TMP1;
+          {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        3: begin // Increment the program counter.
+          ctrl_data = REG_PC;
+          reg_sel = REG_SEL_CONTROL;
+          out_plane = OUT_MLU;
+          in_plane = IN_REG;
+          mlu_op = common::MLU_ADD;
+          mlu_carry = 0;
+          {shifter_plane, opcode_sel} = 0;
+        end
+        4: begin // Copy the opword opcode to the opcode reg, and reset the microop counter.
+          in_plane = IN_OPCODE;
+          misc_plane = MISC_RESET_MICROOP_COUNTER;
+          opcode_sel = OPCODE_SEL_OPCODE_FROM_OPWORD;
+          {ctrl_data, out_plane, mlu_op, mlu_carry, shifter_plane} = 0;
+        end
+        default: `ZERO_ALL();
+      endcase
+    end
+    OP_LHU: begin
+      `SET_MNEMONIC("LHU r%d, %x")
+      case (microop_count)
+        0: begin  // Write the opword 16 bits into the given register.
+          reg_sel = REG_SEL_OPWORD0;
+          out_plane = OUT_OPWORD_IMMEDIATE;
+          in_plane = IN_REG;
+          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        1: `GO_FETCH()
+        default: `ZERO_ALL();
+      endcase
+    end
     default: `ZERO_ALL();
   endcase
   end
