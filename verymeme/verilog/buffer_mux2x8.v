@@ -9,8 +9,8 @@ module buffer_mux2x8(
 );
   wire [7:0] out_a;
   wire [7:0] out_b;
-  chip74245 mux_a(.IN(A), .OUT(out_a), .N_OE(N_SEL_A));
-  chip74245 mux_b(.IN(B), .OUT(out_b), .N_OE(SEL_A));
+  buffer8 mux_a(.IN(A), .OUT(out_a), .N_OE(N_SEL_A));
+  buffer8 mux_b(.IN(B), .OUT(out_b), .N_OE(SEL_A));
 
   `ifdef SCHEMATIC
   assign OUT = out_a;

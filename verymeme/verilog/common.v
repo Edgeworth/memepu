@@ -26,7 +26,7 @@ package common;
   localparam MLU_OR = 3;
   localparam MLU_XOR = 4;
   localparam MLU_NOT = 5;
-  localparam MLU_NOP0 = 6;  // TODO sign extend
+  localparam MLU_NOP0 = 6;  // TODO sign extend. Add extra param to mlu slice or use shifter?
   localparam MLU_NOP1 = 7;
 endpackage
 `endif

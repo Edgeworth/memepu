@@ -92,7 +92,7 @@ void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
 }
 
 template<std::size_t N>
-std::string convertToString(const WData (&data)[N]) {
+std::string convertToString(const WData (& data)[N]) {
   std::string str;
   str.reserve(N * sizeof(WData));
   static_assert(sizeof(WData) == 4, "bug");
@@ -111,10 +111,8 @@ void printKpu(Vkpu& kpu) {
       {"bus",        convertToHex(uint32_t(kpu.kpu->bus))},
       {"tmp0",       convertToHex(uint32_t(kpu.kpu->tmp0_val))},
       {"tmp1",       convertToHex(uint32_t(kpu.kpu->tmp1_val))},
-      {"ow op",      convertToHex(uint32_t(kpu.kpu->opword_val))},
-      {"ow reg0",    convertToHex(uint32_t(kpu.kpu->op_reg_src0))},
-      {"ow reg1",    convertToHex(uint32_t(kpu.kpu->op_reg_src1))},
-      {"ow offset",  convertToHex(uint32_t(kpu.kpu->op_offset))},
+      {"ow op",      convertToHex(uint32_t(kpu.kpu->opword_opcode))},
+      {"ow bits",    convertToHex(uint32_t(kpu.kpu->opword_bits))},
       {"mlu",        convertToHex(uint32_t(kpu.kpu->mlu_val))},
       {"opcode",     convertToHex(uint32_t(kpu.kpu->control->opcode))},
       {"microop",    convertToHex(uint32_t(kpu.kpu->control->microop_count))},

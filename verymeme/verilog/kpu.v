@@ -56,19 +56,27 @@ module kpu(
 
   // Register file:
   wire [31:0] reg_out;
-  register_file regs(.REG_SEL(control_reg_sel), .REG_SRC0(op_reg_src0), .REG_SRC1(op_reg_src1),
-    .REG_SRC2(control_ctrl_data[4:0]), .IN_DATA(bus), .N_WE(control_reg_n_in_clk),
+  register_file regs(.REG_SEL(control_reg_sel), .REG_SRC0(opword_reg_src0),
+    .REG_SRC1(opword_reg_src1), .REG_SRC2(opword_reg_src2),
+    .REG_SRC3(control_ctrl_data[4:0]), .IN_DATA(bus), .N_WE(control_reg_n_in_clk),
     .N_OE(control_reg_n_out), .N_RST(n_rst), .OUT_DATA(reg_out));
 
   // Opcode word:
   // Outputs:
-  wire [5:0] opword_val /*verilator public*/;  // 6 bit opcode
-  wire [4:0] op_reg_src0 /*verilator public*/, op_reg_src1 /*verilator public*/;
-  wire [15:0] op_offset /*verilator public*/;
-  // TODO(improvement): Use op_offset.
-  wire _unused_ok_op_offset = &{op_offset};
+  wire [5:0] opword_opcode /*verilator public*/;  // 6 bit opcode
+  wire [25:0] opword_bits /*verilator public*/;
+  wire [4:0] opword_reg_src0 = opword_bits[4:0];
+  wire [4:0] opword_reg_src1 = opword_bits[9:5];
+  wire [4:0] opword_reg_src2 = opword_bits[14:10];
+
+  // Opword bit mux
+  wire [15:0] opword_immediate_out;
+  buffer16 opword_immediate_buf(.IN(opword_bits[25:10]), .OUT(opword_immediate_out),
+    .N_OE(control_opword_immediate_n_out));
+
+  // Opword:
   register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(0),
-    .OUT({op_offset, op_reg_src1, op_reg_src0, opword_val}));
+    .OUT({opword_bits, opword_opcode}));
 
   // Control logic:
   wire [5:0] control_ctrl_data;
@@ -90,9 +98,10 @@ module kpu(
   wire control_shifter_n_out;
   wire control_timer_n_out;
   wire control_ctrl_data_n_out;
+  wire control_opword_immediate_n_out;
   control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(n_rst),
     .BUS(bus[7:0]),
-    .OPWORD(opword_val),
+    .OPWORD_OPCODE(opword_opcode),
     .CTRL_DATA(control_ctrl_data),
     .REG_SEL(control_reg_sel),
     .MLU_PLANE(control_mlu_plane),
@@ -110,6 +119,7 @@ module kpu(
     .SHIFTER_N_OUT(control_shifter_n_out),
     .TIMER_N_OUT(control_timer_n_out),
     .CTRL_DATA_N_OUT(control_ctrl_data_n_out),
+    .OPWORD_IMMEDIATE_N_OUT(control_opword_immediate_n_out),
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr[11:0]),
     .BOOTSTRAP_N_WE(bootstrap_control_n_we));
 
@@ -123,11 +133,13 @@ module kpu(
   assign bus = timer_out;
   assign bus = mmu_out;
   assign bus[5:0] = control_ctrl_data;
+  assign bus[15:0] = opword_immediate_out;
   `else
   assign bus = !control_reg_n_out ? reg_out : !control_tmp0_n_out ? tmp0_out :
     !control_tmp1_n_out ? tmp1_out : !control_mlu_n_out ? mlu_out : !control_shifter_n_out ?
     shifter_out : !control_timer_n_out ? timer_out : !control_mmu_n_out ? mmu_out :
-    !control_ctrl_data_n_out ? {26'b0, control_ctrl_data} : 32'b0;
+    !control_ctrl_data_n_out ? {26'b0, control_ctrl_data} : !control_opword_immediate_n_out ?
+    {16'b0, opword_immediate_out} : 32'b0;
   `endif
 
   // Bootstrapping code:
@@ -162,7 +174,8 @@ module kpu(
     `CONTRACT(CLK != N_CLK);  // Must be opposites.
     // No conflict on busses.
     assert (8'b0+!control_reg_n_out+!control_tmp0_n_out+!control_tmp1_n_out+!control_mlu_n_out+
-        !control_shifter_n_out+!control_timer_n_out+!control_mmu_n_out+!control_ctrl_data_n_out <= 1);
+        !control_shifter_n_out+!control_timer_n_out+!control_mmu_n_out+!control_ctrl_data_n_out+
+        !control_opword_immediate_n_out<= 1);
     // TODO(bootstrapping): Assert stuff about boot process
   end
 
