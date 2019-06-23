@@ -1,0 +1,14 @@
+[
+  {
+    "mnemonic": "lhu r%d,%x",
+    "opcode": 2
+  },
+  {
+    "mnemonic": "addu r%d,r%d,%x",
+    "opcode": 3
+  },
+  {
+    "mnemonic": "add r%d,r%d,r%d",
+    "opcode": 4
+  }
+]

@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMEROUTE_RENDERER_H
-#define VERYMEME_MEMEROUTE_RENDERER_H
+#ifndef MEMEROUTE_RENDERER_H
+#define MEMEROUTE_RENDERER_H
 
 #include <SFML/Graphics.hpp>
 
@@ -60,4 +60,4 @@ private:
 
 }  // memeroute
 
-#endif  // VERYMEME_MEMEROUTE_RENDERER_H
+#endif  // MEMEROUTE_RENDERER_H

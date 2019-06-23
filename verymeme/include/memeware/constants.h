@@ -1,5 +1,5 @@
-#ifndef VERYMEME_CONSTANTS_H
-#define VERYMEME_CONSTANTS_H
+#ifndef MEMEWARE_CONSTANTS_H
+#define MEMEWARE_CONSTANTS_H
 
 #include "verymeme/common.h"
 
@@ -12,4 +12,4 @@ enum Mlu {
 
 }  // memeware
 
-#endif  //VERYMEME_CONSTANTS_H
+#endif  // MEMEWARE_CONSTANTS_H

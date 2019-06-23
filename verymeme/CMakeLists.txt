@@ -69,9 +69,18 @@ set(MEMEWARE_SOURCES ${VERYMEME_SOURCES}
     include/memeware/constants.h
     src/memeware/microcode.cpp include/memeware/microcode.h)
 set(MEMESIM_SOURCES ${VERYMEME_SOURCES})
+set(MEMEASM_SOURCES
+    src/memeasm/assembler.cpp include/memeasm/assembler.h
+    ${VERYMEME_SOURCES})
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
+
+# memeasm:
+add_executable(memeasm ${MEMEASM_SOURCES} src/programs/memeasm.cpp)
+target_include_directories(memeasm PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memeasm PUBLIC ${Boost_LIBRARY_DIRS})
+target_link_libraries(memeasm PUBLIC ${Boost_LIBRARIES})
 
 # memeware:
 add_executable(memeware ${MEMEWARE_SOURCES} src/programs/memeware.cpp)

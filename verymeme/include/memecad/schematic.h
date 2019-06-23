@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMECAD_SCHEMATIC_H
-#define VERYMEME_MEMECAD_SCHEMATIC_H
+#ifndef MEMECAD_SCHEMATIC_H
+#define MEMECAD_SCHEMATIC_H
 
 #include "verymeme/common.h"
 #include "memecad/types.h"
@@ -40,4 +40,4 @@ private:
 
 }  // memecad
 
-#endif  // VERYMEME_MEMECAD_SCHEMATIC_H
+#endif  // MEMECAD_SCHEMATIC_H

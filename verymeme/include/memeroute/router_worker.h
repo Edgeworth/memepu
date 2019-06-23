@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMEROUTE_ROUTER_WORKER_H
-#define VERYMEME_MEMEROUTE_ROUTER_WORKER_H
+#ifndef MEMEROUTE_ROUTER_WORKER_H
+#define MEMEROUTE_ROUTER_WORKER_H
 
 #include "verymeme/common.h"
 #include "memeroute/types.h"
@@ -88,4 +88,4 @@ private:
 }  // memeroute
 
 
-#endif  // VERYMEME_MEMEROUTE_ROUTER_WORKER_H
+#endif  // MEMEROUTE_ROUTER_WORKER_H

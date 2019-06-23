@@ -1,0 +1,7 @@
+lhu r0,0 ;load 0
+lhu r1,1 ;load 1
+loop:
+  add r2,r0,r1 ;compute next fib number
+  addu r0,r1,0 ;swap down
+  addu r1,r2,0 ;swap down
+  lhu r31,loop ;loop
