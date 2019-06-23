@@ -1,5 +1,5 @@
-#ifndef VERYMEME_YOSYS_MODULE_H
-#define VERYMEME_YOSYS_MODULE_H
+#ifndef MEMECAD_YOSYS_MODULE_H
+#define MEMECAD_YOSYS_MODULE_H
 
 #include <kernel/yosys.h>
 #include <kernel/rtlil.h>
@@ -29,4 +29,4 @@ private:
 
 }  // namespace
 
-#endif  // VERYMEME_YOSYS_MODULE_H
+#endif  // MEMECAD_YOSYS_MODULE_H

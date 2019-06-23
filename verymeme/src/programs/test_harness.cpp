@@ -20,12 +20,13 @@ int main(int argc, char* argv[]) {
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
-    po::notify(vm);
 
     if (vm.count("help")) {
       std::cout << desc << '\n';
       return 0;
     }
+
+    po::notify(vm);
   } catch (const po::error& ex) {
     std::cerr << ex.what() << '\n';
   }

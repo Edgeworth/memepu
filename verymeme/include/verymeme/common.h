@@ -97,6 +97,10 @@ std::string convertToHex(T val) {
   return stream.str();
 }
 
+int convertFromHex(const std::string& s);
+
+int convertFromDec(const std::string& s);
+
 template<std::size_t N>
 std::string convertToBinary(int val) {
   static_assert(N <= 32, "number of bits too large");

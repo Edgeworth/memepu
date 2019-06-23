@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMECAD_UTIL_H
-#define VERYMEME_MEMECAD_UTIL_H
+#ifndef MEMECAD_UTIL_H
+#define MEMECAD_UTIL_H
 
 #include <kernel/rtlil.h>
 #include "verymeme/common.h"
@@ -27,4 +27,4 @@ using ChildMapping = std::unordered_map<std::string, ConnectionData>;
 
 }  // namespace memecad
 
-#endif  // VERYMEME_MEMECAD_UTIL_H
+#endif  // MEMECAD_UTIL_H

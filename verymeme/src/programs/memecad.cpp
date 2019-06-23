@@ -22,12 +22,14 @@ int main(int argc, char* argv[]) {
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
-    po::notify(vm);
 
     if (vm.count("help")) {
       std::cout << desc << '\n';
       return 0;
     }
+
+    po::notify(vm);
+
     verilog_filenames = vm["files"].as<std::vector<std::string>>();
     kicad_library_filenames = vm["chip-libraries"].as<std::vector<std::string>>();
     memecad_map_filename = vm["memecad-map"].as<std::string>();

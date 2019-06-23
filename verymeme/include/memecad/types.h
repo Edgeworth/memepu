@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMECAD_TYPES_H
-#define VERYMEME_MEMECAD_TYPES_H
+#ifndef MEMECAD_TYPES_H
+#define MEMECAD_TYPES_H
 
 #include <vector>
 #include <string>
@@ -192,4 +192,4 @@ std::istream& operator>>(std::istream& str, Sheet::Label::NetType& o);
 
 }  // memecad
 
-#endif  // VERYMEME_MEMECAD_TYPES_H
+#endif  // MEMECAD_TYPES_H

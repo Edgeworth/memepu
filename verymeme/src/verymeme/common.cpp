@@ -9,3 +9,20 @@ std::string trim(const std::string& data, const std::string& c) {
   return sm[1].str();
 }
 
+int convertFromHex(const std::string& s) {
+  std::istringstream stream(s);
+  int val;
+  bool valid_int = bool(stream >> std::hex >> val);
+  if (!valid_int || !stream.eof())
+    return INT_MIN;
+  return val;
+}
+
+int convertFromDec(const std::string& s) {
+  std::istringstream stream(s);
+  int val;
+  bool valid_int = bool(stream >> val);
+  if (!valid_int || !stream.eof())
+    return INT_MIN;
+  return val;
+}

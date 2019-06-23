@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MAPPER_H
-#define VERYMEME_MAPPER_H
+#ifndef MEMECAD_MAPPER_H
+#define MEMECAD_MAPPER_H
 
 #include "verymeme/common.h"
 #include <boost/property_tree/ptree.hpp>
@@ -32,4 +32,4 @@ private:
 
 }  // memecad
 
-#endif  // VERYMEME_MAPPER_H
+#endif  // MEMECAD_MAPPER_H
