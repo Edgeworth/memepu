@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMEROUTE_PARSER_H
-#define VERYMEME_MEMEROUTE_PARSER_H
+#ifndef MEMEROUTE_PARSER_H
+#define MEMEROUTE_PARSER_H
 
 #include "memeroute/types.h"
 
@@ -13,4 +13,4 @@ Pcb parsePcb(const std::string& data);
 
 }  // memeroute
 
-#endif  // VERYMEME_MEMEROUTE_PARSER_H
+#endif  // MEMEROUTE_PARSER_H

@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMEWARE_MICROCODE_H
-#define VERYMEME_MEMEWARE_MICROCODE_H
+#ifndef MEMEWARE_MICROCODE_H
+#define MEMEWARE_MICROCODE_H
 
 #include "verymeme/common.h"
 
@@ -13,4 +13,4 @@ std::vector<uint32_t> generateMicrocodeFirmware();
 
 }  // memeware
 
-#endif  // VERYMEME_MEMEWARE_MICROCODE_H
+#endif  // MEMEWARE_MICROCODE_H

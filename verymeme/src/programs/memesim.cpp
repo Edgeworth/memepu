@@ -66,7 +66,7 @@ std::string prettyPrintNumbers(const std::string& s) {
 }
 
 void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
-  constexpr int MAX_FIELD = 13;
+  constexpr int MAX_FIELD = 14;
   constexpr int MAX_COL = 70;
   int col = 0;
   bool first = true;
@@ -121,7 +121,7 @@ void printKpu(Vkpu& kpu) {
       {"out",        convertToHex(uint32_t(kpu.kpu->control->control_out_plane))},
       {"in",         convertToHex(uint32_t(kpu.kpu->control->control_in_plane))},
       {"misc",       convertToHex(uint32_t(kpu.kpu->control->control_misc_plane))},
-      {"mlu",        convertToBinary<4>(kpu.kpu->control->MLU_PLANE)},
+      {"mlu plane",        convertToBinary<4>(kpu.kpu->control->MLU_PLANE)},
       {"shifter",    convertToBinary<2>(kpu.kpu->control->SHIFTER_PLANE)},
       {"opcode sel", convertToHex(uint32_t(kpu.kpu->control->control_opcode_sel))},
       {"asm",        convertToString(kpu.kpu->control->microcode->mnemonic)},
@@ -138,12 +138,13 @@ int main(int argc, char* argv[]) {
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
-    po::notify(vm);
 
     if (vm.count("help")) {
       std::cout << desc << '\n';
       return 0;
     }
+
+    po::notify(vm);
   } catch (const po::error& ex) {
     std::cerr << ex.what() << '\n';
     return 1;

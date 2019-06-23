@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMECAD_PARSER_H
-#define VERYMEME_MEMECAD_PARSER_H
+#ifndef MEMECAD_PARSER_H
+#define MEMECAD_PARSER_H
 
 #include <string>
 
@@ -14,4 +14,4 @@ std::string writeSheet(const Sheet& sheet);
 
 }  // memecad
 
-#endif  // VERYMEME_MEMECAD_PARSER_H
+#endif  // MEMECAD_PARSER_H

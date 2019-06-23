@@ -75,7 +75,7 @@ def create_build_config(hexfile):
   return path
 
 
-def generate_firmware():
+def generate_memeware():
   path = create_build_config(hexfile=False)
   run_command('%s --output_path=./verilog' % os.path.join(path, 'memeware'))
 
@@ -123,7 +123,7 @@ parser.add_argument('-a', '--all', action='store_true', default=False, required=
 args = parser.parse_args()
 
 if args.memeware or args.all:
-  generate_firmware()
+  generate_memeware()
 
 if args.unit or args.all:
   for hexfile in [False, True]:

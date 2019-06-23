@@ -1,5 +1,5 @@
-#ifndef VERYMEME_MEMEROUTE_TYPES_H
-#define VERYMEME_MEMEROUTE_TYPES_H
+#ifndef MEMEROUTE_TYPES_H
+#define MEMEROUTE_TYPES_H
 
 #include <unordered_map>
 #include <map>
@@ -112,4 +112,4 @@ std::istream& operator>>(std::istream& str, Side& o);
 
 }  // memeroute
 
-#endif  // VERYMEME_MEMEROUTE_TYPES_H
+#endif  // MEMEROUTE_TYPES_H

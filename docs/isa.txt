@@ -14,11 +14,13 @@
 	SB [rD + signext(I)], rS - store 8-bit
 	SH [rD + signext(I)], rS - store 16-bit
 	SW [rD + signext(I)], rS - store 32-bit
+	ADDU rD,rS,I - rD = rS + zeroext(I)
+	SUBU rD,rS,I - rD = rS - zeroext(I)
 	ADD rD,rS,I - rD = rS + signext(I)
 	SUB rD,rS,I - rD = rS - signext(I)
-	AND rD,rS,I - rD = rS & signext(I)
-	OR rD,rS,I - rD = rS | signext(I)
-	XOR rD,rS,I - rD = rS ^ signext(I)
+	AND rD,rS,I - rD = rS & zeroext(I)
+	OR rD,rS,I - rD = rS | zeroext(I)
+	XOR rD,rS,I - rD = rS ^ zeroext(I)
 	SLL rD,rS,I - rD = rS << (I & 0x1F)
 	SRL rD,rS,I - rD = rS >> (I & 0x1F)
 	SRA rD,rS,I - rD = rS >>> (I & 0x1F)
@@ -28,7 +30,7 @@
 	BLTU rA,rB,I - if unsigned rA < rB: r31 = r31 + signext(I)
 	BGE rA,rB,I - if rA >= rB: r31 = r31 + signext(I)
 	BGEU rA,rB,I - if unsigned rA >= rB: r31 = r31 + signext(I)
-[Opcode 6][rD 5][rA 5][rB 5][Unused 11]
+[Opcode 6][rD 5][rA 5][rB 5][unused 11]
 	ADD rD,rA,rB - rD = rA + rB
 	SUB rD,rA,rB - rD = rA - rB
 	AND rD,rA,rB - rD = rA & rB

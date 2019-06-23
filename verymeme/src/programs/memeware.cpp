@@ -16,12 +16,13 @@ int main(int argc, char* argv[]) {
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
-    po::notify(vm);
 
     if (vm.count("help")) {
       std::cout << desc << '\n';
       return 0;
     }
+
+    po::notify(vm);
 
     output = vm["output_path"].as<std::string>();
   } catch (const po::error& ex) {

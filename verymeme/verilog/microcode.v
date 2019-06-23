@@ -47,7 +47,11 @@ module microcode(
   // [Opcode 6][rD 5][unused 5][immediate 16]
   localparam OP_LHU = 2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
 
-  // [Opcode 6][rD 5][rS 5][Offset 16]
+  // [Opcode 6][rD 5][rS 5][immediate 16]
+  localparam OP_ADDU = 3; // ADDU rD,rS,I - rD = rS + zeroext(I)
+
+  // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
+  localparam OP_ADD3 = 4; // ADD rD,rA,rB - rD = rA + rB
 
   localparam REG_SEL_OPWORD0 = 0;
   localparam REG_SEL_OPWORD1 = 1;
@@ -78,7 +82,6 @@ module microcode(
 
   localparam REG_PC = 31; // r31 is program counter.
 
-  `define ZERO_ALL() {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_carry, shifter_plane, opcode_sel} = 0
   `define SET_MNEMONIC(s) `ifdef verilator mnemonic = $size(mnemonic)'(s); `endif
   // Set opcode to fetch and reset micro-op counter.
   `define GO_FETCH() \
@@ -89,24 +92,25 @@ module microcode(
       opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; \
       {reg_sel, mlu_op, mlu_carry, shifter_plane} = 0; end
   always_comb begin
-  case (opcode)
-    OP_RESET: begin
-      `SET_MNEMONIC("RESET")
-      // TODO: maybe can build model of assembler instructions by outputting a string e.g. JMP $a and probing it in memeware.
-      case (microop_count)
-        0: begin  // Set program counter to zero.
-          ctrl_data = REG_PC;
-          reg_sel = REG_SEL_CONTROL;
-          out_plane = OUT_NONE;
-          in_plane = IN_REG;
-          {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
-        end
-        1: `GO_FETCH()
-        default: `ZERO_ALL();
-      endcase
-    end
-    OP_FETCH: begin
-      `SET_MNEMONIC("FETCH")
+    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane,
+        opcode_sel} = 0;
+    case (opcode)
+      OP_RESET: begin
+      `SET_MNEMONIC("rst")
+        // TODO: maybe can build model of assembler instructions by outputting a string e.g. JMP $a and probing it in memeware.
+        case (microop_count)
+          0: begin  // Set program counter to zero.
+            ctrl_data = REG_PC;
+            reg_sel = REG_SEL_CONTROL;
+            out_plane = OUT_NONE;
+            in_plane = IN_REG;
+            {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+          end
+          1: `GO_FETCH()
+        endcase
+      end
+      OP_FETCH: begin
+      `SET_MNEMONIC("nop")
       case (microop_count)
         0: begin  // Copy the program counter into TMP0 to access memory.
           ctrl_data = REG_PC;
@@ -142,11 +146,10 @@ module microcode(
           opcode_sel = OPCODE_SEL_OPCODE_FROM_OPWORD;
           {ctrl_data, out_plane, mlu_op, mlu_carry, shifter_plane} = 0;
         end
-        default: `ZERO_ALL();
       endcase
-    end
-    OP_LHU: begin
-      `SET_MNEMONIC("LHU r%d, %x")
+      end
+      OP_LHU: begin
+      `SET_MNEMONIC("lhu r%d,%x")
       case (microop_count)
         0: begin  // Write the opword 16 bits into the given register.
           reg_sel = REG_SEL_OPWORD0;
@@ -155,11 +158,60 @@ module microcode(
           {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         1: `GO_FETCH()
-        default: `ZERO_ALL();
       endcase
-    end
-    default: `ZERO_ALL();
-  endcase
+      end
+      OP_ADDU: begin
+      `SET_MNEMONIC("addu r%d,r%d,%x")
+      case (microop_count)
+        0: begin  // Write second reg into tmp0.
+          reg_sel = REG_SEL_OPWORD1;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP0;
+          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        1: begin  // Write immediate value into tmp1.
+          out_plane = OUT_OPWORD_IMMEDIATE;
+          in_plane = IN_TMP1;
+          {ctrl_data, reg_sel, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        2: begin  // Write add result into first reg.
+          reg_sel = REG_SEL_OPWORD0;
+          out_plane = OUT_MLU;
+          in_plane = IN_REG;
+          mlu_op = common::MLU_ADD;
+          mlu_carry = 0;
+          {ctrl_data, misc_plane, shifter_plane, opcode_sel} = 0;
+        end
+        3: `GO_FETCH()
+      endcase
+      end
+      OP_ADD3: begin
+      `SET_MNEMONIC("add r%d,r%d,r%d")
+      case (microop_count)
+        0: begin  // Write second reg into tmp0.
+          reg_sel = REG_SEL_OPWORD1;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP0;
+          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        1: begin  // Write third reg into tmp1.
+          reg_sel = REG_SEL_OPWORD2;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP1;
+          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+        end
+        2: begin  // Write add result into first reg.
+          reg_sel = REG_SEL_OPWORD0;
+          out_plane = OUT_MLU;
+          in_plane = IN_REG;
+          mlu_op = common::MLU_ADD;
+          mlu_carry = 0;
+          {ctrl_data, misc_plane, shifter_plane, opcode_sel} = 0;
+        end
+        3: `GO_FETCH()
+      endcase
+      end
+    endcase
   end
   `endif
 
