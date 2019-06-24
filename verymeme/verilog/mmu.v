@@ -15,7 +15,7 @@ module mmu(
   `ifdef FORMAL
   always_comb begin
     if (N_RST) `CONTRACT(N_WE || N_OE);
-    `CONTRACT(ADDR[1:0] == 2'b0);  // No unaligned accesses.
+//    `CONTRACT(ADDR[1:0] == 2'b0);  // No unaligned accesses.
   end
   `endif
 endmodule
