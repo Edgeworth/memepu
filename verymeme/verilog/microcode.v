@@ -42,45 +42,45 @@ module microcode(
   assign OUT[22] = opcode_sel;
   assign OUT[31:23] = 0;
 
-  localparam OP_RESET = 0;
-  localparam OP_FETCH = 1;
+  localparam OP_RESET=0;
+  localparam OP_FETCH=1;
   // [Opcode 6][rD 5][unused 5][immediate 16]
-  localparam OP_LHU = 2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
+  localparam OP_LHU=2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
 
   // [Opcode 6][rD 5][rS 5][immediate 16]
-  localparam OP_ADDU = 3; // ADDU rD,rS,I - rD = rS + zeroext(I)
+  localparam OP_ADDU=3; // ADDU rD,rS,I - rD = rS + zeroext(I)
 
   // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
-  localparam OP_ADD3 = 4; // ADD rD,rA,rB - rD = rA + rB
+  localparam OP_ADD3=4; // ADD rD,rA,rB - rD = rA + rB
 
-  localparam REG_SEL_OPWORD0 = 0;
-  localparam REG_SEL_OPWORD1 = 1;
-  localparam REG_SEL_OPWORD2 = 2;
-  localparam REG_SEL_CONTROL = 3;
+  localparam REG_SEL_OPWORD0=0;
+  localparam REG_SEL_OPWORD1=1;
+  localparam REG_SEL_OPWORD2=2;
+  localparam REG_SEL_CONTROL=3;
 
-  localparam OUT_NONE = 0;
-  localparam OUT_REG = 1;
-  localparam OUT_TMP0 = 2;
-  localparam OUT_TMP1 = 3;
-  localparam OUT_MMU = 4;
-  localparam OUT_MLU = 5;
-  localparam OUT_SHIFTER = 6;
-  localparam OUT_TIMER = 7;
-  localparam OUT_CTRL_DATA = 8;
-  localparam OUT_OPWORD_IMMEDIATE = 9;
+  localparam OUT_NONE=0;
+  localparam OUT_REG=1;
+  localparam OUT_TMP0=2;
+  localparam OUT_TMP1=3;
+  localparam OUT_MMU=4;
+  localparam OUT_MLU=5;
+  localparam OUT_SHIFTER=6;
+  localparam OUT_TIMER=7;
+  localparam OUT_CTRL_DATA=8;
+  localparam OUT_OPWORD_IMMEDIATE=9;
 
-  localparam IN_REG = 1;
-  localparam IN_TMP0 = 2;
-  localparam IN_TMP1 = 3;
-  localparam IN_OPWORD = 5;
-  localparam IN_OPCODE = 6;
+  localparam IN_REG=1;
+  localparam IN_TMP0=2;
+  localparam IN_TMP1=3;
+  localparam IN_OPWORD=5;
+  localparam IN_OPCODE=6;
 
-  localparam MISC_RESET_MICROOP_COUNTER = 1;
+  localparam MISC_RESET_MICROOP_COUNTER=1;
 
-  localparam OPCODE_SEL_OPCODE_FROM_OPWORD = 0;
-  localparam OPCODE_SEL_OPCODE_FROM_BUS = 1;
+  localparam OPCODE_SEL_OPCODE_FROM_OPWORD=0;
+  localparam OPCODE_SEL_OPCODE_FROM_BUS=1;
 
-  localparam REG_PC = 31; // r31 is program counter.
+  localparam REG_PC=31; // r31 is program counter.
 
   `define SET_MNEMONIC(s) `ifdef verilator mnemonic = $size(mnemonic)'(s); `endif
   // Set opcode to fetch and reset micro-op counter.
@@ -89,11 +89,9 @@ module microcode(
       out_plane = OUT_CTRL_DATA; \
       in_plane = IN_OPCODE; \
       misc_plane = MISC_RESET_MICROOP_COUNTER; \
-      opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; \
-      {reg_sel, mlu_op, mlu_carry, shifter_plane} = 0; end
+      opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; end
   always_comb begin
-    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane,
-        opcode_sel} = 0;
+    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
     case (opcode)
       OP_RESET: begin
       `SET_MNEMONIC("rst")
@@ -104,7 +102,6 @@ module microcode(
             reg_sel = REG_SEL_CONTROL;
             out_plane = OUT_NONE;
             in_plane = IN_REG;
-            {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
           end
           1: `GO_FETCH()
         endcase
@@ -117,19 +114,16 @@ module microcode(
           reg_sel = REG_SEL_CONTROL;
           out_plane = OUT_REG;
           in_plane = IN_TMP0;
-          {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         1: begin // Read MMU data onto opword.
           out_plane = OUT_MMU;
           in_plane = IN_OPWORD;
-          {ctrl_data, reg_sel, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         2: begin // Write 4 into TMP1 for incrementing the program counter. TODO(optimization): Faster increment.
           ctrl_data = 4;
           reg_sel = REG_SEL_CONTROL;
           out_plane = OUT_CTRL_DATA;
           in_plane = IN_TMP1;
-          {misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         3: begin // Increment the program counter.
           ctrl_data = REG_PC;
@@ -137,14 +131,11 @@ module microcode(
           out_plane = OUT_MLU;
           in_plane = IN_REG;
           mlu_op = common::MLU_ADD;
-          mlu_carry = 0;
-          {shifter_plane, opcode_sel} = 0;
         end
         4: begin // Copy the opword opcode to the opcode reg, and reset the microop counter.
           in_plane = IN_OPCODE;
           misc_plane = MISC_RESET_MICROOP_COUNTER;
           opcode_sel = OPCODE_SEL_OPCODE_FROM_OPWORD;
-          {ctrl_data, out_plane, mlu_op, mlu_carry, shifter_plane} = 0;
         end
       endcase
       end
@@ -155,7 +146,6 @@ module microcode(
           reg_sel = REG_SEL_OPWORD0;
           out_plane = OUT_OPWORD_IMMEDIATE;
           in_plane = IN_REG;
-          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         1: `GO_FETCH()
       endcase
@@ -167,20 +157,16 @@ module microcode(
           reg_sel = REG_SEL_OPWORD1;
           out_plane = OUT_REG;
           in_plane = IN_TMP0;
-          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         1: begin  // Write immediate value into tmp1.
           out_plane = OUT_OPWORD_IMMEDIATE;
           in_plane = IN_TMP1;
-          {ctrl_data, reg_sel, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         2: begin  // Write add result into first reg.
           reg_sel = REG_SEL_OPWORD0;
           out_plane = OUT_MLU;
           in_plane = IN_REG;
           mlu_op = common::MLU_ADD;
-          mlu_carry = 0;
-          {ctrl_data, misc_plane, shifter_plane, opcode_sel} = 0;
         end
         3: `GO_FETCH()
       endcase
@@ -192,21 +178,17 @@ module microcode(
           reg_sel = REG_SEL_OPWORD1;
           out_plane = OUT_REG;
           in_plane = IN_TMP0;
-          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         1: begin  // Write third reg into tmp1.
           reg_sel = REG_SEL_OPWORD2;
           out_plane = OUT_REG;
           in_plane = IN_TMP1;
-          {ctrl_data, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
         end
         2: begin  // Write add result into first reg.
           reg_sel = REG_SEL_OPWORD0;
           out_plane = OUT_MLU;
           in_plane = IN_REG;
           mlu_op = common::MLU_ADD;
-          mlu_carry = 0;
-          {ctrl_data, misc_plane, shifter_plane, opcode_sel} = 0;
         end
         3: `GO_FETCH()
       endcase
