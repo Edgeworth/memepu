@@ -121,9 +121,10 @@ void printKpu(Vkpu& kpu) {
       {"out",        convertToHex(uint32_t(kpu.kpu->control->control_out_plane))},
       {"in",         convertToHex(uint32_t(kpu.kpu->control->control_in_plane))},
       {"misc",       convertToHex(uint32_t(kpu.kpu->control->control_misc_plane))},
-      {"mlu plane",        convertToBinary<4>(kpu.kpu->control->MLU_PLANE)},
+      {"mlu plane",  convertToBinary<4>(kpu.kpu->control->MLU_PLANE)},
       {"shifter",    convertToBinary<2>(kpu.kpu->control->SHIFTER_PLANE)},
       {"opcode sel", convertToHex(uint32_t(kpu.kpu->control->control_opcode_sel))},
+      {"n_rst",        convertToBinary<1>(kpu.kpu->n_rst)},
       {"asm",        convertToString(kpu.kpu->control->microcode->mnemonic)},
   };
   printTable(table);
@@ -159,7 +160,8 @@ int main(int argc, char* argv[]) {
   Vkpu kpu;
   kpu.N_RST_ASYNC = 1;
   kpu.eval();  // Eval once to set up all signals (X => defined value).
-  resetKpu(kpu);
+  clockKpu(kpu);  // Clock to end any reset that happened from X => defined value.
+  resetKpu(kpu);  // Actually reset.
   while (true) {
     std::string cmd;
     printKpu(kpu);
