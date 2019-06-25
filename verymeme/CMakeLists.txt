@@ -68,7 +68,7 @@ set(MEMEROUTE_SOURCES ${VERYMEME_SOURCES}
 set(MEMEWARE_SOURCES ${VERYMEME_SOURCES}
     include/memeware/constants.h
     src/memeware/microcode.cpp include/memeware/microcode.h)
-set(MEMESIM_SOURCES ${VERYMEME_SOURCES})
+set(MEMESIM_SOURCES ${VERYMEME_SOURCES} src/memesim/simulator.cpp include/memesim/simulator.h src/memesim/cli.cpp include/memesim/cli.h src/memesim/display.cpp include/memesim/display.h)
 set(MEMEASM_SOURCES
     src/memeasm/assembler.cpp include/memeasm/assembler.h
     ${VERYMEME_SOURCES})
@@ -105,9 +105,11 @@ target_link_libraries(memeroute PUBLIC ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${
 
 # memesim:
 add_executable(memesim ${MEMESIM_SOURCES} src/programs/memesim.cpp)
-target_include_directories(memesim PUBLIC ${VERILATOR_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} include)
+target_include_directories(memesim PUBLIC ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS} include)
 target_link_directories(memesim PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(memesim PUBLIC verilated_library ${Boost_LIBRARIES})
+target_link_libraries(memesim PUBLIC verilated_library ${SFML_LIBRARIES} ${SFML_DEPENDENCIES}
+    ${Boost_LIBRARIES} Threads::Threads)
 
 # tests:
 add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)
