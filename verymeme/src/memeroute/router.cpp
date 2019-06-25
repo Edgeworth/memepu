@@ -1,7 +1,4 @@
 #include <thread>
-#include <condition_variable>
-#include <mutex>
-#include <queue>
 #include <random>
 #include <utility>
 #include "memeroute/router_worker.h"
@@ -20,29 +17,6 @@ struct WorkMessage {
 struct ResultMessage {
   int work_id;
   RouterWorker::RoutingResult result;
-};
-
-template<typename T>
-class ConcurrentQueue {
-public:
-  T yield() {
-    std::unique_lock<std::mutex> lock(q_lock_);
-    while (q_.empty()) has_items_cv_.wait(lock);
-    verify_expr(!q_.empty(), "BUG");
-    T val = std::move(q_.front());
-    q_.pop();
-    return val;
-  }
-
-  void push(const T& t) {
-    std::scoped_lock<std::mutex> lock(q_lock_);  // Lock the queue.
-    q_.push(t);
-    has_items_cv_.notify_all();
-  }
-private:
-  std::condition_variable has_items_cv_;
-  std::mutex q_lock_;
-  std::queue<T> q_;
 };
 
 void runWorkerLoop(int id, Pcb pcb, ConcurrentQueue<WorkMessage>* work_queue,

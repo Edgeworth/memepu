@@ -10,6 +10,9 @@
 #include <boost/lexical_cast.hpp>
 #include <iomanip>
 #include <bitset>
+#include <condition_variable>
+#include <mutex>
+#include <queue>
 
 #define verify_expr(expr, ...)                        \
   do {                                                \
@@ -25,6 +28,38 @@
   } while (0)
 
 constexpr float EP = 1e-6;
+
+template<typename T>
+class ConcurrentQueue {
+public:
+  T yield() {
+    std::unique_lock<std::mutex> lock(q_lock_);
+    while (q_.empty()) has_items_cv_.wait(lock);
+    verify_expr(!q_.empty(), "BUG");
+    T val = std::move(q_.front());
+    q_.pop();
+    return val;
+  }
+
+  std::optional<T> tryYield() {
+    std::unique_lock<std::mutex> lock(q_lock_);
+    if (q_.empty()) return std::nullopt;
+    T val = std::move(q_.front());
+    q_.pop();
+    return val;
+  }
+
+  void push(const T& t) {
+    std::scoped_lock<std::mutex> lock(q_lock_);  // Lock the queue.
+    q_.push(t);
+    has_items_cv_.notify_all();
+  }
+
+private:
+  std::condition_variable has_items_cv_;
+  std::mutex q_lock_;
+  std::queue<T> q_;
+};
 
 template<typename M, typename K, typename V>
 V getDefault(const M& map, const K& key, const V& def) {
