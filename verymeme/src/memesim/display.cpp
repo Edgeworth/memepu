@@ -16,6 +16,7 @@ void Display::run() {
   win_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1200, 1200), "memesim",
       sf::Style::Default, settings);
   win_->setVerticalSyncEnabled(true);
+  win_->setFramerateLimit(30);
 
   sf::Texture tex;
   tex.create(Simulator::VGA_WIDTH, Simulator::VGA_HEIGHT);
@@ -47,8 +48,7 @@ void Display::run() {
     win_->display();
 
     sf::Event ev{};
-    win_->waitEvent(ev);
-    do {
+    while (win_->pollEvent(ev)) {
       switch (ev.type) {
         case sf::Event::Closed:
           win_->close();
@@ -56,7 +56,7 @@ void Display::run() {
         default:
           break;
       }
-    } while (win_->pollEvent(ev));
+    }
   }
 }
 

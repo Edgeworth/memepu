@@ -23,7 +23,7 @@ module microcode(
   logic [5:0] ctrl_data;
   logic [1:0] reg_sel; // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
   logic [3:0] out_plane;
-  logic [2:0] in_plane; // In plane: NONE, REG, TMP0, TMP1, MMU, OPWORD, OPCODE
+  logic [2:0] in_plane;
   logic misc_plane; // Misc plane: Micro-op counter reset
   // Could merge these, but it's confusing, makes routing harder, and causes more switching.
   logic [2:0] mlu_op;  // 3 bits for op select
@@ -52,7 +52,8 @@ module microcode(
   localparam OP_ADDU=3; // ADDU rD,rS,I - rD = rS + zeroext(I)
 
   // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
-  localparam OP_ADD3=4; // ADD rD,rA,rB - rD = rA + rB
+  localparam OP_ADD3=4;  // ADD rD,rA,rB - rD = rA + rB
+  localparam OP_OR3=6;  // OR rD,rS,I - rD = rS | zeroext(I)
 
   localparam REG_SEL_OPWORD0=0;
   localparam REG_SEL_OPWORD1=1;
@@ -73,6 +74,7 @@ module microcode(
   localparam IN_REG=1;
   localparam IN_TMP0=2;
   localparam IN_TMP1=3;
+  localparam IN_MMU=4;
   localparam IN_OPWORD=5;
   localparam IN_OPCODE=6;
 
@@ -155,15 +157,15 @@ module microcode(
       OP_SW: begin  // TODO: use offset
       `SET_MNEMONIC("sw r%d,r%d,%x")
       case (microop_count)
-        0: begin  // Write second register into tmp0.
-          reg_sel = REG_SEL_OPWORD1;
+        0: begin  // Write first register (dst) into tmp0.
+          reg_sel = REG_SEL_OPWORD0;
           out_plane = OUT_REG;
           in_plane = IN_TMP0;
         end
-        1: begin  // Write tmp0 into first register.
-          reg_sel = REG_SEL_OPWORD0;
-          out_plane = OUT_TMP0;
-          in_plane = IN_REG;
+        1: begin  // Write second register value into memory.
+          reg_sel = REG_SEL_OPWORD1;
+          out_plane = OUT_REG;
+          in_plane = IN_MMU;
         end
         2: `GO_FETCH()
       endcase
