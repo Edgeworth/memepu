@@ -213,6 +213,28 @@ module microcode(
         3: `GO_FETCH()
       endcase
       end
+      OP_OR3: begin
+      `SET_MNEMONIC("or r%d,r%d,r%d")
+      case (microop_count)
+        0: begin  // Write second reg into tmp0.
+          reg_sel = REG_SEL_OPWORD1;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP0;
+        end
+        1: begin  // Write third reg into tmp1.
+          reg_sel = REG_SEL_OPWORD2;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP1;
+        end
+        2: begin  // Write add result into first reg.
+          reg_sel = REG_SEL_OPWORD0;
+          out_plane = OUT_MLU;
+          in_plane = IN_REG;
+          mlu_op = common::MLU_OR;
+        end
+        3: `GO_FETCH()
+      endcase
+      end
     endcase
   end
   `endif
