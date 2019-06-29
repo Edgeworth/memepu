@@ -1,1 +1,8 @@
-; TODO: Need store.
+lhu r0,ffff
+addu r0,r0,1
+lhu r1,0
+loop:
+  sw r0,r1,0
+  addu r0,r0,1
+  addu r1,r1,1
+  lhu r31,loop

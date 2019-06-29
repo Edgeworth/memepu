@@ -21,7 +21,6 @@ void Simulator::run() {
   bool running = false;
   bool step = false;
   while (true) {
-    usleep(10 * 1000);  // TODO: Remove.
     step = false;
 
     std::optional<Command> cmd;
