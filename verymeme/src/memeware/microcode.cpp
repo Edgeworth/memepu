@@ -1,11 +1,18 @@
 #include "memeware/microcode.h"
-#include "memeware/constants.h"
 
+#include <sstream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+#include "memeware/constants.h"
 #include "Vmicrocode.h"
 #include "Vmlu_lookahead.h"
 #include "Vmlu_slice.h"
+#include "Vmicrocode_microcode.h"
 
 namespace memeware {
+
+namespace pt = boost::property_tree;
 
 std::vector<uint8_t> generateMluSliceFirmware() {
   Vmlu_slice slice;
@@ -41,6 +48,31 @@ std::vector<uint32_t> generateMicrocodeFirmware() {
     firmware.push_back(microcode.OUT);
   }
   return firmware;
+}
+
+std::string generateMemeasmModel() {
+  Vmicrocode microcode;
+  // This must be updated if the opcode format or location is changed.
+  const int MAX_OPCODE = (1u << 6u);
+  std::stringstream s;
+  bool first = true;
+  s << "[\n";
+  for (int opcode = 0; opcode < MAX_OPCODE; ++opcode) {
+    microcode.ADDR = opcode << 5u;
+    microcode.eval();
+
+    const std::string mnemonic = convertToString(microcode.microcode->mnemonic);
+    if (mnemonic.empty()) continue;
+
+    pt::ptree instruction;
+    if (!first) s << ",";
+    instruction.add("opcode", opcode);
+    instruction.add("mnemonic", mnemonic);
+    pt::write_json(s, instruction);
+    first = false;
+  }
+  s << "]\n";
+  return s.str();
 }
 
 }  // memeware

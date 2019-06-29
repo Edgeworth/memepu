@@ -125,6 +125,20 @@ std::string hexdump(const T (& input)[N], int width = 40) {
   return hexdump(std::vector<T>(input, input + N), width);
 }
 
+template<std::size_t N>
+std::string convertToString(const uint32_t (& data)[N]) {
+  std::string str;
+  str.reserve(N * sizeof(uint32_t));
+  for (uint32_t c : data) {
+    str += char(c & 0xFF);
+    str += char((c >> 8) & 0xFF);
+    str += char((c >> 16) & 0xFF);
+    str += char((c >> 24) & 0xFF);
+  }
+  std::string trimmed(str.c_str());  // Cut off at first 0 byte.
+  return std::string(trimmed.rbegin(), trimmed.rend()); // Reverse
+}
+
 template<typename T>
 std::string convertToHex(T val) {
   std::stringstream stream;
