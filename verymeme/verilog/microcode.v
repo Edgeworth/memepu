@@ -48,6 +48,7 @@ module microcode(
   localparam OP_LHU=2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
 
   // [Opcode 6][rD 5][rS 5][immediate 16]
+  localparam OP_SW=5;  // SW [rD + signext(I)], rS - store 32-bit
   localparam OP_ADDU=3; // ADDU rD,rS,I - rD = rS + zeroext(I)
 
   // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
@@ -92,6 +93,7 @@ module microcode(
       opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; end
   always_comb begin
     {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+    `SET_MNEMONIC("")
     case (opcode)
       OP_RESET: begin
       `SET_MNEMONIC("rst")
@@ -148,6 +150,22 @@ module microcode(
           in_plane = IN_REG;
         end
         1: `GO_FETCH()
+      endcase
+      end
+      OP_SW: begin  // TODO: use offset
+      `SET_MNEMONIC("sw r%d,r%d,%x")
+      case (microop_count)
+        0: begin  // Write second register into tmp0.
+          reg_sel = REG_SEL_OPWORD1;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP0;
+        end
+        1: begin  // Write tmp0 into first register.
+          reg_sel = REG_SEL_OPWORD0;
+          out_plane = OUT_TMP0;
+          in_plane = IN_REG;
+        end
+        2: `GO_FETCH()
       endcase
       end
       OP_ADDU: begin

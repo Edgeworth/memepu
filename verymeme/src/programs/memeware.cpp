@@ -33,4 +33,5 @@ int main(int argc, char* argv[]) {
   writeFile(output + "/mlu_slice.hex", hexdump(memeware::generateMluSliceFirmware()));
   writeFile(output + "/mlu_lookahead.hex", hexdump(memeware::generateMluLookaheadFirmware()));
   writeFile(output + "/microcode.hex", hexdump(memeware::generateMicrocodeFirmware()));
+  writeFile(output + "/ksm_model.json", memeware::generateMemeasmModel());
 }
