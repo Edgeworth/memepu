@@ -11,25 +11,6 @@
 
 namespace memesim {
 
-namespace {
-
-template<std::size_t N>
-std::string convertToString(const WData (& data)[N]) {
-  std::string str;
-  str.reserve(N * sizeof(WData));
-  static_assert(sizeof(WData) == 4, "bug");
-  for (WData c : data) {
-    str += char(c & 0xFF);
-    str += char((c >> 8) & 0xFF);
-    str += char((c >> 16) & 0xFF);
-    str += char((c >> 24) & 0xFF);
-  }
-  std::string trimmed(str.c_str());  // Cut off at first 0 byte.
-  return std::string(trimmed.rbegin(), trimmed.rend()); // Reverse
-}
-
-}  // namespace
-
 void Simulator::run() {
   kpu_.N_RST_ASYNC = 1;
   kpu_.eval();  // Eval once to set up all signals (X => defined value).

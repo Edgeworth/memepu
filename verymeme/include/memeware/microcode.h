@@ -11,6 +11,8 @@ std::vector<uint8_t> generateMluLookaheadFirmware();
 
 std::vector<uint32_t> generateMicrocodeFirmware();
 
+std::string generateMemeasmModel();
+
 }  // memeware
 
 #endif  // MEMEWARE_MICROCODE_H
