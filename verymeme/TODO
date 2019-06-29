@@ -7,8 +7,12 @@
 - Timer test
 
 #### kpu
-- Implement EEPROM hexfile load.
-- Define LUT behaviour entirely in verilog. Generate firmware by probing using verilator.
+- Sign extension - need to use shifter.
+ - What to do with 2 extra ALU ops?
+- Condition select
+- Branch instructions (requires condition select and sign extension)
+- VGA signal generation
+- Interrupts (requires condition select)
 
 #### memeroute
 - Finish DSN parsing. Better displaying.
@@ -23,4 +27,3 @@
 #### kpu
 - Timing models for each chip
 - Read hex-files in at boot time
-- Sign extend in ALU somehow.
