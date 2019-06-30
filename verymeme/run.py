@@ -96,7 +96,8 @@ def run_synths():
 
 
 def run_formal_verification():
-  IGNORES = ["workaround.v", "common.v"]
+  # Ignore lut17x8 because it takes too long to run.
+  IGNORES = ["workaround.v", "common.v", "lut17x8.v"]
   files = glob.glob("*.v")
   commands = []
   for file in files:

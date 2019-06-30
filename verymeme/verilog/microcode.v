@@ -39,13 +39,15 @@ module microcode(
   assign OUT[15] = misc_plane;
   assign OUT[18:16] = mlu_op;
   assign OUT[19] = mlu_carry;
-  assign OUT[23:20] = shifter_plane;
-  assign OUT[24] = opcode_sel;
-  assign OUT[31:25] = 0;
+  assign OUT[21:20] = shifter_plane;
+  assign OUT[22] = shifter_arith;
+  assign OUT[23] = opcode_sel;
+  assign OUT[31:24] = 0;
 
   localparam OP_RESET=0;
   localparam OP_FETCH=1;
   // [Opcode 6][rD 5][unused 5][immediate 16]
+  localparam OP_LH=7;  // LH rD, I - rD = I - load signed 16 bits
   localparam OP_LHU=2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
 
   // [Opcode 6][rD 5][rS 5][immediate 16]
@@ -142,6 +144,22 @@ module microcode(
           misc_plane = MISC_RESET_MICROOP_COUNTER;
           opcode_sel = OPCODE_SEL_OPCODE_FROM_OPWORD;
         end
+      endcase
+      end
+      OP_LH: begin
+      `SET_MNEMONIC("lh r%d,%x")
+      case (microop_count)
+        0: begin  // Write the opword 16 bits into tmp0.
+          out_plane = OUT_OPWORD_IMMEDIATE;
+          in_plane = IN_TMP0;
+        end
+        1: begin  // Sign extend and write into the destination register.
+          reg_sel = REG_SEL_OPWORD0;
+          out_plane = OUT_SHIFTER;
+          shifter_plane = common::SHIFTER_SIGNEXT16;
+          in_plane = IN_REG;
+        end
+        2: `GO_FETCH()
       endcase
       end
       OP_LHU: begin
