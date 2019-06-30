@@ -16,6 +16,7 @@ buffer_mux2x32
 buffer_mux3x8
 buffer_mux3x32
 buffer_mux4x8
+buffer_mux4x32_decoded
 chip74LVC162244
 chip7400
 chip7404
@@ -49,6 +50,7 @@ register_file
 shifter
 sram
 timer
+vga
 
 [script]
 bootstrapper: read -formal -D CONTRACT=assume bootstrapper.v
@@ -77,6 +79,9 @@ buffer_mux3x32: prep -top buffer_mux3x32
 buffer_mux4x8: read -formal -D CONTRACT=assume buffer_mux4x8.v
 buffer_mux4x8: read -formal -D CONTRACT=assert buffer8.v chip74139.v chip74245.v
 buffer_mux4x8: prep -top buffer_mux4x8
+buffer_mux4x32_decoded: read -formal -D CONTRACT=assume buffer_mux4x32_decoded.v
+buffer_mux4x32_decoded: read -formal -D CONTRACT=assert buffer16.v buffer32.v chip74LVC162244.v
+buffer_mux4x32_decoded: prep -top buffer_mux4x32_decoded
 chip74LVC162244: read -formal -D CONTRACT=assume chip74LVC162244.v
 chip74LVC162244: prep -top chip74LVC162244
 chip7400: read -formal -D CONTRACT=assume chip7400.v
@@ -117,7 +122,7 @@ control_logic: prep -top control_logic
 eeprom: read -formal -D CONTRACT=assume eeprom.v
 eeprom: prep -top eeprom
 kpu: read -formal -D CONTRACT=assume kpu.v
-kpu: read -formal -D CONTRACT=assert buffer8.v buffer16.v buffer32.v buffer_mux2x8.v buffer_mux2x32.v buffer_mux3x8.v buffer_mux4x8.v chip74LVC162244.v chip7404.v chip7408.v chip74107.v chip74138.v chip74139.v chip74154.v chip74161.v chip74238.v chip74245.v chip74273.v chip74590.v chip7416374.v control_logic.v lut.v microcode.v microop_counter.v mlu.v mlu_slice.v mlu_lookahead.v mmu.v register_file.v register32.v shifter.v sram.v timer.v
+kpu: read -formal -D CONTRACT=assert buffer8.v buffer16.v buffer32.v buffer_mux2x8.v buffer_mux2x32.v buffer_mux3x8.v buffer_mux4x8.v buffer_mux4x32_decoded.v chip74LVC162244.v chip7404.v chip7408.v chip7432.v chip74107.v chip74138.v chip74139.v chip74154.v chip74161.v chip74238.v chip74245.v chip74273.v chip74590.v chip7416374.v control_logic.v lut.v microcode.v microop_counter.v mlu.v mlu_slice.v mlu_lookahead.v mmu.v register_file.v register32.v shifter.v sram.v timer.v vga.v
 kpu: prep -top kpu
 lut: read -formal -D CONTRACT=assume lut.v
 lut: prep -top lut
@@ -139,7 +144,7 @@ mlu_slice: read -formal -D CONTRACT=assume mlu_slice.v
 mlu_slice: read -formal -D CONTRACT=assert lut.v
 mlu_slice: prep -top mlu_slice
 mmu: read -formal -D CONTRACT=assume mmu.v
-mmu: read -formal -D CONTRACT=assert sram.v
+mmu: read -formal -D CONTRACT=assert chip7404.v chip7432.v sram.v vga.v
 mmu: prep -top mmu
 register32: read -formal -D CONTRACT=assume register32.v
 register32: read -formal -D CONTRACT=assert chip7416374.v
@@ -148,13 +153,17 @@ register_file: read -formal -D CONTRACT=assume register_file.v
 register_file: read -formal -D CONTRACT=assert buffer8.v buffer_mux4x8.v chip74139.v chip74245.v sram.v
 register_file: prep -top register_file
 shifter: read -formal -D CONTRACT=assume shifter.v
-shifter: read -formal -D CONTRACT=assert buffer16.v buffer32.v buffer_mux2x32.v chip74LVC162244.v chip7404.v chip7408.v
+shifter: read -formal -D CONTRACT=assert buffer16.v buffer32.v buffer_mux2x32.v buffer_mux4x32_decoded.v chip74LVC162244.v chip7404.v chip7408.v chip74139.v
 shifter: prep -top shifter
 sram: read -formal -D CONTRACT=assume sram.v
 sram: prep -top sram
 timer: read -formal -D CONTRACT=assume timer.v
 timer: read -formal -D CONTRACT=assert chip74161.v
 timer: prep -top timer
+vga: read -formal -D CONTRACT=assume vga.v
+vga: read -formal -D CONTRACT=assert sram.v
+vga: prep -top vga
+
 
 [files]
 bootstrapper.v
@@ -166,6 +175,7 @@ buffer_mux2x32.v
 buffer_mux3x8.v
 buffer_mux3x32.v
 buffer_mux4x8.v
+buffer_mux4x32_decoded.v
 chip74LVC162244.v
 chip7400.v
 chip7404.v
@@ -199,6 +209,7 @@ register_file.v
 shifter.v
 sram.v
 timer.v
+vga.v
 boot.hex
 formal.hex
 microcode.hex

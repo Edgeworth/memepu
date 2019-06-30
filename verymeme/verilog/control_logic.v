@@ -10,6 +10,7 @@ module control_logic(
   output logic [1:0] REG_SEL /*verilator public*/,
   output logic [3:0] MLU_PLANE /*verilator public*/,
   output logic [1:0] SHIFTER_PLANE /*verilator public*/,
+  output logic SHIFTER_ARITH /*verilator public*/,
   // Decoded in plane signals:
   output logic REG_N_IN_CLK,
   output logic TMP0_IN_CLK,
@@ -71,12 +72,12 @@ module control_logic(
   wire [3:0] control_out_plane /*verilator public*/;
   wire control_misc_plane /*verilator public*/;
   wire control_opcode_sel /*verilator public*/;
-  wire [8:0] unused_control;
+  wire [7:0] unused_control;
   // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
   // on rising clock.
   register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(0),
-    .OUT({unused_control, control_opcode_sel, SHIFTER_PLANE, MLU_PLANE, control_misc_plane,
-          control_in_plane, control_out_plane, REG_SEL, CTRL_DATA}));
+    .OUT({unused_control, control_opcode_sel, SHIFTER_ARITH, SHIFTER_PLANE, MLU_PLANE,
+        control_misc_plane, control_in_plane, control_out_plane, REG_SEL, CTRL_DATA}));
 
   // In plane decoder - enable on CLK to do pulse.
   // This must be updated if the signals in microcode.v are changed.
@@ -127,7 +128,7 @@ module control_logic(
     // state.
     if ($past(f_past_n_clk) == 2 && f_past_n_clk == 2 && N_RST) begin
       // Don't try to do a left-arithmetic shift, it doesn't make sense.
-      if ($past(!SHIFTER_N_OUT)) assert ($past(SHIFTER_PLANE[1:0]) != 2'b11);
+      if ($past(!SHIFTER_N_OUT)) assert ($past(SHIFTER_PLANE) == common::SHIFTER_RIGHT);
 
       // Don't try to write and read to the same thing:
       assert ($past(REG_N_IN_CLK) || $past(REG_N_OUT));

@@ -20,4 +20,4 @@ module vga(
     if (N_RST) `CONTRACT(N_WE || N_OE);
   end
   `endif
-endmodule : vga
+endmodule

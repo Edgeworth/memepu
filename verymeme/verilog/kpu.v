@@ -37,8 +37,8 @@ module kpu(
 
   // Shifter:
   wire [31:0] shifter_val, shifter_out;
-  shifter shifter(.IN(tmp0_val), .SHFT(tmp1_val[4:0]), .LEFT(control_shifter_plane[0]),
-    .ARITH(control_shifter_plane[1]), .N_RST(n_rst), .OUT(shifter_val));
+  shifter shifter(.IN(tmp0_val), .SHFT(tmp1_val[4:0]), .SEL(control_shifter_plane),
+    .ARITH(control_shifter_arith), .N_RST(n_rst), .OUT(shifter_val));
   buffer32 shifter_buf(.IN(shifter_val), .OUT(shifter_out), .N_OE(control_shifter_n_out));
 
   // MMU:
@@ -83,6 +83,7 @@ module kpu(
   wire [1:0] control_reg_sel;
   wire [3:0] control_mlu_plane;
   wire [1:0] control_shifter_plane;
+  wire control_shifter_arith;
   // In plane:
   wire control_reg_n_in_clk;
   wire control_tmp0_in_clk;
@@ -106,6 +107,7 @@ module kpu(
     .REG_SEL(control_reg_sel),
     .MLU_PLANE(control_mlu_plane),
     .SHIFTER_PLANE(control_shifter_plane),
+    .SHIFTER_ARITH(control_shifter_arith),
     .REG_N_IN_CLK(control_reg_n_in_clk),
     .TMP0_IN_CLK(control_tmp0_in_clk),
     .TMP1_IN_CLK(control_tmp1_in_clk),
