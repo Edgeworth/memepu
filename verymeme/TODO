@@ -13,6 +13,13 @@
 - Branch instructions (requires condition select and sign extension)
 - VGA signal generation
 - Interrupts (requires condition select)
+- Microcode functions
+- Secure, Privileged bit + privileged instructions
+- Paging + Virtual address translation
+- Page faults
+- System calls (software interrupts)
+- Memelang
+- Mouse/keyboard input somehow
 
 #### memeroute
 - Finish DSN parsing. Better displaying.

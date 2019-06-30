@@ -26,7 +26,12 @@ package common;
   localparam MLU_OR = 3;
   localparam MLU_XOR = 4;
   localparam MLU_NOT = 5;
-  localparam MLU_NOP0 = 6;  // TODO sign extend. Add extra param to mlu slice or use shifter?
+  localparam MLU_NOP0 = 6;  // TODO: Zero and ones - if can't guarantee weakly pulled zero on bus?
   localparam MLU_NOP1 = 7;
+
+  localparam SHIFTER_LEFT = 0;
+  localparam SHIFTER_RIGHT = 1;
+  localparam SHIFTER_SIGNEXT8 = 2;
+  localparam SHIFTER_SIGNEXT16 = 3;
 endpackage
 `endif
