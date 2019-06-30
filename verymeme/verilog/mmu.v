@@ -16,14 +16,24 @@ module mmu(
 
   wire ram_n_we;
   wire ram_n_oe;
+  wire ram_val;
   sram#(.DEPTH(14), .WIDTH(32), .INITIAL("boot.hex")) ram(.ADDR(ADDR[15:2]), .N_WE(ram_n_we),
-    .N_OE(ram_n_oe), .IN_DATA(IN), .N_RST(N_RST), .OUT_DATA(OUT));
+    .N_OE(ram_n_oe), .IN_DATA(IN), .N_RST(N_RST), .OUT_DATA(ram_val));
 
   wire vga_n_we;
   wire vga_n_oe;
-  vga vga(.ADDR({ADDR[15:2]}), .N_WE(vga_n_we), .N_OE(vga_n_oe), .N_RST(N_RST), .IN(IN), .OUT(OUT));
+  wire vga_val;
+  vga vga(.ADDR({ADDR[15:2]}), .N_WE(vga_n_we), .N_OE(vga_n_oe), .N_RST(N_RST), .IN(IN), .OUT(vga_val));
 
   wire _unused_ok = &{ADDR}; // TODO REMOVE.
+
+  `ifdef SCHEMATIC
+  assign OUT = ram_val;
+  assign OUT = vga_val;
+  `else
+  assign OUT = ADDR[16] ? vga_val : ram_val;
+  `endif
+
 
   `ifdef FORMAL
   always_comb begin
@@ -33,4 +43,4 @@ module mmu(
 //    `CONTRACT(ADDR[1:0] == 2'b0);  // No unaligned accesses.
   end
   `endif
-endmodule : mmu
+endmodule

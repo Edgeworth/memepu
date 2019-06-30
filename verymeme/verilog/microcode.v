@@ -28,7 +28,8 @@ module microcode(
   // Could merge these, but it's confusing, makes routing harder, and causes more switching.
   logic [2:0] mlu_op;  // 3 bits for op select
   logic mlu_carry; // 1 bit for carry.
-  logic [1:0] shifter_plane; // 2 bits for direction and arithmetic or not.
+  logic [1:0] shifter_plane;  // See common::SHIFTER_*
+  logic shifter_arith;
   logic opcode_sel;  // 1 bit for deciding between reading from opword reg or bus. 0 is opword.
 
   assign OUT[5:0] = ctrl_data;
@@ -38,9 +39,9 @@ module microcode(
   assign OUT[15] = misc_plane;
   assign OUT[18:16] = mlu_op;
   assign OUT[19] = mlu_carry;
-  assign OUT[21:20] = shifter_plane;
-  assign OUT[22] = opcode_sel;
-  assign OUT[31:23] = 0;
+  assign OUT[23:20] = shifter_plane;
+  assign OUT[24] = opcode_sel;
+  assign OUT[31:25] = 0;
 
   localparam OP_RESET=0;
   localparam OP_FETCH=1;
@@ -94,7 +95,7 @@ module microcode(
       misc_plane = MISC_RESET_MICROOP_COUNTER; \
       opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; end
   always_comb begin
-    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane, opcode_sel} = 0;
+    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane, shifter_arith, opcode_sel} = 0;
     `SET_MNEMONIC("")
     case (opcode)
       OP_RESET: begin
