@@ -128,7 +128,8 @@ module control_logic(
     // state.
     if ($past(f_past_n_clk) == 2 && f_past_n_clk == 2 && N_RST) begin
       // Don't try to do a left-arithmetic shift, it doesn't make sense.
-      if ($past(!SHIFTER_N_OUT)) assert ($past(SHIFTER_PLANE) == common::SHIFTER_RIGHT);
+      if ($past(!SHIFTER_N_OUT) && $past(SHIFTER_PLANE) != common::SHIFTER_RIGHT)
+        assert ($past(!SHIFTER_ARITH));
 
       // Don't try to write and read to the same thing:
       assert ($past(REG_N_IN_CLK) || $past(REG_N_OUT));

@@ -263,20 +263,31 @@ INSTANTIATE_TEST_SUITE_P(Basic, MluTest,
     testing::Values(std::make_tuple(1, 2, 0), std::make_tuple(1, 1, 1),
         std::make_tuple(3364619464, 3637411669, 0)));
 
-class SemiExhaustiveShifterTest : public ExhaustiveVerilatorTest<15, 5, 1, 1> {
+class SemiExhaustiveShifterTest : public ExhaustiveVerilatorTest<15, 5, 2, 1> {
 public:
   void doTest() override {
-    const auto[IN, SHFT, LEFT, ARITH] = param;
-    if (LEFT && ARITH) return;  // Skip arithmetic left shift.
+    const auto[IN, SHFT, SEL, ARITH] = param;
+    if (SEL != memeware::Shifter::SHIFTER_RIGHT_SHIFT && ARITH) return;
     shifter_.IN = IN;
     shifter_.SHFT = SHFT;
-    shifter_.LEFT = LEFT;
+    shifter_.SEL = SEL;
     shifter_.ARITH = ARITH;
     shifter_.eval();
-    if (LEFT) EXPECT_EQ(IN << SHFT, shifter_.OUT);
-    else if (ARITH) EXPECT_EQ(int32_t(IN) >> SHFT, shifter_.OUT);
-    else
-      EXPECT_EQ(IN >> SHFT, shifter_.OUT);
+    switch (memeware::Shifter(SEL)) {
+      case memeware::SHIFTER_LEFT_SHIFT:
+        EXPECT_EQ(IN << SHFT, shifter_.OUT);
+        break;
+      case memeware::SHIFTER_RIGHT_SHIFT:
+        if (ARITH) EXPECT_EQ(int32_t(IN) >> SHFT, shifter_.OUT);
+        else EXPECT_EQ(IN >> SHFT, shifter_.OUT);
+        break;
+      case memeware::SHIFTER_SIGNEXT8:
+        EXPECT_EQ(int32_t(int8_t(IN)) << SHFT, shifter_.OUT);
+        break;
+      case memeware::SHIFTER_SIGNEXT16:
+        EXPECT_EQ(int32_t(int16_t(IN)) << SHFT, shifter_.OUT);
+        break;
+    }
   }
 private:
   Vshifter shifter_;

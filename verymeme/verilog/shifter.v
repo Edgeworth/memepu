@@ -70,13 +70,11 @@ module shifter(
       `CONTRACT (n_signext8 || n_signext16);  // Can't sign extend 8 bit and 16 bit at the same time.
       // If sign extending, can't also reverse bits (right shift).
       `CONTRACT ((n_signext8 && n_signext16) || !n_left_shift);
-      // If sign extending, can't also shift.
-      `CONTRACT ((n_signext8 && n_signext16) || (SHFT == 5'b0));
       // Should rotate left.
       if (!n_left_shift) assert (OUT == (IN << SHFT));
       else if (!n_right_shift && ARITH) assert ($signed(OUT) == ($signed(IN) >>> SHFT));
-      else if (!n_signext8) assert (OUT == ({{24{IN[7]}}, IN[7:0]}));
-      else if (!n_signext16) assert (OUT == ({{16{IN[15]}}, IN[15:0]}));
+      else if (!n_signext8) assert (OUT == ({{24{IN[7]}}, IN[7:0]}) << SHFT);
+      else if (!n_signext16) assert (OUT == ({{16{IN[15]}}, IN[15:0]}) << SHFT);
       else assert (OUT == (IN >> SHFT));
     end
   end
