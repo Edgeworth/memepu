@@ -27,4 +27,8 @@
     "opcode": "6",
     "mnemonic": "or r%d,r%d,r%d"
 }
+,{
+    "opcode": "7",
+    "mnemonic": "lh r%d,%x"
+}
 ]

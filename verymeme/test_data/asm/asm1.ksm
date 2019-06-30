@@ -1,3 +1,4 @@
+lh r5,f000 ; test sgn ext.
 lhu r0,ffff
 addu r0,r0,1 ; r0 is vram addr
 addu r2,r0,0 ; set r2 to r1
