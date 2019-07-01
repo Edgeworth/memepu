@@ -50,28 +50,13 @@ public:
   // This method is thread safe.
   void scheduleCommand(const Command& cmd);
 
+  static void initializeKpu(Vkpu& kpu);
+  static void clockKpu(Vkpu& kpu);
+  static void resetKpu(Vkpu& kpu);
+
 private:
   Vkpu kpu_;
   ConcurrentQueue<Command> command_queue_;
-
-  void clockKpu() {
-    kpu_.CLK = 0;
-    kpu_.N_CLK = 1;
-    kpu_.eval();
-
-    kpu_.CLK = 1;
-    kpu_.N_CLK = 0;
-    kpu_.eval();
-  }
-
-  void resetKpu() {
-    kpu_.CLK = 0;
-    kpu_.N_CLK = 1;
-    kpu_.N_RST_ASYNC = 0;
-    kpu_.eval();
-    kpu_.N_RST_ASYNC = 1;
-    kpu_.eval();
-  }
 
   CpuStateMessage generateCpuState();
   VgaStateMessage generateVgaState();

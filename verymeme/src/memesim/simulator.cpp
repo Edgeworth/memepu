@@ -11,12 +11,46 @@
 
 namespace memesim {
 
+void Simulator::initializeKpu(Vkpu& kpu) {
+  kpu.N_RST_ASYNC = 1;
+  // Make sure to start with a high CLK so the two clockKpu's below produce two falling edges.
+  kpu.CLK = 1;
+  kpu.N_CLK = 0;
+  kpu.eval();  // Eval once to set up all signals (X => defined value).
+  clockKpu(kpu);  // Clock twice to end any reset that happened from X => defined value.
+  clockKpu(kpu);
+  resetKpu(kpu);  // Actually reset.
+}
+
+void Simulator::clockKpu(Vkpu& kpu) {
+  kpu.CLK = 0;
+  kpu.N_CLK = 1;
+  kpu.eval();
+
+  kpu.CLK = 1;
+  kpu.N_CLK = 0;
+  kpu.eval();
+}
+
+void Simulator::resetKpu(Vkpu& kpu) {
+  kpu.CLK = 1;
+  kpu.N_CLK = 0;
+  kpu.N_RST_ASYNC = 0;
+  kpu.eval();
+  kpu.N_RST_ASYNC = 1;
+  kpu.CLK = 0;
+  kpu.N_CLK = 1;  // First falling edge.
+  kpu.eval();
+  kpu.CLK = 1;
+  kpu.N_CLK = 0;
+  kpu.eval();
+  kpu.CLK = 0;
+  kpu.N_CLK = 1;  // Second falling edge - KPU should be reset now.
+  kpu.eval();
+}
+
 void Simulator::run() {
-  kpu_.N_RST_ASYNC = 1;
-  kpu_.eval();  // Eval once to set up all signals (X => defined value).
-  clockKpu();  // Clock twice to end any reset that happened from X => defined value.
-  clockKpu();
-  resetKpu();  // Actually reset.
+  initializeKpu(kpu_);
 
   bool running = false;
   bool step = false;
@@ -49,7 +83,7 @@ void Simulator::run() {
           break;
       }
     }
-    if (running || step) clockKpu();
+    if (running || step) clockKpu(kpu_);
   }
 }
 
@@ -96,7 +130,6 @@ Simulator::VgaStateMessage Simulator::generateVgaState() {
 
   return msg;
 }
-
 
 void Simulator::scheduleCommand(const Simulator::Command& cmd) {
   command_queue_.push(cmd);
