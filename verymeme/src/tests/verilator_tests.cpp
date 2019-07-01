@@ -1,5 +1,6 @@
 #include <array>
 #include <numeric>
+#include <memesim/simulator.h>
 
 #include "gtest/gtest.h"
 #include "verymeme/common.h"
@@ -352,26 +353,6 @@ TEST_F(SemiExhaustiveRegisterFileTest, SemiExhaustiveRegisterFileTest) {
 class KpuTest : public VerilatorTest {
 protected:
   Vkpu kpu_;
-
-  void resetKpu() {
-    kpu_.eval();  // Extra eval to make all signals defined.
-    // Asynchronous reset from high CLK.
-    kpu_.N_RST_ASYNC = 0;
-    kpu_.CLK = 1;
-    kpu_.N_CLK = 0;
-    kpu_.eval();
-    kpu_.N_RST_ASYNC = 1;
-    kpu_.CLK = 0;
-    kpu_.N_CLK = 1;
-    kpu_.eval();
-    kpu_.CLK = 1;
-    kpu_.N_CLK = 0;
-    kpu_.eval();
-    kpu_.CLK = 0;
-    kpu_.N_CLK = 1;
-    kpu_.eval();
-    EXPECT_TRUE(kpu_.kpu->n_rst);
-  }
 };
 
 TEST_F(KpuTest, AsyncResetFromLowClk) {
@@ -436,17 +417,20 @@ TEST_F(KpuTest, AsyncResetFromHighClk) {
 }
 
 TEST_F(KpuTest, TimerIsReset) {
-  resetKpu();
+  memesim::Simulator::initializeKpu(kpu_);
+  EXPECT_TRUE(kpu_.kpu->n_rst);
   EXPECT_EQ(0u, kpu_.kpu->timer_val);
 }
 
 TEST_F(KpuTest, MicroopCounterIsReset) {
-  resetKpu();
+  memesim::Simulator::initializeKpu(kpu_);
+  EXPECT_TRUE(kpu_.kpu->n_rst);
   EXPECT_EQ(0u, kpu_.kpu->control->microop_count);
 }
 
 TEST_F(KpuTest, OpcodeIsReset) {
-  resetKpu();
+  memesim::Simulator::initializeKpu(kpu_);
+  EXPECT_TRUE(kpu_.kpu->n_rst);
   EXPECT_EQ(0u, kpu_.kpu->control->opcode);
 }
 
