@@ -16,7 +16,7 @@ package common;
 
   // Schematics must use LUTs, so enable HEXFILE.
   `ifdef SCHEMATIC
-  `define HEXFILE
+  // `define HEXFILE
   `endif
 
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248

@@ -5,21 +5,20 @@
 
 #### Verilator tests
 - Timer test
+- Instruction tests
 
 #### kpu
-- Sign extension - need to use shifter.
- - What to do with 2 extra ALU ops?
 - Condition select
 - Branch instructions (requires condition select and sign extension)
-- VGA signal generation
 - Interrupts (requires condition select)
+- VGA signal generation
 - Microcode functions
 - Secure, Privileged bit + privileged instructions
+- Memelang
 - Paging + Virtual address translation
 - Page faults
-- System calls (software interrupts)
-- Memelang
 - Mouse/keyboard input somehow
+- System calls (software interrupts)
 
 #### memeroute
 - Finish DSN parsing. Better displaying.
