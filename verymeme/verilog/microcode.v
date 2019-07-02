@@ -1,6 +1,6 @@
 `include "common.v"
 module microcode(
-  input wire [10:0] ADDR,
+  input wire [11:0] ADDR,
   output logic [31:0] OUT,
   // Bootstrapping signals:
   input wire [11:0] BOOTSTRAP_ADDR,
@@ -12,12 +12,13 @@ module microcode(
 
   `ifdef HEXFILEA // TODO undo
   // TODO: change to specific lut chip
-  lut#(.DEPTH(11), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
+  lut#(.DEPTH(12), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
   .ADDR(ADDR), .OUT_DATA(OUT),
   .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
   .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
   `else
   // These assignments must be kept up to date with control_logic.v.
+  wire cond_var = ADDR[11];
   wire [5:0] opcode = ADDR[10:5];
   wire [4:0] microop_count = ADDR[4:0];
   logic [5:0] ctrl_data;
@@ -31,6 +32,7 @@ module microcode(
   logic [1:0] shifter_plane;  // See common::SHIFTER_*
   logic shifter_arith;
   logic opcode_sel;  // 1 bit for deciding between reading from opword reg or bus. 0 is opword.
+  logic [1:0] cond_var_sel;
 
   assign OUT[5:0] = ctrl_data;
   assign OUT[7:6] = reg_sel;
@@ -42,7 +44,8 @@ module microcode(
   assign OUT[21:20] = shifter_plane;
   assign OUT[22] = shifter_arith;
   assign OUT[23] = opcode_sel;
-  assign OUT[31:24] = 0;
+  assign OUT[25:24] = cond_var_sel;
+  assign OUT[31:26] = 0;
 
   localparam OP_RESET=0;
   localparam OP_FETCH=1;
@@ -53,6 +56,7 @@ module microcode(
   // [Opcode 6][rD 5][rS 5][immediate 16]
   localparam OP_SW=5;  // SW [rD + signext(I)], rS - store 32-bit
   localparam OP_ADDU=3; // ADDU rD,rS,I - rD = rS + zeroext(I)
+  localparam OP_BEQ=8;  // BEQ rA,rB,I - if rA == rB: r31 = r31 + signext(I)
 
   // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
   localparam OP_ADD3=4;  // ADD rD,rA,rB - rD = rA + rB
@@ -86,6 +90,12 @@ module microcode(
   localparam OPCODE_SEL_OPCODE_FROM_OPWORD=0;
   localparam OPCODE_SEL_OPCODE_FROM_BUS=1;
 
+  // Selects which condition we look at on the next cycle.
+  localparam COND_SEL_MLU_ZERO=0;
+  localparam COND_SEL_MLU_CARRY=1;
+  localparam COND_SEL_MLU_NEGATIVE=2;
+  localparam COND_SEL_INTERRUPT=3;
+
   localparam REG_PC=31; // r31 is program counter.
 
   `define SET_MNEMONIC(s) `ifdef verilator mnemonic = $size(mnemonic)'(s); `endif
@@ -97,7 +107,7 @@ module microcode(
       misc_plane = MISC_RESET_MICROOP_COUNTER; \
       opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; end
   always_comb begin
-    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane, shifter_arith, opcode_sel} = 0;
+    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane, shifter_arith, opcode_sel, cond_var_sel} = 0;
     `SET_MNEMONIC("")
     case (opcode)
       OP_RESET: begin
@@ -208,6 +218,29 @@ module microcode(
           mlu_op = common::MLU_ADD;
         end
         3: `GO_FETCH()
+      endcase
+      end
+      OP_BEQ: begin // TODO: Use offset
+      `SET_MNEMONIC("beq r%d,r%d,%x")
+      case (microop_count)
+        0: begin // TODO
+          reg_sel = REG_SEL_OPWORD1;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP0;
+          cond_var_sel = COND_SEL_MLU_ZERO;
+        end
+        1: begin
+          if (cond_var) begin
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end else begin
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+        end
+        2: `GO_FETCH()
       endcase
       end
       OP_ADD3: begin

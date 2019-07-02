@@ -66,7 +66,7 @@ module shifter(
   `ifdef FORMAL
   always_comb begin
     if (N_RST) begin
-      `CONTRACT (n_left_shift || !ARITH);  // Left arithmetic shift does not make sense.
+      `CONTRACT (!n_right_shift || !ARITH);  // Arithmetic shift only for right shift.
       // Should rotate left.
       if (!n_left_shift) assert (OUT == (IN << SHFT));
       else if (!n_right_shift && ARITH) assert ($signed(OUT) == ($signed(IN) >>> SHFT));
