@@ -107,12 +107,12 @@ module microcode(
       misc_plane = MISC_RESET_MICROOP_COUNTER; \
       opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS; end
   always_comb begin
-    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane, shifter_arith, opcode_sel, cond_var_sel} = 0;
+    {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane,
+      shifter_arith, opcode_sel, cond_var_sel} = 0;
     `SET_MNEMONIC("")
     case (opcode)
       OP_RESET: begin
       `SET_MNEMONIC("rst")
-        // TODO: maybe can build model of assembler instructions by outputting a string e.g. JMP $a and probing it in memeware.
         case (microop_count)
           0: begin  // Set program counter to zero.
             ctrl_data = REG_PC;
@@ -220,27 +220,54 @@ module microcode(
         3: `GO_FETCH()
       endcase
       end
-      OP_BEQ: begin // TODO: Use offset
+      OP_BEQ: begin
       `SET_MNEMONIC("beq r%d,r%d,%x")
       case (microop_count)
-        0: begin // TODO
-          reg_sel = REG_SEL_OPWORD1;
+        0: begin  // Load first register into TMP0
+          reg_sel = REG_SEL_OPWORD0;
           out_plane = OUT_REG;
           in_plane = IN_TMP0;
+        end
+        1: begin  // Load second register into TMP1
+          reg_sel = REG_SEL_OPWORD1;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP1;
+        end
+        2: begin  // Subtract and observe the ZERO flag on the next microop.
+          mlu_op = common::MLU_SUB;
+          mlu_carry = 1;
           cond_var_sel = COND_SEL_MLU_ZERO;
         end
-        1: begin
-          if (cond_var) begin
-            reg_sel = REG_SEL_OPWORD1;
-            out_plane = OUT_REG;
+        3: begin
+          if (cond_var) begin  // If it was zero, load offset into tmp0 for sign extend.
+            out_plane = OUT_OPWORD_IMMEDIATE;
             in_plane = IN_TMP0;
-          end else begin
-            reg_sel = REG_SEL_OPWORD1;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP0;
-          end
+          end else `GO_FETCH()  // Skip if it wasn't zero.
         end
-        2: `GO_FETCH()
+        4: begin  // Set shift amount to zero.
+          // TODO(improvement): Shift by 2 bits since instructions must be 4 byte aligned.
+          out_plane = OUT_NONE;
+          in_plane = IN_TMP1;
+        end
+        5: begin  // Sign extend and write to TMP1.
+          shifter_plane = common::SHIFTER_SIGNEXT16;
+          out_plane = OUT_SHIFTER;
+          in_plane = IN_TMP1;
+        end
+        6: begin  // Load PC into tmp0.
+          ctrl_data = REG_PC;
+          reg_sel = REG_SEL_CONTROL;
+          out_plane = OUT_REG;
+          in_plane = IN_TMP0;
+        end
+        7: begin  // Add offset and write back to program counter.
+          ctrl_data = REG_PC;
+          reg_sel = REG_SEL_CONTROL;
+          out_plane = OUT_MLU;
+          in_plane = IN_REG;
+          mlu_op = common::MLU_ADD;
+        end
+        8: `GO_FETCH()
       endcase
       end
       OP_ADD3: begin
