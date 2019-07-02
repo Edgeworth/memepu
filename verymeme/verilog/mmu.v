@@ -34,7 +34,6 @@ module mmu(
   assign OUT = ADDR[16] ? vga_val : ram_val;
   `endif
 
-
   `ifdef FORMAL
   always_comb begin
     if (N_RST) `CONTRACT(N_WE || N_OE);

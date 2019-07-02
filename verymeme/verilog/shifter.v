@@ -67,9 +67,6 @@ module shifter(
   always_comb begin
     if (N_RST) begin
       `CONTRACT (n_left_shift || !ARITH);  // Left arithmetic shift does not make sense.
-      `CONTRACT (n_signext8 || n_signext16);  // Can't sign extend 8 bit and 16 bit at the same time.
-      // If sign extending, can't also reverse bits (right shift).
-      `CONTRACT ((n_signext8 && n_signext16) || !n_left_shift);
       // Should rotate left.
       if (!n_left_shift) assert (OUT == (IN << SHFT));
       else if (!n_right_shift && ARITH) assert ($signed(OUT) == ($signed(IN) >>> SHFT));
