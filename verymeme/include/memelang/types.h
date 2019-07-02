@@ -1,10 +1,10 @@
 #ifndef MEMELANG_TYPES_H
 #define MEMELANG_TYPES_H
 
-#include "common.h"
-#include "compile.h"
+#include "verymeme/common.h"
+#include "memelang/compile.h"
 
-namespace meme {
+namespace memelang {
 
 #define DEFNLT(type, ...) \
   auto getTie() const { return std::tie(__VA_ARGS__); } \
@@ -68,4 +68,4 @@ const Type UINT16 = {"uint16", false, {}};
 
 }  // namespace meme
 
-#endif //MEMELANG_TYPES_H
+#endif  // MEMELANG_TYPES_H

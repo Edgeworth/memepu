@@ -1,4 +1,4 @@
-#include "compile.h"
+#include "memelang/compile.h"
 
 #define compile_error(expr, node, ...) \
   do { \
@@ -11,7 +11,7 @@
     } \
   } while (0)
 
-namespace meme {
+namespace memelang {
 
 const std::string& Compile::generateCode() {
   for (const auto& child : root_->children)
@@ -154,4 +154,4 @@ Compile::findAll(const Parser::Node* node, Parser::Node::Type type) {
   return matches;
 }
 
-}  // namespace meme
+}  // namespace memelang

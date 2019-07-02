@@ -1,7 +1,7 @@
-#include "tokeniser.h"
+#include "memelang/tokeniser.h"
 #include <unordered_map>
 
-namespace meme {
+namespace memelang {
 
 namespace {
 
@@ -100,4 +100,4 @@ bool Tokeniser::atCompleteToken() {
   return false;
 }
 
-}  // namespace meme
+}  // namespace memelang
