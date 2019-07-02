@@ -1,13 +1,13 @@
-#ifndef VERYMEME_PARSER_H
-#define VERYMEME_PARSER_H
+#ifndef VERYMEME_TOKENIZER_H
+#define VERYMEME_TOKENIZER_H
 
 #include <regex>
 
 #include "verymeme/common.h"
 
-class Parser {
+class Tokenizer {
 public:
-  Parser(const std::string& data, const std::regex& token);
+  Tokenizer(const std::string& data, const std::regex& token);
 
   template<typename T = std::string>
   T peek(int ahead = 0) {
@@ -33,4 +33,4 @@ private:
   int idx_ = 0;
 };
 
-#endif  // VERYMEME_PARSER_H
+#endif  // VERYMEME_TOKENIZER_H
