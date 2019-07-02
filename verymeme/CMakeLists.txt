@@ -49,7 +49,7 @@ set(VERYMEME_SOURCES
     src/verymeme/common.cpp include/verymeme/common.h
     src/verymeme/file.cpp include/verymeme/file.h
     src/verymeme/geom.cpp include/verymeme/geom.h
-    src/verymeme/parser.cpp include/verymeme/parser.h
+    src/verymeme/tokenizer.cpp include/verymeme/tokenizer.h
     src/verymeme/term.cpp include/verymeme/term.h)
 set(MEMECAD_SOURCES ${VERYMEME_SOURCES}
     src/memecad/parser.cpp include/memecad/parser.h
