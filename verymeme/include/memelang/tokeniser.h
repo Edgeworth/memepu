@@ -1,16 +1,14 @@
-#include <utility>
-
-
 #ifndef MEMELANG_TOKENISER_H
 #define MEMELANG_TOKENISER_H
 
-#include "common.h"
-#include "file_contents.h"
+#include "verymeme/common.h"
+#include "memelang/file_contents.h"
 #include <vector>
 #include <utility>
 #include <memory>
+#include <boost/format.hpp>
 
-namespace meme {
+namespace memelang {
 
 struct Token {
   enum Type {
@@ -22,10 +20,8 @@ struct Token {
   int size;
 
   std::string toString(const FileContents* contents) const {
-    std::string str;
-    format_str(str, "Token('%s', %d:%d)", contents->getSpan(loc, size).c_str(),
-        contents->getLineNumber(loc), contents->getColNumber(loc));
-    return str;
+    return (boost::format("Token('%s', %d:%d)") % contents->getSpan(loc, size) %
+            contents->getLineNumber(loc) % contents->getColNumber(loc)).str();
   }
 };
 
@@ -47,6 +43,6 @@ private:
   bool atCompleteToken();
 };
 
-}  // namespace meme
+}  // namespace memelang
 
-#endif //MEMELANG_TOKENISER_H
+#endif  // MEMELANG_TOKENISER_H

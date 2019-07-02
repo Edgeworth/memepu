@@ -280,7 +280,8 @@ public:
         break;
       case memeware::SHIFTER_RIGHT_SHIFT:
         if (ARITH) EXPECT_EQ(int32_t(IN) >> SHFT, shifter_.OUT);
-        else EXPECT_EQ(IN >> SHFT, shifter_.OUT);
+        else
+          EXPECT_EQ(IN >> SHFT, shifter_.OUT);
         break;
       case memeware::SHIFTER_SIGNEXT8:
         EXPECT_EQ(int32_t(int8_t(IN)) << SHFT, shifter_.OUT);

@@ -1,16 +1,14 @@
-#include <utility>
-
 #ifndef MEMELANG_PARSER_H
 #define MEMELANG_PARSER_H
 
-#include "common.h"
-#include "tokeniser.h"
-#include "file_contents.h"
+#include "verymeme/common.h"
+#include "memelang/tokeniser.h"
+#include "memelang/file_contents.h"
 #include <vector>
 #include <memory>
 #include <unordered_set>
 
-namespace meme {
+namespace memelang {
 
 class Parser {
 public:
@@ -109,6 +107,6 @@ private:
   void astToStringInternal(const Parser::Node* const root, std::string& out, int indent);
 };
 
-}  // namespace meme
+}  // namespace memelang
 
-#endif //MEMELANG_PARSER_H
+#endif  // MEMELANG_PARSER_H
