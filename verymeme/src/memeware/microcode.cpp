@@ -68,7 +68,6 @@ std::string generateMemeasmModel() {
     if (!first) s << ",";
     instruction.add("opcode", opcode);
     instruction.add("mnemonic", mnemonic);
-    instruction.add("imm_signed", microcode.microcode->imm_signed);
     instruction.add("imm_relative", microcode.microcode->imm_relative);
     pt::write_json(s, instruction);
     first = false;

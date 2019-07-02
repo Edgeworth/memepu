@@ -13,6 +13,9 @@ public:
 
   std::vector<uint32_t> assemble(const std::string& data);
 
+  static std::string
+  generateMnemonicString(const std::string& mnemonic_str, uint32_t opword_bits);
+
 private:
   enum class Parameter {
     REGISTER, IMMEDIATE
@@ -21,7 +24,6 @@ private:
   struct Mnemonic {
     std::regex rx;
     int opcode;
-    bool imm_signed;
     bool imm_relative;
     std::vector<Parameter> params;
   };
@@ -31,7 +33,10 @@ private:
   std::vector<uint32_t> bin_;
   std::map<std::string, uint32_t> labels_;
 
+  uint32_t convertMnemonicStringToOpword(const std::string& line, int lnum, bool first_pass);
+  const Mnemonic& findMnemonicByOpcode(uint32_t opcode);
   void assembleInternal(bool first_pass);
+
 };
 
 }  // memeasm

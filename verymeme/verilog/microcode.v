@@ -9,7 +9,6 @@ module microcode(
   input wire BOOTSTRAP_N_WE
 );
   logic [8*20:0] mnemonic /*verilator public*/;
-  logic imm_signed /*verilator public*/;
   logic imm_relative /*verilator public*/;
 
   `ifdef HEXFILEA // TODO undo
@@ -112,7 +111,6 @@ module microcode(
     {ctrl_data, reg_sel, out_plane, in_plane, misc_plane, mlu_op, mlu_carry, shifter_plane,
     shifter_arith, opcode_sel, cond_var_sel} = 0;
     `SET_MNEMONIC("")
-    imm_signed = 1'b0;
     imm_relative = 1'b0;
     case (opcode)
       OP_RESET: begin
@@ -161,7 +159,7 @@ module microcode(
         endcase
       end
       OP_LH: begin
-        `SET_MNEMONIC("lh r%d,%x")
+        `SET_MNEMONIC("lh r%1%,%4$x")
         case (microop_count)
           0: begin  // Write the opword 16 bits into tmp0.
             out_plane = OUT_OPWORD_IMMEDIATE;
@@ -177,7 +175,7 @@ module microcode(
         endcase
       end
       OP_LHU: begin
-        `SET_MNEMONIC("lhu r%d,%x")
+        `SET_MNEMONIC("lhu r%1%,%4$x")
         case (microop_count)
           0: begin  // Write the opword 16 bits into the given register.
             reg_sel = REG_SEL_OPWORD0;
@@ -188,7 +186,7 @@ module microcode(
         endcase
       end
       OP_SW: begin  // TODO: use offset
-        `SET_MNEMONIC("sw r%d,r%d,%x")
+        `SET_MNEMONIC("sw r%1%,r%2%,%4$x")
         case (microop_count)
           0: begin  // Write first register (dst) into tmp0.
             reg_sel = REG_SEL_OPWORD0;
@@ -204,7 +202,7 @@ module microcode(
         endcase
       end
       OP_ADDU: begin
-        `SET_MNEMONIC("addu r%d,r%d,%x")
+        `SET_MNEMONIC("addu r%1%,r%2%,%4$x")
         case (microop_count)
           0: begin  // Write second reg into tmp0.
             reg_sel = REG_SEL_OPWORD1;
@@ -225,8 +223,7 @@ module microcode(
         endcase
       end
       OP_BEQ: begin
-        `SET_MNEMONIC("beq r%d,r%d,%x")
-        imm_signed = 1'b1;  // Signed relative.
+        `SET_MNEMONIC("beq r%1%,r%2%,%4$x")
         imm_relative = 1'b1;
         case (microop_count)
           0: begin  // Load first register into TMP0
@@ -277,7 +274,7 @@ module microcode(
         endcase
       end
       OP_ADD3: begin
-        `SET_MNEMONIC("add r%d,r%d,r%d")
+        `SET_MNEMONIC("add r%1%,r%2%,r%3%")
         case (microop_count)
           0: begin  // Write second reg into tmp0.
             reg_sel = REG_SEL_OPWORD1;
@@ -299,7 +296,7 @@ module microcode(
         endcase
       end
       OP_OR3: begin
-        `SET_MNEMONIC("or r%d,r%d,r%d")
+        `SET_MNEMONIC("or r%1%,r%2%,r%3%")
         case (microop_count)
           0: begin  // Write second reg into tmp0.
             reg_sel = REG_SEL_OPWORD1;
