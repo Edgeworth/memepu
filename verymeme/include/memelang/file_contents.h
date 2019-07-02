@@ -1,10 +1,10 @@
 #ifndef MEMELANG_FILE_CONTENTS_H
 #define MEMELANG_FILE_CONTENTS_H
 
-#include "common.h"
+#include "verymeme/common.h"
 #include <vector>
 
-namespace meme {
+namespace memelang {
 
 class FileContents {
 public:
@@ -22,6 +22,6 @@ private:
   std::vector<int> newlines_;
 };
 
-}  // namespace meme
+}  // namespace memelang
 
-#endif //MEMELANG_FILE_CONTENTS_H
+#endif  // MEMELANG_FILE_CONTENTS_H

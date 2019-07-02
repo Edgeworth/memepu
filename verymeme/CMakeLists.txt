@@ -74,7 +74,14 @@ set(MEMESIM_SOURCES ${VERYMEME_SOURCES} ${MEMEASM_SOURCES}
     src/memesim/simulator.cpp include/memesim/simulator.h
     src/memesim/cli.cpp include/memesim/cli.h
     src/memesim/display.cpp include/memesim/display.h)
-set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES} ${MEMESIM_SOURCES}
+set(MEMELANG_SOURCES ${VERYMEME_SOURCES}
+    src/memelang/tokeniser.cpp include/memelang/tokeniser.h
+    src/memelang/parser.cpp include/memelang/parser.h
+    src/memelang/file_contents.cpp include/memelang/file_contents.h
+    src/memelang/compile.cpp include/memelang/compile.h
+    include/memelang/types.h)
+set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES} ${MEMEWARE_SOURCES}
+    ${MEMEASM_SOURCES} ${MEMESIM_SOURCES} ${MEMELANG_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
 
@@ -112,6 +119,12 @@ target_include_directories(memesim PUBLIC ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUD
 target_link_directories(memesim PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(memesim PUBLIC verilated_library ${SFML_LIBRARIES} ${SFML_DEPENDENCIES}
     ${Boost_LIBRARIES} Threads::Threads)
+
+# memelang:
+add_executable(memelang ${MEMELANG_SOURCES} src/programs/memelang.cpp)
+target_include_directories(memelang PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_link_directories(memelang PUBLIC ${Boost_LIBRARY_DIRS})
+target_link_libraries(memelang PUBLIC ${Boost_LIBRARIES})
 
 # tests:
 add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)

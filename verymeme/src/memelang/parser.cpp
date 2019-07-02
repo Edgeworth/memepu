@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "memelang/parser.h"
 
 #include <climits>
 #include <sstream>
@@ -37,7 +37,7 @@
   auto name = tri(__VA_ARGS__); \
   if (!name) return nullptr;
 
-namespace meme {
+namespace memelang {
 
 namespace {
 
@@ -539,4 +539,4 @@ void Parser::compileError() {
   exit(1);
 }
 
-}  // namespace meme
+}  // namespace memelang

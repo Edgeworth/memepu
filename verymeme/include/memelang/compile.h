@@ -1,13 +1,13 @@
 #ifndef MEMELANG_COMPILE_H
 #define MEMELANG_COMPILE_H
 
-#include "common.h"
-#include "parser.h"
-#include "types.h"
+#include "verymeme/common.h"
+#include "memelang/parser.h"
+#include "memelang/types.h"
 #include <unordered_map>
 #include <functional>
 
-namespace meme {
+namespace memelang {
 
 class Compile {
 public:
@@ -55,6 +55,6 @@ private:
   std::vector<const Parser::Node*> findAll(const Parser::Node* node, Parser::Node::Type type);
 };
 
-}  // namespace meme
+}  // namespace memelang
 
-#endif //MEMELANG_COMPILE_H
+#endif  // MEMELANG_COMPILE_H

@@ -1,8 +1,8 @@
-#include "file_contents.h"
+#include "memelang/file_contents.h"
 
 #include <algorithm>
 
-namespace meme {
+namespace memelang {
 
 FileContents::FileContents(std::string filename, std::string data) : filename_(std::move(filename)),
                                                                      data_(std::move(data)) {
@@ -26,4 +26,4 @@ std::string FileContents::getSpan(int loc, int size) const {
   return data_.substr(loc, size);
 }
 
-}  // namespace meme
+}  // namespace memelang
