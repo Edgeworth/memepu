@@ -1,38 +1,56 @@
 [
 {
     "opcode": "0",
-    "mnemonic": "rst"
+    "mnemonic": "rst",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "1",
-    "mnemonic": "nop"
+    "mnemonic": "nop",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "2",
-    "mnemonic": "lhu r%d,%x"
+    "mnemonic": "lhu r%d,%x",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "3",
-    "mnemonic": "addu r%d,r%d,%x"
+    "mnemonic": "addu r%d,r%d,%x",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "4",
-    "mnemonic": "add r%d,r%d,r%d"
+    "mnemonic": "add r%d,r%d,r%d",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "5",
-    "mnemonic": "sw r%d,r%d,%x"
+    "mnemonic": "sw r%d,r%d,%x",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "6",
-    "mnemonic": "or r%d,r%d,r%d"
+    "mnemonic": "or r%d,r%d,r%d",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "7",
-    "mnemonic": "lh r%d,%x"
+    "mnemonic": "lh r%d,%x",
+    "imm_signed": "0",
+    "imm_relative": "0"
 }
 ,{
     "opcode": "8",
-    "mnemonic": "beq r%d,r%d,%x"
+    "mnemonic": "beq r%d,r%d,%x",
+    "imm_signed": "1",
+    "imm_relative": "1"
 }
 ]

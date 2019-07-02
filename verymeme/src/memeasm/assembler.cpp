@@ -11,6 +11,8 @@ const char* PREAMBLE_RX = "\\s*";
 const char* POSTAMBLE_RX = "\\s*(;.*)?";
 const char* LABEL_RX = "([0-9a-zA-Z]+):";
 
+constexpr int OPWORD_SIZE = 4;
+
 std::vector<std::string> getLines(const std::string& data) {
   std::stringstream ss(data);
   std::string line;
@@ -34,6 +36,8 @@ Assembler::Assembler(const std::string& model_json) {
     const auto& mnemonic_str = kv.second.get<std::string>("mnemonic");
     Mnemonic mnemonic = {};
     mnemonic.opcode = kv.second.get<int>("opcode");
+    mnemonic.imm_signed = kv.second.get<bool>("imm_signed");
+    mnemonic.imm_relative = kv.second.get<bool>("imm_relative");
     std::string mnemonic_rx = PREAMBLE_RX;
     for (int i = 0; i < int(mnemonic_str.size()); ++i) {
       if (mnemonic_str[i] == '%') {
@@ -82,7 +86,7 @@ void Assembler::assembleInternal(bool first_pass) {
       if (first_pass) {
         verify_expr(labels_.count(label) == 0, "%d: duplicate label definition of %s", lnum + 1,
             label.c_str());
-        labels_[label] = bin_.size() * sizeof(bin_[0]);
+        labels_[label] = bin_.size() * OPWORD_SIZE;
       }
       continue;
     }
@@ -114,8 +118,10 @@ void Assembler::assembleInternal(bool first_pass) {
                 const auto& label = pstr;
                 verify_expr(labels_.count(label), "%d: missing label definition of %s", lnum + 1,
                     label.c_str());
-                // TODO: Need to handle relative jumps.
-                imm = labels_[label];
+                if (mnemonic.imm_relative)
+                  imm = labels_[label] - bin_.size() * OPWORD_SIZE - OPWORD_SIZE;
+                else
+                  imm = labels_[label];
               }
             }
             // TODO: Check signedness.

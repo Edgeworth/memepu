@@ -21,6 +21,8 @@ private:
   struct Mnemonic {
     std::regex rx;
     int opcode;
+    bool imm_signed;
+    bool imm_relative;
     std::vector<Parameter> params;
   };
 
