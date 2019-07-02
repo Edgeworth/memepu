@@ -1,4 +1,4 @@
-#include "verymeme/parser.h"
+#include "verymeme/tokenizer.h"
 #include "memeroute/parser.h"
 #include "verymeme/geom.h"
 
@@ -11,7 +11,7 @@ const std::regex TOKEN(R"(([()])|(\".*?[^\\]\")|(\"\")|([^ \t\n()]+))");
 
 class PcbParser {
 public:
-  explicit PcbParser(const std::string& data) : p_(data, TOKEN) {}
+  explicit PcbParser(const std::string& data) : t_(data, TOKEN) {}
 
   const Pcb parsePcb() {
     parse();
@@ -20,12 +20,12 @@ public:
   }
 
 private:
-  Parser p_;
+  Tokenizer t_;
   Pcb pcb_;
   int resolution_ = 2540000;  // Default value.
 
   int64_t parseDimension() {
-    const float dim = p_.next<float>() * resolution_;
+    const float dim = t_.next<float>() * resolution_;
     verify_expr(std::abs(dim - int64_t(dim)) < EP, "coordinate conversion loses information");
     return int64_t(dim);
   }
@@ -36,21 +36,21 @@ private:
 
   Shape parseShape() {
     Shape shape{};
-    p_.expect({"("});
-    std::string type = p_.next();
-    const std::string layer_name = p_.next();
+    t_.expect({"("});
+    std::string type = t_.next();
+    const std::string layer_name = t_.next();
     shape.layer_id = getDefault(pcb_.layers, layer_name, -1);
 
     if (type == "path") {
       shape.type = Shape::Type::PATH;
       shape.path.width = parseDimension();
-      while (p_.peek() != ")") {
+      while (t_.peek() != ")") {
         shape.path.points.push_back(parsePoint());
       }
     } else if (type == "circle") {
       shape.type = Shape::Type::CIRCLE;
       shape.circle.diameter = parseDimension();
-      if (p_.peek() != ")")
+      if (t_.peek() != ")")
         shape.circle.p = parsePoint();
     } else if (type == "rect") {
       shape.type = Shape::Type::RECT;
@@ -60,82 +60,82 @@ private:
     } else {
       verify_expr(false, "unsupported shape type '%s'", type.c_str());
     }
-    p_.expect({")"});
+    t_.expect({")"});
     return shape;
   }
 
   Pin parsePin() {
     Pin pin{};
-    p_.expect({"(", "pin"});
-    pin.padstack_id = p_.next();
-    pin.pin_id = p_.next();
+    t_.expect({"(", "pin"});
+    pin.padstack_id = t_.next();
+    pin.pin_id = t_.next();
     pin.p = parsePoint();
-    p_.expect({")"});
+    t_.expect({")"});
     return pin;
   }
 
   Image parseImage() {
     Image image{};
-    p_.expect({"(", "image"});
-    image.name = trim(p_.next(), "\"");
+    t_.expect({"(", "image"});
+    image.name = trim(t_.next(), "\"");
     while (true) {
-      const std::string& tok = p_.peek();
+      const std::string& tok = t_.peek();
       if (tok == ")") {
         break;
       } else {
         verify_expr(tok == "(", "expected child expression in image");
-        const std::string& child = p_.peek(1);
+        const std::string& child = t_.peek(1);
         if (child == "outline") {
-          p_.expect({"(", "outline"});
+          t_.expect({"(", "outline"});
           image.outlines.push_back(parseShape());
-          p_.expect({")"});
+          t_.expect({")"});
         } else if (child == "pin") {
           Pin pin = parsePin();
           verify_expr(image.pins.count(pin.pin_id) == 0, "duplicate pin '%s'", pin.pin_id.c_str());
           image.pins[pin.pin_id] = pin;
         } else if (child == "keepout") {
-          p_.expect({"(", "keepout"});
-          p_.next();  // Skip keepout name.
+          t_.expect({"(", "keepout"});
+          t_.next();  // Skip keepout name.
           image.keepouts.push_back(parseShape());
-          p_.expect({")"});
+          t_.expect({")"});
         } else {
           verify_expr(false, "unknown token '%s'", child.c_str());
         }
       }
     }
-    p_.expect({")"});
+    t_.expect({")"});
     return image;
   }
 
   Padstack parsePadstack() {
     Padstack padstack{};
-    p_.expect({"(", "padstack"});
-    padstack.name = p_.next();
+    t_.expect({"(", "padstack"});
+    padstack.name = t_.next();
     while (true) {
-      const std::string& tok = p_.peek();
+      const std::string& tok = t_.peek();
       if (tok == ")") {
         break;
       } else {
         verify_expr(tok == "(", "expected child expression in image");
-        const std::string& child = p_.peek(1);
+        const std::string& child = t_.peek(1);
         if (child == "shape") {
-          p_.expect({"(", "shape"});
+          t_.expect({"(", "shape"});
           padstack.shapes.push_back(parseShape());
-          p_.expect({")"});
+          t_.expect({")"});
         } else {
           verify_expr(child == "attach", "unknown token '%s", child.c_str());
           ignoreRestOfExpression();  // TODO(improvement): Ignore for now.
         }
       }
     }
-    p_.expect({")"});
+    t_.expect({")"});
     return padstack;
   }
 
   void ignoreRestOfExpression() {
-    const bool inside_expr = p_.peek() != "(";
+    const bool inside_expr = t_.peek() != "(";
     while (true) {
-      const std::string& tok = p_.next();
+      const std::string& tok = t_.next();
       if (tok == "(") {
         ignoreRestOfExpression();
         if (!inside_expr) break;  // Handle the case of being called at the start of an expression.
@@ -146,41 +146,41 @@ private:
   }
 
   std::vector<Component> parseComponents() {
-    p_.expect({"(", "component"});
-    const std::string image_id = trim(p_.next(), "\"");
+    t_.expect({"(", "component"});
+    const std::string image_id = trim(t_.next(), "\"");
     std::vector<Component> components;
     while (true) {
-      const std::string& tok = p_.peek();
+      const std::string& tok = t_.peek();
       if (tok == "(") {
-        p_.expect({"(", "place"});
+        t_.expect({"(", "place"});
         Component& component = components.emplace_back();
-        component.name = p_.next();
+        component.name = t_.next();
         component.image_id = image_id;
         component.p = parsePoint();
-        component.side = p_.next<Side>();
-        component.rotation = p_.next<int>();
-        p_.expect({"(", "PN"});
-        component.part_number = p_.next();
-        p_.expect({")", ")"});
+        component.side = t_.next<Side>();
+        component.rotation = t_.next<int>();
+        t_.expect({"(", "PN"});
+        component.part_number = t_.next();
+        t_.expect({")", ")"});
       } else {
         break;
       }
     }
-    p_.expect({")"});
+    t_.expect({")"});
     return components;
   }
 
   void checkParseConfiguration() {
-    p_.expect({"(", "parser"});
+    t_.expect({"(", "parser"});
     while (true) {
-      const std::string& tok = p_.peek();
+      const std::string& tok = t_.peek();
       if (tok == ")") {
         break;
       } else {
-        p_.expect({"("});
-        const std::string& child = p_.peek();
+        t_.expect({"("});
+        const std::string& child = t_.peek();
         if (child == "string_quote")
-          p_.expect({"string_quote", "\"", ")"});
+          t_.expect({"string_quote", "\"", ")"});
         else if (child == "space_in_quoted_tokens" || child == "host_cad" ||
                  child == "host_version")
           ignoreRestOfExpression();
@@ -188,33 +188,33 @@ private:
           verify_expr(false, "unrecognised expression '%s'", tok.c_str());
       }
     }
-    p_.expect({")"});
+    t_.expect({")"});
   }
 
   void parseStructure() {
-    p_.expect({"(", "structure"});
+    t_.expect({"(", "structure"});
     while (true) {
-      const std::string& tok = p_.peek();
+      const std::string& tok = t_.peek();
       if (tok == ")") {
         break;
       } else {
-        p_.expect({"("});
-        const std::string& child = p_.peek();
+        t_.expect({"("});
+        const std::string& child = t_.peek();
         if (child == "boundary") {
-          p_.expect({"boundary"});
+          t_.expect({"boundary"});
           pcb_.boundary = parseShape();
-          p_.expect({")"});
+          t_.expect({")"});
         } else if (child == "layer") {
-          p_.expect({"layer"});
-          const std::string name = p_.next();
-          p_.expect({"(", "type", "signal", ")", "(", "property", "(", "index"});
+          t_.expect({"layer"});
+          const std::string name = t_.next();
+          t_.expect({"(", "type", "signal", ")", "(", "property", "(", "index"});
           verify_expr(pcb_.layers.count(name) == 0, "duplicate layer '%s'", name.c_str());
-          pcb_.layers[name] = p_.next<int>();
-          p_.expect({")", ")", ")"});
+          pcb_.layers[name] = t_.next<int>();
+          t_.expect({")", ")", ")"});
         } else if (child == "via") {
-          p_.expect({"via"});
-          pcb_.via_padstack_id = p_.next();
-          p_.expect({")"});
+          t_.expect({"via"});
+          pcb_.via_padstack_id = t_.next();
+          t_.expect({")"});
         } else if (child == "rule") {
           // TODO(improvement): Collect via and rules and propagate to router.
           ignoreRestOfExpression();  // TODO(improvement): Don't ignore these.
@@ -222,26 +222,26 @@ private:
           verify_expr(false, "unrecognised expression '%s'", tok.c_str());
       }
     }
-    p_.expect({")"});
+    t_.expect({")"});
   }
 
   void parse() {
-    std::string name = p_.peek(1);
+    std::string name = t_.peek(1);
     if (name == "pcb") {
       // TODO(improvement): support more expressions. Error if see unrecognised.
-      p_.expect({"("});
-      p_.next();  // ignore name for this expr.
+      t_.expect({"("});
+      t_.next();  // ignore name for this expr.
       while (true) {
-        const std::string& tok = p_.peek();
+        const std::string& tok = t_.peek();
         if (tok == "(") {
           parse();
         } else if (tok == ")") {
           break;
         } else {
-          p_.next();
+          t_.next();
         }
       }
-      p_.expect({")"});
+      t_.expect({")"});
     } else if (name == "image") {
       const auto& image = parseImage();
       verify_expr(pcb_.images.count(image.name) == 0, "duplicate image");
@@ -262,12 +262,12 @@ private:
     } else if (name == "parser") {
       checkParseConfiguration();
     } else if (name == "net") {
-      p_.expect({"(", "net"});
+      t_.expect({"(", "net"});
       Net net = {};
-      net.name = p_.next();
-      p_.expect({"(", "pins"});
-      while (p_.peek() != ")") {
-        const std::string component_pin = p_.next();
+      net.name = t_.next();
+      t_.expect({"(", "pins"});
+      while (t_.peek() != ")") {
+        const std::string component_pin = t_.next();
         const auto div = component_pin.find('-');
         verify_expr(div != std::string::npos, "invalid component-pin specifier '%s'",
             component_pin.c_str());
@@ -276,23 +276,23 @@ private:
       verify_expr(pcb_.nets.count(net.name) == 0, "duplicate net description with name '%s'",
           net.name.c_str());
       pcb_.nets[net.name] = std::move(net);
-      p_.expect({")", ")"});
+      t_.expect({")", ")"});
     } else if (name == "class") {
       ignoreRestOfExpression();  // TODO(improvement): Don't ignore.
     } else if (name == "wiring") {
       ignoreRestOfExpression();  // TODO(improvement): Don't ignore.
     } else if (name == "resolution") {
-      p_.expect({"(", "resolution"});
-      p_.next();  // Ignore unit for now.
-      resolution_ = p_.next<int>();
-      p_.expect({")"});
+      t_.expect({"(", "resolution"});
+      t_.next();  // Ignore unit for now.
+      resolution_ = t_.next<int>();
+      t_.expect({")"});
     } else if (name == "unit") {
       ignoreRestOfExpression();  // Ignore for now.
     } else if (name == "library" || name == "placement" || name == "network") {
       // Just process children.
-      p_.expect({"(", name});
-      while (p_.peek() != ")") parse();
-      p_.expect({")"});
+      t_.expect({"(", name});
+      while (t_.peek() != ")") parse();
+      t_.expect({")"});
     } else {
       verify_expr(false, "unrecognised expression '%s'", name.c_str());
     }
