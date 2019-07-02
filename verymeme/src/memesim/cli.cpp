@@ -86,7 +86,7 @@ void CommandLine::run() {
     } else if (cmd == "c") {
       simulator_->scheduleCommand(
           {Simulator::Command::Type::RUN, nullptr, nullptr});
-    } {
+    } else {
       simulator_->scheduleCommand(
           {Simulator::Command::Type::STEP, nullptr, nullptr});
       simulator_->scheduleCommand(
@@ -99,24 +99,26 @@ void CommandLine::run() {
 
 void CommandLine::printCpuState(const Simulator::CpuStateMessage& state) {
   const std::vector<std::pair<std::string, std::string>> table = {
-      {"bus",        convertToHex(state.bus)},
-      {"tmp0",       convertToHex(state.tmp0)},
-      {"tmp1",       convertToHex(state.tmp1)},
-      {"ow op",      convertToHex(state.opword_opcode)},
-      {"ow bits",    convertToHex(state.opword_bits)},
-      {"mlu",        convertToHex(state.mlu)},
-      {"opcode",     convertToHex(state.opcode)},
-      {"microop",    convertToHex(state.microop_count)},
-      {"ctrl data",  convertToHex(state.ctrl_data)},
-      {"reg sel",    convertToHex(state.reg_sel)},
-      {"out",        convertToHex(state.out_plane)},
-      {"in",         convertToHex(state.in_plane)},
-      {"misc",       convertToHex(state.misc_plane)},
-      {"mlu plane",  convertToBinary<4>(state.mlu_plane)},
-      {"shifter",    convertToBinary<2>(state.shifter_plane)},
-      {"opcode sel", convertToHex(state.opcode_sel)},
-      {"n_rst",      convertToBinary<1>(state.n_rst)},
-      {"asm",        state.mnemonic},
+      {"bus",          convertToHex(state.bus)},
+      {"tmp0",         convertToHex(state.tmp0)},
+      {"tmp1",         convertToHex(state.tmp1)},
+      {"ow op",        convertToHex(state.opword_opcode)},
+      {"ow bits",      convertToHex(state.opword_bits)},
+      {"mlu",          convertToHex(state.mlu)},
+      {"cond_var",     convertToHex(state.cond_var)},
+      {"opcode",       convertToHex(state.opcode)},
+      {"microop",      convertToHex(state.microop_count)},
+      {"ctrl data",    convertToHex(state.ctrl_data)},
+      {"reg sel",      convertToHex(state.reg_sel)},
+      {"out",          convertToHex(state.out_plane)},
+      {"in",           convertToHex(state.in_plane)},
+      {"misc",         convertToHex(state.misc_plane)},
+      {"mlu plane",    convertToBinary<4>(state.mlu_plane)},
+      {"shifter",      convertToBinary<2>(state.shifter_plane)},
+      {"opcode sel",   convertToHex(state.opcode_sel)},
+      {"cond var sel", convertToHex(state.cond_var_sel)},
+      {"n_rst",        convertToBinary<1>(state.n_rst)},
+      {"asm",          state.mnemonic},
   };
   printTable(table);
   printf("%s\n", prettyPrintNumbers(hexdump(state.regs, 8)).c_str());
