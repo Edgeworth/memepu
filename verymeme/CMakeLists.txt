@@ -68,13 +68,12 @@ set(MEMEROUTE_SOURCES ${VERYMEME_SOURCES}
 set(MEMEWARE_SOURCES ${VERYMEME_SOURCES}
     include/memeware/constants.h
     src/memeware/microcode.cpp include/memeware/microcode.h)
-set(MEMESIM_SOURCES ${VERYMEME_SOURCES}
+set(MEMEASM_SOURCES ${VERYMEME_SOURCES}
+    src/memeasm/assembler.cpp include/memeasm/assembler.h)
+set(MEMESIM_SOURCES ${VERYMEME_SOURCES} ${MEMEASM_SOURCES}
     src/memesim/simulator.cpp include/memesim/simulator.h
     src/memesim/cli.cpp include/memesim/cli.h
     src/memesim/display.cpp include/memesim/display.h)
-set(MEMEASM_SOURCES
-    src/memeasm/assembler.cpp include/memeasm/assembler.h
-    ${VERYMEME_SOURCES})
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES} ${MEMESIM_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
