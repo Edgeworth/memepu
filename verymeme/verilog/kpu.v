@@ -3,10 +3,12 @@
 module kpu(
   input wire CLK,
   input wire N_CLK,
-  input wire N_RST_ASYNC
+  input wire N_RST_ASYNC,
+  output wire [31:0] BUS
 );
   // Bus.
   wire [31:0] bus /*verilator public*/;
+  assign BUS = bus;
 
   // Synchronously deassert reset on 2nd falling edge.
   wire n_rst /*verilator public*/;
