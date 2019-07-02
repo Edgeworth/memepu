@@ -1,7 +1,12 @@
 lhu r0,0 ;load 0
 lhu r1,1 ;load 1
+lhu r3,22 ;load 0x22
 loop:
   add r2,r0,r1 ;compute next fib number
   addu r0,r1,0 ;swap down
   addu r1,r2,0 ;swap down
-  lhu r31,loop ;loop
+  beq r2,r3,loop2 ;exit loop if up to 22
+  lhu r31,loop ;loop otherwise
+loop2:
+  addu r2,r2,1 ;continually add one
+  lhu r31,loop2

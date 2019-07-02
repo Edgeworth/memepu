@@ -31,4 +31,8 @@
     "opcode": "7",
     "mnemonic": "lh r%d,%x"
 }
+,{
+    "opcode": "8",
+    "mnemonic": "beq r%d,r%d,%x"
+}
 ]

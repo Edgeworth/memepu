@@ -108,10 +108,15 @@ void Assembler::assembleInternal(bool first_pass) {
           case Parameter::IMMEDIATE: {
             int imm = convertFromHex(pstr);
             if (imm == INT_MIN) {
-              const auto& label = pstr;
-              verify_expr(labels_.count(label), "%d: missing label definition of %s", lnum + 1,
-                  label.c_str());
-              imm = labels_[label];
+              if (first_pass) {
+                imm = 0;
+              } else {
+                const auto& label = pstr;
+                verify_expr(labels_.count(label), "%d: missing label definition of %s", lnum + 1,
+                    label.c_str());
+                // TODO: Need to handle relative jumps.
+                imm = labels_[label];
+              }
             }
             // TODO: Check signedness.
             verify_expr(
