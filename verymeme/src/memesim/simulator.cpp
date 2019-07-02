@@ -1,3 +1,4 @@
+#include <memeasm/assembler.h>
 #include "memesim/simulator.h"
 
 #include "Vkpu_kpu.h"
@@ -109,7 +110,8 @@ Simulator::CpuStateMessage Simulator::generateCpuState() {
   msg.opcode_sel = uint32_t(kpu_.kpu->control->opcode_sel);
   msg.cond_var_sel = uint32_t(kpu_.kpu->control->cond_var_sel);
   msg.n_rst = uint32_t(kpu_.kpu->n_rst);
-  msg.mnemonic = convertToString(kpu_.kpu->control->microcode->mnemonic);
+  msg.mnemonic = memeasm::Assembler::generateMnemonicString(
+      convertToString(kpu_.kpu->control->microcode->mnemonic), kpu_.kpu->opword_bits);
   for (int i = 0; i < NUM_REG; ++i)
     msg.regs[i] = uint32_t(kpu_.kpu->regs->registers->mem[i]);
 

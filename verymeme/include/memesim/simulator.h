@@ -62,7 +62,6 @@ private:
 
   CpuStateMessage generateCpuState();
   VgaStateMessage generateVgaState();
-
 };
 
 }  // memesim

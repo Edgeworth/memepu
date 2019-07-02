@@ -14,8 +14,6 @@
 - System call tests
 
 #### kpu
-- Condition select
-- Branch instructions (requires condition select and sign extension)
 - Interrupts (requires condition select)
 - VGA signal generation
 - Microcode functions
