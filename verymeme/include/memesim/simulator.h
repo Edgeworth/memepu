@@ -20,6 +20,7 @@ public:
     uint32_t opword_opcode;
     uint32_t opword_bits;
     uint32_t mlu;
+    uint32_t cond_var;
     uint32_t opcode;
     uint32_t microop_count;
     uint32_t ctrl_data;
@@ -30,6 +31,7 @@ public:
     uint32_t mlu_plane;
     uint32_t shifter_plane;
     uint32_t opcode_sel;
+    uint32_t cond_var_sel;
     uint32_t n_rst;
     std::string mnemonic;
     uint32_t regs[32];

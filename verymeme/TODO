@@ -6,6 +6,12 @@
 #### Verilator tests
 - Timer test
 - Instruction tests
+- Condition select tests
+- VGA tests
+- Microcode function tests
+- Paging / translation tests
+- Page fault tests
+- System call tests
 
 #### kpu
 - Condition select

@@ -12,6 +12,11 @@ enum Mlu {
 enum Shifter {
   SHIFTER_LEFT_SHIFT, SHIFTER_RIGHT_SHIFT, SHIFTER_SIGNEXT8, SHIFTER_SIGNEXT16
 };
+
+constexpr int MLU_SLICE_DEPTH = 12;
+constexpr int MLU_LOOKAHEAD_DEPTH = 17;
+constexpr int MICROCODE_DEPTH = 12;
+
 }  // memeware
 
 #endif  // MEMEWARE_CONSTANTS_H

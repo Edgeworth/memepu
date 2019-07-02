@@ -25,17 +25,16 @@ module kpu(
 
   // MLU:
   wire [31:0] mlu_val /*verilator public*/, mlu_out;
-  wire [2:0] mlu_flags_out;
+  wire mlu_zero;
+  wire mlu_carry;
+  wire mlu_negative;
   mlu mlu(.A(tmp0_val), .B(tmp1_val), .OP(control_mlu_plane[2:0]), .C_IN(control_mlu_plane[3]),
-    .N_RST(n_rst), .OUT(mlu_val), .Z(mlu_flags_out[0]), .C(mlu_flags_out[1]), .N(mlu_flags_out[2]),
+    .N_RST(n_rst), .OUT(mlu_val), .Z(mlu_zero), .C(mlu_carry), .N(mlu_negative),
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr),
     .BOOTSTRAP_MLU_SLICE_N_WE(bootstrap_mlu_slice_n_we),
     .BOOTSTRAP_MLU_LOOKAHEAD_N_WE(bootstrap_mlu_lookahead_n_we));
   // TODO(optimisation): maybe can remove buffer by pushing output enable signals down to mlu slices.
   buffer32 mlu_buf(.IN(mlu_val), .OUT(mlu_out), .N_OE(control_mlu_n_out));
-
-  // TODO(improvement): Use mlu_flags_out.
-  wire _unused_ok = &{mlu_flags_out};
 
   // Shifter:
   wire [31:0] shifter_val, shifter_out;
@@ -105,6 +104,7 @@ module kpu(
   control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(n_rst),
     .BUS(bus[7:0]),
     .OPWORD_OPCODE(opword_opcode),
+    .MLU_ZERO(mlu_zero), .MLU_CARRY(mlu_carry), .MLU_NEGATIVE(mlu_negative),
     .CTRL_DATA(control_ctrl_data),
     .REG_SEL(control_reg_sel),
     .MLU_PLANE(control_mlu_plane),
