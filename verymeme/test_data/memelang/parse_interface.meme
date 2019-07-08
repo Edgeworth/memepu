@@ -1,0 +1,4 @@
+interface Meme<T> {
+    func testFunc() i8;
+    func testFunc2(T* a) i16;
+}

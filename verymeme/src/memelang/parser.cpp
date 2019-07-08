@@ -18,15 +18,15 @@
 
 #define peek_token(name) \
   const auto* name = curToken(); \
-  if (!name) return nullptr;
+  if (!name) return nullptr
 
 #define discard_token() \
-  if (!nextToken()) return nullptr;
+  if (!nextToken()) return nullptr
 
 #define consume_token(name, expected_type, note) \
   const auto* name = nextToken(); \
   if (!name) return nullptr; \
-  token_error(name->type == (expected_type), name, "expecting " note);
+  token_error(name->type == (expected_type), name, "expecting " note)
 
 #define expect_token(expected_type, note) \
   do { \
@@ -35,7 +35,7 @@
 
 #define expect_parse(name, ...) \
   auto name = tri(__VA_ARGS__); \
-  if (!name) return nullptr;
+  if (!name) return nullptr
 
 namespace memelang {
 
@@ -164,7 +164,7 @@ std::unique_ptr<Parser::Node> Parser::tryLiteral() {
   consume_token(token, Token::LITERAL, "literal");
   auto node = std::make_unique<Node>();
   int lit = parseInt(contents_->getSpan(token->loc, token->size));
-  if (lit != INT_MIN) {
+  if (lit != INT_MIN) {  // TODO: this is broken for INT_MIN.
     node = nodeFromToken(Node::INTEGER_LITERAL, token);
     node->intdata = lit;
   } else {
