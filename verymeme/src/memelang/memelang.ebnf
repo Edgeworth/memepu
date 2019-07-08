@@ -1,23 +1,23 @@
 grammar memelang;
-file : (interface_defn | struct_defn | fn_defn | enum_defn | impl_defn)* EOF;
+file : (intf_defn | struct_defn | fn_defn | enum_defn | impl_defn)* EOF;
 
 // Top level constructs:
-interface_defn : 'interface' typename decl_block ;
+intf_defn : 'intf' typename decl_block ;
 struct_defn : 'struct' typename defn_block ;
 fn_defn : fn_signature stmt_block ;
 enum_defn : 'enum' typename enum_block ;
-impl_defn : 'impl' type defn_block ;
+impl_defn : 'impl' typelist type defn_block ;
 
 // Block related:
-stmt_block : '{' stmt* '}' ;
-defn_block : '{' ('static'? fn_defn | var_decl)* '}' ;
-decl_block : '{' fn_decl* '}' ;
+stmt_block : LBRACE stmt* RBRACE ;
+defn_block : LBRACE ('static'? fn_defn | var_decl)* RBRACE ;
+decl_block : LBRACE fn_decl* RBRACE ;
 // TODO: Support structure like objects?
-enum_block : '{' (IDENT '(' type '),')* '}' ;
+enum_block : LBRACE (IDENT '(' type '),')* RBRACE ;
 // TODO: Ranges / OR / values?
-match_block : '{' (IDENT ('()' | '(' IDENT (',' IDENT)* ')') stmt_block)* '}' ;
+match_block : LBRACE (IDENT ('()' | '(' IDENT (',' IDENT)* ')') stmt_block)* RBRACE ;
 
-// stmt related:
+// Statement related:
 stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';' | stmt_for | stmt_if | stmt_match ;
 stmt_for : 'for' var_defn expr ';' expr stmt_block ;
 stmt_if : 'if' expr stmt_block ('else' stmt_if)* ('else' stmt_block)? ;
@@ -29,7 +29,7 @@ var_defn : ('auto' | type) IDENT '=' expr ';' ;
 
 // Expression related:
 literal : STRING_LIT | CHAR_LIT | INTEGER_LIT | float_lit | bool_lit;
-struct_init : type ('{}' | '{' (IDENT ':' expr ',')* '}') ;
+struct_init : type LBRACE (IDENT ':' expr ',')* RBRACE ;
 expr : expr '[' expr ']'  // Array subscript
     | fn_call  // Function call
     | expr '.' (fn_call | IDENT)  // Member access
@@ -43,15 +43,15 @@ expr : expr '[' expr ']'  // Array subscript
     | type | literal ;
 
 // Type related:
-
 typebound : IDENT ; // TODO: Support complex type bounds?
-typename : IDENT ('<' typebound (',' typebound)* '>')? ; // Identifies a typename with typebounds.
+typelist : '<' typebound (',' typebound)* '>' ;
+typename : IDENT typelist? ;
 // Identifiers either a concrete type or a set of types that should be deduced to a single type.
 type : (IDENT ('<' type (',' type)* '>')? | builtin_type) '*'? ;
 
-// fn related:
+// Function related:
 fn_decl : fn_signature ';' ; // Only allowed in interfaces.
-fn_signature : 'func' typename
+fn_signature : 'fn' typename
     ('()' | '(' type IDENT (',' type IDENT)* ')') type ;
 fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 
@@ -73,5 +73,7 @@ bool_lit : 'false' | 'true' ;
 WHITESPACE : [ \t\r\n]+ -> skip ;
 COMMENT : '//' ~[\n]* -> skip;
 IDENT : [a-zA-Z_]+[a-zA-Z0-9_]* ;
+LBRACE : '{' ;
+RBRACE : '}' ;
 
 // TODO: asm
