@@ -46,7 +46,7 @@ const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
 std::vector<Token> Tokeniser::tokenise() {
   tokens_.clear();
   const auto& data = contents_->data();
-  for (idx_ = 0; idx_ < data.size(); ++idx_) {
+  for (idx_ = 0; idx_ < int(data.size()); ++idx_) {
     char c = data[idx_];
     verify_expr(isprint(c) || c == '\n', "unprintable character '%c' at %d:%d",
         c, contents_->getLineNumber(idx_), contents_->getColNumber(idx_));

@@ -1,4 +1,0 @@
-func main() int8 {
-    34 + 32;
-    return 42;
-}
