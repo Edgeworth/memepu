@@ -1,6 +1,6 @@
 enum Unit {}
 
-func bubblesort<T>(vector<T*>* v) Unit {
+fn bubblesort<T>(vector<T*>* v) Unit {
   for (i32 i = 0; i < v.size(); i++) {
     for (i32 j = 0; j < v.size() - 1; j++) {
       if v[j] > v[j + 1] {
@@ -10,7 +10,7 @@ func bubblesort<T>(vector<T*>* v) Unit {
   }
 }
 
-func main() i32 {
+fn main() i32 {
   auto v = vector<int8>.new();
   v.push(4);
   v.push(3);

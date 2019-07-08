@@ -1,26 +1,26 @@
 enum Unit {}
 
-interface Iterator<T> {
-  func next() T*;
+intf Iterator<T> {
+  fn next() T*;
 }
 
-interface Iterable<T> {
-  func iter() Iterator<T>;
+intf Iterable<T> {
+  fn iter() Iterator<T>;
 }
 
-interface Movable<T> {
-  func move_into(T* o) Unit;
+intf Movable<T> {
+  fn move_into(T* o) Unit;
 }
 
-interface Destructible<T> {
-  func destroy() Unit;
+intf Destructible<T> {
+  fn destroy() Unit;
 }
 
 struct vector_iter<T> {
   vector<T>* vec_;
   i16 idx_;
 
-  func next() T* {
+  fn next() T* {
     if idx_ == vec_.size() {
       return nullptr;
     }
@@ -28,7 +28,7 @@ struct vector_iter<T> {
     return vec_[idx_ - 1];
   }
 
-  static func new(vector<T>* vec) vector_iter<T> {
+  static fn new(vector<T>* vec) vector_iter<T> {
     return vector_iter<T> {
       vec_: vec,
       idx_: 0,
@@ -41,11 +41,11 @@ struct vector<T> {
   i16 size_;
   i16 cap_;
 
-  func index(i16 index) T* {
+  fn index(i16 index) T* {
     return data_[index];
   }
 
-  func push(T val) Unit {
+  fn push(T val) Unit {
     if size_ == cap_ {
       cap_ = cap_ * 2;
       T* newdata = malloc(cap_ * sizeof(T));
@@ -60,16 +60,16 @@ struct vector<T> {
     data_[size_ - 1] = val;
   }
 
-  func pop() T {
+  fn pop() T {
     size_ = size_ - 1;
     return data_[size_].move();
   }
 
-  func size() i16 {
+  fn size() i16 {
     return size_;
   }
 
-  static func new() vector<T> {
+  static fn new() vector<T> {
     return vector<T>{
       data_: nullptr,
       size_: 0,
@@ -78,14 +78,14 @@ struct vector<T> {
   }
 }
 
-impl Iterable<vector<T>> {
-  func iter() vector_iter<T> {
+impl<T> Iterable<vector<T>> {
+  fn iter() vector_iter<T> {
     return vector_iter<T>.new(this);
   }
 }
 
-impl Movable<vector<T>> {
-  func move_into(vector<T>* o) Unit {
+impl<T> Movable<vector<T>> {
+  fn move_into(vector<T>* o) Unit {
     o.data_ = data_;
     o.size_ = size_;
     o.cap_ = cap_;
@@ -95,8 +95,8 @@ impl Movable<vector<T>> {
   }
 }
 
-impl Destructible<vector<T>> {
-  func destroy() Unit {
+impl<T> Destructible<vector<T>> {
+  fn destroy() Unit {
     for i16 i = 0; i < size; i = i + 1 {
       data_[i].destroy();
     }
@@ -104,14 +104,14 @@ impl Destructible<vector<T>> {
   }
 }
 
-func swap<T>(T* a, T* b) Unit {
+fn swap<T>(T* a, T* b) Unit {
   T c = T{};
   a.move_into(&c);
   b.move_into(a);
   c.move_into(b);
 }
 
-func bubblesort<T>(vector<T>* v) Unit {
+fn bubblesort<T>(vector<T>* v) Unit {
   for i32 i = 0; i < v.size(); i++ {
     for i32 j = 0; j < v.size() - 1; j++ {
       if v[j] > v[j + 1] {
@@ -121,7 +121,7 @@ func bubblesort<T>(vector<T>* v) Unit {
   }
 }
 
-func main() int8 {
+fn main() int8 {
     auto v = vector<int8>.new();
     v.push(4);
     v.push(3);

@@ -3,7 +3,7 @@ enum Result<T, E> {
   Error(E),
 }
 
-func trysomething(i8 succeed) Result<i8, bool> {
+fn trysomething(i8 succeed) Result<i8, bool> {
   if succeed > 3 {
     return Ok(5);
   } else {
@@ -12,7 +12,7 @@ func trysomething(i8 succeed) Result<i8, bool> {
   return Ok(1);
 }
 
-func main() i8 {
+fn main() i8 {
   match trysomething(4) {
     Ok(v) {
       print("Got value");
