@@ -6,7 +6,7 @@ interface_defn : 'interface' typename decl_block ;
 struct_defn : 'struct' typename defn_block ;
 fn_defn : fn_signature stmt_block ;
 enum_defn : 'enum' typename enum_block ;
-impl_defn : 'impl' typename 'for' type defn_block ;
+impl_defn : 'impl' type defn_block ;
 
 // Block related:
 stmt_block : '{' stmt* '}' ;
@@ -14,11 +14,14 @@ defn_block : '{' ('static'? fn_defn | var_decl)* '}' ;
 decl_block : '{' fn_decl* '}' ;
 // TODO: Support structure like objects?
 enum_block : '{' (IDENT '(' type '),')* '}' ;
+// TODO: Ranges / OR / values?
+match_block : '{' (IDENT ('()' | '(' IDENT (',' IDENT)* ')') stmt_block)* '}' ;
 
 // stmt related:
-stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';' | stmt_for | stmt_if ;
-stmt_for : 'for' '(' var_defn expr ';' expr ')' stmt_block ;
-stmt_if : 'if' expr stmt_block ;
+stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';' | stmt_for | stmt_if | stmt_match ;
+stmt_for : 'for' var_defn expr ';' expr stmt_block ;
+stmt_if : 'if' expr stmt_block ('else' stmt_if)* ('else' stmt_block)? ;
+stmt_match : 'match' expr match_block ;
 
 // Variable related:
 var_decl : type IDENT ';' ;
@@ -56,8 +59,9 @@ fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 // Switch case (matching?)
 
 // Terminals:
-builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' | 'void' ;
-binary_op : '*' | '/' | '%' | '+' | '-' | '>>' | '<<' | '<=' | '>=' | '<' | '>'
+builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' ;
+// Parse << and >> as two separate tokens to allow stuff like vector<vector<T>>.
+binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' | '<' '<' | '<=' | '>=' | '<' | '>'
     | '==' | '!=' |  '&' | '^' | '|' | '&&' | '||';
 prefix_op : '~' | '-' | '!' | '&' | '*' ;
 postfix_op : '++' | '--' ;

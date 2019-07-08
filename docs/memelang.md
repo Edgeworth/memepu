@@ -36,13 +36,19 @@ postincrement
 
 lexical scoping
 
-Maybe?
 destructuring
+ - structs
+ -
+zero sized types
+ - return optional for zero sized types
+
+tuples
+
+Maybe?
 default arguments
 explicit implement interface
 private/public stuff inside modules
 error handling: tagged union result, ? operator
-lambdas
 varargs?
 pointers can't be null?
 bitfields?
@@ -52,8 +58,6 @@ operator overloading via magic interfaces
 slices?
 type coercions?
 memory allocation (new)
-zero sized types?
-tuples? or just meme it with templates
 
 No features:
 - Multiple declarations in one line.
