@@ -1,4 +1,6 @@
-func bubblesort<T>(vector<T*>* v) void {
+enum Unit {}
+
+func bubblesort<T>(vector<T*>* v) Unit {
   for (i32 i = 0; i < v.size(); i++) {
     for (i32 j = 0; j < v.size() - 1; j++) {
       if v[j] > v[j + 1] {
