@@ -1,46 +1,81 @@
-int8, uint8, int16, uint16, int32, uint32, pointers, f32, f64
 
+## Built-in types
+i8, i16, i32, u8, u16, u32, bool, bit
 
-Yes features:
-functions - not first class
-interfaces
-strongly typed + type deduction
-auto
-structs
-tagged unions (enums)
-matching
-generics
-explicit implement interface
-const
-names ending with _ are private, otherwise public.
+## Literals
+struct_lit : type LBRACE (IDENT ':' expr ',')* RBRACE ;
+array_lit : '[]' | '[' expr (',' expr)* ']';
+literal : STRING_LIT | CHAR_LIT | INTEGER_LIT | float_lit | bool_lit | struct_lit | array_lit;
+
+## Operators and precedence
+binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' | '<' '<' | '<=' | '>=' | '<' | '>'
+    | '==' | '!=' |  '&' | '^' | '|' | '&&' | '||';
+prefix_op : '~' | '-' | '!' | '&' | '*' ;
+postfix_op : '++' | '--' ;
+expr '[' expr ']'  // Array subscript
+    | fn_call  // Function call
+    | expr '.' (fn_call | IDENT)  // Member access
+    | expr '?'  // Result syntactic sugar
+<assoc=right> expr '?' expr ':' expr  // Ternary expression
+    | <assoc=right> expr '=' expr  // Assignment
+    | '(' expr ')' // Grouped expression
+
+## Scoping
 lexical scoping
-inline assembly
-package/modules
+
+## Pointers and arrays
 pointer arithmetic
-destructors
-postincrement
-lexical scoping
-zero sized types
- - return optional for zero sized types
-static functions inside structs
-operator overloading via magic interfaces
-error handling: ? operator
 
-arrays
+## Const
+
+## Tagged unions
+
+## Control flow
+### If statement
+### Match statement
+### For loop
+### ? operator
+
+## Functions
+
+## Templates
+
+## Interfaces
+### Interface resolution
+
+## Structs
+### Static functions
+### Bitfields
+
+## Modules
+### Visibility
+names ending with _ are private, otherwise public.
+
+## Inline assembly
+
+## Compiler magic
+### Indexable
+### ConvertibleFrom
+### Destructible
+### LessThan
+### Equals
+### Auto
+### Zero sized types
+return optional for zero sized types
+
+TODO:
+casts
+type coercions via interfaces e.g. ConvertibleFrom<type> for type
 destructuring
  - structs
  - tuples
 tuples
 
-
 Maybe?
 template values (dependent types)
 pointers can't be null?
 varargs?
-bitfields?
 trait bounds?
-slices?
-type coercions?
 memory allocation (new)
 
 No features:
@@ -54,6 +89,7 @@ No features:
 - Function overloading
 - Default arguments
 - Automatic decay into pointers
+- slices
 
 Compiler magic:
 [u]int(8|16|24) satisfy Integral interface
