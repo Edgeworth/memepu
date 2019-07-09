@@ -6,7 +6,7 @@ intf_defn : 'intf' typename decl_block ;
 struct_defn : 'struct' typename defn_block ;
 fn_defn : fn_signature stmt_block ;
 enum_defn : 'enum' typename enum_block ;
-impl_defn : 'impl' typelist type defn_block ;
+impl_defn : 'impl' typelist typename 'for' typename defn_block ;
 
 // Block related:
 stmt_block : LBRACE stmt* RBRACE ;
@@ -18,17 +18,18 @@ enum_block : LBRACE (IDENT '(' type '),')* RBRACE ;
 match_block : LBRACE (IDENT ('()' | '(' IDENT (',' IDENT)* ')') stmt_block)* RBRACE ;
 
 // Statement related:
-stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';' | stmt_for | stmt_if | stmt_match | ASM ;
+stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';'
+    | stmt_for | stmt_if | stmt_match | ASM ;
 stmt_for : 'for' var_defn expr ';' expr stmt_block ;
 stmt_if : 'if' expr stmt_block ('else' stmt_if)* ('else' stmt_block)? ;
 stmt_match : 'match' expr match_block ;
 
 // Variable related:
-var_decl : type IDENT ';' ;
+var_decl : type IDENT (':' INTEGER_LIT)? ';' ;  // Optional bitfield.
 var_defn : ('auto' | type) IDENT '=' expr ';' ;
 
 // Expression related:
-literal : STRING_LIT | CHAR_LIT | INTEGER_LIT | float_lit | bool_lit;
+literal : STRING_LIT | CHAR_LIT | INTEGER_LIT | float_lit | bool_lit | struct_lit | array_lit;
 struct_lit : type LBRACE (IDENT ':' expr ',')* RBRACE ;
 array_lit : '[]' | '[' expr (',' expr)* ']';
 expr : expr '[' expr ']'  // Array subscript
@@ -41,8 +42,6 @@ expr : expr '[' expr ']'  // Array subscript
     | <assoc=right> expr '?' expr ':' expr  // Ternary expression
     | <assoc=right> expr '=' expr  // Assignment
     | '(' expr ')' // Grouped expression
-    | struct_lit
-    | array_lit
     | type | literal ;
 
 // Type related:
@@ -63,7 +62,7 @@ fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 // Switch case (matching?)
 
 // Terminals:
-builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' ;
+builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' | 'bit' ;
 // Parse << and >> as two separate tokens to allow stuff like vector<vector<T>>.
 binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' | '<' '<' | '<=' | '>=' | '<' | '>'
     | '==' | '!=' |  '&' | '^' | '|' | '&&' | '||';
