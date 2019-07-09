@@ -97,7 +97,7 @@ void Assembler::assembleInternal(bool first_pass) {
 std::string
 Assembler::generateMnemonicString(const std::string& mnemonic_str, uint32_t opword_bits) {
   const uint32_t regs[3] = {opword_bits & 0x1Fu, (opword_bits >> 5u) & 0x1Fu,
-                            (opword_bits >> 10u) & 0x1Fu};
+      (opword_bits >> 10u) & 0x1Fu};
   const uint16_t imm = opword_bits >> 10u;
   boost::format fmt(mnemonic_str);
   fmt.exceptions(boost::io::all_error_bits ^ boost::io::too_many_args_bit);

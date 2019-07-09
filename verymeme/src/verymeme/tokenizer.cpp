@@ -14,7 +14,8 @@ std::vector<std::string> tokenize(const std::string& data, const std::regex& tok
 
 } // namespace
 
-Tokenizer::Tokenizer(const std::string& data, const std::regex& token) : toks_(tokenize(data, token)) {}
+Tokenizer::Tokenizer(const std::string& data, const std::regex& token) : toks_(
+    tokenize(data, token)) {}
 
 std::string Tokenizer::getLines(int num_lines) {
   const int start_idx = idx_;

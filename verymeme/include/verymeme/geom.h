@@ -72,7 +72,7 @@ struct Rect {
 
   std::string toString() const {
     return "{" + std::to_string(left) + ", " + std::to_string(top) + ", " + std::to_string(right) +
-           ", " + std::to_string(bottom) + "}";
+        ", " + std::to_string(bottom) + "}";
   }
 
   static Rect enclosing(const Point& a, const Point& b);

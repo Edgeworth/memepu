@@ -243,7 +243,7 @@ public:
       data += "P " + tos(comp.p) + "\n";
       for (const auto& f : comp.fields) {
         data += "F " + tos(f.num) + " \"" + f.text + "\" " + tos(f.orientation) + " " + tos(f.p) +
-                " " + tos(f.size) + " " + f.flags + " " + f.justification + " " + f.style + "\n";
+            " " + tos(f.size) + " " + f.flags + " " + f.justification + " " + f.style + "\n";
       }
       data += comp.footer;
       data += "$EndComp\n";
@@ -256,7 +256,7 @@ public:
         continue;
       }
       data += "Text " + tos(l.type) + " " + tos(l.p) + " " +
-              tos(directionToLabelOrientation(l.direction, l.type)) + " " + tos(l.dimension) + " ";
+          tos(directionToLabelOrientation(l.direction, l.type)) + " " + tos(l.dimension) + " ";
       if (l.type == Sheet::Label::Type::HIERARCHICAL || l.type == Sheet::Label::Type::GLOBAL)
         data += tos(l.net_type) + " ";
       data += std::string(l.italic ? "Italic" : "~") + " " + (l.bold ? "10" : "0") + "\n";
@@ -276,7 +276,7 @@ public:
       data += "F1 \"" + r.filename + "\" 50\n";
       for (const auto& f : r.fields) {
         data += "F" + tos(f.num) + " \"" + f.text + "\" " + tos(f.type) + " " + tos(f.side) + " " +
-                tos(f.p) + " 50\n";
+            tos(f.p) + " 50\n";
       }
       data += "$EndSheet\n";
     }

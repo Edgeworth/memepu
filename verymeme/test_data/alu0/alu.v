@@ -1,5 +1,4 @@
-module alu(
-);
+module alu();
   wire [31:0] A = 0;
   wire [31:0] B = 0;
   wire [2:0] OP = 0;
