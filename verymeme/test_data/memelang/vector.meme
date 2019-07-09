@@ -1,7 +1,7 @@
 enum Unit {}
 
 intf Iterator<T> {
-  fn next() T*;
+  fn next() *T;
 }
 
 intf Iterable<T> {
@@ -9,18 +9,22 @@ intf Iterable<T> {
 }
 
 intf Movable<T> {
-  fn move_into(T* o) Unit;
+  fn move_into(*T o) Unit;
 }
 
 intf Destructible<T> {
   fn destroy() Unit;
 }
 
+intf Indexable<T> {
+  fn index(i32 index) *T;
+}
+
 struct vector_iter<T> {
-  vector<T>* vec_;
+  *vector<T> vec_;
   i16 idx_;
 
-  fn next() T* {
+  fn next() *T {
     if idx_ == vec_.size() {
       return nullptr;
     }
@@ -28,7 +32,7 @@ struct vector_iter<T> {
     return vec_[idx_ - 1];
   }
 
-  static fn new(vector<T>* vec) vector_iter<T> {
+  static fn new(*vector<T> vec) vector_iter<T> {
     return vector_iter<T> {
       vec_: vec,
       idx_: 0,
@@ -37,18 +41,14 @@ struct vector_iter<T> {
 }
 
 struct vector<T> {
-  T* data_;
+  *T data_;
   i16 size_;
   i16 cap_;
-
-  fn index(i16 index) T* {
-    return data_[index];
-  }
 
   fn push(T val) Unit {
     if size_ == cap_ {
       cap_ = cap_ * 2;
-      T* newdata = malloc(cap_ * sizeof(T));
+      *T newdata = malloc(cap_ * sizeof(T));
       for i16 i = 0; i < size_; i = i + 1 {
         newdata[i] = data_[i].move();
       }
@@ -85,7 +85,7 @@ impl<T> Iterable<vector<T>> {
 }
 
 impl<T> Movable<vector<T>> {
-  fn move_into(vector<T>* o) Unit {
+  fn move_into(*vector<T> o) Unit {
     o.data_ = data_;
     o.size_ = size_;
     o.cap_ = cap_;
@@ -104,14 +104,20 @@ impl<T> Destructible<vector<T>> {
   }
 }
 
-fn swap<T>(T* a, T* b) Unit {
+impl<T> Indexable {
+  fn index(i32 index) *T {
+    return data_[index];
+  }
+}
+
+fn swap<T>(*T a, *T b) Unit {
   T c = T{};
   a.move_into(&c);
   b.move_into(a);
   c.move_into(b);
 }
 
-fn bubblesort<T>(vector<T>* v) Unit {
+fn bubblesort<T>(*vector<T> v) Unit {
   for i32 i = 0; i < v.size(); i++ {
     for i32 j = 0; j < v.size() - 1; j++ {
       if v[j] > v[j + 1] {
@@ -126,7 +132,7 @@ fn main() int8 {
     v.push(4);
     v.push(3);
     v.push(1);
-    bubblesort(v);
+    bubblesort(&v);
     v[0] = v[0] << 2;
     return 1;
 }
