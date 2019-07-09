@@ -76,7 +76,7 @@ Rect Shape::getBoundingBox() const {
         // Paths with zero width are treated as having a small non-zero width, so min.
         const int radius_ceil = std::max(1, path.width / 2 + path.width % 2);
         const Rect r = {point.x - radius_ceil, point.y - radius_ceil, point.x + radius_ceil,
-                        point.y + radius_ceil};
+            point.y + radius_ceil};
         bounds.unionRect(r);
       }
       return bounds;

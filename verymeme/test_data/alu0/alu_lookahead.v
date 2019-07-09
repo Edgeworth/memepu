@@ -6,5 +6,5 @@ module alu_lookahead(
 );
   wire [7:0] unused = 0;
   sram17x8 lookahead_mem(.ADDR({C_IN, G, P}), .N_WE(1), .N_OE(0),
-      .IN_DATA(unused), .OUT_DATA(CARRYS));
+    .IN_DATA(unused), .OUT_DATA(CARRYS));
 endmodule

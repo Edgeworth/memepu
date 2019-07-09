@@ -35,13 +35,13 @@ RouterWorker::RouterWorker(Pcb pcb) : pcb_(std::move(pcb)) {}
 
 bool RouterWorker::oob(const RouterWorker::State& s) const {
   return s.p.x < 0 || s.p.y < 0 || s.p.x >= GRID_COLS || s.p.y >= GRID_ROWS || s.layer < 0 ||
-         s.layer >= NUM_LAYERS;
+      s.layer >= NUM_LAYERS;
 }
 
 Point RouterWorker::convertWorldToGrid(const Point& p) const {
   // Rounded up boundary so divisions guaranteed to be okay.
   const Point grid_point = {(p.x - boundary_.left) * GRID_COLS / boundary_.width(),
-                            (p.y - boundary_.top) * GRID_ROWS / boundary_.height()};
+      (p.y - boundary_.top) * GRID_ROWS / boundary_.height()};
   verify_expr(grid_point.x < GRID_COLS && grid_point.y < GRID_ROWS,
       "grid point %s from %s out of range", grid_point.toString().c_str(), p.toString().c_str());
   return grid_point;
@@ -49,7 +49,7 @@ Point RouterWorker::convertWorldToGrid(const Point& p) const {
 
 Point RouterWorker::convertGridToWorld(const Point& p) const {
   return {(p.x * boundary_.width() + boundary_.width() / 2) / GRID_COLS + boundary_.left,
-          (p.y * boundary_.height() + boundary_.height() / 2) / GRID_ROWS + boundary_.top};
+      (p.y * boundary_.height() + boundary_.height() / 2) / GRID_ROWS + boundary_.top};
 }
 
 void RouterWorker::markPinInGrid(const Component& component, const Pin& pin, int val) {

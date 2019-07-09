@@ -27,7 +27,7 @@ struct Token {
 
   std::string toString(const FileContents* contents) const {
     return (boost::format("Token('%s', %d:%d)") % contents->getSpan(loc, size) %
-            contents->getLineNumber(loc) % contents->getColNumber(loc)).str();
+        contents->getLineNumber(loc) % contents->getColNumber(loc)).str();
   }
 };
 
