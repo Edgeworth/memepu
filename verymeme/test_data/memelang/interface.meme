@@ -1,0 +1,4 @@
+intf Meme<T> {
+    fn testFunc() i8;
+    fn testFunc2(*T a) i16;
+}

@@ -3,58 +3,42 @@ int8, uint8, int16, uint16, int32, uint32, pointers, f32, f64
 
 Yes features:
 functions - not first class
-
 interfaces
-
 strongly typed + type deduction
 auto
-
 structs
-Tagged unions (enums) + matching - switch case
-
-generics - can be qualified with interfaces (?)
- - implies having first class functions? what if they are passed
-template values
-
+tagged unions (enums)
+matching
+generics
+explicit implement interface
 const
-automatic decay into pointers
-ending struct member var with _ makes it private. otherwise public.
+names ending with _ are private, otherwise public.
 lexical scoping
-
-package/modules
-
-const
-
 inline assembly
+package/modules
 pointer arithmetic
-
 destructors
-
-arrays
-
 postincrement
-
 lexical scoping
-
-destructuring
- - structs
- -
 zero sized types
  - return optional for zero sized types
+static functions inside structs
+operator overloading via magic interfaces
+error handling: ? operator
 
+arrays
+destructuring
+ - structs
+ - tuples
 tuples
 
+
 Maybe?
-default arguments
-explicit implement interface
-private/public stuff inside modules
-error handling: tagged union result, ? operator
-varargs?
+template values (dependent types)
 pointers can't be null?
+varargs?
 bitfields?
-static functions inside structs?
 trait bounds?
-operator overloading via magic interfaces
 slices?
 type coercions?
 memory allocation (new)
@@ -68,6 +52,8 @@ No features:
 - Type deduction based on return types / full unification
 - Lambdas, closures
 - Function overloading
+- Default arguments
+- Automatic decay into pointers
 
 Compiler magic:
 [u]int(8|16|24) satisfy Integral interface

@@ -18,7 +18,7 @@ enum_block : LBRACE (IDENT '(' type '),')* RBRACE ;
 match_block : LBRACE (IDENT ('()' | '(' IDENT (',' IDENT)* ')') stmt_block)* RBRACE ;
 
 // Statement related:
-stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';' | stmt_for | stmt_if | stmt_match ;
+stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';' | stmt_for | stmt_if | stmt_match | ASM ;
 stmt_for : 'for' var_defn expr ';' expr stmt_block ;
 stmt_if : 'if' expr stmt_block ('else' stmt_if)* ('else' stmt_block)? ;
 stmt_match : 'match' expr match_block ;
@@ -29,17 +29,20 @@ var_defn : ('auto' | type) IDENT '=' expr ';' ;
 
 // Expression related:
 literal : STRING_LIT | CHAR_LIT | INTEGER_LIT | float_lit | bool_lit;
-struct_init : type LBRACE (IDENT ':' expr ',')* RBRACE ;
+struct_lit : type LBRACE (IDENT ':' expr ',')* RBRACE ;
+array_lit : '[]' | '[' expr (',' expr)* ']';
 expr : expr '[' expr ']'  // Array subscript
     | fn_call  // Function call
     | expr '.' (fn_call | IDENT)  // Member access
+    | expr '?'  // Result syntactic sugar
     | expr postfix_op  // Postfix operations
     | <assoc=right> prefix_op expr  // Prefix operations
     | expr binary_op expr  // Binary operations
     | <assoc=right> expr '?' expr ':' expr  // Ternary expression
     | <assoc=right> expr '=' expr  // Assignment
     | '(' expr ')' // Grouped expression
-    | struct_init
+    | struct_lit
+    | array_lit
     | type | literal ;
 
 // Type related:
@@ -47,7 +50,8 @@ typebound : IDENT ; // TODO: Support complex type bounds?
 typelist : '<' typebound (',' typebound)* '>' ;
 typename : IDENT typelist? ;
 // Identifiers either a concrete type or a set of types that should be deduced to a single type.
-type : (IDENT ('<' type (',' type)* '>')? | builtin_type) '*'? ;
+type : ('const'? '*' | '[' INTEGER_LIT ']')* 'const'?
+    (IDENT ('<' type (',' type)* '>')? | builtin_type);
 
 // Function related:
 fn_decl : fn_signature ';' ; // Only allowed in interfaces.
@@ -75,5 +79,4 @@ COMMENT : '//' ~[\n]* -> skip;
 IDENT : [a-zA-Z_]+[a-zA-Z0-9_]* ;
 LBRACE : '{' ;
 RBRACE : '}' ;
-
-// TODO: asm
+ASM : 'asm' [ \t\r\n]* '{' ~[}]* '}' ;

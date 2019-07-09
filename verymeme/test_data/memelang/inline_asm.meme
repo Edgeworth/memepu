@@ -1,0 +1,16 @@
+fn main() i8 {
+  asm {
+    lhu r3,5
+  }
+  asm{
+    lhu r3,5
+    lhu r3,5
+  }
+  asm
+  {
+    lhu r3,5
+    lhu r3,5
+    lhu r3,5
+  }
+  asm {}
+}
