@@ -1,0 +1,12 @@
+struct Bitfields {
+  bit somebits1 : 5;
+  bit somebits2 : 3;
+}
+
+fn main() i8 {
+  [42]i8 arr = [0, 1, 2, 3];
+  takesbyvalue(arr);
+  takesbyref(&arr);
+  takesbyptr(&arr);
+  return 4;
+}
