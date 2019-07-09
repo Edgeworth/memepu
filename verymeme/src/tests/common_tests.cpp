@@ -13,13 +13,13 @@ TEST_F(CommonTest, BasenameAndStem) {
     std::string expected_basename;
     std::string expected_stem;
   } test_data[] = {
-      {"1/2/3",      "3",      "3"},
-      {"1/2/3.txt",  "3.txt",  "3"},
-      {"1/2/3.a.b",  "3.a.b",  "3"},
+      {"1/2/3", "3", "3"},
+      {"1/2/3.txt", "3.txt", "3"},
+      {"1/2/3.a.b", "3.a.b", "3"},
       {"1/2/.3.a.b", ".3.a.b", ".3.a.b"},
-      {"3",          "3",      "3"},
-      {"3/",         "",       ""},
-      {"",           "",       ""},
+      {"3", "3", "3"},
+      {"3/", "", ""},
+      {"", "", ""},
   };
   for (const auto& test : test_data) {
     EXPECT_EQ(test.expected_basename, basename(test.filename));

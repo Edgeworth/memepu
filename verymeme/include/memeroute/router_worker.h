@@ -43,14 +43,14 @@ private:
   // TODO(improvement): Needs to support more than 2 layers.
   static constexpr State DP9[9] =
       {{{-1, -1}, 0},
-       {{-1, 0},  0},
-       {{-1, 1},  0},
-       {{0,  -1}, 0},
-       {{0,  1},  0},
-       {{1,  -1}, 0},
-       {{1,  0},  0},
-       {{1,  1},  0},
-       {{0,  0},  1}};
+          {{-1, 0}, 0},
+          {{-1, 1}, 0},
+          {{0, -1}, 0},
+          {{0, 1}, 0},
+          {{1, -1}, 0},
+          {{1, 0}, 0},
+          {{1, 1}, 0},
+          {{0, 0}, 1}};
 
   // Routing state:
   std::vector<State> tmp_states_;
