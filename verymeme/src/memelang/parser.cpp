@@ -112,11 +112,11 @@ std::unique_ptr<Parser::Node> Parser::tryInternal() {
 std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
   peek_token(token);
   switch (token->type) {
-    case Token::INTERFACE:
+    case Token::INTF:
       return tryInterface();
     case Token::STRUCT:
       return tryStruct();
-    case Token::FUNCTION:
+    case Token::FN:
       return tryFunctionDefinition(true);
     default:
       token_error(false, token, "unexpected token");
@@ -126,7 +126,7 @@ std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
 
 // Building blocks:
 std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
-  consume_token(function_token, Token::FUNCTION, "function declaration");
+  consume_token(function_token, Token::FN, "function declaration");
   auto node = nodeFromToken(Node::FUNCTION, function_token);
 
   auto static_node = tri([this] { return tryStaticQualifier(); });
@@ -291,7 +291,7 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template)
 
 // Interface possibilities:
 std::unique_ptr<Parser::Node> Parser::tryInterface() {
-  expect_token(Token::INTERFACE, "interface");
+  expect_token(Token::INTF, "interface");
 
   expect_parse(node, [this] { return tryIdentifier(); });
   node->type = Node::INTERFACE;  // This is actually an interface.

@@ -7,39 +7,33 @@ namespace {
 
 constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t?,:.=";
 
-const std::unordered_map<std::string, Token::Type> TOKEN_MAP = {
-    {"interface", Token::INTERFACE},
-    {"struct",    Token::STRUCT},
-    {"func",      Token::FUNCTION},
-    {"for",       Token::FOR},
-    {"while",     Token::WHILE},
-    {"return",    Token::RETURN},
-    {"if",        Token::IF},
-    {"+",         Token::PLUS},
-    {"-",         Token::MINUS},
-    {"*",         Token::ASTERISK},
-    {"/",         Token::FSLASH},
-    {"'",         Token::QUOTE},
-    {"(",         Token::LPAREN},
-    {")",         Token::RPAREN},
-    {"{",         Token::LBRACE},
-    {"}",         Token::RBRACE},
-    {"<",         Token::LANGLE},
-    {">",         Token::RANGLE},
-    {"[",         Token::LSQUARE},
-    {"]",         Token::RSQUARE},
-    {";",         Token::SEMICOLON},
-    {"?",         Token::QUESTION},
-    {",",         Token::COMMA},
-    {":",         Token::COLON},
-    {"=",         Token::EQUAL},
-    {"==",        Token::DEQUAL},
-    {"!=",        Token::NEQUAL},
-    {".",         Token::DOT},
-    {"static",    Token::STATIC},
-    {"<=",        Token::LTEQUAL},
-    {">=",        Token::GTEQUAL}
+const std::unordered_map<std::string, Token::Type> SIMPLE_TOKENS = {
+    // Basic tokens:
+    {"+", Token::PLUS}, {"-", Token::MINUS}, {"*", Token::ASTERISK}, {"%", Token::PERCENT},
+    {"/", Token::FSLASH}, {"'", Token::QUOTE}, {"\"", Token::DQUOTE}, {"(", Token::LPAREN},
+    {")", Token::RPAREN}, {"{", Token::LBRACE}, {"}", Token::RBRACE}, {"<", Token::LANGLE},
+    {">", Token::RANGLE}, {"[", Token::LSQUARE}, {"]", Token::RSQUARE}, {";", Token::SEMICOLON},
+    {":", Token::COLON}, {"?", Token::QUESTION}, {",", Token::COMMA}, {".", Token::DOT},
+    {"~", Token::TILDE}, {"!", Token::EXCLAMATION}, {"&", Token::AMPERSAND},
+    {"&&", Token::DAMPERSAND}, {"|", Token::BAR}, {"||", Token::DBAR}, {"=", Token::EQUAL},
+    {"==", Token::DEQUAL}, {"!=", Token::NEQUAL}, {"<=", Token::LTEQUAL}, {">=", Token::GTEQUAL},
+    // Keywords:
+    {"intf", Token::INTF}, {"struct", Token::STRUCT}, {"enum", Token::ENUM}, {"impl", Token::IMPL},
+    {"fn", Token::FN}, {"if", Token::IF}, {"else", Token::ELSE}, {"match", Token::MATCH},
+    {"for", Token::FOR}, {"return", Token::RETURN}, {"static", Token::STATIC},
+    {"const", Token::CONST}, {"auto", Token::AUTO}, {"i8", Token::I8}, {"i16", Token::I16},
+    {"i32", Token::I32}, {"u8", Token::U8}, {"u16", Token::U16}, {"u32", Token::U32},
+    {"bool", Token::BOOL}, {"bit", Token::BIT},
 };
+
+// TODO:
+//{"asm", Token::ASM}, // TODO
+//{"TODO", Token::STR_LIT},
+//{"TODO", Token::INT_LIT},
+//{"TODO", Token::CHAR_LIT},
+//{"TODO", Token::BOOL_LIT},
+//{"TODO", Token::IDENT},
+//{"TODO", Token::COMMENT},
 
 }  // namespace
 
@@ -67,8 +61,8 @@ void Tokeniser::pushCurrentToken() {
     return;
 
   Token::Type type;
-  auto iter = TOKEN_MAP.find(curtok_);
-  if (iter != TOKEN_MAP.end()) {
+  auto iter = SIMPLE_TOKENS.find(curtok_);
+  if (iter != SIMPLE_TOKENS.end()) {
     type = iter->second;
   } else {
     type = Token::LITERAL;
@@ -78,8 +72,8 @@ void Tokeniser::pushCurrentToken() {
   if (!tokens_.empty()) {
     auto prevtok = tokens_.back();
     std::string mergetok = contents_->getSpan(prevtok.loc, prevtok.size) + curtok_;
-    auto iter = TOKEN_MAP.find(mergetok);
-    if (iter != TOKEN_MAP.end()) {
+    auto iter = SIMPLE_TOKENS.find(mergetok);
+    if (iter != SIMPLE_TOKENS.end()) {
       tokens_.pop_back();
       type = iter->second;
       curtok_ = std::move(mergetok);
