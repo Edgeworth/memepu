@@ -7,6 +7,7 @@ namespace {
 
 constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t?,:.=";
 
+// Stores the tokens which are just a simple string match.
 const std::unordered_map<std::string, Token::Type> SIMPLE_TOKENS = {
     // Basic tokens:
     {"+", Token::PLUS}, {"-", Token::MINUS}, {"*", Token::ASTERISK}, {"%", Token::PERCENT},
@@ -68,7 +69,7 @@ void Tokeniser::pushCurrentToken() {
     type = Token::LITERAL;
   }
 
-  // Maybe merge tokens together (==, >=, <=).
+  // Try to merge tokens together (==, >=, <=).
   if (!tokens_.empty()) {
     auto prevtok = tokens_.back();
     std::string mergetok = contents_->getSpan(prevtok.loc, prevtok.size) + curtok_;

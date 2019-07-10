@@ -1,0 +1,52 @@
+enum Unit {}
+enum TestEnum {
+  Test1, Test2, Test3(A),
+}
+enum Result<R, E> {
+  Ok(R), Err(E),
+}
+fn test<T>(const *T a) Unit {}
+struct A { i8 v; bit y : 5; bool z; static fn new() Unit {} }
+intf Intf {}
+intf IntfT<T> {}
+impl Intf for A {}
+impl<T> IntfT<T> for A {}
+fn main() i8 {
+  asm {}
+  asm {
+    lhu r30, 3
+  }
+  A st = A {};
+  TestEnum test_enum = Test3(st);
+  st.v = 3;
+  i8 e = 0;
+  i8 a = 2;
+  [40]d = [];
+  d[40 - 1] = true && (true || !false) ? ~0 & 1 : 1 ^ 2 | 3;
+  if e == st.v || d[23 - 2] != a || a <= e || a > e || e >= st.v || e < d[3] {
+    test<i8>(&e);
+  } else if true {} else {
+    match a {
+      1 {}
+      2 {}
+      3 {print(5);}
+    }
+    match test_enum {
+      Test1 {}
+      Test2 {}
+      Test3(x) {print(x);}
+    }
+  }
+  const auto b = -(34 + 32) * (55 / 3) - -4;
+  a-- 4 % 2;
+  a--- b;
+  'a';
+  '\\';
+  "b\"";
+  5.5;
+  for i8 f = 0; f < 10; f++ {
+    return 4;
+  }
+  // Big comment "\" ''
+  return 0;
+}

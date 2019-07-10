@@ -6,16 +6,16 @@ intf_defn : 'intf' typename decl_block ;
 struct_defn : 'struct' typename defn_block ;
 fn_defn : fn_signature stmt_block ;
 enum_defn : 'enum' typename enum_block ;
-impl_defn : 'impl' typelist typename 'for' typename defn_block ;
+impl_defn : 'impl' typelist? typename 'for' typename defn_block ;
 
 // Block related:
 stmt_block : LBRACE stmt* RBRACE ;
 defn_block : LBRACE ('static'? fn_defn | var_decl)* RBRACE ;
 decl_block : LBRACE fn_decl* RBRACE ;
 // TODO: Support structure like objects?
-enum_block : LBRACE (IDENT '(' type '),')* RBRACE ;
-// TODO: Ranges / OR / values?
-match_block : LBRACE (IDENT ('()' | '(' IDENT (',' IDENT)* ')') stmt_block)* RBRACE ;
+enum_block : LBRACE (IDENT ('(' type ')')? ',')* RBRACE ;
+// TODO: Ranges / OR / values / tuples / destructuring?
+match_block : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_block)* RBRACE ;
 
 // Statement related:
 stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';'
@@ -26,7 +26,7 @@ stmt_match : 'match' expr match_block ;
 
 // Variable related:
 var_decl : type IDENT (':' INT_LIT)? ';' ;  // Optional bitfield.
-var_defn : ('auto' | type) IDENT '=' expr ';' ;
+var_defn : ('const'? 'auto' | type) IDENT '=' expr ';' ;
 
 // Expression related:
 literal : STR_LIT | CHAR_LIT | INT_LIT | float_lit | bool_lit | struct_lit | array_lit;
@@ -70,7 +70,7 @@ prefix_op : '~' | '-' | '!' | '&' | '*' ;
 postfix_op : '+' '+' | '-' '-' ;
 INT_LIT : [0-9]+ ;
 float_lit : INT_LIT '.' INT_LIT ;
-CHAR_LIT  : '\'' ~[\t\r\n] '\'' ;
+CHAR_LIT  : '\'' (~[\t\r\n] | ESCAPE) '\'' ;
 STR_LIT : ('"' ~[\t\r\n]* '"')+ ;  // Allow literal concat.
 bool_lit : 'false' | 'true' ;
 WHITESPACE : [ \t\r\n]+ -> skip ;
@@ -79,3 +79,4 @@ IDENT : [a-zA-Z_]+[a-zA-Z0-9_]* ;
 LBRACE : '{' ;
 RBRACE : '}' ;
 ASM : 'asm' [ \t\r\n]* '{' ~[}]* '}' ;
+ESCAPE : '\\' [\\] ;
