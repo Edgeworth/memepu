@@ -43,6 +43,34 @@ pointer arithmetic
 ## Interfaces
 ### Interface resolution
 
+struct structA<T> {}
+struct structB {}
+intf intfA<T> {}
+intf intfB {}
+
+Defines an interface implementation for the set of types structA<T>.
+impl<T> intfB for structA<T> {}
+
+Defines a set of interface implementations intf<T> for structA<T>, where the
+type T must be the same. The appropriate interface to use can be deduced from
+the type of structA<T>.
+impl<T> intfA<T> for structA<T> {}
+
+Defines an interface implementation for a single type structB. Unambiguous.
+impl intfB for structB {}
+
+Defines a set of interface implementations intfA<T> for a single type structB.
+Which interface to use must be inferred from the context.
+impl<T> intfA<T> for structB {}
+
+If we further define a specialisation, then there may be multiple options
+impl intfA<u32> for structB {}
+
+
+impl<T> intfA<u32> for structA<T> {}
+
+impl intfA<u32> for structA<u32> {}
+
 ## Structs
 ### Static functions
 ### Bitfields
