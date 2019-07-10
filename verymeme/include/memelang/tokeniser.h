@@ -29,7 +29,7 @@ struct Token {
     return (boost::format("Token('%s', %d:%d)") % contents->getSpan(loc, size) %
         contents->getLineNumber(loc) % contents->getColNumber(loc)).str();
   }
-};
+};\
 
 class Tokeniser {
 public:
