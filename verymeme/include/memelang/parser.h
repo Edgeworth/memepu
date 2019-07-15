@@ -15,13 +15,15 @@ public:
   struct Node {
     enum Type {
       // Top level constructs:
-          FUNCTION, INTERFACE, STRUCT,
+      INTF_DEFN, STRUCT_DEFN, FN_DEFN, ENUM_DEFN, IMPL_DEFN,
+      // Blocks:
+      STMT_BLK, STRUCT_BLK,
       // Statements:
-          FOR, WHILE, RETURN, VARIABLE_DECLARATION, BLOCK, IF,
+      FOR, RETURN, VARIABLE_DECLARATION, BLOCK, IF,
       // Qualifiers:
-          TEMPLATE, STATIC,
+      TEMPLATE, STATIC,
       // Expressions:
-          TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
+      TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
       DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
       STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
     } type;
