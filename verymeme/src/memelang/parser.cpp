@@ -47,14 +47,6 @@ std::unique_ptr<Parser::Node> nodeFromToken(Parser::Node::Type type, const Token
   return node;
 }
 
-int parseInt(const std::string& str) {
-  std::istringstream s(str);
-  int out = INT_MIN;
-  if (!(s >> out)) return INT_MIN;
-  if (!s.eof()) return INT_MIN;
-  return out;
-}
-
 std::unordered_map<Token::Type, Parser::Node::Type> OPMAP = {
     {Token::Type::PLUS, Parser::Node::ADD},
     {Token::Type::MINUS, Parser::Node::SUB},
@@ -91,9 +83,8 @@ void Parser::parse() {
   idx_ = 0;
 
   root_ = tryInternal();
-  if (!root_) {
+  if (!root_)
     compileError();
-  }
 }
 
 // Top level
@@ -127,7 +118,7 @@ std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
 // Building blocks:
 std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
   consume_token(function_token, Token::FN, "function declaration");
-  auto node = nodeFromToken(Node::FUNCTION, function_token);
+  auto node = nodeFromToken(Node::FN, function_token);
 
   auto static_node = tri([this] { return tryStaticQualifier(); });
   if (static_node)
@@ -260,7 +251,7 @@ std::unique_ptr<Parser::Node> Parser::tryStruct() {
     expect_parse(child, [this] { return tryVariableDeclaration(); },
         [this] { return tryFunctionDefinition(false); });
 
-    if (child->type != Node::FUNCTION)
+    if (child->type != Node::FN)
       expect_token(Token::SEMICOLON, "semicolon");
 
     node->children.push_back(std::move(child));
@@ -295,7 +286,7 @@ std::unique_ptr<Parser::Node> Parser::tryInterface() {
   expect_token(Token::INTF, "interface");
 
   expect_parse(node, [this] { return tryIdentifier(); });
-  node->type = Node::INTERFACE;  // This is actually an interface.
+  node->type = Node::INTF;  // This is actually an interface.
 
   maybeAddTemplateList(node.get(), false);
 
@@ -510,11 +501,11 @@ void Parser::astToStringInternal(const Parser::Node* const root, std::string& ou
   out += contents_->getSpan(root->loc, root->size);
   out += '\n';
   bars_.insert(indent);
-  for (int i = 0; i < root->children.size(); ++i) {
+  for (int i = 0; i < int(root->children.size()); ++i) {
     const auto* child = root->children[i].get();
     for (int k = 0; k < indent; ++k)
       out += bars_.count(k) ? "│" : " ";
-    if (i == root->children.size() - 1) {
+    if (i == int(root->children.size()) - 1) {
       out += "└";
       bars_.erase(indent);
     } else {
