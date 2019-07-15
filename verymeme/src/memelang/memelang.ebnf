@@ -2,7 +2,7 @@ grammar memelang;
 file : (intf_defn | struct_defn | fn_defn | enum_defn | impl_defn)* EOF;
 
 // Top level constructs:
-intf_defn : 'intf' typename decl_blk ;
+intf_defn : 'intf' typename intf_blk ;
 struct_defn : 'struct' typename struct_blk ;
 fn_defn : fn_signature stmt_blk ;
 enum_defn : 'enum' typename enum_blk ;
@@ -10,24 +10,26 @@ impl_defn : 'impl' typelist? typename 'for' typename impl_blk ;
 
 // Block related:
 stmt_blk : LBRACE stmt* RBRACE ;
-struct_blk : LBRACE ('static'? fn_defn | var_decl)* RBRACE ;
+struct_blk : LBRACE ('static'? fn_defn | struct_var_decl ';')* RBRACE ;
 impl_blk : LBRACE fn_defn* RBRACE ;
-decl_blk : LBRACE fn_decl* RBRACE ;
+intf_blk : LBRACE fn_decl* RBRACE ;
 // TODO: Support structure like objects?
 enum_blk : LBRACE (IDENT ('(' type ')')? ',')* RBRACE ;
 // TODO: Ranges / OR / values / tuples / destructuring?
 match_blk : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_blk)* RBRACE ;
 
 // Statement related:
-stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';'
-    | stmt_for | stmt_if | stmt_match | ASM ;
-stmt_for : 'for' var_defn expr ';' expr stmt_blk ;
+stmt : expr ';' | stmt_var_defn | stmt_var_decl ';' | stmt_ret | stmt_for | stmt_if | stmt_match | ASM ;
+stmt_ret : 'return' expr ';' ;
+stmt_for : 'for' stmt_var_defn expr ';' expr stmt_blk ;
 stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
 stmt_match : 'match' expr match_blk ;
 
 // Variable related:
-var_decl : type IDENT (':' int_lit)? ';' ;  // Optional bitfield.
-var_defn : ('const'? 'auto' | type) IDENT '=' expr ';' ;
+struct_var_decl : type IDENT (':' int_lit)? ;  // Optional bitfield.
+stmt_var_decl : ('const'? 'auto' | type) IDENT ;
+stmt_var_defn : stmt_var_decl '=' expr ';' ;
+fn_var_decl : type IDENT ;
 
 // Expression related:
 literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | struct_lit | array_lit;
@@ -43,7 +45,7 @@ expr : expr '[' expr ']'  // Array subscript
     | <assoc=right> expr '?' expr ':' expr  // Ternary expression
     | <assoc=right> expr '=' expr  // Assignment
     | '(' expr ')' // Grouped expression
-    | type | literal ;
+    | IDENT | type | literal ;
 
 // Type related:
 typebound : IDENT ; // TODO: Support complex type bounds?
@@ -56,7 +58,7 @@ type : ('const'? '*' | '[' int_lit ']')* 'const'?
 // Function related:
 fn_decl : fn_signature ';' ; // Only allowed in interfaces.
 fn_signature : 'fn' typename
-    ('()' | '(' type IDENT (',' type IDENT)* ')') type ;
+    ('()' | '(' fn_var_decl (',' fn_var_decl)* ')') type ;
 fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 
 // Ideas:

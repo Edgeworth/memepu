@@ -2,69 +2,95 @@
 #define MEMELANG_TYPES_H
 
 #include "verymeme/common.h"
-#include "memelang/compile.h"
+
+#include <vector>
+#include <string>
 
 namespace memelang {
 
 #define DEFNLT(type, ...) \
   auto getTie() const { return std::tie(__VA_ARGS__); } \
-  bool operator<(const type& o) const { return getTie() < o.getTie(); }
+  bool operator<(const type& o) const { return getTie() < o.getTie(); } \
+  type(type&&) = default; \
+  type& operator=(type&&) = default; \
+  type(const type&) = delete; \
+  type& operator=(const type&) = delete
 
-struct Type {
-  std::string name;
-  bool pointer = false;
-  std::vector<Type> templates;
+struct Node {
+//  enum Type {
+//    // Top level constructs:
+//    INTF_DEFN, STRUCT_DEFN, FN_DEFN, ENUM_DEFN, IMPL_DEFN,
+//    // Blocks:
+//    STMT_BLK, STRUCT_BLK, IMPL_BLK, INTF_BLK, ENUM_BLK, MATCH_BLK,
+//    // Statements:
+//    VAR_DEFN, VAR_DECL, STMT_RET, STMT_FOR, STMT_IF, STMT_MATCH, STMT_ASM,
+//    // Qualifiers:
+//    TYPENAME, TYPELIST, STATIC,
+//    // Expressions:
+//    TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
+//    DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
+//    STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
+//  } type;
+  int loc;
+  int size;
 
-  DEFNLT(Type, name, pointer, templates);
+  explicit Node(const Token& tok) : loc(tok.loc), size(tok.size) {}
+
+  void generateIr() {}
 };
 
-struct Variable {
+struct Typename : public Node {
+  std::string name;
+  std::vector<std::string> typelist;
+
+  DEFNLT(Typename, name, typelist);
+};
+
+struct Qualifier {
+  bool cnst = false;
+  bool ptr = false;
+  int array = 0;
+
+  DEFNLT(Qualifier, cnst, ptr, array);
+};
+
+struct Type : public Node {
+  std::string name;
+  std::vector<Qualifier> quals;
+  std::vector<Type> params;
+
+  DEFNLT(Type, name, quals, params);
+};
+
+struct FnVarDecl : public Node {
+  std::string name;
   Type type;
-  std::string name;
 
-  DEFNLT(Variable, type, name);
+  DEFNLT(FnVarDecl, name, type);
 };
 
-struct FuncSig {
-  std::string name;
-  std::vector<std::string> templates;
-  Type return_type;
-  std::vector<Variable> params;
-  bool is_static = false;
+struct FnSig : public Node {
+  Typename name;
+  std::vector<FnVarDecl> params;
+  Type ret_type;
+  bool is_static = false;  // Only allowed in structs.
 
-  DEFNLT(FuncSig, name, templates, return_type, params, is_static);
+  DEFNLT(FnSig, name, params, ret_type, is_static);
 };
 
-struct Func {
-  FuncSig sig;
-  const Parser::Node* defn = nullptr;
+struct IntfDefn : public Node {
+  std::string name;
+  Typename tname;
+  std::vector<FnSig> decls;
 
-  DEFNLT(Func, sig, defn);
+  DEFNLT(IntfDefn, name, tname, decls);
 };
 
-struct Struct {
-  std::string name;
-  std::vector<std::string> templates;
-  std::vector<Func> funcs;
-  std::vector<Variable> vars;
-
-  DEFNLT(Struct, name, templates, funcs, vars);
-};
-
-struct Interface {
-  std::string name;
-  std::vector<std::string> templates;
-  std::vector<FuncSig> funcs;
-
-  DEFNLT(Interface, name, templates, funcs);
+struct File : public Node {
+  std::vector<IntfDefn> intf_defns;
 };
 
 #undef DEFNLT
-
-const Type INT8 = {"int8", false, {}};
-const Type INT16 = {"int16", false, {}};
-const Type UINT8 = {"uint8", false, {}};
-const Type UINT16 = {"uint16", false, {}};
 
 }  // namespace meme
 
