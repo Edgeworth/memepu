@@ -78,7 +78,6 @@ set(MEMELANG_SOURCES ${VERYMEME_SOURCES}
     src/memelang/tokeniser.cpp include/memelang/tokeniser.h
     src/memelang/parser.cpp include/memelang/parser.h
     src/memelang/file_contents.cpp include/memelang/file_contents.h
-    src/memelang/compile.cpp include/memelang/compile.h
     include/memelang/types.h)
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES} ${MEMEWARE_SOURCES}
     ${MEMEASM_SOURCES} ${MEMESIM_SOURCES} ${MEMELANG_SOURCES}
