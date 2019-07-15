@@ -914,7 +914,7 @@ Wire Wire Line
 $Sheet
 S 7900 4700 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$1[0].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$1[0].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 7900 4800 50
 F3 "A1" I R 7900 4900 50
@@ -940,7 +940,7 @@ $EndSheet
 $Sheet
 S 5850 4700 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$2[1].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$2[1].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 5850 4800 50
 F3 "A1" I R 5850 4900 50
@@ -966,7 +966,7 @@ $EndSheet
 $Sheet
 S 3600 4700 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$3[2].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$3[2].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 3600 4800 50
 F3 "A1" I R 3600 4900 50
@@ -992,7 +992,7 @@ $EndSheet
 $Sheet
 S 1350 4700 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$4[3].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$4[3].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 1350 4800 50
 F3 "A1" I R 1350 4900 50
@@ -1018,7 +1018,7 @@ $EndSheet
 $Sheet
 S 15100 1000 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$5[4].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$5[4].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 15100 1100 50
 F3 "A1" I R 15100 1200 50
@@ -1044,7 +1044,7 @@ $EndSheet
 $Sheet
 S 12850 1000 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$6[5].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$6[5].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 12850 1100 50
 F3 "A1" I R 12850 1200 50
@@ -1070,7 +1070,7 @@ $EndSheet
 $Sheet
 S 10600 1000 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$7[6].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$7[6].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 10600 1100 50
 F3 "A1" I R 10600 1200 50
@@ -1096,7 +1096,7 @@ $EndSheet
 $Sheet
 S 8350 1000 1000 1100
 U DEADBEEF
-F0 "genblock$test_data/alu0/alu.v:21$8[7].\slice" 50
+F0 "genblock$test_data/alu0/alu.v:20$8[7].\slice" 50
 F1 "alu_slice.sch" 50
 F2 "A0" I R 8350 1100 50
 F3 "A1" I R 8350 1200 50

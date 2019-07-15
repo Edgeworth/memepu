@@ -161,15 +161,16 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
 }
 
 std::unique_ptr<Parser::Node> Parser::tryLiteral() {
-  consume_token(token, Token::LITERAL, "literal");
+  // TODO
+//  consume_token(token, Token::LITERAL, "literal");
   auto node = std::make_unique<Node>();
-  int lit = parseInt(contents_->getSpan(token->loc, token->size));
-  if (lit != INT_MIN) {  // TODO: this is broken for INT_MIN.
-    node = nodeFromToken(Node::INTEGER_LITERAL, token);
-    node->intdata = lit;
-  } else {
-    node = nodeFromToken(Node::IDENT, token);
-  }
+//  int lit = parseInt(contents_->getSpan(token->loc, token->size));
+//  if (lit != INT_MIN) {  // TODO: this is broken for INT_MIN.
+//    node = nodeFromToken(Node::INTEGER_LITERAL, token);
+//    node->intdata = lit;
+//  } else {
+//    node = nodeFromToken(Node::IDENT, token);
+//  }
   return node;
 }
 
@@ -414,13 +415,14 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
     token_error(!node, token, "unexpected token in expression");
 
     switch (token->type) {
-      case Token::LITERAL: {
-        // Parse literal last - it might be an index,  function call, or struct initialiser.
-        expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryIndex(); },
-            [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); });
-        node = std::move(literal);
-        continue;
-      }
+      // TODO
+//      case Token::LITERAL: {
+//        // Parse literal last - it might be an index,  function call, or struct initialiser.
+//        expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryIndex(); },
+//            [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); });
+//        node = std::move(literal);
+//        continue;
+//      }
       case Token::LPAREN: {
         discard_token();
         expect_parse(subexpr, [this] { return tryExpression(); });
