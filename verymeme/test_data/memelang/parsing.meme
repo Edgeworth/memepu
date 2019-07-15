@@ -18,9 +18,9 @@ fn main() i8 {
   }
   A st = A {};
   TestEnum test_enum = Test3(st);
-  st.v = 3;
+  st.v = 0x3;
   i8 e = 0;
-  i8 a = 2;
+  i8 a = 02;
   [40]d = [];
   d[40 - 1] = true && (true || !false) ? ~0 & 1 : 1 ^ 2 | 3;
   if e == st.v || d[23 - 2] != a || a <= e || a > e || e >= st.v || e < d[3] {
@@ -42,6 +42,8 @@ fn main() i8 {
   a--- b;
   'a';
   '\\';
+  '\'';
+  '\"';
   "b\"";
   5.5;
   for i8 f = 0; f < 10; f++ {

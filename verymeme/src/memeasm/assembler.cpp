@@ -117,15 +117,15 @@ Assembler::convertMnemonicStringToOpword(const std::string& line, int lnum, bool
       const auto& pstr = sm[i + 1].str();
       switch (mnemonic.params[i]) {
         case Parameter::REGISTER: {
-          const int reg = convertFromDec(pstr);
+          const auto reg = convertFromDec(pstr);
           verify_expr(reg >= 0 && reg <= 31, "%d: register %d does not exist", lnum, reg);
           opword |= (uint32_t(reg) << (reg_count * 5u + 6u));
           reg_count++;
           break;
         }
         case Parameter::IMMEDIATE: {
-          int32_t imm = convertFromHex(pstr);
-          if (imm == INT_MIN) {
+          auto imm = convertFromHex(pstr);
+          if (imm == INT64_MIN) {
             if (first_pass) {
               imm = 0;  // Placeholder value.
             } else {

@@ -146,9 +146,12 @@ std::string convertToHex(T val) {
   return stream.str();
 }
 
-int convertFromHex(const std::string& s);
+int64_t convertFromHex(const std::string& s);
 
-int convertFromDec(const std::string& s);
+int64_t convertFromDec(const std::string& s);
+
+// Converts from formatted number: 123, 0xff, 0701.
+int64_t convertFromInteger(const std::string& s);
 
 template<std::size_t N>
 std::string convertToBinary(int val) {

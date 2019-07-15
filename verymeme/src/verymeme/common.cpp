@@ -9,20 +9,25 @@ std::string trim(const std::string& data, const std::string& c) {
   return sm[1].str();
 }
 
-int convertFromHex(const std::string& s) {
+int64_t convertFromHex(const std::string& s) {
   std::istringstream stream(s);
   int val;
   bool valid_int = bool(stream >> std::hex >> val);
-  if (!valid_int || !stream.eof())
-    return INT_MIN;
+  if (!valid_int || !stream.eof()) return INT64_MIN;
   return val;
 }
 
-int convertFromDec(const std::string& s) {
+int64_t convertFromDec(const std::string& s) {
   std::istringstream stream(s);
   int val;
   bool valid_int = bool(stream >> val);
-  if (!valid_int || !stream.eof())
-    return INT_MIN;
+  if (!valid_int || !stream.eof()) return INT64_MIN;
+  return val;
+}
+
+int64_t convertFromInteger(const std::string& s) {
+  char* end = nullptr;
+  int64_t val = strtoll(s.c_str(), &end, 0);
+  if (end != s.c_str() + s.size() || int32_t(val) != val) return INT64_MIN;
   return val;
 }

@@ -25,11 +25,11 @@ stmt_if : 'if' expr stmt_block ('else' stmt_if)* ('else' stmt_block)? ;
 stmt_match : 'match' expr match_block ;
 
 // Variable related:
-var_decl : type IDENT (':' INT_LIT)? ';' ;  // Optional bitfield.
+var_decl : type IDENT (':' int_lit)? ';' ;  // Optional bitfield.
 var_defn : ('const'? 'auto' | type) IDENT '=' expr ';' ;
 
 // Expression related:
-literal : STR_LIT | CHAR_LIT | INT_LIT | float_lit | bool_lit | struct_lit | array_lit;
+literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | struct_lit | array_lit;
 struct_lit : type LBRACE (IDENT ':' expr ',')* RBRACE ;
 array_lit : '[]' | '[' expr (',' expr)* ']';
 expr : expr '[' expr ']'  // Array subscript
@@ -49,7 +49,7 @@ typebound : IDENT ; // TODO: Support complex type bounds?
 typelist : '<' typebound (',' typebound)* '>' ;
 typename : IDENT typelist? ;
 // Identifiers either a concrete type or a set of types that should be deduced to a single type.
-type : ('const'? '*' | '[' INT_LIT ']')* 'const'?
+type : ('const'? '*' | '[' int_lit ']')* 'const'?
     (IDENT ('<' type (',' type)* '>')? | builtin_type);
 
 // Function related:
@@ -68,8 +68,9 @@ binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' | '<' '<' | '<=' | '>=' | '<' 
     | '==' | '!=' |  '&' | '^' | '|' | '&&' | '||';
 prefix_op : '~' | '-' | '!' | '&' | '*' ;
 postfix_op : '+' '+' | '-' '-' ;
-INT_LIT : [0-9]+ ;
-float_lit : INT_LIT '.' INT_LIT ;
+NUMBERS : [0-9]+ ;
+int_lit : '0x'? NUMBERS;
+float_lit : NUMBERS '.' NUMBERS ;
 CHAR_LIT  : '\'' (~[\t\r\n] | ESCAPE) '\'' ;
 STR_LIT : ('"' ~[\t\r\n]* '"')+ ;  // Allow literal concat.
 bool_lit : 'false' | 'true' ;
