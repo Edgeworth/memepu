@@ -2,27 +2,28 @@ grammar memelang;
 file : (intf_defn | struct_defn | fn_defn | enum_defn | impl_defn)* EOF;
 
 // Top level constructs:
-intf_defn : 'intf' typename decl_block ;
-struct_defn : 'struct' typename defn_block ;
-fn_defn : fn_signature stmt_block ;
-enum_defn : 'enum' typename enum_block ;
-impl_defn : 'impl' typelist? typename 'for' typename defn_block ;
+intf_defn : 'intf' typename decl_blk ;
+struct_defn : 'struct' typename struct_blk ;
+fn_defn : fn_signature stmt_blk ;
+enum_defn : 'enum' typename enum_blk ;
+impl_defn : 'impl' typelist? typename 'for' typename impl_blk ;
 
 // Block related:
-stmt_block : LBRACE stmt* RBRACE ;
-defn_block : LBRACE ('static'? fn_defn | var_decl)* RBRACE ;
-decl_block : LBRACE fn_decl* RBRACE ;
+stmt_blk : LBRACE stmt* RBRACE ;
+struct_blk : LBRACE ('static'? fn_defn | var_decl)* RBRACE ;
+impl_blk : LBRACE fn_defn* RBRACE ;
+decl_blk : LBRACE fn_decl* RBRACE ;
 // TODO: Support structure like objects?
-enum_block : LBRACE (IDENT ('(' type ')')? ',')* RBRACE ;
+enum_blk : LBRACE (IDENT ('(' type ')')? ',')* RBRACE ;
 // TODO: Ranges / OR / values / tuples / destructuring?
-match_block : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_block)* RBRACE ;
+match_blk : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_blk)* RBRACE ;
 
 // Statement related:
 stmt : expr ';' | var_defn | 'return' expr ';' | IDENT '=' expr ';'
     | stmt_for | stmt_if | stmt_match | ASM ;
-stmt_for : 'for' var_defn expr ';' expr stmt_block ;
-stmt_if : 'if' expr stmt_block ('else' stmt_if)* ('else' stmt_block)? ;
-stmt_match : 'match' expr match_block ;
+stmt_for : 'for' var_defn expr ';' expr stmt_blk ;
+stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
+stmt_match : 'match' expr match_blk ;
 
 // Variable related:
 var_decl : type IDENT (':' int_lit)? ';' ;  // Optional bitfield.
@@ -80,4 +81,4 @@ IDENT : [a-zA-Z_]+[a-zA-Z0-9_]* ;
 LBRACE : '{' ;
 RBRACE : '}' ;
 ASM : 'asm' [ \t\r\n]* '{' ~[}]* '}' ;
-ESCAPE : '\\' [\\] ;
+ESCAPE : '\\' [\\'"nrt] ;

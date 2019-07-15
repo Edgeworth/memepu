@@ -28,7 +28,7 @@ void Compile::generateCodeForBlock(const Parser::Node* node) {
 
 void Compile::extractSymbols(const Parser::Node* node) {
   switch (node->type) {
-    case Parser::Node::FUNCTION: {
+    case Parser::Node::FN: {
       auto func = extractFunctionDefinition(node);
       auto iter = funcs_.find(func.sig.name);
       compile_error(iter == funcs_.end(), node, "redefinition of function %s",
@@ -45,7 +45,7 @@ void Compile::extractSymbols(const Parser::Node* node) {
       structs_[struc.name] = std::move(struc);
       break;
     }
-    case Parser::Node::INTERFACE: {
+    case Parser::Node::INTF: {
       auto interface = extractInterface(node);
       auto iter = interfaces_.find(interface.name);
       compile_error(iter == interfaces_.end(), node, "redefinition of interface %s",
@@ -84,7 +84,7 @@ Struct Compile::extractStruct(const Parser::Node* node) {
   return Struct{
       text(node), // name
       maybeExtractTemplateDeclaration(node), // templates
-      map(findAll(node, Parser::Node::FUNCTION), &Compile::extractFunctionDefinition), // funcs
+      map(findAll(node, Parser::Node::FN), &Compile::extractFunctionDefinition), // funcs
       map(findAll(node, Parser::Node::VARIABLE_DECLARATION),
           &Compile::extractVariableDeclaration), // vars
   };
@@ -94,7 +94,7 @@ Interface Compile::extractInterface(const Parser::Node* node) {
   return Interface{
       text(node), // name
       maybeExtractTemplateDeclaration(node), // templates
-      map(findAll(node, Parser::Node::FUNCTION), &Compile::extractFunctionSignature), // funcs
+      map(findAll(node, Parser::Node::FN), &Compile::extractFunctionSignature), // funcs
   };
 }
 
