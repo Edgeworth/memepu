@@ -41,41 +41,35 @@ namespace memelang {
 
 namespace {
 
-std::unique_ptr<Parser::Node> nodeFromToken(Parser::Node::Type type, const Token* token) {
-  auto node = std::make_unique<Parser::Node>();
-  *node = Parser::Node{type, {}, token->loc, token->size};
-  return node;
-}
+//std::unordered_map<Token::Type, Node::Type> OPMAP = {
+//    {Token::Type::PLUS, Node::ADD},
+//    {Token::Type::MINUS, Node::SUB},
+//    {Token::Type::ASTERISK, Node::MUL},
+//    {Token::Type::FSLASH, Node::DIV},
+//    {Token::Type::EQUAL, Node::ASSIGN},
+//    {Token::Type::DEQUAL, Node::EQUALS},
+//    {Token::Type::NEQUAL, Node::NOT_EQUALS},
+//    {Token::Type::DOT, Node::ACCESS},
+//    {Token::Type::LANGLE, Node::LESS_THAN},
+//    {Token::Type::RANGLE, Node::GREATER_THAN},
+//    {Token::Type::LTEQUAL, Node::LESS_THAN_EQUAL},
+//    {Token::Type::GTEQUAL, Node::GREATER_THAN_EQUAL},
+//};
 
-std::unordered_map<Token::Type, Parser::Node::Type> OPMAP = {
-    {Token::Type::PLUS, Parser::Node::ADD},
-    {Token::Type::MINUS, Parser::Node::SUB},
-    {Token::Type::ASTERISK, Parser::Node::MUL},
-    {Token::Type::FSLASH, Parser::Node::DIV},
-    {Token::Type::EQUAL, Parser::Node::ASSIGN},
-    {Token::Type::DEQUAL, Parser::Node::EQUALS},
-    {Token::Type::NEQUAL, Parser::Node::NOT_EQUALS},
-    {Token::Type::DOT, Parser::Node::ACCESS},
-    {Token::Type::LANGLE, Parser::Node::LESS_THAN},
-    {Token::Type::RANGLE, Parser::Node::GREATER_THAN},
-    {Token::Type::LTEQUAL, Parser::Node::LESS_THAN_EQUAL},
-    {Token::Type::GTEQUAL, Parser::Node::GREATER_THAN_EQUAL},
-};
-
-std::unordered_map<Parser::Node::Type, int> PRECEDENCE = {
-    {Parser::Node::ACCESS, 4},
-    {Parser::Node::MUL, 3},
-    {Parser::Node::DIV, 3},
-    {Parser::Node::ADD, 2},
-    {Parser::Node::SUB, 2},
-    {Parser::Node::LESS_THAN, 1},
-    {Parser::Node::GREATER_THAN, 1},
-    {Parser::Node::LESS_THAN_EQUAL, 1},
-    {Parser::Node::GREATER_THAN_EQUAL, 1},
-    {Parser::Node::EQUALS, 1},
-    {Parser::Node::NOT_EQUALS, 1},
-    {Parser::Node::ASSIGN, 0},
-};
+//std::unordered_map<Node::Type, int> PRECEDENCE = {
+//    {Node::ACCESS, 4},
+//    {Node::MUL, 3},
+//    {Node::DIV, 3},
+//    {Node::ADD, 2},
+//    {Node::SUB, 2},
+//    {Node::LESS_THAN, 1},
+//    {Node::GREATER_THAN, 1},
+//    {Node::LESS_THAN_EQUAL, 1},
+//    {Node::GREATER_THAN_EQUAL, 1},
+//    {Node::EQUALS, 1},
+//    {Node::NOT_EQUALS, 1},
+//    {Node::ASSIGN, 0},
+//};
 
 }  // namespace
 
@@ -89,18 +83,18 @@ void Parser::parse() {
 
 // Top level
 
-std::unique_ptr<Parser::Node> Parser::tryInternal() {
-  auto node = std::make_unique<Parser::Node>();
+std::unique_ptr<Node> Parser::tryInternal() {
+  auto file = std::make_unique<File>();
 
   while (hasToken()) {
     expect_parse(child, [this] { return tryTopLevel(); });
-    node->children.push_back(std::move(child));
+    file->children.push_back(std::move(child));
   }
 
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
+std::unique_ptr<Node> Parser::tryTopLevel() {
   peek_token(token);
   switch (token->type) {
     case Token::INTF:
@@ -116,7 +110,7 @@ std::unique_ptr<Parser::Node> Parser::tryTopLevel() {
 }
 
 // Building blocks:
-std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) {
+std::unique_ptr<Node> Parser::tryFunctionSignature(bool allow_template) {
   consume_token(function_token, Token::FN, "function declaration");
   auto node = nodeFromToken(Node::FN, function_token);
 
@@ -151,7 +145,7 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionSignature(bool allow_template) 
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryLiteral() {
+std::unique_ptr<Node> Parser::tryLiteral() {
   // TODO
 //  consume_token(token, Token::LITERAL, "literal");
   auto node = std::make_unique<Node>();
@@ -165,14 +159,14 @@ std::unique_ptr<Parser::Node> Parser::tryLiteral() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryIdentifier() {
+std::unique_ptr<Node> Parser::tryIdentifier() {
   peek_token(token);
   expect_parse(node, [this] { return tryLiteral(); });
   token_error(node->type == Node::IDENT, token, "token not identifier");
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryType() {
+std::unique_ptr<Node> Parser::tryType() {
   expect_parse(node, [this] { return tryIdentifier(); });
   node->type = Node::TYPE;  // Actually this is a type.
   maybeAddTemplateList(node.get(), true);
@@ -184,7 +178,7 @@ std::unique_ptr<Parser::Node> Parser::tryType() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryBlock() {
+std::unique_ptr<Node> Parser::tryBlock() {
   consume_token(block_token, Token::LBRACE, "left brace");
   auto node = nodeFromToken(Node::BLOCK, block_token);
 
@@ -200,7 +194,7 @@ std::unique_ptr<Parser::Node> Parser::tryBlock() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryTemplateList(bool is_definition) {
+std::unique_ptr<Node> Parser::tryTemplateList(bool is_definition) {
   consume_token(template_token, Token::LANGLE, "left angle bracket");
   auto node = nodeFromToken(Node::TEMPLATE, template_token);
   while (true) {
@@ -224,19 +218,19 @@ std::unique_ptr<Parser::Node> Parser::tryTemplateList(bool is_definition) {
   return node;
 }
 
-void Parser::maybeAddTemplateList(Parser::Node* root, bool is_definition) {
+void Parser::maybeAddTemplateList(Node* root, bool is_definition) {
   auto template_declaration = tri([=] { return tryTemplateList(is_definition); });
   if (template_declaration)
     root->children.push_back(std::move(template_declaration));
 }
 
-std::unique_ptr<Parser::Node> Parser::tryStaticQualifier() {
+std::unique_ptr<Node> Parser::tryStaticQualifier() {
   consume_token(token, Token::STATIC, "static");
   return nodeFromToken(Node::STATIC, token);
 }
 
 // Struct possibilities:
-std::unique_ptr<Parser::Node> Parser::tryStruct() {
+std::unique_ptr<Node> Parser::tryStruct() {
   expect_token(Token::STRUCT, "struct");
   expect_parse(node, [this] { return tryIdentifier(); });
   node->type = Node::STRUCT;  // Actually this is a struct.
@@ -261,7 +255,7 @@ std::unique_ptr<Parser::Node> Parser::tryStruct() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
+std::unique_ptr<Node> Parser::tryVariableDeclaration() {
   peek_token(token);
   auto node = nodeFromToken(Node::VARIABLE_DECLARATION, token);
 
@@ -274,7 +268,7 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDeclaration() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template) {
+std::unique_ptr<Node> Parser::tryFunctionDefinition(bool allow_template) {
   expect_parse(node, [this, allow_template] { return tryFunctionSignature(allow_template); });
   expect_parse(child, [this] { return tryBlock(); });
   node->children.push_back(std::move(child));
@@ -282,7 +276,7 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionDefinition(bool allow_template)
 }
 
 // Interface possibilities:
-std::unique_ptr<Parser::Node> Parser::tryInterface() {
+std::unique_ptr<Node> Parser::tryInterface() {
   expect_token(Token::INTF, "interface");
 
   expect_parse(node, [this] { return tryIdentifier(); });
@@ -304,14 +298,14 @@ std::unique_ptr<Parser::Node> Parser::tryInterface() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryFunctionDeclaration(bool allow_template) {
+std::unique_ptr<Node> Parser::tryFunctionDeclaration(bool allow_template) {
   expect_parse(node, [this, allow_template] { return tryFunctionSignature(allow_template); });
   expect_token(Token::SEMICOLON, "semicolon");
   return node;
 }
 
 // Statement possibilities:
-std::unique_ptr<Parser::Node> Parser::tryStatement() {
+std::unique_ptr<Node> Parser::tryStatement() {
   peek_token(token);
   expect_parse(node, [this] { return tryVariableDefinition(); },
       [this] { return tryExpression(); }, [this] { return tryReturn(); },
@@ -321,7 +315,7 @@ std::unique_ptr<Parser::Node> Parser::tryStatement() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryVariableDefinition() {
+std::unique_ptr<Node> Parser::tryVariableDefinition() {
   expect_parse(node, [this] { return tryVariableDeclaration(); });
   expect_token(Token::EQUAL, "equals sign");
   expect_parse(initialiser, [this] { return tryExpression(); });
@@ -330,7 +324,7 @@ std::unique_ptr<Parser::Node> Parser::tryVariableDefinition() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryIf() {
+std::unique_ptr<Node> Parser::tryIf() {
   consume_token(if_token, Token::IF, "if");
   expect_token(Token::LPAREN, "left parent");
   auto node = nodeFromToken(Node::IF, if_token);
@@ -342,7 +336,7 @@ std::unique_ptr<Parser::Node> Parser::tryIf() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryReturn() {
+std::unique_ptr<Node> Parser::tryReturn() {
   consume_token(return_token, Token::RETURN, "return");
   auto node = nodeFromToken(Node::RETURN, return_token);
   expect_parse(child, [this] { return tryExpression(); });
@@ -350,7 +344,7 @@ std::unique_ptr<Parser::Node> Parser::tryReturn() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryFor() {
+std::unique_ptr<Node> Parser::tryFor() {
   consume_token(for_token, Token::FOR, "for");
   auto node = nodeFromToken(Node::FOR, for_token);
 
@@ -372,7 +366,7 @@ std::unique_ptr<Parser::Node> Parser::tryFor() {
 }
 
 // Expression possibilities:
-std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
+std::unique_ptr<Node> Parser::tryExpression(int last_precedence) {
   std::unique_ptr<Node> node;
   while (true) {
     peek_token(token);
@@ -431,7 +425,7 @@ std::unique_ptr<Parser::Node> Parser::tryExpression(int last_precedence) {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
+std::unique_ptr<Node> Parser::tryFunctionCall() {
   expect_parse(node, [this] { return tryIdentifier(); });
   node->type = Node::FUNCTION_CALL;  // Actually this is a function call.
 
@@ -452,7 +446,7 @@ std::unique_ptr<Parser::Node> Parser::tryFunctionCall() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryIndex() {
+std::unique_ptr<Node> Parser::tryIndex() {
   expect_parse(node, [this] { return tryIdentifier(); });
   node->type = Node::INDEX;  // Actually this is an indexing operation.
   expect_token(Token::LSQUARE, "left square bracket");
@@ -462,7 +456,7 @@ std::unique_ptr<Parser::Node> Parser::tryIndex() {
   return node;
 }
 
-std::unique_ptr<Parser::Node> Parser::tryStructInitialiser() {
+std::unique_ptr<Node> Parser::tryStructInitialiser() {
   expect_parse(node, [this] { return tryType(); });
   node->type = Node::STRUCT_INITIALISER;  // Actually this is an initialisation operation.
   expect_token(Token::LBRACE, "left brace");
@@ -495,7 +489,7 @@ std::string Parser::astToString(const Node* root) {
   return out;
 }
 
-void Parser::astToStringInternal(const Parser::Node* const root, std::string& out, int indent) {
+void Parser::astToStringInternal(const Node* const root, std::string& out, int indent) {
   if (root == nullptr) return;
 
   out += contents_->getSpan(root->loc, root->size);

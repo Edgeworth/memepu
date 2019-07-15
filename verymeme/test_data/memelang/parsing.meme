@@ -16,6 +16,7 @@ fn main() i8 {
   asm {
     lhu r30, 3
   }
+  A decl;
   A st = A {};
   TestEnum test_enum = Test3(st);
   st.v = 0x3;

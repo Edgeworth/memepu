@@ -4,6 +4,7 @@
 #include "verymeme/common.h"
 #include "memelang/tokeniser.h"
 #include "memelang/file_contents.h"
+#include "memelang/types.h"
 #include <vector>
 #include <memory>
 #include <unordered_set>
@@ -12,29 +13,9 @@ namespace memelang {
 
 class Parser {
 public:
-  struct Node {
-    enum Type {
-      // Top level constructs:
-      INTF_DEFN, STRUCT_DEFN, FN_DEFN, ENUM_DEFN, IMPL_DEFN,
-      // Blocks:
-      STMT_BLK, STRUCT_BLK,
-      // Statements:
-      FOR, RETURN, VARIABLE_DECLARATION, BLOCK, IF,
-      // Qualifiers:
-      TEMPLATE, STATIC,
-      // Expressions:
-      TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-      DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
-      STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
-    } type;
-    std::vector<std::unique_ptr<Node>> children;
-    int loc;
-    int size;
-    int intdata;
-  };
 
-  Parser(const FileContents* contents, std::vector<Token> tokens) : contents_(contents),
-                                                                    tokens_(std::move(tokens)) {}
+  Parser(const FileContents* contents, std::vector<Token> tokens)
+    : contents_(contents), tokens_(std::move(tokens)) {}
 
   void parse();
   const Node* root() { return root_.get(); }
@@ -60,8 +41,8 @@ private:
   std::unique_ptr<Node> tryIdentifier();
   std::unique_ptr<Node> tryType();
   std::unique_ptr<Node> tryBlock();
-  std::unique_ptr<Parser::Node> tryTemplateList(bool is_definition);
-  std::unique_ptr<Parser::Node> tryStaticQualifier();
+  std::unique_ptr<Node> tryTemplateList(bool is_definition);
+  std::unique_ptr<Node> tryStaticQualifier();
   void maybeAddTemplateList(Node* root, bool is_definition);
 
   // Struct possibilities:
@@ -88,7 +69,7 @@ private:
 
   const Token* curToken();
   const Token* nextToken();
-  bool hasToken(int ahead = 0) { return idx_ + ahead < tokens_.size(); }
+  bool hasToken(int ahead = 0) { return idx_ + ahead < int(tokens_.size()); }
   void compileError();
 
   std::unique_ptr<Node> tri() {
@@ -106,7 +87,7 @@ private:
     return child;
   }
 
-  void astToStringInternal(const Parser::Node* const root, std::string& out, int indent);
+  void astToStringInternal(const Node* const root, std::string& out, int indent);
 };
 
 }  // namespace memelang

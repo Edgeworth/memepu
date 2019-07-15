@@ -2,7 +2,6 @@
 #include "verymeme/file.h"
 
 #include "memelang/parser.h"
-#include "memelang/compile.h"
 
 int main(int argc, char* argv[]) {
   verify_expr(argc == 2, "need filename");
@@ -15,6 +14,4 @@ int main(int argc, char* argv[]) {
   memelang::Parser parser(&contents, tokens);
   parser.parse();
   printf("AST:\n%s\n", parser.astToString(parser.root()).c_str());
-  memelang::Compile compile(&contents, parser.root());
-  printf("Compile: %s\n", compile.generateCode().c_str());
 }
