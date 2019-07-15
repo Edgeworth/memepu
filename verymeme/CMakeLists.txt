@@ -83,7 +83,7 @@ set(MEMELANG_SOURCES ${VERYMEME_SOURCES}
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES} ${MEMEWARE_SOURCES}
     ${MEMEASM_SOURCES} ${MEMESIM_SOURCES} ${MEMELANG_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
-    src/tests/common_tests.cpp src/tests/memeroute_tests.cpp)
+    src/tests/common_tests.cpp src/tests/memeroute_tests.cpp src/tests/memelang_tests.cpp)
 
 # memeasm:
 add_executable(memeasm ${MEMEASM_SOURCES} src/programs/memeasm.cpp)
