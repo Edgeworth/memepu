@@ -1,4 +1,5 @@
 #include "memesim/display.h"
+#include "verymeme/concurrent_queue.h"
 
 namespace memesim {
 

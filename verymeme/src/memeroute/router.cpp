@@ -1,8 +1,11 @@
 #include <thread>
 #include <random>
 #include <utility>
+
 #include "memeroute/router_worker.h"
 #include "memeroute/router.h"
+#include "verymeme/concurrent_queue.h"
+#include "verymeme/util.h"
 
 namespace memeroute {
 

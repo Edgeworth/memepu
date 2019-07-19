@@ -2,8 +2,9 @@
 #define VERYMEME_TOKENIZER_H
 
 #include <regex>
+#include <boost/lexical_cast.hpp>
 
-#include "verymeme/common.h"
+#include "verymeme/util.h"
 
 class Tokenizer {
 public:

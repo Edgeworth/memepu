@@ -1,9 +1,10 @@
 #ifndef MEMEASM_ASSEMBLER_H
 #define MEMEASM_ASSEMBLER_H
 
-#include "verymeme/common.h"
-
 #include <regex>
+#include <vector>
+#include <string>
+#include <cstdint>
 
 namespace memeasm {
 

@@ -1,8 +1,6 @@
 #ifndef MEMEWARE_CONSTANTS_H
 #define MEMEWARE_CONSTANTS_H
 
-#include "verymeme/common.h"
-
 namespace memeware {
 
 enum Mlu {

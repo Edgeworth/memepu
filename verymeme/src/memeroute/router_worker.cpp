@@ -2,6 +2,7 @@
 #include <utility>
 #include "memeroute/router_worker.h"
 #include "verymeme/geom.h"
+#include "verymeme/util.h"
 
 namespace memeroute {
 

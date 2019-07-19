@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "verymeme/common.h"
 #include "memeroute/types.h"
 #include "memeroute/render_shapes.h"
 #include "memeroute/router.h"

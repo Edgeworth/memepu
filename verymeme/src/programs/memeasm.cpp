@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "verymeme/file.h"
+#include "verymeme/string_util.h"
 #include "memeasm/assembler.h"
 
 namespace po = boost::program_options;
