@@ -1,8 +1,8 @@
 #ifndef MEMESIM_CLI_H
 #define MEMESIM_CLI_H
 
-#include "verymeme/common.h"
-#include "simulator.h"
+#include "memesim/simulator.h"
+#include "verymeme/concurrent_queue.h"
 
 namespace memesim {
 

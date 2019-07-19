@@ -1,7 +1,6 @@
 #ifndef MEMELANG_TOKENISER_H
 #define MEMELANG_TOKENISER_H
 
-#include "verymeme/common.h"
 #include "memelang/file_contents.h"
 #include <vector>
 #include <utility>

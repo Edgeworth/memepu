@@ -3,7 +3,6 @@
 
 #include <kernel/yosys.h>
 #include <kernel/rtlil.h>
-#include "verymeme/common.h"
 #include "memecad/mapper.h"
 
 namespace memecad {

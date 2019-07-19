@@ -1,4 +1,5 @@
 #include "verymeme/file.h"
+#include "verymeme/util.h"
 
 namespace {
 

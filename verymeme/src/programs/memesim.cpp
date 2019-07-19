@@ -3,7 +3,6 @@
 #include <verilated.h>
 #include <thread>
 
-#include "verymeme/common.h"
 #include "verymeme/file.h"
 #include "memesim/simulator.h"
 #include "memesim/cli.h"

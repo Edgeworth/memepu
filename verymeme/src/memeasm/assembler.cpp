@@ -1,5 +1,6 @@
 #include "memeasm/assembler.h"
-
+#include "verymeme/string_util.h"
+#include <cinttypes>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
@@ -118,7 +119,7 @@ Assembler::convertMnemonicStringToOpword(const std::string& line, int lnum, bool
       switch (mnemonic.params[i]) {
         case Parameter::REGISTER: {
           const auto reg = convertFromDec(pstr);
-          verify_expr(reg >= 0 && reg <= 31, "%d: register %d does not exist", lnum, reg);
+          verify_expr(reg >= 0 && reg <= 31, "%d: register %" PRId64 " does not exist", lnum, reg);
           opword |= (uint32_t(reg) << (reg_count * 5u + 6u));
           reg_count++;
           break;
@@ -138,7 +139,7 @@ Assembler::convertMnemonicStringToOpword(const std::string& line, int lnum, bool
                 imm = labels_[label];
             }
           }
-          verify_expr(int16_t(imm) == imm, "%d: immediate value %d out of range", lnum, imm);
+          verify_expr(int16_t(imm) == imm, "%d: immediate value %" PRId64 " out of range", lnum, imm);
           opword |= uint32_t(imm) << 16u;
           break;
         }

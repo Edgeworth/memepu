@@ -5,6 +5,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include "memeware/constants.h"
+#include "verymeme/string_util.h"
 #include "Vmicrocode.h"
 #include "Vmlu_lookahead.h"
 #include "Vmlu_slice.h"

@@ -1,7 +1,6 @@
 #ifndef MEMEROUTE_ROUTER_H
 #define MEMEROUTE_ROUTER_H
 
-#include "verymeme/common.h"
 #include "memeroute/types.h"
 #include "memeroute/router_worker.h"
 

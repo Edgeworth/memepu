@@ -1,7 +1,6 @@
 #ifndef MEMECAD_MAPPER_H
 #define MEMECAD_MAPPER_H
 
-#include "verymeme/common.h"
 #include <boost/property_tree/ptree.hpp>
 #include <kernel/rtlil.h>
 #include "memecad/types.h"

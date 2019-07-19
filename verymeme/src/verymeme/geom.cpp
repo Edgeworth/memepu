@@ -1,5 +1,8 @@
 #include "verymeme/geom.h"
 
+#include <sstream>
+#include <tuple>
+
 std::ostream& operator<<(std::ostream& str, const Point& p) {
   return str << p.x << " " << p.y;
 }
