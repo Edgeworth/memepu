@@ -1,5 +1,6 @@
 #include "memelang/tokeniser.h"
 #include <unordered_map>
+#include "verymeme/string_util.h"
 
 namespace memelang {
 

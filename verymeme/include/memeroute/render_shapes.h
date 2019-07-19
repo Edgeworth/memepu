@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "verymeme/common.h"
 #include "memeroute/types.h"
 #include "verymeme/geom.h"
 

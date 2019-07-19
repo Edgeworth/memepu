@@ -4,6 +4,7 @@
 #include <boost/lexical_cast.hpp>
 #include <utility>
 #include <kernel/sigtools.h>
+#include "verymeme/util.h"
 
 namespace memecad {
 

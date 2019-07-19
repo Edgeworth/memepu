@@ -1,6 +1,7 @@
 #include "verymeme/tokenizer.h"
 #include "memeroute/parser.h"
 #include "verymeme/geom.h"
+#include "verymeme/string_util.h"
 
 namespace memeroute {
 

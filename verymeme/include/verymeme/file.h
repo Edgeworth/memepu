@@ -1,7 +1,7 @@
 #ifndef VERYMEME_FILE_H
 #define VERYMEME_FILE_H
 
-#include "verymeme/common.h"
+#include <string>
 
 std::string readFile(const std::string& filename, bool binary = false);
 

@@ -1,7 +1,6 @@
 #ifndef MEMEROUTE_ROUTER_WORKER_H
 #define MEMEROUTE_ROUTER_WORKER_H
 
-#include "verymeme/common.h"
 #include "memeroute/types.h"
 #include "verymeme/geom.h"
 

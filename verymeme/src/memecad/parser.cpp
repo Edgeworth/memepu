@@ -1,8 +1,10 @@
 #include "memecad/parser.h"
-#include "verymeme/tokenizer.h"
 
 #include <regex>
 #include <boost/lexical_cast.hpp>
+
+#include "verymeme/tokenizer.h"
+#include "verymeme/string_util.h"
 
 namespace memecad {
 

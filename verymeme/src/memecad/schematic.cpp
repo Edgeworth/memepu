@@ -1,6 +1,8 @@
+#include "verymeme/string_util.h"
 #include "memecad/parser.h"
 #include "memecad/schematic.h"
 #include "verymeme/geom.h"
+#include "verymeme/util.h"
 
 namespace memecad {
 

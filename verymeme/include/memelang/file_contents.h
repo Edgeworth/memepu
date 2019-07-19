@@ -1,7 +1,7 @@
 #ifndef MEMELANG_FILE_CONTENTS_H
 #define MEMELANG_FILE_CONTENTS_H
 
-#include "verymeme/common.h"
+#include <string>
 #include <vector>
 
 namespace memelang {

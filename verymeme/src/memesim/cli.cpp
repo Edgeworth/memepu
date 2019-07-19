@@ -1,9 +1,9 @@
-#include <iostream>
 #include <map>
-
+#include <iostream>
+#include "verymeme/string_util.h"
 #include "memesim/cli.h"
-
 #include "verymeme/term.h"
+#include "verymeme/concurrent_queue.h"
 
 namespace memesim {
 

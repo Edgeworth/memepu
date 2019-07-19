@@ -1,7 +1,9 @@
 #ifndef MEMEWARE_MICROCODE_H
 #define MEMEWARE_MICROCODE_H
 
-#include "verymeme/common.h"
+#include <vector>
+#include <cstdint>
+#include <string>
 
 namespace memeware {
 

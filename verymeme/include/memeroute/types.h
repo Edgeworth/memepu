@@ -3,8 +3,8 @@
 
 #include <unordered_map>
 #include <map>
+#include <vector>
 
-#include "verymeme/common.h"
 #include "verymeme/geom.h"
 
 namespace memeroute {

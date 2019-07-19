@@ -1,7 +1,7 @@
 #ifndef VERYMEME_TERM_H
 #define VERYMEME_TERM_H
 
-#include "verymeme/common.h"
+#include <string>
 
 enum class TermColor {
   FG_DEFAULT = 39, FG_BLACK = 30, FG_RED = 31, FG_GREEN = 32, FG_YELLOW = 33, FG_BLUE = 34,

@@ -1,11 +1,10 @@
 #ifndef VERYMEME_DISPLAY_H
 #define VERYMEME_DISPLAY_H
 
-#include "verymeme/common.h"
-
 #include <SFML/Graphics.hpp>
 
 #include "memesim/simulator.h"
+#include "verymeme/concurrent_queue.h"
 
 namespace memesim {
 

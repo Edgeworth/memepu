@@ -1,7 +1,9 @@
 #ifndef VERYMEME_GEOM_H
 #define VERYMEME_GEOM_H
 
-#include "verymeme/common.h"
+#include <cstdint>
+#include <algorithm>
+#include <string>
 
 template<typename T>
 T clamp(T low, T high, T val) {

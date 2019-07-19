@@ -1,3 +1,5 @@
+#include <cmath>
+#include "verymeme/util.h"
 #include "memeroute/render_shapes.h"
 #include "verymeme/geom.h"
 

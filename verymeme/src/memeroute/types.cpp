@@ -2,6 +2,8 @@
 
 #include "memeroute/types.h"
 #include "verymeme/geom.h"
+#include "verymeme/util.h"
+#include "verymeme/string_util.h"
 
 namespace memeroute {
 

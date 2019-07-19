@@ -1,9 +1,8 @@
 #ifndef VERYMEME_SIMULATOR_H
 #define VERYMEME_SIMULATOR_H
 
-#include "verymeme/common.h"
-
 #include "Vkpu.h"
+#include "verymeme/concurrent_queue.h"
 
 namespace memesim {
 

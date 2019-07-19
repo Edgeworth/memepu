@@ -1,6 +1,6 @@
 #include <boost/program_options.hpp>
 #include <iostream>
-
+#include "verymeme/string_util.h"
 #include "memeware/microcode.h"
 #include "verymeme/file.h"
 

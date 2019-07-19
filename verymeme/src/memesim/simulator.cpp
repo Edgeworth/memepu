@@ -1,4 +1,5 @@
-#include <memeasm/assembler.h>
+#include "verymeme/string_util.h"
+#include "memeasm/assembler.h"
 #include "memesim/simulator.h"
 
 #include "Vkpu_kpu.h"
