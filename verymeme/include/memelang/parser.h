@@ -20,6 +20,7 @@ public:
 
   bool parse();
   const File* root() { return root_.get(); }
+  std::string astToString();
 
 private:
   std::unique_ptr<Context> ctx_;
@@ -36,6 +37,7 @@ private:
   type(const type&) = delete; \
   type& operator=(const type&) = delete; \
   std::string toString() const override; \
+  std::vector<Node*> children() override; \
   void generateIr() const override
 
 struct Node {
@@ -57,6 +59,12 @@ struct Node {
 
   virtual std::string toString() const = 0;
   virtual void generateIr() const = 0;
+  virtual std::vector<Node*> children() = 0;
+  virtual void visit(const std::function<void(Node&)>& f) {
+    f(*this);
+    for (const auto& child : children())
+      child->visit(f);
+  }
 };
 
 struct Typelist : public Node {
@@ -75,7 +83,7 @@ struct Typename : public Node {
 struct Qualifier : public Node {
   bool cnst = false;
   bool ptr = false;
-  int array = 0;
+  int64_t array = 0;
 
   DEFNLT(Qualifier, cnst, ptr, array);
 };
@@ -84,8 +92,9 @@ struct Type : public Node {
   std::string name;
   std::vector<std::unique_ptr<Qualifier>> quals;
   std::vector<std::unique_ptr<Type>> params;
+  bool cnst = false;
 
-  DEFNLT(Type, name, quals, params);
+  DEFNLT(Type, name, quals, params, cnst);
 };
 
 struct FnVarDecl : public Node {

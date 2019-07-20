@@ -139,6 +139,6 @@ target_link_libraries(memeware PUBLIC memeware_library)
 
 # tests:
 add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)
-target_link_libraries(tests PUBLIC gtest memeasm_library memecad_library memelang_library
+target_link_libraries(tests PUBLIC gtest gmock memeasm_library memecad_library memelang_library
     memeroute_library memesim_library memeware_library)
 gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
