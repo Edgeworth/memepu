@@ -14,6 +14,7 @@ TEST_F(MemelangTokeniserTest, BasicTest) {
   for (const auto& token : tokens) {
     printf("%s\n", token.toString(&contents).c_str());
   }
+  // TODO
 //  EXPECT_EQ({}, tokens);
 }
 

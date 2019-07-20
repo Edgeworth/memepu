@@ -1,36 +1,10 @@
 #include "memelang/parser.h"
 #include "verymeme/util.h"
+#include "verymeme/string_util.h"
 #include <climits>
 #include <sstream>
 #include <unordered_map>
-
-#define token_error(expr, token, ...) \
-  do { \
-    if (!(expr)) { \
-      char buf0[4096], buf1[4096]; \
-      snprintf(buf0, sizeof(buf0), "%s:%d: compile error at %s - ", __func__, \
-               __LINE__, (token)->toString(contents_).c_str()); \
-      snprintf(buf1, sizeof(buf1), __VA_ARGS__); \
-      verify_expr(false, "%s%s", buf0, buf1); \
-    } \
-  } while (0)
-
-#define peek_token(name) \
-  const auto* name = curToken(); \
-  if (!name) return nullptr
-
-#define discard_token() \
-  if (!nextToken()) return nullptr
-
-#define consume_token(name, expected_type, note) \
-  const auto* name = nextToken(); \
-  if (!name) return nullptr; \
-  token_error(name->type == (expected_type), name, "expecting " note)
-
-#define expect_token(expected_type, note) \
-  do { \
-    consume_token(token, expected_type, note); \
-  } while (0)
+#include <numeric>
 
 namespace memelang {
 
@@ -66,36 +40,13 @@ namespace {
 //    {Node::ASSIGN, 0},
 //};
 
+const std::vector<Token::Type> BUILTIN_TYPES = {Token::AUTO, Token::I8, Token::I16, Token::I32,
+    Token::U8,
+    Token::U16, Token::U32, Token::BOOL, Token::BIT};
+
 }  // namespace
 
-void Parser::parse() {
-  idx_ = 0;
-
-  root_ = tryInternal();
-}
-
 // Top level
-
-std::unique_ptr<File> Parser::tryInternal() {
-  auto file = std::make_unique<File>(Token());
-
-  while (hasToken()) {
-    peek_token(token);
-    switch (token->type) {
-      case Token::INTF:
-        file->intf_defns.emplace_back(parseIntfDefn());
-        break;
-      default:
-        token_error(false, token, "unexpected token");
-    }
-  }
-
-  return file;
-}
-
-std::unique_ptr<IntfDefn> Parser::parseIntfDefn() {
-  return nullptr;
-}
 
 // Building blocks:
 //std::unique_ptr<Node> Parser::tryFunctionSignature(bool allow_template) {
@@ -498,14 +449,165 @@ std::unique_ptr<IntfDefn> Parser::parseIntfDefn() {
 //  }
 //}
 
-const Token* Parser::nextToken() {
-  token_error(hasToken(), &tokens_.back(), "unexpected end of file");
-  return &tokens_[int(idx_++)];
+struct Parser::Context {
+  const FileContents* contents;
+  std::vector<Token> toks;
+  int idx;
+
+  const Token* curToken() const { return curToken({}); }
+  const Token* curToken(Token::Type type) const { return curToken(std::vector<Token::Type>{type}); }
+  const Token* curToken(const std::vector<Token::Type>& ts) const {
+    if (!hasToken())
+      throw std::runtime_error("unexpected end of file\n" + tos(boost::stacktrace::stacktrace()));
+    const auto* token = &toks[int(idx)];
+    if (!hasToken(ts))
+      throw std::runtime_error("unexpected token " + token->toString(contents) +
+          ": must be one of " + std::accumulate(ts.begin(), ts.end(), std::string(),
+          [](const auto& a, const auto& b) { return tos(a) + tos(b) + ", "; }) + "\n" +
+          tos(boost::stacktrace::stacktrace()));
+    return token;
+  }
+
+  const Token* consumeToken() { return consumeToken({}); }
+  const Token* consumeToken(Token::Type type) {
+    return consumeToken(std::vector<Token::Type>{type});
+  }
+  const Token* consumeToken(const std::vector<Token::Type>& ts) {
+    const auto* token = curToken(ts);
+    idx++;
+    return token;
+  }
+
+  bool hasToken() const { return hasToken({}); }
+  bool hasToken(Token::Type type) const { return hasToken(std::vector<Token::Type>{type}); }
+  bool hasToken(const std::vector<Token::Type>& ts) const {
+    if (idx >= int(toks.size())) return false;
+    if (ts.empty()) return true;
+    const auto& token = toks[int(idx)];
+    return !std::any_of(ts.begin(), ts.end(), [token](auto type) { return token.type == type; });
+  }
+};
+
+Parser::Parser(const FileContents* contents, std::vector<Token> tokens)
+    : ctx_(new Context{contents, std::move(tokens), 0}), root_() {}
+
+Parser::~Parser() = default;
+
+bool Parser::parse() {
+  try {
+    root_ = std::make_unique<File>(*ctx_);
+  } catch (const std::exception& e) {
+    verify_expr(false, "%s\n", e.what());
+  }
+  return true;
 }
 
-const Token* Parser::curToken() {
-  token_error(hasToken(), &tokens_.back(), "unexpected end of file");
-  return &tokens_[int(idx_)];
+Typelist::Typelist(Parser::Context& ctx) {
+  printf("DOING TYPELIST\n");
+  ctx.consumeToken(Token::LANGLE);
+  while (ctx.hasToken(Token::IDENT)) {
+    names.push_back(ctx.consumeToken()->toString(ctx.contents));
+    ctx.consumeToken(Token::COMMA);
+  }
+  ctx.consumeToken(Token::RANGLE);
 }
+
+std::string Typelist::toString() const { return ""; }
+
+void Typelist::generateIr() const {}
+
+Typename::Typename(Parser::Context& ctx) {
+  printf("DOING TYPENAME\n");
+  name = ctx.consumeToken(Token::IDENT)->toString(ctx.contents);
+  printf("CUR TOK: %s\n", tos(ctx.curToken()->type).c_str());
+  if (ctx.hasToken(Token::LANGLE))
+    tlist = std::make_unique<Typelist>(ctx);
+}
+
+std::string Typename::toString() const { return ""; }
+
+void Typename::generateIr() const {}
+
+Qualifier::Qualifier(Parser::Context& ctx) {}
+
+std::string Qualifier::toString() const { return ""; }
+
+void Qualifier::generateIr() const {}
+
+Type::Type(Parser::Context& ctx) {
+  while (!ctx.hasToken(Token::IDENT) && !ctx.hasToken(BUILTIN_TYPES))
+    quals.emplace_back(std::make_unique<Qualifier>(ctx));
+  if (ctx.hasToken(Token::IDENT)) {
+    name = ctx.consumeToken(Token::IDENT)->toString(ctx.contents);
+    if (ctx.hasToken(Token::LANGLE)) {
+      ctx.consumeToken(Token::LANGLE);
+      while (ctx.curToken()->type != Token::RANGLE) {
+        params.emplace_back(std::make_unique<Type>(ctx));
+        if (ctx.hasToken(Token::COMMA)) ctx.consumeToken();
+        else break;
+      }
+      ctx.consumeToken(Token::RANGLE);
+    }
+  } else {
+    name = ctx.consumeToken(BUILTIN_TYPES)->toString(ctx.contents);
+  }
+}
+
+std::string Type::toString() const { return ""; }
+
+void Type::generateIr() const {}
+
+FnVarDecl::FnVarDecl(Parser::Context& ctx) {
+  type = std::make_unique<Type>(ctx);
+  name = ctx.consumeToken(Token::IDENT)->toString(ctx.contents);
+}
+
+std::string FnVarDecl::toString() const { return ""; }
+
+void FnVarDecl::generateIr() const {}
+
+FnSig::FnSig(Parser::Context& ctx) {
+  ctx.consumeToken(Token::FN);
+  tname = std::make_unique<Typename>(ctx);
+  ctx.consumeToken(Token::LPAREN);
+  while (ctx.curToken()->type != Token::RPAREN) {
+    params.emplace_back(std::make_unique<FnVarDecl>(ctx));
+    if (ctx.hasToken(Token::COMMA)) ctx.consumeToken();
+    else break;
+  }
+  ctx.consumeToken(Token::RPAREN);
+  ret_type = std::make_unique<Type>(ctx);
+}
+
+std::string FnSig::toString() const { return ""; }
+
+void FnSig::generateIr() const {}
+
+IntfDefn::IntfDefn(Parser::Context& ctx) {
+  ctx.consumeToken(Token::INTF);
+  tname = std::make_unique<Typename>(ctx);
+  ctx.consumeToken(Token::LBRACE);
+  while (ctx.hasToken(Token::FN)) {
+    decls.emplace_back(std::make_unique<FnSig>(ctx));
+    ctx.consumeToken(Token::SEMICOLON);
+  }
+  ctx.consumeToken(Token::RBRACE);
+}
+
+std::string IntfDefn::toString() const { return ""; }
+
+void IntfDefn::generateIr() const {}
+
+File::File(Parser::Context& ctx) {
+  while (ctx.hasToken()) {
+    const auto* token = ctx.curToken(Token::INTF);
+    if (token->type == Token::INTF)
+      intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx));
+  }
+}
+
+std::string File::toString() const { return ""; }
+
+void File::generateIr() const {}
 
 }  // namespace memelang
