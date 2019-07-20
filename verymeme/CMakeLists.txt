@@ -47,93 +47,98 @@ add_subdirectory(verilog)
 
 # Add libraries.
 set(VERYMEME_SOURCES
-    include/verymeme/util.h
+    src/verymeme/util.cpp include/verymeme/util.h
     src/verymeme/file.cpp include/verymeme/file.h
     src/verymeme/geom.cpp include/verymeme/geom.h
     src/verymeme/tokenizer.cpp include/verymeme/tokenizer.h
     src/verymeme/term.cpp include/verymeme/term.h
     include/verymeme/concurrent_queue.h
-    include/verymeme/string_util.h src/verymeme/string_util.cpp)
-set(MEMECAD_SOURCES ${VERYMEME_SOURCES}
+    src/verymeme/string_util.cpp include/verymeme/string_util.h)
+set(MEMEASM_SOURCES src/memeasm/assembler.cpp include/memeasm/assembler.h)
+set(MEMECAD_SOURCES
     src/memecad/parser.cpp include/memecad/parser.h
     src/memecad/types.cpp include/memecad/types.h
     src/memecad/mapper.cpp include/memecad/mapper.h
     src/memecad/yosys_module.cpp include/memecad/yosys_module.h
     src/memecad/util.cpp include/memecad/util.h
     src/memecad/schematic.cpp include/memecad/schematic.h)
-set(MEMEROUTE_SOURCES ${VERYMEME_SOURCES}
+set(MEMELANG_SOURCES
+    src/memelang/tokeniser.cpp include/memelang/tokeniser.h
+    src/memelang/parser.cpp include/memelang/parser.h
+    src/memelang/file_contents.cpp include/memelang/file_contents.h)
+set(MEMEROUTE_SOURCES
     src/memeroute/parser.cpp include/memeroute/parser.h
     src/memeroute/types.cpp include/memeroute/types.h
     src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h
     src/memeroute/renderer.cpp include/memeroute/renderer.h
     src/memeroute/router.cpp include/memeroute/router.h
     src/memeroute/router_worker.cpp include/memeroute/router_worker.h)
-set(MEMEWARE_SOURCES ${VERYMEME_SOURCES}
-    include/memeware/constants.h
-    src/memeware/microcode.cpp include/memeware/microcode.h)
-set(MEMEASM_SOURCES ${VERYMEME_SOURCES}
-    src/memeasm/assembler.cpp include/memeasm/assembler.h)
-set(MEMESIM_SOURCES ${VERYMEME_SOURCES} ${MEMEASM_SOURCES}
+set(MEMESIM_SOURCES
     src/memesim/simulator.cpp include/memesim/simulator.h
     src/memesim/cli.cpp include/memesim/cli.h
     src/memesim/display.cpp include/memesim/display.h)
-set(MEMELANG_SOURCES ${VERYMEME_SOURCES}
-    src/memelang/tokeniser.cpp include/memelang/tokeniser.h
-    src/memelang/parser.cpp include/memelang/parser.h
-    src/memelang/file_contents.cpp include/memelang/file_contents.h)
-set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES} ${MEMEWARE_SOURCES}
-    ${MEMEASM_SOURCES} ${MEMESIM_SOURCES} ${MEMELANG_SOURCES}
+set(MEMEWARE_SOURCES
+    include/memeware/constants.h
+    src/memeware/microcode.cpp include/memeware/microcode.h)
+set(TEST_SOURCES
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memeroute_tests.cpp src/tests/memelang_tests.cpp)
 
-# memeasm:
-add_executable(memeasm ${MEMEASM_SOURCES} src/programs/memeasm.cpp)
-target_include_directories(memeasm PUBLIC ${Boost_INCLUDE_DIRS} include)
-target_link_directories(memeasm PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(memeasm PUBLIC ${CMAKE_DL_LIBS} ${Boost_LIBRARIES})
+# verymeme:
+add_library(verymeme_library ${VERYMEME_SOURCES})
+target_include_directories(verymeme_library PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_link_directories(verymeme_library PUBLIC ${Boost_LIBRARY_DIRS})
+target_link_libraries(verymeme_library PUBLIC ${CMAKE_DL_LIBS} ${Boost_LIBRARIES})
 
-# memeware:
-add_executable(memeware ${MEMEWARE_SOURCES} src/programs/memeware.cpp)
-target_include_directories(memeware PUBLIC ${Boost_INCLUDE_DIRS} ${VERILATOR_INCLUDE_DIRS} include)
-target_link_directories(memeware PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(memeware PUBLIC ${CMAKE_DL_LIBS} verilated_library ${Boost_LIBRARIES})
+# memeasm:
+add_library(memeasm_library ${MEMEASM_SOURCES})
+target_link_libraries(memeasm_library PUBLIC verymeme_library)
+add_executable(memeasm src/programs/memeasm.cpp)
+target_link_libraries(memeasm PUBLIC memeasm_library)
 
 # memecad:
-add_executable(memecad ${MEMECAD_SOURCES} src/programs/memecad.cpp)
-target_include_directories(memecad PUBLIC ${Boost_INCLUDE_DIRS} include)
-target_link_directories(memecad PUBLIC ${Boost_LIBRARY_DIRS})
-target_compile_options(memecad PUBLIC ${YOSYS_OPTIONS})
-target_link_options(memecad PUBLIC ${YOSYS_LDFLAGS})
-target_link_libraries(memecad PUBLIC ${CMAKE_DL_LIBS} ${YOSYS_LIBRARIES} ${Boost_LIBRARIES})
-
-# memeroute:
-add_executable(memeroute ${MEMEROUTE_SOURCES} src/programs/memeroute.cpp)
-target_include_directories(memeroute PUBLIC ${SFML_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} include)
-target_link_directories(memeroute PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(memeroute PUBLIC ${CMAKE_DL_LIBS} Threads::Threads ${SFML_LIBRARIES}
-    ${SFML_DEPENDENCIES} ${Boost_LIBRARIES})
-
-# memesim:
-add_executable(memesim ${MEMESIM_SOURCES} src/programs/memesim.cpp)
-target_include_directories(memesim PUBLIC ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS} include)
-target_link_directories(memesim PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(memesim PUBLIC ${CMAKE_DL_LIBS} Threads::Threads verilated_library
-    ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} ${Boost_LIBRARIES})
+add_library(memecad_library ${MEMECAD_SOURCES})
+target_link_libraries(memecad_library PUBLIC verymeme_library)
+target_compile_options(memecad_library PUBLIC ${YOSYS_OPTIONS})
+target_link_options(memecad_library PUBLIC ${YOSYS_LDFLAGS})
+target_link_libraries(memecad_library PUBLIC ${YOSYS_LIBRARIES})
+add_executable(memecad src/programs/memecad.cpp)
+target_link_libraries(memecad PUBLIC memecad_library)
 
 # memelang:
-add_executable(memelang ${MEMELANG_SOURCES} src/programs/memelang.cpp)
-target_include_directories(memelang PUBLIC ${Boost_INCLUDE_DIRS} include)
-target_link_directories(memelang PUBLIC ${Boost_LIBRARY_DIRS})
-target_link_libraries(memelang PUBLIC ${CMAKE_DL_LIBS} ${Boost_LIBRARIES})
+add_library(memelang_library ${MEMELANG_SOURCES})
+target_link_libraries(memelang_library PUBLIC verymeme_library)
+add_executable(memelang src/programs/memelang.cpp)
+target_link_libraries(memelang PUBLIC memelang_library)
+
+# memeroute:
+add_library(memeroute_library ${MEMEROUTE_SOURCES})
+target_link_libraries(memeroute_library PUBLIC verymeme_library)
+target_include_directories(memeroute_library PUBLIC ${SFML_INCLUDE_DIR})
+target_link_libraries(memeroute_library PUBLIC
+    Threads::Threads ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+add_executable(memeroute src/programs/memeroute.cpp)
+target_link_libraries(memeroute PUBLIC memeroute_library)
+
+# memesim:
+add_library(memesim_library ${MEMESIM_SOURCES})
+target_link_libraries(memesim_library PUBLIC verymeme_library memeasm_library)
+target_include_directories(memesim_library PUBLIC ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUDE_DIRS})
+target_link_libraries(memesim_library PUBLIC Threads::Threads verilated_library
+    ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+add_executable(memesim src/programs/memesim.cpp)
+target_link_libraries(memesim PUBLIC memesim_library)
+
+# memeware:
+add_library(memeware_library ${MEMEWARE_SOURCES})
+target_link_libraries(memeware_library PUBLIC verymeme_library)
+target_include_directories(memeware_library PUBLIC ${VERILATOR_INCLUDE_DIRS})
+target_link_libraries(memeware_library PUBLIC verilated_library)
+add_executable(memeware src/programs/memeware.cpp)
+target_link_libraries(memeware PUBLIC memeware_library)
 
 # tests:
 add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)
-target_include_directories(tests PUBLIC ${SFML_INCLUDE_DIR} ${VERILATOR_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS} include)
-target_link_directories(tests PUBLIC ${YOSYS_OPTIONS} ${Boost_LIBRARY_DIRS})
-target_compile_options(tests PUBLIC ${YOSYS_OPTIONS})
-target_link_options(tests PUBLIC ${YOSYS_LDFLAGS})
-target_link_libraries(tests PUBLIC ${CMAKE_DL_LIBS} Threads::Threads ${SFML_LIBRARIES}
-    ${SFML_DEPENDENCIES} ${YOSYS_LIBRARIES} gtest verilated_library ${Boost_LIBRARIES})
+target_link_libraries(tests PUBLIC gtest memeasm_library memecad_library memelang_library
+    memeroute_library memesim_library memeware_library)
 gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")

@@ -1,6 +1,7 @@
 #include <thread>
 #include <random>
 #include <utility>
+#include <climits>
 
 #include "memeroute/router_worker.h"
 #include "memeroute/router.h"

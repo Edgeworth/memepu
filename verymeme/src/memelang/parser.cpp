@@ -458,13 +458,13 @@ struct Parser::Context {
   const Token* curToken(Token::Type type) const { return curToken(std::vector<Token::Type>{type}); }
   const Token* curToken(const std::vector<Token::Type>& ts) const {
     if (!hasToken())
-      throw std::runtime_error("unexpected end of file\n" + tos(boost::stacktrace::stacktrace()));
+      throw std::runtime_error("unexpected end of file\n" + getStacktrace());
     const auto* token = &toks[int(idx)];
     if (!hasToken(ts))
       throw std::runtime_error("unexpected token " + token->toString(contents) +
           ": must be one of " + std::accumulate(ts.begin(), ts.end(), std::string(),
           [](const auto& a, const auto& b) { return tos(a) + tos(b) + ", "; }) + "\n" +
-          tos(boost::stacktrace::stacktrace()));
+          getStacktrace());
     return token;
   }
 
