@@ -3,8 +3,7 @@
 
 #include <cstdio>
 #include <vector>
-#include <sstream>
-#include <boost/stacktrace.hpp>
+#include <string>
 
 #define verify_expr(expr, ...)                        \
   do {                                                \
@@ -12,14 +11,14 @@
       fprintf(stderr, "%s:%d: ", __func__, __LINE__); \
       fprintf(stderr, __VA_ARGS__);                   \
       fprintf(stderr, "\n");                          \
-      std::stringstream _s; \
-      _s << boost::stacktrace::stacktrace(); \
-      fprintf(stderr, "Stack:\n%s\n", _s.str().c_str()); \
+      fprintf(stderr, "Stack:\n%s\n", getStacktrace().c_str()); \
       exit(1);                                        \
     }                                                 \
   } while (0)
 
 constexpr float EP = 1e-6;
+
+std::string getStacktrace();
 
 template<typename M, typename K, typename V>
 V getDefault(const M& map, const K& key, const V& def) {

@@ -1,7 +1,6 @@
 #ifndef VERYMEME_STRING_UTIL_H
 #define VERYMEME_STRING_UTIL_H
 
-#include <boost/lexical_cast.hpp>
 #include <bitset>
 #include <iomanip>
 
@@ -17,7 +16,11 @@ int64_t convertFromDec(const std::string& s);
 int64_t convertFromInteger(const std::string& s);
 
 template<typename T>
-std::string tos(const T& val) { return boost::lexical_cast<std::string>(val); }
+std::string tos(const T& val) {
+  std::stringstream s;
+  s << val;
+  return s.str();
+}
 
 template<typename T>
 std::ostream&
