@@ -57,4 +57,5 @@ std::string getIdForSigBit(const Yosys::SigBit& bit) {
   }
   return parent_label;
 }
+
 } // namespace memecad
