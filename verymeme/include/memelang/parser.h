@@ -3,76 +3,121 @@
 
 #include "memelang/tokeniser.h"
 #include "memelang/file_contents.h"
-#include "memelang/types.h"
 #include <vector>
 #include <memory>
 #include <unordered_set>
 
 namespace memelang {
 
+struct File;
+
 class Parser {
 public:
+  struct Context;
 
-  Parser(const FileContents* contents, std::vector<Token> tokens)
-      : contents_(contents), tokens_(std::move(tokens)) {}
+  Parser(const FileContents* contents, std::vector<Token> tokens);
+  ~Parser();
 
-  void parse();
-  const Node* root() { return root_.get(); }
-
-//  std::string astToString(const Node* root);
+  bool parse();
+  const File* root() { return root_.get(); }
 
 private:
-  int idx_ = 0;
-  const FileContents* contents_;
-  std::vector<Token> tokens_;
+  std::unique_ptr<Context> ctx_;
   std::unique_ptr<File> root_;
-
-  // AST printing related.
-//  std::unordered_set<int> bars_;
-
-  std::unique_ptr<File> tryInternal();
-
-  // Top level constructs:
-  std::unique_ptr<IntfDefn> parseIntfDefn();
-
-  // Building blocks:
-//  std::unique_ptr<Node> tryFunctionSignature(bool allow_template);
-//  std::unique_ptr<Node> tryLiteral();
-//  std::unique_ptr<Node> tryIdentifier();
-//  std::unique_ptr<Node> tryType();
-//  std::unique_ptr<Node> tryBlock();
-//  std::unique_ptr<Node> tryTemplateList(bool is_definition);
-//  std::unique_ptr<Node> tryStaticQualifier();
-//  void maybeAddTemplateList(Node* root, bool is_definition);
-//
-//  // Struct possibilities:
-//  std::unique_ptr<Node> tryStruct();
-//  std::unique_ptr<Node> tryVariableDeclaration();
-//  std::unique_ptr<Node> tryFunctionDefinition(bool allow_template);
-//
-//  // Interface possibilities:
-//  std::unique_ptr<Node> tryInterface();
-//  std::unique_ptr<Node> tryFunctionDeclaration(bool allow_template);
-//
-//  // Statement possibilities:
-//  std::unique_ptr<Node> tryStatement();
-//  std::unique_ptr<Node> tryVariableDefinition();
-//  std::unique_ptr<Node> tryIf();
-//  std::unique_ptr<Node> tryReturn();
-//  std::unique_ptr<Node> tryFor();
-//
-//  // Expression possibilities:
-//  std::unique_ptr<Node> tryExpression(int last_precedence = -1);
-//  std::unique_ptr<Node> tryFunctionCall();
-//  std::unique_ptr<Node> tryIndex();
-//  std::unique_ptr<Node> tryStructInitialiser();
-
-  const Token* curToken();
-  const Token* nextToken();
-  bool hasToken(int ahead = 0) { return idx_ + ahead < int(tokens_.size()); }
-
-//  void astToStringInternal(const Node* const root, std::string& out, int indent);
 };
+
+
+#define DEFNLT(type, ...) \
+  auto getTie() const { return std::tie(__VA_ARGS__); } \
+  bool operator<(const type& o) const { return getTie() < o.getTie(); } \
+  explicit type(Parser::Context& ctx); \
+  type(type&&) = default; \
+  type& operator=(type&&) = default; \
+  type(const type&) = delete; \
+  type& operator=(const type&) = delete; \
+  std::string toString() const override; \
+  void generateIr() const override
+
+struct Node {
+//  enum Type {
+//    // Top level constructs:
+//    INTF_DEFN, STRUCT_DEFN, FN_DEFN, ENUM_DEFN, IMPL_DEFN,
+//    // Blocks:
+//    STMT_BLK, STRUCT_BLK, IMPL_BLK, INTF_BLK, ENUM_BLK, MATCH_BLK,
+//    // Statements:
+//    VAR_DEFN, VAR_DECL, STMT_RET, STMT_FOR, STMT_IF, STMT_MATCH, STMT_ASM,
+//    // Qualifiers:
+//    TYPENAME, TYPELIST, STATIC,
+//    // Expressions:
+//    TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
+//    DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
+//    STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
+//  } type;
+  Token tok = {};
+
+  virtual std::string toString() const = 0;
+  virtual void generateIr() const = 0;
+};
+
+struct Typelist : public Node {
+  std::vector<std::string> names;
+
+  DEFNLT(Typelist, names);
+};
+
+struct Typename : public Node {
+  std::string name;
+  std::unique_ptr<Typelist> tlist;
+
+  DEFNLT(Typename, name, tlist);
+};
+
+struct Qualifier : public Node {
+  bool cnst = false;
+  bool ptr = false;
+  int array = 0;
+
+  DEFNLT(Qualifier, cnst, ptr, array);
+};
+
+struct Type : public Node {
+  std::string name;
+  std::vector<std::unique_ptr<Qualifier>> quals;
+  std::vector<std::unique_ptr<Type>> params;
+
+  DEFNLT(Type, name, quals, params);
+};
+
+struct FnVarDecl : public Node {
+  std::string name;
+  std::unique_ptr<Type> type;
+
+  DEFNLT(FnVarDecl, name, type);
+};
+
+struct FnSig : public Node {
+  std::unique_ptr<Typename> tname;
+  std::vector<std::unique_ptr<FnVarDecl>> params;
+  std::unique_ptr<Type> ret_type;
+  bool is_static = false;  // Only allowed in structs.
+
+  DEFNLT(FnSig, tname, params, ret_type, is_static);
+};
+
+struct IntfDefn : public Node {
+  std::unique_ptr<Typename> tname;
+  std::vector<std::unique_ptr<FnSig>> decls;
+
+  DEFNLT(IntfDefn, tname, decls);
+};
+
+struct File : public Node {
+  std::vector<std::unique_ptr<IntfDefn>> intf_defns;
+
+  DEFNLT(File, intf_defns);
+};
+
+#undef DEFNLT
 
 }  // namespace memelang
 
