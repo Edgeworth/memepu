@@ -8,14 +8,6 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 project(verymeme)
 
-# IWYU
-find_program(iwyu_path NAMES include-what-you-use iwyu)
-if(NOT iwyu_path)
-  message(STATUS "Could not find the program include-what-you-use")
-endif()
-
-set(CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
-
 # Find required packages.
 find_package(Boost REQUIRED program_options stacktrace_backtrace)
 find_package(Verilator REQUIRED)
@@ -48,6 +40,7 @@ include(GoogleTest)
 
 # Verilator debug option.
 #add_definitions(-DVL_DEBUG)
+add_definitions(-DBOOST_STACKTRACE_USE_BACKTRACE)
 
 # Build verilog files using verilator.
 add_subdirectory(verilog)
@@ -87,8 +80,7 @@ set(MEMESIM_SOURCES ${VERYMEME_SOURCES} ${MEMEASM_SOURCES}
 set(MEMELANG_SOURCES ${VERYMEME_SOURCES}
     src/memelang/tokeniser.cpp include/memelang/tokeniser.h
     src/memelang/parser.cpp include/memelang/parser.h
-    src/memelang/file_contents.cpp include/memelang/file_contents.h
-    include/memelang/types.h src/memelang/types.cpp)
+    src/memelang/file_contents.cpp include/memelang/file_contents.h)
 set(TEST_SOURCES ${VERYMEME_SOURCES} ${MEMECAD_SOURCES} ${MEMEROUTE_SOURCES} ${MEMEWARE_SOURCES}
     ${MEMEASM_SOURCES} ${MEMESIM_SOURCES} ${MEMELANG_SOURCES}
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
