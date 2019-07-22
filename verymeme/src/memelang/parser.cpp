@@ -48,8 +48,13 @@ void fcInternal(std::vector<Node*>&) {}
 
 template<typename T, typename... Args>
 void fcInternal(std::vector<Node*>& cs, const T& head, const Args& ...tail) {
-  if constexpr (std::is_assignable_v<T, nullptr_t>) cs.push_back(head.get());
-  else for (const auto& p : head) cs.push_back(p.get());
+  if constexpr (std::is_assignable_v<T, nullptr_t>) { if (head) cs.push_back(head.get()); }
+  else {
+    for (const auto& p : head) {
+      verify_expr(p != nullptr, "BUG");
+      cs.push_back(p.get());
+    }
+  }
   fcInternal(cs, tail...);
 }
 
@@ -213,7 +218,7 @@ Typename::Typename(Parser::Context& ctx) {
 }
 
 std::string Typename::toString() const { return (fmt("Typename %s") % name).str(); }
-std::vector<Node*> Typename::children() { if (tlist) return {tlist.get()}; return {}; }
+std::vector<Node*> Typename::children() { return flattenChildren(tlist); }
 void Typename::generateIr() const {}
 
 Qualifier::Qualifier(Parser::Context& ctx) {
@@ -280,6 +285,29 @@ std::string FnSig::toString() const { return "FnSig"; }
 std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret_type); }
 void FnSig::generateIr() const {}
 
+StmtBlk::StmtBlk(Parser::Context& ctx) {
+  ctx.consumeToken(Token::LBRACE);
+  while (!ctx.hasToken(Token::RBRACE)) {
+
+    ctx.consumeToken(Token::SEMICOLON);
+  }
+  ctx.consumeToken(Token::RBRACE);
+}
+
+std::string StmtBlk::toString() const { return "StmtBlk"; }
+std::vector<Node*> StmtBlk::children() { return flattenChildren(stmts); }
+void StmtBlk::generateIr() const {}
+
+FnDefn::FnDefn(Parser::Context& ctx) {
+  sig = std::make_unique<FnSig>(ctx);
+  blk = std::make_unique<StmtBlk>(ctx);
+}
+
+std::string FnDefn::toString() const { return "FnDefn"; }
+std::vector<Node*> FnDefn::children() { return flattenChildren(sig, blk); }
+void FnDefn::generateIr() const {}
+
+
 IntfDefn::IntfDefn(Parser::Context& ctx) {
   ctx.consumeToken(Token::INTF);
   tname = std::make_unique<Typename>(ctx);
@@ -296,11 +324,9 @@ std::vector<Node*> IntfDefn::children() { return flattenChildren(decls); }
 void IntfDefn::generateIr() const {}
 
 File::File(Parser::Context& ctx) {
-  printf("ASDF\n");
   while (ctx.hasToken()) {
     const auto* token = ctx.curToken(Token::INTF);
     if (token->type == Token::INTF) {
-      printf("NEW INTF\n");
       intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx));
     }
   }

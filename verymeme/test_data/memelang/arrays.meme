@@ -1,19 +1,19 @@
 enum Unit {}
 
-fn takesbyvalue([42]i8 arr) i8 {
+fn takesbyvalue(arr: [42]i8) i8 {
   return arr[0];
 }
 
-fn takesbyref(*[42]i8 arr) i8 {
+fn takesbyref(arr: *[42]i8) i8 {
   return arr[0];
 }
 
-fn takesbyptr(*i8 arr) i8 {
+fn takesbyptr(arr: *i8) i8 {
   return arr[0];
 }
 
 fn main() i8 {
-  [42]i8 arr = [0, 1, 2, 3];
+  var arr: [42]i8 = [0, 1, 2, 3];
   takesbyvalue(arr);
   takesbyref(&arr);
   takesbyptr(&arr);

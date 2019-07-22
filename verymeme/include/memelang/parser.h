@@ -113,6 +113,36 @@ struct FnSig : public Node {
   DEFNLT(FnSig, tname, params, ret_type, is_static);
 };
 
+// Expression related:
+// TODO: change variable declaration style to let a: type = asdf ?
+struct Expr : public Node {
+
+};
+
+struct BinOp : public Expr {
+  std::unique_ptr<Expr> left;
+  std::unique_ptr<Expr> right;
+
+  DEFNLT(BinOp, left, right);
+};
+
+// Statement related:
+
+// Block related:
+struct StmtBlk : public Node {
+  std::vector<std::unique_ptr<Node>> stmts;
+
+  DEFNLT(StmtBlk, stmts);
+};
+
+// Top level constructs:
+struct FnDefn : public Node {
+  std::unique_ptr<FnSig> sig;
+  std::unique_ptr<StmtBlk> blk;
+
+  DEFNLT(FnDefn, sig, blk);
+};
+
 struct IntfDefn : public Node {
   std::unique_ptr<Typename> tname;
   std::vector<std::unique_ptr<FnSig>> decls;

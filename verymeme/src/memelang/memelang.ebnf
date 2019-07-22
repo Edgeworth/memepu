@@ -26,10 +26,10 @@ stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
 stmt_match : 'match' expr match_blk ;
 
 // Variable related:
-struct_var_decl : type IDENT (':' int_lit)? ;  // Optional bitfield.
-stmt_var_decl : ('const'? 'auto' | type) IDENT ;
+struct_var_decl : IDENT ':' type (':' int_lit)? ;  // Optional bitfield.
+stmt_var_decl : 'var' IDENT ':' ('const'? 'auto' | type);
+fn_var_decl : IDENT ':' type;
 stmt_var_defn : stmt_var_decl '=' expr ';' ;
-fn_var_decl : type IDENT ;
 
 // Expression related:
 literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | struct_lit | array_lit;
