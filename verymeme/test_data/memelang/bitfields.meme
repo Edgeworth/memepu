@@ -1,10 +1,10 @@
 struct Bitfields {
-  bit somebits1 : 5;
-  bit somebits2 : 3;
+  somebits1: bit: 5;
+  somebits2: bit: 3;
 }
 
 fn main() i8 {
-  [42]i8 arr = [0, 1, 2, 3];
+  var arr: [42]i8 = [0, 1, 2, 3];
   takesbyvalue(arr);
   takesbyref(&arr);
   takesbyptr(&arr);
