@@ -3,7 +3,7 @@ enum Result<T, E> {
   Error(E),
 }
 
-fn trysomething(i8 succeed) Result<i8, bool> {
+fn trysomething(succeed: i8) Result<i8, bool> {
   if succeed > 3 {
     return Ok(5);
   } else {

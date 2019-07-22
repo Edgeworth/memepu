@@ -13,7 +13,7 @@ intf Iterable<T> {
 }
 
 intf Movable<T> {
-  fn move_into(*T o) Unit;
+  fn move_into(o: *T) Unit;
 }
 
 intf Destructible<T> {
@@ -21,12 +21,12 @@ intf Destructible<T> {
 }
 
 intf Indexable<T> {
-  fn index(i32 index) *T;
+  fn index(index: i32) *T;
 }
 
 struct vector_iter<T> {
-  *vector<T> vec_;
-  i16 idx_;
+  vec_: *vector<T>;
+  idx_: i32;
 
   fn next() *T {
     if idx_ == vec_.size() {
@@ -36,7 +36,7 @@ struct vector_iter<T> {
     return vec_[idx_ - 1];
   }
 
-  static fn new(*vector<T> vec) vector_iter<T> {
+  static fn new(vec: *vector<T>) vector_iter<T> {
     return vector_iter<T> {
       vec_: vec,
       idx_: 0,
@@ -45,15 +45,15 @@ struct vector_iter<T> {
 }
 
 struct vector<T> {
-  *T data_;
-  i16 size_;
-  i16 cap_;
+  data_: *T;
+  size_: i32;
+  cap_: i32;
 
-  fn push(T val) Unit {
+  fn push(val: *T) Unit {
     if size_ == cap_ {
       cap_ = cap_ * 2;
-      *T newdata = malloc(cap_ * sizeof(T));
-      for i16 i = 0; i < size_; i = i + 1 {
+      var newdata: *T = malloc(cap_ * sizeof(T));
+      for var i: i32 = 0; i < size_; i = i + 1 {
         newdata[i] = data_[i].move();
       }
       free(data_);
@@ -61,7 +61,7 @@ struct vector<T> {
     }
 
     size_ = size_ + 1;
-    data_[size_ - 1] = val;
+    data_[size_ - 1] = *val;
   }
 
   fn pop() T {
@@ -69,7 +69,7 @@ struct vector<T> {
     return data_[size_].move();
   }
 
-  fn size() i16 {
+  fn size() i32 {
     return size_;
   }
 
@@ -89,7 +89,7 @@ impl<T> Iterable<T> for vector<T> {
 }
 
 impl<T> Movable<T> for vector<T> {
-  fn move_into(*vector<T> o) Unit {
+  fn move_into(o: *vector<T>) Unit {
     o.data_ = data_;
     o.size_ = size_;
     o.cap_ = cap_;
@@ -101,7 +101,7 @@ impl<T> Movable<T> for vector<T> {
 
 impl<T> Destructible<T> for vector<T> {
   fn destroy() Unit {
-    for i16 i = 0; i < size; i = i + 1 {
+    for var i: i32 = 0; i < size; i = i + 1 {
       data_[i].destroy();
     }
     free(data_);
@@ -109,21 +109,21 @@ impl<T> Destructible<T> for vector<T> {
 }
 
 impl<T> Indexable for vector<T> {
-  fn index(i32 index) *T {
+  fn index(index: i32) *T {
     return data_[index];
   }
 }
 
-fn swap<T>(*T a, *T b) Unit {
-  T c = T{};
+fn swap<T>(a: *T, b: *T) Unit {
+  var c: T = T{};
   a.move_into(&c);
   b.move_into(a);
   c.move_into(b);
 }
 
-fn bubblesort<T>(*vector<T> v) Unit {
-  for i32 i = 0; i < v.size(); i++ {
-    for i32 j = 0; j < v.size() - 1; j++ {
+fn bubblesort<T>(v: *vector<T>) Unit {
+  for var i: i32 = 0; i < v.size(); i++ {
+    for var j: i32 = 0; j < v.size() - 1; j++ {
       if v[j] > v[j + 1] {
         swap(v[j], v[j + 1]);
       }
@@ -132,7 +132,7 @@ fn bubblesort<T>(*vector<T> v) Unit {
 }
 
 fn main() int8 {
-    auto v = vector<int8>.new();
+    var v: auto = vector<int8>.new();
     v.push(4);
     v.push(3);
     v.push(1);

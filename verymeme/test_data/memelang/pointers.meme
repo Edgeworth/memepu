@@ -1,14 +1,14 @@
 fn main() i8 {
-  i8 val = 2;
-  *i8 ptr = &val;
-  **i8 pptr = &ptr;
+  var val: i8 = 2;
+  var ptr: *i8 = &val;
+  var pptr: **i8 = &ptr;
 
-  const i8 cval = 2;
-  const* const i8 cptr_ci8 = &cval;
-  const* const* const i8 cptr_cptr_ci8 = &cptr_ci8;
+  var cval: const i8 = 2;
+  var cptr_ci8: const* const i8 = &cval;
+  var cptr_cptr_ci8: const* const* const i8 = &cptr_ci8;
 
-  [42] const* const i8 array_cptr_ci8 = [];
-  const* [42] const i8 cptr_array_ci8 = 0;
+  var array_cptr_ci8: [42] const* const i8 = [];
+  var cptr_array_ci8: const* [42] const i8 = 0;
 
-  [40][30]i8 multidim_array = [];
+  var multidim_array: [40][30]i8 = [];
 }

@@ -1,8 +1,8 @@
 enum Unit {}
 
-fn bubblesort<T>(const* vector<*T> v) Unit {
-  for i32 i = 0; i < v.size(); i++ {
-    for i32 j = 0; j < v.size() - 1; j++ {
+fn bubblesort<T>(v: const* vector<*T>) Unit {
+  for var i: i32 = 0; i < v.size(); i++ {
+    for var j: i32 = 0; j < v.size() - 1; j++ {
       if v[j] > v[j + 1] {
         swap(v[j], v[j + 1]);
       }
@@ -11,7 +11,7 @@ fn bubblesort<T>(const* vector<*T> v) Unit {
 }
 
 fn main() i32 {
-  auto v = vector<int8>.new();
+  var v: auto = vector<int8>.new();
   v.push(4);
   v.push(3);
   v.push(1);
