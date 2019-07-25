@@ -1,7 +1,8 @@
-#include "verymeme/tokenizer.h"
 #include "memeroute/parser.h"
+
 #include "verymeme/geom.h"
 #include "verymeme/string_util.h"
+#include "verymeme/tokenizer.h"
 
 namespace memeroute {
 
@@ -31,9 +32,7 @@ private:
     return int64_t(dim);
   }
 
-  Point parsePoint() {
-    return {parseDimension(), parseDimension()};
-  }
+  Point parsePoint() { return {parseDimension(), parseDimension()}; }
 
   Shape parseShape() {
     Shape shape{};
@@ -45,14 +44,11 @@ private:
     if (type == "path") {
       shape.type = Shape::Type::PATH;
       shape.path.width = parseDimension();
-      while (t_.peek() != ")") {
-        shape.path.points.push_back(parsePoint());
-      }
+      while (t_.peek() != ")") { shape.path.points.push_back(parsePoint()); }
     } else if (type == "circle") {
       shape.type = Shape::Type::CIRCLE;
       shape.circle.diameter = parseDimension();
-      if (t_.peek() != ")")
-        shape.circle.p = parsePoint();
+      if (t_.peek() != ")") shape.circle.p = parsePoint();
     } else if (type == "rect") {
       shape.type = Shape::Type::RECT;
       const Point& a = parsePoint();
@@ -180,8 +176,7 @@ private:
       } else {
         t_.expect({"("});
         const std::string& child = t_.peek();
-        if (child == "string_quote")
-          t_.expect({"string_quote", "\"", ")"});
+        if (child == "string_quote") t_.expect({"string_quote", "\"", ")"});
         else if (child == "space_in_quoted_tokens" || child == "host_cad" ||
             child == "host_version")
           ignoreRestOfExpression();
@@ -305,9 +300,7 @@ private:
 Pcb parsePcb(const std::string& data) {
   try {
     return PcbParser(data).parsePcb();
-  } catch (const std::exception& e) {
-    verify_expr(false, "failed exception: %s", e.what());
-  }
+  } catch (const std::exception& e) { verify_expr(false, "failed exception: %s", e.what()); }
 }
 
-}  // memeroute
+}  // namespace memeroute

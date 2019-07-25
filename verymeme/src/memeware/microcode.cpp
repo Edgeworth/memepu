@@ -1,15 +1,15 @@
 #include "memeware/microcode.h"
 
-#include <sstream>
-#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <sstream>
 
-#include "memeware/constants.h"
-#include "verymeme/string_util.h"
 #include "Vmicrocode.h"
+#include "Vmicrocode_microcode.h"
 #include "Vmlu_lookahead.h"
 #include "Vmlu_slice.h"
-#include "Vmicrocode_microcode.h"
+#include "memeware/constants.h"
+#include "verymeme/string_util.h"
 
 namespace memeware {
 
@@ -58,7 +58,7 @@ std::string generateMemeasmModel() {
   std::stringstream s;
   bool first = true;
   s << "[\n";
-  for (int opcode = 0; opcode < MAX_OPCODE; ++opcode) {
+  for (uint16_t opcode = 0; opcode < MAX_OPCODE; ++opcode) {
     microcode.ADDR = opcode << 5u;
     microcode.eval();
 
@@ -77,4 +77,4 @@ std::string generateMemeasmModel() {
   return s.str();
 }
 
-}  // memeware
+}  // namespace memeware

@@ -1,5 +1,7 @@
-#include <unistd.h>
 #include "verymeme/file.h"
+
+#include <unistd.h>
+
 #include "verymeme/util.h"
 
 namespace {

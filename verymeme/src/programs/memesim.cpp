@@ -1,21 +1,20 @@
+#include <verilated.h>
+
 #include <boost/program_options.hpp>
 #include <iostream>
-#include <verilated.h>
 #include <thread>
 
-#include "verymeme/file.h"
-#include "memesim/simulator.h"
 #include "memesim/cli.h"
 #include "memesim/display.h"
+#include "memesim/simulator.h"
+#include "verymeme/file.h"
 
 namespace po = boost::program_options;
-
 
 int main(int argc, char* argv[]) {
   try {
     po::options_description desc{"Options"};
-    desc.add_options()
-        ("help,h", "Help screen");
+    desc.add_options()("help,h", "Help screen");
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);

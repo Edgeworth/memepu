@@ -25,4 +25,4 @@ TEST_F(CommonTest, BasenameAndStem) {
   }
 }
 
-}  // anonymous
+}  // namespace

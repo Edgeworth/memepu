@@ -1,25 +1,31 @@
 #ifndef MEMECAD_TYPES_H
 #define MEMECAD_TYPES_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "verymeme/geom.h"
 
 namespace memecad {
 
-enum class Orientation {
-  HORIZONTAL, VERTICAL, COUNT
-};
+enum class Orientation { HORIZONTAL, VERTICAL, COUNT };
 
 enum class PinType {
-  INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, UNSPECIFIED, POWER_IN, POWER_OUT,
-  OPEN_COLLECTOR, OPEN_EMITTER, NOT_CONNECTED, COUNT
+  INPUT,
+  OUTPUT,
+  BIDIRECTIONAL,
+  TRISTATE,
+  PASSIVE,
+  UNSPECIFIED,
+  POWER_IN,
+  POWER_OUT,
+  OPEN_COLLECTOR,
+  OPEN_EMITTER,
+  NOT_CONNECTED,
+  COUNT
 };
 
-enum class Direction {
-  LEFT, RIGHT, UP, DOWN, COUNT
-};
+enum class Direction { LEFT, RIGHT, UP, DOWN, COUNT };
 
 constexpr int DEFAULT_DIMENSION = 50;
 
@@ -44,9 +50,7 @@ struct Lib {
   };
 
   struct Component {
-    enum class UnitSwappable {
-      SWAPPABLE, UNSWAPPABLE, COUNT
-    };
+    enum class UnitSwappable { SWAPPABLE, UNSWAPPABLE, COUNT };
 
     std::vector<std::string> names;
     std::string ref;
@@ -99,12 +103,8 @@ struct Sheet {
   };
 
   struct Label {
-    enum class Type {
-      GLOBAL, HIERARCHICAL, LOCAL, NOTES, NOCONNECT, COUNT
-    };
-    enum class NetType {
-      INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, COUNT
-    };
+    enum class Type { GLOBAL, HIERARCHICAL, LOCAL, NOTES, NOCONNECT, COUNT };
+    enum class NetType { INPUT, OUTPUT, BIDIRECTIONAL, TRISTATE, PASSIVE, COUNT };
 
     Type type = {};
     Point p = {};
@@ -166,7 +166,6 @@ private:
       "Date \"\"\nRev \"\"\nComp \"\"\nComment1 \"\"\nComment2 \"\"\n"
       "Comment3 \"\"\nComment4 \"\"\n$EndDescr\n";
   constexpr static const char* DEFAULT_FOOTER = "\t1    2600 1750\n\t1    0    0    -1\n";
-
 };
 
 PinType netTypeToPinType(Sheet::Label::NetType net_type);
@@ -189,6 +188,6 @@ std::istream& operator>>(std::istream& str, PinType& o);
 std::ostream& operator<<(std::ostream& str, const Sheet::Label::NetType& o);
 std::istream& operator>>(std::istream& str, Sheet::Label::NetType& o);
 
-}  // memecad
+}  // namespace memecad
 
 #endif  // MEMECAD_TYPES_H

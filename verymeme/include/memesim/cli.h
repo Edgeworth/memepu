@@ -19,6 +19,6 @@ private:
   static void printCpuState(const Simulator::CpuStateMessage& state);
 };
 
-}  // memesim
+}  // namespace memesim
 
 #endif  // MEMESIM_CLI_H

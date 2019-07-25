@@ -1,8 +1,9 @@
 #include <boost/program_options.hpp>
 #include <iostream>
-#include "verymeme/string_util.h"
+
 #include "memeware/microcode.h"
 #include "verymeme/file.h"
+#include "verymeme/string_util.h"
 
 namespace po = boost::program_options;
 
@@ -10,9 +11,8 @@ int main(int argc, char* argv[]) {
   std::string output;
   try {
     po::options_description desc{"Options"};
-    desc.add_options()
-        ("help,h", "Help screen")
-        ("output_path,o", po::value<std::string>()->required());
+    desc.add_options()("help,h", "Help screen")(
+        "output_path,o", po::value<std::string>()->required());
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);

@@ -1,10 +1,11 @@
-#include <thread>
-#include <random>
-#include <utility>
+#include "memeroute/router.h"
+
 #include <climits>
+#include <random>
+#include <thread>
+#include <utility>
 
 #include "memeroute/router_worker.h"
-#include "memeroute/router.h"
 #include "verymeme/concurrent_queue.h"
 #include "verymeme/util.h"
 
@@ -39,7 +40,6 @@ void runWorkerLoop(int id, Pcb pcb, ConcurrentQueue<WorkMessage>* work_queue,
   printf("Worker %d finished\n", id);
 }
 
-
 class PermutationGA {
 public:
   struct Gene {
@@ -68,8 +68,8 @@ public:
       pop.total_fitness += pop.genes[i].fitness;
       if (i < pop_size_) size_fitness += pop.genes[i].fitness;
     }
-    printf("Generation, %f total fitness, %f max fitness.\n", pop.total_fitness,
-        pop.genes[0].fitness);
+    printf(
+        "Generation, %f total fitness, %f max fitness.\n", pop.total_fitness, pop.genes[0].fitness);
 
     std::uniform_real_distribution<float> uniform_dist(0.f, size_fitness);
     Population return_pop = {};
@@ -90,8 +90,7 @@ public:
   static Population getRandomPopulation(int num_perm, int size) {
     Population pop = {};
     pop.genes.reserve(num_perm);
-    for (int i = 0; i < num_perm; ++i)
-      pop.genes.push_back(getRandomGene(size));
+    for (int i = 0; i < num_perm; ++i) pop.genes.push_back(getRandomGene(size));
     return pop;
   }
 
@@ -117,8 +116,8 @@ private:
   }
 };
 
-RouterWorker::InvocationParams invocationParamsFromGene(const std::vector<std::string>& net_names,
-    const PermutationGA::Gene& gene) {
+RouterWorker::InvocationParams invocationParamsFromGene(
+    const std::vector<std::string>& net_names, const PermutationGA::Gene& gene) {
   RouterWorker::InvocationParams params = {};
   params.net_names.reserve(net_names.size());
   verify_expr(net_names.size() == gene.nums.size(), "BUG");
@@ -129,7 +128,7 @@ RouterWorker::InvocationParams invocationParamsFromGene(const std::vector<std::s
   return params;
 }
 
-}
+}  // namespace
 
 Router::Router(Pcb pcb) : pcb_(std::move(pcb)) {}
 
@@ -143,9 +142,7 @@ RouterWorker::RoutingResult Router::route() {
     threads.emplace_back(runWorkerLoop, i, pcb_, &work_queue, &result_queue);
 
   std::vector<std::string> net_names;
-  for (const auto& kv : pcb_.nets)
-    net_names.push_back(kv.first);
-
+  for (const auto& kv : pcb_.nets) net_names.push_back(kv.first);
 
   const int NUM_GENERATIONS = 2;
   const int POP_SIZE = 8;
@@ -153,13 +150,12 @@ RouterWorker::RoutingResult Router::route() {
   PermutationGA::Population pop = PermutationGA::getRandomPopulation(POP_SIZE, net_names.size());
   RouterWorker::InvocationParams best_params = {};
   RouterWorker::RoutingResult best_result = {};
-  best_result.failed = INT_MAX;  // TODO
+  best_result.failed = INT_MAX;
   for (int gen_num = 0; gen_num < NUM_GENERATIONS; ++gen_num) {
     printf("Running generation %d...\n", gen_num + 1);
     RouterWorker::RoutingResult best;
     for (int i = 0; i < int(pop.genes.size()); ++i)
-      work_queue.push({
-          WorkMessage::Type::ROUTE, i /* work_id */,
+      work_queue.push({WorkMessage::Type::ROUTE, i /* work_id */,
           invocationParamsFromGene(net_names, pop.genes[i])});
 
     for (int i = 0; i < int(pop.genes.size()); ++i) {
@@ -173,22 +169,18 @@ RouterWorker::RoutingResult Router::route() {
       }
     }
 
-    // TODO: For now break if we succeed. Later want to optimise cost.
+    // TODO(Improvement): For now break if we succeed. Later want to optimise cost.
     if (best_result.failed == 0) break;
 
     pop = ga.computeNextGeneration(pop);
   }
 
-
-  for (int i = 0; i < num_threads; ++i)
-    work_queue.push({WorkMessage::Type::FINISH, -1, {}});
+  for (int i = 0; i < num_threads; ++i) work_queue.push({WorkMessage::Type::FINISH, -1, {}});
   for (auto& thread : threads) thread.join();
 
   printf("Got best result, %d failed\n", best_result.failed);
-  for (const auto& net_name : best_params.net_names)
-    printf("%s\n", net_name.c_str());
+  for (const auto& net_name : best_params.net_names) printf("%s\n", net_name.c_str());
   return best_result;
 }
 
-
-}  // memeroute
+}  // namespace memeroute

@@ -4,18 +4,18 @@ namespace {
 
 std::vector<std::string> tokenize(const std::string& data, const std::regex& token) {
   std::vector<std::string> toks;
-  for (auto i = std::sregex_iterator(data.begin(), data.end(), token);
-       i != std::sregex_iterator(); ++i) {
+  for (auto i = std::sregex_iterator(data.begin(), data.end(), token); i != std::sregex_iterator();
+       ++i) {
     const std::smatch& sm = *i;
     toks.push_back(sm[0].str());
   }
   return toks;
 }
 
-} // namespace
+}  // namespace
 
-Tokenizer::Tokenizer(const std::string& data, const std::regex& token) : toks_(
-    tokenize(data, token)) {}
+Tokenizer::Tokenizer(const std::string& data, const std::regex& token)
+    : toks_(tokenize(data, token)) {}
 
 std::string Tokenizer::getLines(int num_lines) {
   const int start_idx = idx_;
@@ -31,8 +31,8 @@ std::string Tokenizer::getSubstr(int st, int en) {
     // 1. not already terminated with a newline (prevent space on next line)
     // 2. not about to be terminated with a newline (prevent space before newline)
     // 3. same two rules as above for tab.
-    if (!substr.empty() && substr.back() != '\n' && toks_[i] != "\n" &&
-        substr.back() != '\t' && toks_[i] != "\t")
+    if (!substr.empty() && substr.back() != '\n' && toks_[i] != "\n" && substr.back() != '\t' &&
+        toks_[i] != "\t")
       substr += ' ';
     substr += toks_[i];
   }
@@ -41,8 +41,6 @@ std::string Tokenizer::getSubstr(int st, int en) {
 void Tokenizer::expect(const std::vector<std::string>& toks) {
   for (const std::string& tok : toks) {
     const std::string next_tok = next();
-    verify_expr(tok == next_tok, "expected '%s', got '%s'", tok.c_str(),
-        next_tok.c_str());
+    verify_expr(tok == next_tok, "expected '%s', got '%s'", tok.c_str(), next_tok.c_str());
   }
 }
-

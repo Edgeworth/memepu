@@ -1,7 +1,8 @@
-#include "verymeme/string_util.h"
-#include "memecad/parser.h"
 #include "memecad/schematic.h"
+
+#include "memecad/parser.h"
 #include "verymeme/geom.h"
+#include "verymeme/string_util.h"
 #include "verymeme/util.h"
 
 namespace memecad {
@@ -29,8 +30,8 @@ Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
     // Signal supplied from a higher up module.
     parent_label.type = Sheet::Label::Type::HIERARCHICAL;
     // TODO(improvement): check direction compared to kicad
-    parent_label.net_type = bit.wire->port_input ? Sheet::Label::NetType::INPUT
-                                                 : Sheet::Label::NetType::OUTPUT;
+    parent_label.net_type =
+        bit.wire->port_input ? Sheet::Label::NetType::INPUT : Sheet::Label::NetType::OUTPUT;
   } else if (bit.wire) {
     // Signal supplied from within this module.
     parent_label.type = Sheet::Label::Type::LOCAL;
@@ -50,7 +51,7 @@ Schematic::SheetData::SheetData() : cur({SHEET_MARGIN, SHEET_MARGIN}) {}
 std::vector<Schematic::SchematicFile> Schematic::writeHierarchy() {
   std::vector<Schematic::SchematicFile> files;
   for (auto& kv : sheets_) {
-    auto&[sheet_name, sheet_data] = kv;
+    auto& [sheet_name, sheet_data] = kv;
     sheet_data.sheet.title = sheet_name;
     sheet_data.sheet.id = 1;  // TODO(improvement): sheet index.
 
@@ -72,8 +73,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   auto& child = sheets_[child_name];
   std::set<Sheet::Label> child_label_set;
   for (const auto& label : child.sheet.labels) {
-    if (label.type == Sheet::Label::Type::HIERARCHICAL)
-      child_label_set.insert(label);
+    if (label.type == Sheet::Label::Type::HIERARCHICAL) child_label_set.insert(label);
   }
   std::vector<Sheet::Label> child_labels(child_label_set.begin(), child_label_set.end());
   verify_expr(child_labels.size() == mapping.size(),
@@ -82,7 +82,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
       child_name.c_str());
 
   // Add hierarchical label for child sheet.
-  int64_t pack_y = ref.p.y + 100;
+  int pack_y = ref.p.y + 100;
   for (int i = 0; i < int(child_labels.size()); ++i) {
     if (i == int(child_labels.size() / 2))  // Place on other side.
       pack_y = ref.p.y + 100;
@@ -97,11 +97,10 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
     ref_field.p.y = pack_y;
     pack_y += ref_field.dimension * 2;
   }
-  ref.height = int(pack_y) - ref.p.y;
+  ref.height = pack_y - ref.p.y;
 
   std::vector<Rect> aabbs;
-  aabbs.push_back(
-      {ref.p.x, ref.p.y, ref.p.x + ref.width, ref.p.y + ref.height});
+  aabbs.push_back({ref.p.x, ref.p.y, ref.p.x + ref.width, ref.p.y + ref.height});
 
   // Add label connecting to hierarchical label for parent sheet.
   std::vector<Sheet::Label> labels;
@@ -110,8 +109,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
     verify_expr(conn_iter != mapping.end(),
         "BUG: should have association from child label '%s' to parent label",
         child_labels[i].text.c_str());
-    Sheet::Label& parent_label = labels.emplace_back(
-        createParentLabel(conn_iter->second.bit));
+    Sheet::Label& parent_label = labels.emplace_back(createParentLabel(conn_iter->second.bit));
     parent_label.connectToRefField(ref.fields[i]);
     aabbs.push_back(parent_label.getBoundingBox());
   }
@@ -126,9 +124,8 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   }
 }
 
-void
-Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component& lib_component,
-    const PinMapping& mapping, const std::string& sheet_name) {
+void Schematic::addComponentToSheet(const std::string& lib_name,
+    const Lib::Component& lib_component, const PinMapping& mapping, const std::string& sheet_name) {
   verify_expr(2u == lib_component.fields.size(), "library component missing fields");
 
   // Add components.
@@ -162,7 +159,7 @@ Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component
   // Place labels relative to subcomponents and collect sizing data.
   std::vector<Sheet::Label> labels;
   for (const auto& kv : mapping) {
-    const auto&[kicad_pin, conn] = kv;
+    const auto& [kicad_pin, conn] = kv;
     auto& label = labels.emplace_back(createParentLabel(conn.bit));
     label.connectToPin(*kicad_pin);
 
@@ -188,8 +185,8 @@ Schematic::addComponentToSheet(const std::string& lib_name, const Lib::Component
   }
 }
 
-void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
-    const std::vector<Yosys::SigSig>& sigs) {
+void Schematic::addModuleConnectionsToSheet(
+    const std::string& sheet_name, const std::vector<Yosys::SigSig>& sigs) {
   auto& data = sheets_[sheet_name];
   for (const auto& sig : sigs) {
     verify_expr(sig.first.size() == sig.second.size(),
@@ -223,9 +220,8 @@ void Schematic::addModuleConnectionsToSheet(const std::string& sheet_name,
       height += std::max(label0.dimension, label1.dimension) * 2;
       labels.push_back(label0);
       labels.push_back(label1);
-      printf("  Connecting (%s of type %s) => (%s of type %s)\n",
-          label0.text.c_str(), tos(label0.type).c_str(),
-          label1.text.c_str(), tos(label1.type).c_str());
+      printf("  Connecting (%s of type %s) => (%s of type %s)\n", label0.text.c_str(),
+          tos(label0.type).c_str(), label1.text.c_str(), tos(label1.type).c_str());
     }
     if (labels.empty()) continue;
 
@@ -249,8 +245,7 @@ Point Schematic::SheetData::packBox(Point box_size) {
     cur.x = SHEET_MARGIN;
     cur.y += max_y;
     // TODO(improvement): Dynamically size sheets.
-    if (cur.y > SHEET_MARGIN + SHEET_HEIGHT)
-      printf("WARNING: ran out of space on sheet");
+    if (cur.y > SHEET_MARGIN + SHEET_HEIGHT) printf("WARNING: ran out of space on sheet");
     max_y = 0;
   }
 
@@ -262,11 +257,9 @@ Point Schematic::SheetData::packBox(Point box_size) {
 
 Point Schematic::SheetData::packBoxesOffset(const std::vector<Rect>& rects) {
   Rect r;
-  for (const auto& rect : rects)
-    r.unionRect(rect);
+  for (const auto& rect : rects) r.unionRect(rect);
   const Point loc = packBox({r.width(), r.height()});
   return loc - r.origin();
 }
 
-
-}  // memecad
+}  // namespace memecad

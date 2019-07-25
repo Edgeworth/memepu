@@ -1,7 +1,7 @@
-#include <boost/program_options.hpp>
 #include <kernel/yosys.h>
 
-#include "memecad/mapper.h"
+#include <boost/program_options.hpp>
+
 #include "memecad/parser.h"
 #include "memecad/yosys_module.h"
 #include "verymeme/file.h"
@@ -14,11 +14,10 @@ int main(int argc, char* argv[]) {
   std::string memecad_map_filename;
   try {
     po::options_description desc{"Options"};
-    desc.add_options()
-        ("help,h", "Help screen")
-        ("files,f", po::value<std::vector<std::string>>()->required()->multitoken())
-        ("memecad-map,k", po::value<std::string>()->required())
-        ("chip-libraries,c", po::value<std::vector<std::string>>()->required()->multitoken());
+    desc.add_options()("help,h", "Help screen")(
+        "files,f", po::value<std::vector<std::string>>()->required()->multitoken())(
+        "memecad-map,k", po::value<std::string>()->required())(
+        "chip-libraries,c", po::value<std::vector<std::string>>()->required()->multitoken());
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
@@ -38,9 +37,8 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  auto files = memecad::convertVerilogToKicadSchematics(memecad_map_filename, verilog_filenames,
-      kicad_library_filenames);
-  for (const auto& file : files)
-    writeFile("test/" + file.filename, file.contents);
+  auto files = memecad::convertVerilogToKicadSchematics(
+      memecad_map_filename, verilog_filenames, kicad_library_filenames);
+  for (const auto& file : files) writeFile("test/" + file.filename, file.contents);
   printf("Finished writing %d files\n", int(files.size()));
 }

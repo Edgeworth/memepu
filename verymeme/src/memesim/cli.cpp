@@ -1,9 +1,11 @@
-#include <map>
-#include <iostream>
-#include "verymeme/string_util.h"
 #include "memesim/cli.h"
-#include "verymeme/term.h"
+
+#include <iostream>
+#include <map>
+
 #include "verymeme/concurrent_queue.h"
+#include "verymeme/string_util.h"
+#include "verymeme/term.h"
 
 namespace memesim {
 
@@ -47,7 +49,7 @@ void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
   constexpr int MAX_COL = 70;
   int col = 0;
   bool first = true;
-  for (const auto&[name, val] : table) {
+  for (const auto& [name, val] : table) {
     col += MAX_FIELD;
     if (!first) {
       if (col > MAX_COL) {
@@ -70,8 +72,9 @@ void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
 
 }  // namespace
 
-CommandLine::CommandLine(Simulator* simulator) : simulator_(simulator), cpu_state_receiver_(
-    new ConcurrentQueue<Simulator::CpuStateMessage>()) {}
+CommandLine::CommandLine(Simulator* simulator)
+    : simulator_(simulator),
+      cpu_state_receiver_(new ConcurrentQueue<Simulator::CpuStateMessage>()) {}
 
 void CommandLine::run() {
   while (true) {
@@ -80,15 +83,12 @@ void CommandLine::run() {
     std::getline(std::cin, cmd);
     cmd = trim(cmd, "\\n ");
     if (cmd == "q") {
-      simulator_->scheduleCommand(
-          {Simulator::Command::Type::QUIT, nullptr, nullptr});
+      simulator_->scheduleCommand({Simulator::Command::Type::QUIT, nullptr, nullptr});
       break;
     } else if (cmd == "c") {
-      simulator_->scheduleCommand(
-          {Simulator::Command::Type::RUN, nullptr, nullptr});
+      simulator_->scheduleCommand({Simulator::Command::Type::RUN, nullptr, nullptr});
     } else {
-      simulator_->scheduleCommand(
-          {Simulator::Command::Type::STEP, nullptr, nullptr});
+      simulator_->scheduleCommand({Simulator::Command::Type::STEP, nullptr, nullptr});
       simulator_->scheduleCommand(
           {Simulator::Command::Type::GET_CPU_STATE, cpu_state_receiver_, nullptr});
       const auto& state = cpu_state_receiver_->yield();
@@ -124,4 +124,4 @@ void CommandLine::printCpuState(const Simulator::CpuStateMessage& state) {
   printf("%s\n", prettyPrintNumbers(hexdump(state.regs, 8)).c_str());
 }
 
-}  // memesim
+}  // namespace memesim

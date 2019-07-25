@@ -1,15 +1,15 @@
-#include "verymeme/string_util.h"
-#include "memeasm/assembler.h"
 #include "memesim/simulator.h"
 
-#include "Vkpu_kpu.h"
 #include "Vkpu_control_logic.h"
+#include "Vkpu_kpu.h"
+#include "Vkpu_microcode.h"
+#include "Vkpu_mmu.h"
 #include "Vkpu_register_file.h"
 #include "Vkpu_sram__D5_W20.h"
-#include "Vkpu_mmu.h"
-#include "Vkpu_vga.h"
 #include "Vkpu_sram__De_W20.h"
-#include "Vkpu_microcode.h"
+#include "Vkpu_vga.h"
+#include "memeasm/assembler.h"
+#include "verymeme/string_util.h"
 
 namespace memesim {
 
@@ -55,7 +55,7 @@ void Simulator::run() {
   initializeKpu(kpu_);
 
   bool running = false;
-  bool step = false;
+  bool step;
   while (true) {
     step = false;
 
@@ -64,25 +64,18 @@ void Simulator::run() {
 
     if (cmd) {
       switch (cmd->type) {
-        case Command::Type::RUN:
-          running = true;
-          break;
-        case Command::Type::STOP:
-          running = false;
-          break;
-        case Command::Type::STEP:
-          step = true;
-          break;
-        case Command::Type::QUIT:
-          return;
-        case Command::Type::GET_CPU_STATE:
-          verify_expr(cmd->cpu_state_receiver, "require receiver for get cpu state cmd");
-          cmd->cpu_state_receiver->push(generateCpuState());
-          break;
-        case Command::Type::GET_VGA_STATE:
-          verify_expr(cmd->vga_state_receiver, "require receiver for get vga state cmd");
-          cmd->vga_state_receiver->push(generateVgaState());
-          break;
+      case Command::Type::RUN: running = true; break;
+      case Command::Type::STOP: running = false; break;
+      case Command::Type::STEP: step = true; break;
+      case Command::Type::QUIT: return;
+      case Command::Type::GET_CPU_STATE:
+        verify_expr(cmd->cpu_state_receiver, "require receiver for get cpu state cmd");
+        cmd->cpu_state_receiver->push(generateCpuState());
+        break;
+      case Command::Type::GET_VGA_STATE:
+        verify_expr(cmd->vga_state_receiver, "require receiver for get vga state cmd");
+        cmd->vga_state_receiver->push(generateVgaState());
+        break;
       }
     }
     if (running || step) clockKpu(kpu_);
@@ -113,8 +106,7 @@ Simulator::CpuStateMessage Simulator::generateCpuState() {
   msg.n_rst = uint32_t(kpu_.kpu->n_rst);
   msg.mnemonic = memeasm::Assembler::generateMnemonicString(
       convertToString(kpu_.kpu->control->microcode->mnemonic), kpu_.kpu->opword_bits);
-  for (int i = 0; i < NUM_REG; ++i)
-    msg.regs[i] = uint32_t(kpu_.kpu->regs->registers->mem[i]);
+  for (int i = 0; i < NUM_REG; ++i) msg.regs[i] = uint32_t(kpu_.kpu->regs->registers->mem[i]);
 
   return msg;
 }
@@ -122,22 +114,20 @@ Simulator::CpuStateMessage Simulator::generateCpuState() {
 Simulator::VgaStateMessage Simulator::generateVgaState() {
   VgaStateMessage msg = {};
 
-  static_assert(sizeof(kpu_.kpu->mmu->vga->vram0->mem[0]) == sizeof(uint32_t),
-      "wrong size for vga memory");
+  static_assert(
+      sizeof(kpu_.kpu->mmu->vga->vram0->mem[0]) == sizeof(uint32_t), "wrong size for vga memory");
   constexpr int NUM_ELTS = sizeof(kpu_.kpu->mmu->vga->vram0->mem) / sizeof(uint32_t);
   for (int i = 0; i < NUM_ELTS; ++i) {
     auto val = uint32_t(kpu_.kpu->mmu->vga->vram0->mem[i]);
-    msg.pixels[4 * i] = val & 0xFFu;
-    msg.pixels[4 * i + 1] = (val >> 8) & 0xFFu;
-    msg.pixels[4 * i + 2] = (val >> 16) & 0xFFu;
-    msg.pixels[4 * i + 3] = (val >> 24) & 0xFFu;
+    msg.pixels[4 * i] = uint8_t(val & 0xFFu);
+    msg.pixels[4 * i + 1] = uint8_t((val >> 8u) & 0xFFu);
+    msg.pixels[4 * i + 2] = uint8_t((val >> 16u) & 0xFFu);
+    msg.pixels[4 * i + 3] = uint8_t((val >> 24u) & 0xFFu);
   }
 
   return msg;
 }
 
-void Simulator::scheduleCommand(const Simulator::Command& cmd) {
-  command_queue_.push(cmd);
-}
+void Simulator::scheduleCommand(const Simulator::Command& cmd) { command_queue_.push(cmd); }
 
-}  // memesim
+}  // namespace memesim

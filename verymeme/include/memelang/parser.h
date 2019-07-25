@@ -1,11 +1,12 @@
 #ifndef MEMELANG_PARSER_H
 #define MEMELANG_PARSER_H
 
-#include "memelang/tokeniser.h"
-#include "memelang/file_contents.h"
-#include <vector>
 #include <memory>
 #include <unordered_set>
+#include <vector>
+
+#include "memelang/file_contents.h"
+#include "memelang/tokeniser.h"
 
 namespace memelang {
 
@@ -27,7 +28,6 @@ private:
   std::unique_ptr<File> root_;
 };
 
-
 #define DEFNLT(type, ...) \
   auto getTie() const { return std::tie(__VA_ARGS__); } \
   bool operator<(const type& o) const { return getTie() < o.getTie(); } \
@@ -36,25 +36,26 @@ private:
   type& operator=(type&&) = default; \
   type(const type&) = delete; \
   type& operator=(const type&) = delete; \
+  ~type() = default; \
   std::string toString() const override; \
   std::vector<Node*> children() override; \
   void generateIr() const override
 
 struct Node {
-//  enum Type {
-//    // Top level constructs:
-//    INTF_DEFN, STRUCT_DEFN, FN_DEFN, ENUM_DEFN, IMPL_DEFN,
-//    // Blocks:
-//    STMT_BLK, STRUCT_BLK, IMPL_BLK, INTF_BLK, ENUM_BLK, MATCH_BLK,
-//    // Statements:
-//    VAR_DEFN, VAR_DECL, STMT_RET, STMT_FOR, STMT_IF, STMT_MATCH, STMT_ASM,
-//    // Qualifiers:
-//    TYPENAME, TYPELIST, STATIC,
-//    // Expressions:
-//    TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-//    DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
-//    STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
-//  } type;
+  //  enum Type {
+  //    // Top level constructs:
+  //    INTF_DEFN, STRUCT_DEFN, FN_DEFN, ENUM_DEFN, IMPL_DEFN,
+  //    // Blocks:
+  //    STMT_BLK, STRUCT_BLK, IMPL_BLK, INTF_BLK, ENUM_BLK, MATCH_BLK,
+  //    // Statements:
+  //    VAR_DEFN, VAR_DECL, STMT_RET, STMT_FOR, STMT_IF, STMT_MATCH, STMT_ASM,
+  //    // Qualifiers:
+  //    TYPENAME, TYPELIST, STATIC,
+  //    // Expressions:
+  //    TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
+  //    DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
+  //    STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
+  //  } type;
   Token tok = {};
 
   virtual std::string toString() const = 0;
@@ -62,8 +63,7 @@ struct Node {
   virtual std::vector<Node*> children() = 0;
   void visit(const std::function<void(Node&, int)>& f, int depth = 0) {
     f(*this, depth);
-    for (const auto& child : children())
-      child->visit(f, depth + 1);
+    for (const auto& child : children()) child->visit(f, depth + 1);
   }
 };
 
@@ -116,10 +116,40 @@ struct FnSig : public Node {
 // Expression related:
 struct Expr : public Node {
   enum Type {
-    ARRAY_ACCESS, MEMBER_ACCESS, FN_CALL, POSTFIX_INC, POSTFIX_DEC, PREFIX_INC, PREFIX_DEC,
-    UNARY_NEGATE, UNARY_LINVERT, UNARY_BINVERT, UNARY_DEREF, UNARY_ADDR, MUL, DIV, MOD, ADD, SUB,
-    LSHIFT, ARITH_RSHIFT, RSHIFT, LEQ, GEQ, LT, GT, EQ, NEQ, BAND, BXOR, BOR, LAND, LOR, TERNARY,
-    ASSIGNMENT, COUNT,
+    ARRAY_ACCESS,
+    MEMBER_ACCESS,
+    FN_CALL,
+    POSTFIX_INC,
+    POSTFIX_DEC,
+    PREFIX_INC,
+    PREFIX_DEC,
+    UNARY_NEGATE,
+    UNARY_LINVERT,
+    UNARY_BINVERT,
+    UNARY_DEREF,
+    UNARY_ADDR,
+    MUL,
+    DIV,
+    MOD,
+    ADD,
+    SUB,
+    LSHIFT,
+    ARITH_RSHIFT,
+    RSHIFT,
+    LEQ,
+    GEQ,
+    LT,
+    GT,
+    EQ,
+    NEQ,
+    BAND,
+    BXOR,
+    BOR,
+    LAND,
+    LOR,
+    TERNARY,
+    ASSIGNMENT,
+    COUNT,
   };
 };
 

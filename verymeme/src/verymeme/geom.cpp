@@ -3,9 +3,7 @@
 #include <sstream>
 #include <tuple>
 
-std::ostream& operator<<(std::ostream& str, const Point& p) {
-  return str << p.x << " " << p.y;
-}
+std::ostream& operator<<(std::ostream& str, const Point& p) { return str << p.x << " " << p.y; }
 
 Point& Point::operator+=(const Point& p) {
   x += p.x;
@@ -13,29 +11,17 @@ Point& Point::operator+=(const Point& p) {
   return *this;
 }
 
-Point Point::operator+(const Point& p) const {
-  return {x + p.x, y + p.y};
-}
+Point Point::operator+(const Point& p) const { return {x + p.x, y + p.y}; }
 
-Point Point::operator-(const Point& p) const {
-  return {x - p.x, y - p.y};
-}
+Point Point::operator-(const Point& p) const { return {x - p.x, y - p.y}; }
 
-bool Point::operator<(const Point& p) const {
-  return std::tie(x, y) < std::tie(p.x, p.y);
-}
+bool Point::operator<(const Point& p) const { return std::tie(x, y) < std::tie(p.x, p.y); }
 
-Point Point::operator-() const {
-  return {-x, -y};
-}
+Point Point::operator-() const { return {-x, -y}; }
 
-bool Point::operator!=(const Point& p) const {
-  return x != p.x || y != p.y;
-}
+bool Point::operator!=(const Point& p) const { return x != p.x || y != p.y; }
 
-int64_t Point::cross(const Point& p) const {
-  return x * p.y - y * p.x;
-}
+int64_t Point::cross(const Point& p) const { return x * p.y - y * p.x; }
 
 Rect Rect::enclosing(const Point& a, const Point& b) {
   Rect r{};

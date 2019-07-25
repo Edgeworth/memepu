@@ -1,5 +1,5 @@
-#ifndef VERYMEME_SIMULATOR_H
-#define VERYMEME_SIMULATOR_H
+#ifndef MEMESIM_SIMULATOR_H
+#define MEMESIM_SIMULATOR_H
 
 #include "Vkpu.h"
 #include "verymeme/concurrent_queue.h"
@@ -63,6 +63,6 @@ private:
   VgaStateMessage generateVgaState();
 };
 
-}  // memesim
+}  // namespace memesim
 
-#endif  // VERYMEME_SIMULATOR_H
+#endif // MEMESIM_SIMULATOR_H
