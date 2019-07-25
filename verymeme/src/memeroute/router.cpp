@@ -165,7 +165,7 @@ RouterWorker::RoutingResult Router::route() {
     for (int i = 0; i < int(pop.genes.size()); ++i) {
       const ResultMessage& result = result_queue.yield();
       printf("Got result with work id %d with %d failed\n", result.work_id, result.result.failed);
-      pop.genes[result.work_id].fitness = 100.f / (result.result.failed + 1.f);
+      pop.genes[result.work_id].fitness = 100.f / (float(result.result.failed) + 1.f);
 
       if (result.result.failed < best_result.failed) {
         best_params = invocationParamsFromGene(net_names, pop.genes[result.work_id]);

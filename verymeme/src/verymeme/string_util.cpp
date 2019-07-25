@@ -11,7 +11,7 @@ std::string trim(const std::string& data, const std::string& c) {
 
 int64_t convertFromHex(const std::string& s) {
   std::istringstream stream(s);
-  int val;
+  int val = 0;
   bool valid_int = bool(stream >> std::hex >> val);
   if (!valid_int || !stream.eof()) return INT64_MIN;
   return val;
@@ -19,7 +19,7 @@ int64_t convertFromHex(const std::string& s) {
 
 int64_t convertFromDec(const std::string& s) {
   std::istringstream stream(s);
-  int val;
+  int val = 0;
   bool valid_int = bool(stream >> val);
   if (!valid_int || !stream.eof()) return INT64_MIN;
   return val;

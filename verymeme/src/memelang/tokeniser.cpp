@@ -30,17 +30,16 @@ const std::unordered_map<std::string, Token::Type> SIMPLE_TOKENS = {
     {"asm", Token::ASM}, {"//", Token::COMMENT},
 };
 
-const std::string TOKEN_TYPES[] = {"PLUS", "MINUS", "ASTERISK", "PERCENT", "FSLASH", "QUOTE",
-    "DQUOTE", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LANGLE", "RANGLE", "LSQUARE", "RSQUARE",
-    "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE", "EXCLAMATION", "AMPERSAND",
-    "DAMPERSAND", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL", "LTEQUAL", "GTEQUAL", "INTF",
-    "STRUCT", "ENUM", "IMPL", "FN", "IF", "ELSE", "MATCH", "FOR", "RETURN", "STATIC", "CONST",
-    "AUTO", "I8", "I16", "I32", "U8", "U16", "U32", "BOOL", "BIT", "ASM", "STR_LIT", "INT_LIT",
-    "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
-
 }  // namespace
 
 std::ostream& operator<<(std::ostream& str, const Token::Type& o) {
+  const static std::string TOKEN_TYPES[] = {"PLUS", "MINUS", "ASTERISK", "PERCENT", "FSLASH", "QUOTE",
+      "DQUOTE", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LANGLE", "RANGLE", "LSQUARE", "RSQUARE",
+      "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE", "EXCLAMATION", "AMPERSAND",
+      "DAMPERSAND", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL", "LTEQUAL", "GTEQUAL", "INTF",
+      "STRUCT", "ENUM", "IMPL", "FN", "IF", "ELSE", "MATCH", "FOR", "RETURN", "STATIC", "CONST",
+      "AUTO", "I8", "I16", "I32", "U8", "U16", "U32", "BOOL", "BIT", "ASM", "STR_LIT", "INT_LIT",
+      "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
   return outputEnum(str, o, TOKEN_TYPES);
 }
 
@@ -162,8 +161,9 @@ char Tokeniser::grabEscapedChar() {
       return '\'';
     case '"':
       return '"';
+    default:
+      verify_expr(false, "unknown escape sequence \\%c", data[idx_ - 1]);
   }
-  verify_expr(false, "unknown escape sequence \\%c", data[idx_ - 1]);
   return -1;
 }
 

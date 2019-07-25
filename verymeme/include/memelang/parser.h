@@ -60,10 +60,10 @@ struct Node {
   virtual std::string toString() const = 0;
   virtual void generateIr() const = 0;
   virtual std::vector<Node*> children() = 0;
-  virtual void visit(const std::function<void(Node&)>& f) {
-    f(*this);
+  void visit(const std::function<void(Node&, int)>& f, int depth = 0) {
+    f(*this, depth);
     for (const auto& child : children())
-      child->visit(f);
+      child->visit(f, depth + 1);
   }
 };
 
@@ -114,14 +114,53 @@ struct FnSig : public Node {
 };
 
 // Expression related:
-// TODO: change variable declaration style to let a: type = asdf ?
 struct Expr : public Node {
+  enum Type {
+    ARRAY_ACCESS, MEMBER_ACCESS, FN_CALL, POSTFIX_INC, POSTFIX_DEC, PREFIX_INC, PREFIX_DEC,
+    UNARY_NEGATE, UNARY_LINVERT, UNARY_BINVERT, UNARY_DEREF, UNARY_ADDR, MUL, DIV, MOD, ADD, SUB,
+    LSHIFT, ARITH_RSHIFT, RSHIFT, LEQ, GEQ, LT, GT, EQ, NEQ, BAND, BXOR, BOR, LAND, LOR, TERNARY,
+    ASSIGNMENT, COUNT,
+  };
+};
 
+std::ostream& operator<<(std::ostream& str, const Expr::Type& o);
+
+struct BoolLit : public Expr {
+  bool val;
+
+  DEFNLT(BoolLit, val);
+};
+
+struct IntLit : public Expr {
+  int64_t val;
+
+  DEFNLT(IntLit, val);
+};
+
+struct CharLit : public Expr {
+  int32_t val;
+
+  DEFNLT(CharLit, val);
+};
+
+struct StrLit : public Expr {
+  std::string val;
+
+  DEFNLT(StrLit, val);
+};
+
+struct VarRef : public Expr {
+  std::string name;
+
+  DEFNLT(VarRef, name);
 };
 
 struct BinOp : public Expr {
+  Expr::Type type;
   std::unique_ptr<Expr> left;
   std::unique_ptr<Expr> right;
+
+  explicit BinOp(Expr::Type t) : type(t) {}
 
   DEFNLT(BinOp, left, right);
 };

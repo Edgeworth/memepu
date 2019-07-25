@@ -14,7 +14,7 @@ class PcbParser {
 public:
   explicit PcbParser(const std::string& data) : t_(data, TOKEN) {}
 
-  const Pcb parsePcb() {
+  Pcb parsePcb() {
     parse();
     pcb_.verifyAndSetup();
     return pcb_;
@@ -26,7 +26,7 @@ private:
   int resolution_ = 2540000;  // Default value.
 
   int64_t parseDimension() {
-    const float dim = t_.next<float>() * resolution_;
+    const float dim = t_.next<float>() * float(resolution_);
     verify_expr(std::abs(dim - int64_t(dim)) < EP, "coordinate conversion loses information");
     return int64_t(dim);
   }

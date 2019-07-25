@@ -59,7 +59,7 @@ void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
     }
     first = false;
 
-    const int SPACING = MAX_FIELD - name.length() - val.length();
+    const int SPACING = MAX_FIELD - int(name.length()) - int(val.length());
     fputs(name.c_str(), stdout);
     putchar(':');
     for (int i = 0; i < SPACING; ++i) putchar(' ');

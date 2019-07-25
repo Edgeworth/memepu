@@ -136,7 +136,7 @@ Renderer::addPadstackToDisplayList(const std::string& padstack_id, const sf::Tra
 
 sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf::Transform tf) {
   tf.translate(pointToVector(component.p));
-  tf.rotate(component.rotation);
+  tf.rotate(float(component.rotation));
   if (component.side == Side::BACK)
     tf.scale(-1.f, -1.f);  // TODO(check): is it correct to flip both axes?
 
