@@ -67,9 +67,9 @@ fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 // Terminals:
 builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' | 'bit' ;
 // Parse << and >> as two separate tokens to allow stuff like vector<vector<T>>.
-binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' | '<' '<' | '<=' | '>=' | '<' | '>'
+binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' '>' | '>' '>' | '<' '<' | '<=' | '>=' | '<' | '>'
     | '==' | '!=' |  '&' | '^' | '|' | '&&' | '||';
-prefix_op : '~' | '-' | '!' | '&' | '*' ;
+prefix_op : '+' '+' | '-' '-' | '~' | '-' | '!' | '&' | '*' ;
 postfix_op : '+' '+' | '-' '-' ;
 NUMBERS : [0-9]+ ;
 int_lit : '0x'? NUMBERS;

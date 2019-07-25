@@ -45,8 +45,9 @@ private:
   std::vector<Token> tokens_;
   int idx_ = 0;
 
+  static bool startsNewToken(char c);
+
   void pushCurrentToken();
-  bool startsNewToken(char c);
   bool atCompleteToken();
   bool isChar(char c, const char* msg);
   char grabEscapedChar();

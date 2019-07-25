@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  memeasm::Assembler assember(readFile(model_filename));
-  std::vector<uint32_t> data = assember.assemble(readFile(input_filename));
+  memeasm::Assembler assembler(readFile(model_filename));
+  std::vector<uint32_t> data = assembler.assemble(readFile(input_filename));
   writeFile(output_filename, hexdump(data));
 }

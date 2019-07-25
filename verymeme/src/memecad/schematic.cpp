@@ -82,7 +82,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
       child_name.c_str());
 
   // Add hierarchical label for child sheet.
-  int pack_y = ref.p.y + 100;
+  int64_t pack_y = ref.p.y + 100;
   for (int i = 0; i < int(child_labels.size()); ++i) {
     if (i == int(child_labels.size() / 2))  // Place on other side.
       pack_y = ref.p.y + 100;
@@ -97,7 +97,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
     ref_field.p.y = pack_y;
     pack_y += ref_field.dimension * 2;
   }
-  ref.height = pack_y - ref.p.y;
+  ref.height = int(pack_y) - ref.p.y;
 
   std::vector<Rect> aabbs;
   aabbs.push_back(
