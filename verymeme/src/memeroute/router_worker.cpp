@@ -1,7 +1,9 @@
+#include "memeroute/router_worker.h"
+
+#include <cstring>
 #include <queue>
 #include <utility>
-#include <cstring>
-#include "memeroute/router_worker.h"
+
 #include "verymeme/geom.h"
 #include "verymeme/util.h"
 
@@ -9,9 +11,7 @@ namespace memeroute {
 
 namespace {
 
-int64_t ceil_div(int64_t a, int64_t b) {
-  return a / b + bool(a % b);
-}
+int64_t ceil_div(int64_t a, int64_t b) { return a / b + bool(a % b); }
 
 }  // namespace
 
@@ -58,8 +58,8 @@ void RouterWorker::markPinInGrid(const Component& component, const Pin& pin, int
   const auto& padstack = pcb_.padstacks[pin.padstack_id];
   // Add padstacks. Convert from pin coord -> component coord -> pcb coord
   for (const auto& s : padstack.shapes)
-    markFilledShapeInGrid(component.toParentCoord(pin.toParentCoord(s)),
-        pcb_.getLayer(component, s), val);
+    markFilledShapeInGrid(
+        component.toParentCoord(pin.toParentCoord(s)), pcb_.getLayer(component, s), val);
 }
 
 void RouterWorker::markPadstackInGrid(const Point& p, const std::string& padstack_id) {
@@ -68,24 +68,21 @@ void RouterWorker::markPadstackInGrid(const Point& p, const std::string& padstac
     // TODO(improvement): For now just do bounding box.
     const Rect bbox = shape.getBoundingBox().offset(convertGridToWorld(p));
     // Move to current state location (put via there).
-    const Rect grid_bbox = Rect::enclosing(convertWorldToGrid(bbox.origin()),
-        convertWorldToGrid(bbox.bottom_right()));
+    const Rect grid_bbox =
+        Rect::enclosing(convertWorldToGrid(bbox.origin()), convertWorldToGrid(bbox.bottom_right()));
     for (int r = grid_bbox.top; r < grid_bbox.bottom; ++r)
-      for (int c = grid_bbox.left; c < grid_bbox.right; ++c)
-        blocked_[r][c][shape.layer_id]++;
+      for (int c = grid_bbox.left; c < grid_bbox.right; ++c) blocked_[r][c][shape.layer_id]++;
   }
 }
 
 void RouterWorker::markFilledShapeInGrid(const Shape& shape, int layer, int val) {
   const Rect bbox = shape.getBoundingBox();  // TODO(improvement): For now just do bounding box.
-  const Rect grid_bbox = Rect::enclosing(convertWorldToGrid(bbox.origin()),
-      convertWorldToGrid(bbox.bottom_right()));
+  const Rect grid_bbox =
+      Rect::enclosing(convertWorldToGrid(bbox.origin()), convertWorldToGrid(bbox.bottom_right()));
 
   for (int r = grid_bbox.top; r < grid_bbox.bottom; ++r)
-    for (int c = grid_bbox.left; c < grid_bbox.right; ++c)
-      blocked_[r][c][layer] += val;
+    for (int c = grid_bbox.left; c < grid_bbox.right; ++c) blocked_[r][c][layer] += val;
 }
-
 
 bool RouterWorker::isBlocked(const State& prev_s, const State& s) {
   // No via case.
@@ -97,8 +94,8 @@ bool RouterWorker::isBlocked(const State& prev_s, const State& s) {
     const Rect bbox = shape.getBoundingBox().offset(convertGridToWorld(s.p));
     if (!boundary_.contains(bbox)) return true;  // Goes outside boundary.
     // Move to current state location (put via there).
-    const Rect grid_bbox = Rect::enclosing(convertWorldToGrid(bbox.origin()),
-        convertWorldToGrid(bbox.bottom_right()));
+    const Rect grid_bbox =
+        Rect::enclosing(convertWorldToGrid(bbox.origin()), convertWorldToGrid(bbox.bottom_right()));
 
     for (int r = grid_bbox.top; r < grid_bbox.bottom; ++r)
       for (int c = grid_bbox.left; c < grid_bbox.right; ++c)
@@ -123,11 +120,9 @@ void RouterWorker::initializeGrid() {
   for (const auto& kv : pcb_.components) {
     const auto& component = kv.second;
     const auto& image = pcb_.images[component.image_id];
-    for (const auto& kv2 : image.pins)
-      markPinInGrid(component, kv2.second, 1);
+    for (const auto& kv2 : image.pins) markPinInGrid(component, kv2.second, 1);
     for (const auto& keepout : image.keepouts)
-      markFilledShapeInGrid(component.toParentCoord(keepout),
-          pcb_.getLayer(component, keepout), 1);
+      markFilledShapeInGrid(component.toParentCoord(keepout), pcb_.getLayer(component, keepout), 1);
   }
 }
 
@@ -142,7 +137,8 @@ RouterWorker::RoutingResult RouterWorker::route(const RouterWorker::InvocationPa
     for (const auto& pin_id : net.pin_ids) {
       const auto& component = pcb_.getComponentForPinId(pin_id);
       const auto& pin = pcb_.getPinForPinId(pin_id);
-      // TODO(improvement): Through hole components can start from any layer. Needs to check padstack.
+      // TODO(improvement): Through hole components can start from any layer. Needs to check
+      // padstack.
       states.push_back(
           {convertWorldToGrid(component.toParentCoord(pin.p)), pcb_.getLayer(component.side)});
       markPinInGrid(component, pin, -1);  // Temporarily unmark pins in this net.
@@ -159,8 +155,9 @@ RouterWorker::RoutingResult RouterWorker::route(const RouterWorker::InvocationPa
 }
 
 RouterWorker::RoutingResult RouterWorker::bfsAndAddToGrid(const std::vector<State>& states) {
-  memset(traces_, 0, sizeof(traces_)); // Reset traces to zero
-  traces_[states[0].p.y][states[0].p.x][states[0].layer] = true;  // Set-up initial connection point.
+  memset(traces_, 0, sizeof(traces_));  // Reset traces to zero
+  traces_[states[0].p.y][states[0].p.x][states[0].layer] =
+      true;  // Set-up initial connection point.
 
   // Start from the 2nd pad and try to connect to previous stuff so everything is connected.
   bool succeeded = true;
@@ -181,7 +178,8 @@ RouterWorker::RoutingResult RouterWorker::bfsAndAddToGrid(const std::vector<Stat
     for (int c = 0; c < GRID_COLS; ++c) {
       for (int l = 0; l < NUM_LAYERS; ++l) {
         // Do a cross block around traces[r][c][l] to prevent diagonal lines crossing.
-        // TODO(improvement): Removing this restriction or doing it only for diagonal lines could improve routing.
+        // TODO(improvement): Removing this restriction or doing it only for diagonal lines could
+        // improve routing.
         // TODO(improvement): Handle trace width.
         blocked_[r][c][l] += int(traces_[r][c][l]);
         if (r > 0) blocked_[r - 1][c][l] += int(traces_[r][c][l]);
@@ -192,8 +190,7 @@ RouterWorker::RoutingResult RouterWorker::bfsAndAddToGrid(const std::vector<Stat
     }
   }
   // Mark vias:
-  for (const auto& p : tmp_vias_)
-    markPadstackInGrid(p, pcb_.via_padstack_id);
+  for (const auto& p : tmp_vias_) markPadstackInGrid(p, pcb_.via_padstack_id);
 
   return collectRoutes(states[0]);
 }
@@ -231,7 +228,7 @@ bool RouterWorker::bfsOnce(const State& start) {
           cur = next;
         }
         traces_[start.p.y][start.p.x][start.layer] = true;
-        return true; // We are done.
+        return true;  // We are done.
       }
 
       back_[new_s.p.y][new_s.p.x][new_s.layer] = s;  // Mark for backtracking.
@@ -281,8 +278,7 @@ void RouterWorker::collectRoutesInternal(const State s) {
       if (cur_path.path.points.size() >= 2u) {
         const auto& a = cur_path.path.points[cur_path.path.points.size() - 2];
         const auto& b = cur_path.path.points.back();
-        if ((b - a).cross(grid_point - b) == 0)
-          cur_path.path.points.pop_back();
+        if ((b - a).cross(grid_point - b) == 0) cur_path.path.points.pop_back();
       }
       cur_path.path.points.push_back(grid_point);
     }
@@ -299,4 +295,4 @@ RouterWorker::RoutingResult RouterWorker::collectRoutes(const State s) {
   return {std::move(tmp_shapes_), std::move(tmp_vias_), 0 /* failed */};
 }
 
-}  // memeroute
+}  // namespace memeroute

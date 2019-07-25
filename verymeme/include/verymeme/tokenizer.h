@@ -1,8 +1,8 @@
 #ifndef VERYMEME_TOKENIZER_H
 #define VERYMEME_TOKENIZER_H
 
-#include <regex>
 #include <boost/lexical_cast.hpp>
+#include <regex>
 
 #include "verymeme/util.h"
 
@@ -10,13 +10,13 @@ class Tokenizer {
 public:
   Tokenizer(const std::string& data, const std::regex& token);
 
-  template<typename T = std::string>
+  template <typename T = std::string>
   T peek(int ahead = 0) {
     verify_expr(idx_ + ahead < int(toks_.size()), "expecting token");
     return boost::lexical_cast<T>(toks_[idx_ + ahead]);
   }
 
-  template<typename T = std::string>
+  template <typename T = std::string>
   T next() {
     T value = peek<T>();
     idx_++;

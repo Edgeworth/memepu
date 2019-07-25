@@ -1,8 +1,8 @@
 #ifndef MEMEROUTE_ROUTER_H
 #define MEMEROUTE_ROUTER_H
 
-#include "memeroute/types.h"
 #include "memeroute/router_worker.h"
+#include "memeroute/types.h"
 
 namespace memeroute {
 
@@ -16,6 +16,6 @@ private:
   Pcb pcb_;
 };
 
-}  // memeroute
+}  // namespace memeroute
 
 #endif  // MEMEROUTE_ROUTER_H

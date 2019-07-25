@@ -1,15 +1,15 @@
-#include <cmath>
-#include "verymeme/util.h"
 #include "memeroute/render_shapes.h"
+
+#include <cmath>
+
 #include "verymeme/geom.h"
+#include "verymeme/util.h"
 
 namespace memeroute {
 
 namespace {
 
-float length(const sf::Vector2f& v) {
-  return sqrt(v.x * v.x + v.y * v.y);
-}
+float length(const sf::Vector2f& v) { return std::sqrt(v.x * v.x + v.y * v.y); }
 
 sf::Vector2f normalize(const sf::Vector2f& v) {
   const auto len = length(v);
@@ -17,13 +17,10 @@ sf::Vector2f normalize(const sf::Vector2f& v) {
   return v / length(v);
 }
 
-sf::Vector2f getPerpendicular(const sf::Vector2f& v) {
-  return normalize(sf::Vector2f(-v.y, v.x));
-}
+sf::Vector2f getPerpendicular(const sf::Vector2f& v) { return normalize(sf::Vector2f(-v.y, v.x)); }
 
-std::vector<sf::VertexArray>
-createPathWithThickness(const std::vector<sf::Vector2f> points, float thickness,
-    const sf::Color& color) {
+std::vector<sf::VertexArray> createPathWithThickness(
+    const std::vector<sf::Vector2f>& points, float thickness, const sf::Color& color) {
   sf::VertexArray quads(sf::PrimitiveType::Quads);
   std::vector<sf::VertexArray> circles;
   for (int i = 0; i < int(points.size()); ++i) {
@@ -49,10 +46,9 @@ createPathWithThickness(const std::vector<sf::Vector2f> points, float thickness,
   return circles;
 }
 
-sf::VertexArray createLineStrip(const std::vector<sf::Vector2f> points, const sf::Color& color) {
+sf::VertexArray createLineStrip(const std::vector<sf::Vector2f>& points, const sf::Color& color) {
   sf::VertexArray array(sf::PrimitiveType::LineStrip);
-  for (const auto& point : points)
-    array.append({point, color});
+  for (const auto& point : points) array.append({point, color});
   return array;
 }
 
@@ -73,33 +69,28 @@ sf::FloatRect floatRectUnion(const sf::FloatRect& a, const sf::FloatRect& b) {
 
 sf::FloatRect getVertexArraysBoundingBox(const std::vector<sf::VertexArray>& arrays) {
   sf::FloatRect bounds{};
-  for (const auto& array : arrays)
-    bounds = floatRectUnion(array.getBounds(), bounds);
+  for (const auto& array : arrays) bounds = floatRectUnion(array.getBounds(), bounds);
   return bounds;
 }
 
-sf::Vector2f pointToVector(const Point& p) {
-  return sf::Vector2f(p.x, p.y);
-}
+sf::Vector2f pointToVector(const Point& p) { return sf::Vector2f(p.x, p.y); }
 
 sf::FloatRect rectToFloatRect(const Rect& r) {
   return sf::FloatRect(r.left, r.top, r.width(), r.height());
 }
 
-sf::VertexArray
-createCircle(float radius, sf::Transform tf, const sf::Color& color, bool filled) {
+sf::VertexArray createCircle(float radius, sf::Transform tf, const sf::Color& color, bool filled) {
   sf::CircleShape circle(radius);
   sf::VertexArray array(filled ? sf::PrimitiveType::TriangleFan : sf::PrimitiveType::LineStrip);
   tf.translate(-radius, -radius);
   for (int i = 0; i < int(circle.getPointCount()); ++i)
     array.append({tf * circle.getPoint(i), color});
-  if (!filled)
-    array.append({tf * circle.getPoint(0), color});
+  if (!filled) array.append({tf * circle.getPoint(0), color});
   return array;
 }
 
-sf::VertexArray
-createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color, bool filled) {
+sf::VertexArray createRect(
+    const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& color, bool filled) {
   sf::VertexArray array(filled ? sf::PrimitiveType::Quads : sf::PrimitiveType::LineStrip);
   array.append({tf * sf::Vector2f(r.left, r.top), color});
   array.append({tf * sf::Vector2f(r.left, r.top + r.height), color});
@@ -109,39 +100,32 @@ createRect(const sf::FloatRect& r, const sf::Transform& tf, const sf::Color& col
   return array;
 }
 
-std::vector<sf::VertexArray>
-createVertexArraysFromShape(const Shape& shape, sf::Transform tf, const sf::Color& color,
-    bool filled) {
+std::vector<sf::VertexArray> createVertexArraysFromShape(
+    const Shape& shape, sf::Transform tf, const sf::Color& color, bool filled) {
   switch (shape.type) {
-    case Shape::Type::PATH: {
-      std::vector<sf::Vector2f> points;
-      for (const auto& p : shape.path.points)
-        points.emplace_back(tf * pointToVector(p));
-      // Treat paths with width 0 as line strips so they are visible (width of >= 1 pixel).
-      // TODO(improvement): Support |filled| for path.
-      if (shape.path.width != 0)
-        return createPathWithThickness(points, shape.path.width, color);
-      else
-        return {createLineStrip(points, color)};
-
-    }
-    case Shape::Type::CIRCLE: {
-      tf.translate(pointToVector(shape.circle.p));
-      return {createCircle(shape.circle.diameter / 2.0f, tf, color, filled)};
-    }
-    case Shape::Type::RECT:
-      return {createRect(rectToFloatRect(shape.rect), tf, color, false)};
+  case Shape::Type::PATH: {
+    std::vector<sf::Vector2f> points;
+    for (const auto& p : shape.path.points) points.emplace_back(tf * pointToVector(p));
+    // Treat paths with width 0 as line strips so they are visible (width of >= 1 pixel).
+    // TODO(improvement): Support |filled| for path.
+    if (shape.path.width != 0)
+      return createPathWithThickness(points, float(shape.path.width), color);
+    else
+      return {createLineStrip(points, color)};
   }
-  return {};
+  case Shape::Type::CIRCLE: {
+    tf.translate(pointToVector(shape.circle.p));
+    return {createCircle(float(shape.circle.diameter) / 2.0f, tf, color, filled)};
+  }
+  case Shape::Type::RECT: return {createRect(rectToFloatRect(shape.rect), tf, color, false)};
+  }
+  verify_expr(false, "BUG");
 }
 
 void DisplayList::draw(sf::RenderWindow& window) {
-  for (const auto& array : arrays_)
-    window.draw(array);
+  for (const auto& array : arrays_) window.draw(array);
 }
 
-void DisplayList::add(const sf::VertexArray& array) {
-  arrays_.push_back(array);
-}
+void DisplayList::add(const sf::VertexArray& array) { arrays_.push_back(array); }
 
-}  // memeroute
+}  // namespace memeroute

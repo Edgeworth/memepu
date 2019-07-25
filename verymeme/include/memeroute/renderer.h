@@ -3,9 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "memeroute/types.h"
 #include "memeroute/render_shapes.h"
 #include "memeroute/router.h"
+#include "memeroute/types.h"
 
 namespace memeroute {
 
@@ -34,29 +34,27 @@ private:
   Router router_;
 
   sf::Text createText(const std::string& str);
-  sf::FloatRect
-  addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, const sf::Color& color,
-      bool filled);
-  sf::FloatRect
-  addPadstackToDisplayList(const std::string& padstack_id, const sf::Transform& tf);
+  sf::FloatRect addShapeToDisplayList(
+      const Shape& shape, const sf::Transform& tf, const sf::Color& color, bool filled);
+  sf::FloatRect addPadstackToDisplayList(const std::string& padstack_id, const sf::Transform& tf);
   sf::FloatRect addComponentToDisplayList(const Component& component, sf::Transform tf);
   void initialiseDrawingState();
 
   float getInitialScale() const;
 
-  template<typename T>
+  template <typename T>
   sf::Vector2f windowToScreen(const T& mouse) {
-    return
-        2.f * sf::Vector2f(mouse.x / float(win_->getSize().x), mouse.y / float(win_->getSize().y)) -
-            sf::Vector2f(1.0f, 1.0f);
+    return 2.f *
+        sf::Vector2f(mouse.x / float(win_->getSize().x), mouse.y / float(win_->getSize().y)) -
+        sf::Vector2f(1.0f, 1.0f);
   }
 
-  template<typename T>
+  template <typename T>
   sf::Vector2f windowToWorld(const T& mouse) {
     return 1.f / scale_ * windowToScreen(mouse) - translation_;
   }
 };
 
-}  // memeroute
+}  // namespace memeroute
 
 #endif  // MEMEROUTE_RENDERER_H

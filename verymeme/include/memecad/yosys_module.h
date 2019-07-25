@@ -1,8 +1,9 @@
 #ifndef MEMECAD_YOSYS_MODULE_H
 #define MEMECAD_YOSYS_MODULE_H
 
-#include <kernel/yosys.h>
 #include <kernel/rtlil.h>
+#include <kernel/yosys.h>
+
 #include "memecad/mapper.h"
 
 namespace memecad {
@@ -26,6 +27,6 @@ private:
   static void printModuleInfo(Yosys::RTLIL::Module* module);
 };
 
-}  // namespace
+}  // namespace memecad
 
 #endif  // MEMECAD_YOSYS_MODULE_H

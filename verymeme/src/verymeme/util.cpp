@@ -1,5 +1,5 @@
 #include "verymeme/util.h"
-#include <sstream>
+
 #include <boost/stacktrace.hpp>
 
 std::string getStacktrace() {

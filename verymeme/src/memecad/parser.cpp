@@ -1,10 +1,10 @@
 #include "memecad/parser.h"
 
-#include <regex>
 #include <boost/lexical_cast.hpp>
+#include <regex>
 
-#include "verymeme/tokenizer.h"
 #include "verymeme/string_util.h"
+#include "verymeme/tokenizer.h"
 
 namespace memecad {
 
@@ -17,23 +17,17 @@ int directionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   const bool is_hierarchical_or_global =
       label_type == Sheet::Label::Type::HIERARCHICAL || label_type == Sheet::Label::Type::GLOBAL;
   switch (d) {
-    case Direction::LEFT:
-      return is_hierarchical_or_global ? 0 : 2;
-    case Direction::DOWN:
-      return 3;
-    case Direction::RIGHT:
-      return is_hierarchical_or_global ? 2 : 0;
-    case Direction::UP:
-      return 1;
-    default:
-      verify_expr(false, "unknown direction '%d'", int(d));
+  case Direction::LEFT: return is_hierarchical_or_global ? 0 : 2;
+  case Direction::DOWN: return 3;
+  case Direction::RIGHT: return is_hierarchical_or_global ? 2 : 0;
+  case Direction::UP: return 1;
+  default: verify_expr(false, "unknown direction '%d'", int(d));
   }
 }
 
 Direction labelOrientationToDirection(int orientation, Sheet::Label::Type label_type) {
   for (int d = 0; d < int(Direction::COUNT); ++d) {
-    if (directionToLabelOrientation(Direction(d), label_type) == orientation)
-      return Direction(d);
+    if (directionToLabelOrientation(Direction(d), label_type) == orientation) return Direction(d);
   }
   verify_expr(false, "unknown label orientation %d", orientation);
 }
@@ -54,7 +48,8 @@ public:
     while (true) {
       std::string tok = t_.next();
       if (tok == "$EndSCHEMATC") break;
-      else if (tok == "$Comp") sheet.components.emplace_back(parseComponent());
+      else if (tok == "$Comp")
+        sheet.components.emplace_back(parseComponent());
       else if (tok == "Text") {
         auto& label = sheet.labels.emplace_back();
         label.type = t_.next<Sheet::Label::Type>();
@@ -195,7 +190,8 @@ private:
         auto& field = component.fields.emplace_back();
         field.num = boost::lexical_cast<int>(tok.substr(1));
         field.text = trim(t_.next(), "\"");
-        field.p = {t_.next<int>(), -t_.next<int>()}; // Seems like y-axis is inverted for libraries.
+        field.p = {
+            t_.next<int>(), -t_.next<int>()};  // Seems like y-axis is inverted for libraries.
         field.text_size = t_.next<int>();
         field.text_orientation = t_.next<Orientation>();
         t_.next();  // Skip visibility.
@@ -209,17 +205,18 @@ private:
         auto& pin = component.pins.emplace_back();
         pin.name = t_.next();
         pin.id = t_.next();
-        pin.p = {t_.next<int>(), -t_.next<int>()}; // Seems like y-axis is inverted for libraries.
-        t_.next(); // Length
+        pin.p = {t_.next<int>(), -t_.next<int>()};  // Seems like y-axis is inverted for libraries.
+        t_.next();  // Length
         pin.direction = t_.next<Direction>();
         t_.next();
         t_.next();  // Name text size, num text size.
         pin.subcomponent = t_.next<int>() - 1;
-        // TODO(improvement): Pins common to all subcomponents (==0) are just put in the first one for now.
+        // TODO(improvement): Pins common to all subcomponents (==0) are just put in the first one
+        // for now.
         if (pin.subcomponent == -1) pin.subcomponent = 0;
         t_.next();  // convert
         pin.type = t_.next<PinType>();
-        t_.getLines(1); // Ignore rest.
+        t_.getLines(1);  // Ignore rest.
       }
     }
     t_.expect({"\n"});
@@ -286,8 +283,6 @@ public:
     data += "$EndSCHEMATC\n";
     return data;
   }
-
-private:
 };
 
 }  // namespace
@@ -295,25 +290,19 @@ private:
 Sheet parseSheet(const std::string& data) {
   try {
     return KicadParser(data).parseSheet();
-  } catch (const std::exception& e) {
-    verify_expr(false, "failed exception: %s", e.what());
-  }
+  } catch (const std::exception& e) { verify_expr(false, "failed exception: %s", e.what()); }
 }
 
 Lib parseLibrary(const std::string& data, const std::string& name) {
   try {
     return KicadParser(data).parseLibrary(name);
-  } catch (const std::exception& e) {
-    verify_expr(false, "failed exception: %s", e.what());
-  }
+  } catch (const std::exception& e) { verify_expr(false, "failed exception: %s", e.what()); }
 }
 
 std::string writeSheet(const Sheet& sheet) {
   try {
-    return KicadWriter().writeSheet(sheet);
-  } catch (const std::exception& e) {
-    verify_expr(false, "failed exception: %s", e.what());
-  }
+    return KicadWriter::writeSheet(sheet);
+  } catch (const std::exception& e) { verify_expr(false, "failed exception: %s", e.what()); }
 }
 
-}  // memecad
+}  // namespace memecad

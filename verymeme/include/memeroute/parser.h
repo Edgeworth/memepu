@@ -5,12 +5,10 @@
 
 namespace memeroute {
 
-class DsnParser {
-
-};
+class DsnParser {};
 
 Pcb parsePcb(const std::string& data);
 
-}  // memeroute
+}  // namespace memeroute
 
 #endif  // MEMEROUTE_PARSER_H
