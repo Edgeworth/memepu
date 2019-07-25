@@ -23,7 +23,7 @@ public:
 private:
   Mapper mapper_;
 
-  void printModuleInfo(Yosys::RTLIL::Module* module);
+  static void printModuleInfo(Yosys::RTLIL::Module* module);
 };
 
 }  // namespace

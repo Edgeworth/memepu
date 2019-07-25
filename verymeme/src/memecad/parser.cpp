@@ -229,7 +229,7 @@ private:
 
 class KicadWriter {
 public:
-  std::string writeSheet(Sheet sheet) {
+  static std::string writeSheet(Sheet sheet) {
     std::string data;
     data += sheet.header1;
     data += "Sheet 1 " + tos(sheet.id) + "\n";
