@@ -3,11 +3,12 @@
 
 #include <condition_variable>
 #include <mutex>
-#include <queue>
 #include <optional>
+#include <queue>
+
 #include "verymeme/util.h"
 
-template<typename T>
+template <typename T>
 class ConcurrentQueue {
 public:
   T yield() {

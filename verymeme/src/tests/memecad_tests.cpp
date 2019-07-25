@@ -1,8 +1,8 @@
 #include <regex>
 
 #include "gtest/gtest.h"
-#include "memecad/yosys_module.h"
 #include "memecad/parser.h"
+#include "memecad/yosys_module.h"
 #include "verymeme/file.h"
 
 namespace {
@@ -22,8 +22,7 @@ TEST_F(SchematicTest, Parsing0) {
 }
 
 TEST_F(SchematicTest, Hierarchical0) {
-  auto files = memecad::convertVerilogToKicadSchematics(
-      "test_data/common/memecad_map.json",
+  auto files = memecad::convertVerilogToKicadSchematics("test_data/common/memecad_map.json",
       {"test_data/hierarchical0/tapb_top_level.v", "test_data/hierarchical0/two_a_plus_b.v",
           "test_data/hierarchical0/full_adder.v", "test_data/common/chip7408.v",
           "test_data/common/chip7432.v", "test_data/common/chip7486.v"},
@@ -36,8 +35,7 @@ TEST_F(SchematicTest, Hierarchical0) {
 }
 
 TEST_F(SchematicTest, Alu0) {
-  auto files = memecad::convertVerilogToKicadSchematics(
-      "test_data/common/memecad_map.json",
+  auto files = memecad::convertVerilogToKicadSchematics("test_data/common/memecad_map.json",
       {"test_data/alu0/alu.v", "test_data/alu0/alu_lookahead.v", "test_data/alu0/sram17x8.v",
           "test_data/alu0/alu_slice.v", "test_data/alu0/sram.v", "test_data/common/chip7408.v"},
       {"test_data/common/74xx.lib", "test_data/common/Memory_RAM.lib"});
@@ -48,4 +46,4 @@ TEST_F(SchematicTest, Alu0) {
   }
 }
 
-}  // anonymous
+}  // namespace

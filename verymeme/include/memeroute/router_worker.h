@@ -40,16 +40,8 @@ private:
   };
 
   // TODO(improvement): Needs to support more than 2 layers.
-  static constexpr State DP9[9] =
-      {{{-1, -1}, 0},
-          {{-1, 0}, 0},
-          {{-1, 1}, 0},
-          {{0, -1}, 0},
-          {{0, 1}, 0},
-          {{1, -1}, 0},
-          {{1, 0}, 0},
-          {{1, 1}, 0},
-          {{0, 0}, 1}};
+  static constexpr State DP9[9] = {{{-1, -1}, 0}, {{-1, 0}, 0}, {{-1, 1}, 0}, {{0, -1}, 0},
+      {{0, 1}, 0}, {{1, -1}, 0}, {{1, 0}, 0}, {{1, 1}, 0}, {{0, 0}, 1}};
 
   // Routing state:
   std::vector<State> tmp_states_;
@@ -84,7 +76,6 @@ private:
   bool isBlocked(const State& prev_s, const State& s);
 };
 
-}  // memeroute
-
+}  // namespace memeroute
 
 #endif  // MEMEROUTE_ROUTER_WORKER_H

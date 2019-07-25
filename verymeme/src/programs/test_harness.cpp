@@ -1,5 +1,5 @@
-#include <utility>
 #include <verilated.h>
+
 #include <boost/program_options.hpp>
 
 #include "gtest/gtest.h"
@@ -15,8 +15,7 @@ int main(int argc, char* argv[]) {
 
   try {
     po::options_description desc{"Options"};
-    desc.add_options()
-        ("help,h", "Help screen");
+    desc.add_options()("help,h", "Help screen");
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
@@ -27,9 +26,7 @@ int main(int argc, char* argv[]) {
     }
 
     po::notify(vm);
-  } catch (const po::error& ex) {
-    std::cerr << ex.what() << '\n';
-  }
+  } catch (const po::error& ex) { std::cerr << ex.what() << '\n'; }
 
   return RUN_ALL_TESTS();
 }

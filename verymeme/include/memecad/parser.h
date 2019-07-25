@@ -11,6 +11,6 @@ Sheet parseSheet(const std::string& data);
 Lib parseLibrary(const std::string& data, const std::string& name);
 std::string writeSheet(const Sheet& sheet);
 
-}  // memecad
+}  // namespace memecad
 
 #endif  // MEMECAD_PARSER_H

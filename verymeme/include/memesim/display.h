@@ -1,5 +1,5 @@
-#ifndef VERYMEME_DISPLAY_H
-#define VERYMEME_DISPLAY_H
+#ifndef MEMESIM_DISPLAY_H
+#define MEMESIM_DISPLAY_H
 
 #include <SFML/Graphics.hpp>
 
@@ -21,6 +21,6 @@ private:
   std::unique_ptr<sf::RenderWindow> win_;
 };
 
-}  // memesim
+}  // namespace memesim
 
-#endif  // VERYMEME_DISPLAY_H
+#endif // MEMESIM_DISPLAY_H

@@ -1,4 +1,5 @@
 #include "memecad/util.h"
+
 #include "verymeme/util.h"
 
 namespace memecad {
@@ -9,24 +10,18 @@ std::string checkModuleName(const std::string& name) {
   auto idx = name.find('\\');
   // Parametric modules and generated modules are prefixed with e.g. $gen$ or $paramod$, so just
   // check for the presence of a \.
-  verify_expr(idx != std::string::npos, "BUG: cell name '%s' must be user defined cell",
-      name.c_str());
+  verify_expr(
+      idx != std::string::npos, "BUG: cell name '%s' must be user defined cell", name.c_str());
   return name.substr(1);
 }
 
 }  // namespace
 
-std::string moduleType(const Yosys::Cell& cell) {
-  return checkModuleName(cell.type.str());
-}
+std::string moduleType(const Yosys::Cell& cell) { return checkModuleName(cell.type.str()); }
 
-std::string moduleName(const Yosys::Cell& cell) {
-  return checkModuleName(cell.name.str());
-}
+std::string moduleName(const Yosys::Cell& cell) { return checkModuleName(cell.name.str()); }
 
-std::string moduleName(const Yosys::Module& module) {
-  return checkModuleName(module.name.str());
-}
+std::string moduleName(const Yosys::Module& module) { return checkModuleName(module.name.str()); }
 
 std::string parentModuleType(const Yosys::Cell& cell) {
   return checkModuleName(cell.module->name.str());
@@ -43,8 +38,7 @@ std::string getIdForSigBit(const Yosys::SigBit& bit) {
     parent_label = std::string(bit.wire->name.c_str() + 1);
 
     // Empty string as special case for unused. This will be mapped to no-connect.
-    if (parent_label.substr(0, 6) == "unused")
-      return "";
+    if (parent_label.substr(0, 6) == "unused") return "";
 
     // A single child signal may connect to multiple different parent signals and wires, e.g.
     // .B(C[2:0], C_IN): The child signal B connects to C_IN and C[2:0]. So, use parent offset
@@ -58,4 +52,4 @@ std::string getIdForSigBit(const Yosys::SigBit& bit) {
   return parent_label;
 }
 
-} // namespace memecad
+}  // namespace memecad

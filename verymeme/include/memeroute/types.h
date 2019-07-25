@@ -1,17 +1,15 @@
 #ifndef MEMEROUTE_TYPES_H
 #define MEMEROUTE_TYPES_H
 
-#include <unordered_map>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 #include "verymeme/geom.h"
 
 namespace memeroute {
 
-enum class Side {
-  FRONT, BACK, COUNT
-};
+enum class Side { FRONT, BACK, COUNT };
 
 struct Shape {
   struct Path {
@@ -22,9 +20,7 @@ struct Shape {
     int diameter;
     Point p = {};
   };
-  enum class Type {
-    PATH, CIRCLE, RECT
-  };
+  enum class Type { PATH, CIRCLE, RECT };
   Type type;
   int layer_id = -1;  // Layer id in Pcb::layers or -1.
   Path path = {};
@@ -106,10 +102,9 @@ private:
   std::map<Net::PinId, Net> pin_id_to_net_;
 };
 
-
 std::ostream& operator<<(std::ostream& str, const Side& o);
 std::istream& operator>>(std::istream& str, Side& o);
 
-}  // memeroute
+}  // namespace memeroute
 
 #endif  // MEMEROUTE_TYPES_H

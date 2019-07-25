@@ -1,10 +1,12 @@
 #ifndef MEMECAD_MAPPER_H
 #define MEMECAD_MAPPER_H
 
-#include <boost/property_tree/ptree.hpp>
 #include <kernel/rtlil.h>
-#include "memecad/types.h"
+
+#include <boost/property_tree/ptree.hpp>
+
 #include "memecad/schematic.h"
+#include "memecad/types.h"
 
 namespace memecad {
 
@@ -29,6 +31,6 @@ private:
   Schematic schematic_ = {};
 };
 
-}  // memecad
+}  // namespace memecad
 
 #endif  // MEMECAD_MAPPER_H

@@ -18,8 +18,8 @@ public:
       const std::string& child_name, const std::string& parent_name);
   void addComponentToSheet(const std::string& lib_name, const Lib::Component& lib_component,
       const PinMapping& mapping, const std::string& sheet_name);
-  void addModuleConnectionsToSheet(const std::string& sheet_name,
-      const std::vector<Yosys::SigSig>& sigs);
+  void addModuleConnectionsToSheet(
+      const std::string& sheet_name, const std::vector<Yosys::SigSig>& sigs);
   std::vector<SchematicFile> writeHierarchy();
 
 private:
@@ -37,6 +37,6 @@ private:
   std::unordered_map<std::string, SheetData> sheets_;
 };
 
-}  // memecad
+}  // namespace memecad
 
 #endif  // MEMECAD_SCHEMATIC_H

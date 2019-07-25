@@ -1,7 +1,9 @@
-#include <boost/lexical_cast.hpp>
-#include "verymeme/string_util.h"
 #include "memecad/types.h"
+
+#include <boost/lexical_cast.hpp>
+
 #include "verymeme/geom.h"
+#include "verymeme/string_util.h"
 #include "verymeme/util.h"
 
 namespace memecad {
@@ -24,16 +26,11 @@ std::pair<std::string, int> toStringIntPair(const std::string& s) {
 
 Direction getOppositeDirection(Direction d) {
   switch (d) {
-    case Direction::LEFT:
-      return Direction::RIGHT;
-    case Direction::DOWN:
-      return Direction::UP;
-    case Direction::RIGHT:
-      return Direction::LEFT;
-    case Direction::UP:
-      return Direction::DOWN;
-    default:
-      verify_expr(false, "unknown direction '%d'", int(d));
+  case Direction::LEFT: return Direction::RIGHT;
+  case Direction::DOWN: return Direction::UP;
+  case Direction::RIGHT: return Direction::LEFT;
+  case Direction::UP: return Direction::DOWN;
+  default: verify_expr(false, "unknown direction '%d'", int(d));
   }
 }
 
@@ -41,18 +38,12 @@ Direction getOppositeDirection(Direction d) {
 
 PinType netTypeToPinType(Sheet::Label::NetType net_type) {
   switch (net_type) {
-    case Sheet::Label::NetType::INPUT:
-      return PinType::INPUT;
-    case Sheet::Label::NetType::OUTPUT:
-      return PinType::OUTPUT;
-    case Sheet::Label::NetType::BIDIRECTIONAL:
-      return PinType::BIDIRECTIONAL;
-    case Sheet::Label::NetType::TRISTATE:
-      return PinType::TRISTATE;
-    case Sheet::Label::NetType::PASSIVE:
-      return PinType::PASSIVE;
-    default:
-      verify_expr(false, "Unknown net type '%d'", int(net_type));
+  case Sheet::Label::NetType::INPUT: return PinType::INPUT;
+  case Sheet::Label::NetType::OUTPUT: return PinType::OUTPUT;
+  case Sheet::Label::NetType::BIDIRECTIONAL: return PinType::BIDIRECTIONAL;
+  case Sheet::Label::NetType::TRISTATE: return PinType::TRISTATE;
+  case Sheet::Label::NetType::PASSIVE: return PinType::PASSIVE;
+  default: verify_expr(false, "Unknown net type '%d'", int(net_type));
   }
 }
 
@@ -71,16 +62,14 @@ Rect Lib::Component::getBoundingBox(int subcomponent) const {
 
 const Lib::Pin* Lib::Component::findPinByName(const std::string& pin_name) const {
   for (const auto& pin : pins) {
-    if (pin.name == pin_name)
-      return &pin;
+    if (pin.name == pin_name) return &pin;
   }
   return nullptr;
 }
 
 const Lib::Pin* Lib::Component::findPinById(const std::string& pin_id) const {
   for (const auto& pin : pins) {
-    if (pin.id == pin_id)
-      return &pin;
+    if (pin.id == pin_id) return &pin;
   }
   return nullptr;
 }
@@ -88,8 +77,7 @@ const Lib::Pin* Lib::Component::findPinById(const std::string& pin_id) const {
 Lib::Component* Lib::findComponent(const std::string& name_to_find) {
   for (auto& comp : components) {
     for (const auto& comp_name : comp.names) {
-      if (comp_name == name_to_find)
-        return &comp;
+      if (comp_name == name_to_find) return &comp;
     }
   }
   return nullptr;
@@ -106,8 +94,7 @@ bool Sheet::RefField::operator<(const Sheet::RefField& o) const {
 
 void Sheet::Ref::offset(const Point& offset) {
   p += offset;
-  for (auto& field : fields)
-    field.p += offset;
+  for (auto& field : fields) field.p += offset;
 }
 
 bool Sheet::Ref::operator<(const Sheet::Ref& o) const {
@@ -133,18 +120,13 @@ bool Sheet::Label::operator<(const Sheet::Label& o) const {
 }
 
 Rect Sheet::Label::getBoundingBox() const {
-  const int text_length = text.size() * dimension;
+  const int text_length = int(text.size()) * dimension;
   switch (direction) {
-    case Direction::LEFT:
-      return {p.x - text_length, p.y - dimension, p.x, p.y};
-    case Direction::DOWN:
-      return {p.x - dimension, p.y, p.x, p.y + text_length};
-    case Direction::RIGHT:
-      return {p.x, p.y - dimension, p.x + text_length, p.y};
-    case Direction::UP:
-      return {p.x - dimension, p.y - text_length, p.x, p.y};
-    default:
-      verify_expr(false, "unknown direction '%d'", int(direction));
+  case Direction::LEFT: return {p.x - text_length, p.y - dimension, p.x, p.y};
+  case Direction::DOWN: return {p.x - dimension, p.y, p.x, p.y + text_length};
+  case Direction::RIGHT: return {p.x, p.y - dimension, p.x + text_length, p.y};
+  case Direction::UP: return {p.x - dimension, p.y - text_length, p.x, p.y};
+  default: verify_expr(false, "unknown direction '%d'", int(direction));
   }
 }
 
@@ -165,8 +147,7 @@ void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::strin
 
 void Sheet::Component::offset(Point offset) {
   p += offset;
-  for (auto& field : fields)
-    field.p += offset;
+  for (auto& field : fields) field.p += offset;
 }
 
 bool Sheet::Component::operator<(const Sheet::Component& o) const {
@@ -178,11 +159,8 @@ const std::string ORIENTATION_MAPPING[] = {"H", "V"};
 const std::string LABEL_MAPPING[] = {"GLabel", "HLabel", "Label", "Notes", "NoConn"};
 const std::string DIRECTION_MAPPING[] = {"L", "R", "U", "D"};
 const std::string UNIT_SWAPPABLE_MAPPING[] = {"F", "L"};
-const std::string PIN_TYPE_MAPPING[] =
-    {"I", "O", "B", "T", "P", "U", "W", "w", "C", "E", "N"};
-const std::string NET_TYPE_MAPPING[] = {
-    "Input", "Output", "BiDi", "3State", "UnSpc"
-};
+const std::string PIN_TYPE_MAPPING[] = {"I", "O", "B", "T", "P", "U", "W", "w", "C", "E", "N"};
+const std::string NET_TYPE_MAPPING[] = {"Input", "Output", "BiDi", "3State", "UnSpc"};
 
 std::ostream& operator<<(std::ostream& str, const Orientation& o) {
   return outputEnum(str, o, ORIENTATION_MAPPING);
@@ -232,4 +210,4 @@ std::istream& operator>>(std::istream& str, Sheet::Label::NetType& o) {
   return inputEnum(str, o, NET_TYPE_MAPPING);
 }
 
-}  // memecad
+}  // namespace memecad

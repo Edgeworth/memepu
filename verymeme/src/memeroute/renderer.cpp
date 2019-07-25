@@ -1,4 +1,5 @@
 #include "memeroute/renderer.h"
+
 #include "verymeme/geom.h"
 #include "verymeme/util.h"
 
@@ -36,15 +37,13 @@ sf::Color layerToColor(int layer, int idx) {
 
 }  // namespace
 
-Renderer::Renderer(const Pcb& pcb) : pcb_(pcb), router_(pcb) {
-  initialiseDrawingState();
-}
+Renderer::Renderer(const Pcb& pcb) : pcb_(pcb), router_(pcb) { initialiseDrawingState(); }
 
 void Renderer::run() {
   sf::ContextSettings settings;
   settings.antialiasingLevel = 4;
-  win_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1200, 1200), "memeroute",
-      sf::Style::Default, settings);
+  win_ = std::make_unique<sf::RenderWindow>(
+      sf::VideoMode(1200, 1200), "memeroute", sf::Style::Default, settings);
   win_->setVerticalSyncEnabled(true);
 
   sf::Vector2f mouse_cursor;
@@ -56,8 +55,7 @@ void Renderer::run() {
     view.zoom(1.f / scale_);
     win_->setView(view);
     dl_.draw(*win_);
-    for (const auto& text : labels_)
-      win_->draw(text);
+    for (const auto& text : labels_) win_->draw(text);
     sf::Transform mouse_tf;
     mouse_tf.translate(mouse_cursor);
     win_->draw(createCircle(MOUSE_SIZE / scale_, mouse_tf, sf::Color::Black, true /* filled */));
@@ -68,35 +66,30 @@ void Renderer::run() {
     win_->waitEvent(ev);
     do {
       switch (ev.type) {
-        case sf::Event::Closed:
-          win_->close();
-          break;
-        case sf::Event::MouseWheelScrolled: {
-          const auto& mouse = windowToWorld(ev.mouseWheelScroll);
-          const float f = clamp(getInitialScale() * MIN_SCALE_FACTOR / scale_,
-              getInitialScale() * MAX_SCALE_FACTOR / scale_,
-              ev.mouseWheelScroll.delta > 0 ? SCALE_FACTOR : 1.f / SCALE_FACTOR);
-          translation_ += (1.f / f - 1) * (mouse + translation_);
-          scale_ *= f;
-          break;
+      case sf::Event::Closed: win_->close(); break;
+      case sf::Event::MouseWheelScrolled: {
+        const auto& mouse = windowToWorld(ev.mouseWheelScroll);
+        const float f = clamp(getInitialScale() * MIN_SCALE_FACTOR / scale_,
+            getInitialScale() * MAX_SCALE_FACTOR / scale_,
+            ev.mouseWheelScroll.delta > 0 ? SCALE_FACTOR : 1.f / SCALE_FACTOR);
+        translation_ += (1.f / f - 1) * (mouse + translation_);
+        scale_ *= f;
+        break;
+      }
+      case sf::Event::MouseButtonPressed:
+        panning_ = true;
+        pan_screen_loc_ = windowToScreen(ev.mouseButton);
+        break;
+      case sf::Event::MouseButtonReleased: panning_ = false; break;
+      case sf::Event::MouseMoved:
+        if (panning_) {
+          const auto& mouse_screen_loc = windowToScreen(ev.mouseMove);
+          translation_ += 1.f / scale_ * (mouse_screen_loc - pan_screen_loc_);
+          pan_screen_loc_ = mouse_screen_loc;
         }
-        case sf::Event::MouseButtonPressed:
-          panning_ = true;
-          pan_screen_loc_ = windowToScreen(ev.mouseButton);
-          break;
-        case sf::Event::MouseButtonReleased:
-          panning_ = false;
-          break;
-        case sf::Event::MouseMoved:
-          if (panning_) {
-            const auto& mouse_screen_loc = windowToScreen(ev.mouseMove);
-            translation_ += 1.f / scale_ * (mouse_screen_loc - pan_screen_loc_);
-            pan_screen_loc_ = mouse_screen_loc;
-          }
-          mouse_cursor = windowToWorld(ev.mouseMove);
-          break;
-        default:
-          break;
+        mouse_cursor = windowToWorld(ev.mouseMove);
+        break;
+      default: break;
       }
     } while (win_->pollEvent(ev));
   }
@@ -114,17 +107,15 @@ sf::Text Renderer::createText(const std::string& str) {
 }
 
 // Returns the bounds in world coordinates (no need to transform).
-sf::FloatRect
-Renderer::addShapeToDisplayList(const Shape& shape, const sf::Transform& tf, const sf::Color& color,
-    bool filled) {
+sf::FloatRect Renderer::addShapeToDisplayList(
+    const Shape& shape, const sf::Transform& tf, const sf::Color& color, bool filled) {
   const auto& arrays = createVertexArraysFromShape(shape, tf, color, filled);
-  for (const auto& array : arrays)
-    dl_.add(array);
+  for (const auto& array : arrays) dl_.add(array);
   return getVertexArraysBoundingBox(arrays);
 }
 
-sf::FloatRect
-Renderer::addPadstackToDisplayList(const std::string& padstack_id, const sf::Transform& tf) {
+sf::FloatRect Renderer::addPadstackToDisplayList(
+    const std::string& padstack_id, const sf::Transform& tf) {
   sf::FloatRect bounds = {};
   auto padstack_iter = pcb_.padstacks.find(padstack_id);
   for (const auto& shape : padstack_iter->second.shapes)
@@ -144,9 +135,10 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
   const auto& image = pcb_.images[component.image_id];
 
   for (const auto& outline : image.outlines)
-    bounds = floatRectUnion(
-        addShapeToDisplayList(outline, tf, layerToColor(pcb_.getLayer(component, outline), 0),
-            false /* filled */), bounds);
+    bounds =
+        floatRectUnion(addShapeToDisplayList(outline, tf,
+                           layerToColor(pcb_.getLayer(component, outline), 0), false /* filled */),
+            bounds);
 
   for (const auto& kv : image.pins) {
     const auto& pin = kv.second;
@@ -192,8 +184,7 @@ void Renderer::initialiseDrawingState() {
 
   // Decide how big text should be.
   const float text_scale = 1.f / (TEXT_SIZE * getInitialScale());
-  for (auto& label : labels_)
-    label.scale(text_scale, text_scale);
+  for (auto& label : labels_) label.scale(text_scale, text_scale);
 
   // Add routed paths.
   auto result = router_.route();
@@ -208,8 +199,6 @@ void Renderer::initialiseDrawingState() {
   addShapeToDisplayList(pcb_.boundary, tf, SECONDARY_COLOR[1], false /* filled */);
 }
 
-float Renderer::getInitialScale() const {
-  return 1.5f / std::max(bounds_.width, bounds_.height);
-}
+float Renderer::getInitialScale() const { return 1.5f / std::max(bounds_.width, bounds_.height); }
 
-}  // memeroute
+}  // namespace memeroute
