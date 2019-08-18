@@ -1,5 +1,6 @@
 #include "memelang/parser.h"
 
+#include <climits>
 #include <numeric>
 #include <unordered_map>
 
@@ -50,7 +51,7 @@ struct Parser::Context {
     if (!hasToken()) compileError("unexpected end of file");
     const auto* token = &toks[idx];
     if (!hasToken(ts))
-      compileError("unexpected token " + token->toString(contents) + ": must be one of " +
+      compileError("unexpected token, must be one of " +
           std::accumulate(ts.begin(), ts.end(), std::string(),
               [](const auto& a, const auto& b) { return tos(a) + tos(b) + ", "; }));
     return token;
@@ -98,81 +99,15 @@ struct Parser::Context {
 
 namespace {
 
-// std::unordered_map<Token::Type, Node::Type> OPMAP = {
-//    {Token::Type::PLUS, Node::ADD},
-//    {Token::Type::MINUS, Node::SUB},
-//    {Token::Type::ASTERISK, Node::MUL},
-//    {Token::Type::FSLASH, Node::DIV},
-//    {Token::Type::EQUAL, Node::ASSIGN},
-//    {Token::Type::DEQUAL, Node::EQUALS},
-//    {Token::Type::NEQUAL, Node::NOT_EQUALS},
-//    {Token::Type::DOT, Node::ACCESS},
-//    {Token::Type::LANGLE, Node::LESS_THAN},
-//    {Token::Type::RANGLE, Node::GREATER_THAN},
-//    {Token::Type::LTEQUAL, Node::LESS_THAN_EQUAL},
-//    {Token::Type::GTEQUAL, Node::GREATER_THAN_EQUAL},
-//};
+std::unordered_map<Token::Type, Expr::Type> BINOP_MAP = {
+    {Token::DOT, Expr::MEMBER_ACCESS}, {Token::PLUS, Expr::ADD}, {Token::ASTERISK, Expr::MUL}};
 
-//// Expression possibilities:
-// std::unique_ptr<Node> Parser::tryExpression(int last_precedence) {
-//  std::unique_ptr<Node> node;
-//  while (true) {
-//    peek_token(token);
-//    // Stop parsing at the end of a statement, sub-expression, start of a block (e.g. if
-//    statement),
-//    // end of an indexing, or part of a list (comma).
-//    if (token->type == Token::SEMICOLON || token->type == Token::RPAREN ||
-//        token->type == Token::LBRACE || token->type == Token::RSQUARE ||
-//        token->type == Token::COMMA)
-//      break;
+// TODO how to decide if postfix/prefix.
+std::unordered_map<Token::Type, Expr::Type> UNOP_MAP = {
+    {Token::DPLUS, Expr::POSTFIX_INC}
+};
 
-//    auto iter = OPMAP.find(token->type);
-//    if (iter != OPMAP.end()) {
-//      auto type = iter->second;
-//      auto precedence = PRECEDENCE[type];
-
-//      // If current precedence isn't high enough to keep going, stop parsing here.
-//      if (precedence <= last_precedence)
-//        break;
-
-//      discard_token();
-//      auto child = nodeFromToken(type, token);
-//      std::swap(child, node);
-//      node->children.push_back(std::move(child));
-
-//      expect_parse(subexpr, [this, precedence] { return tryExpression(precedence); });
-//      node->children.push_back(std::move(subexpr));
-//      continue;
-//    }
-
-//    // Don't want hanging exprs.
-//    token_error(!node, token, "unexpected token in expression");
-
-//    switch (token->type) {
-//      // TODO
-////      case Token::LITERAL: {
-////        // Parse literal last - it might be an index,  function call, or struct initialiser.
-////        expect_parse(literal, [this] { return tryFunctionCall(); }, [this] { return tryIndex();
-///}, /            [this] { return tryStructInitialiser(); }, [this] { return tryLiteral(); }); /
-/// node = std::move(literal); /        continue; /      }
-//      case Token::LPAREN: {
-//        discard_token();
-//        expect_parse(subexpr, [this] { return tryExpression(); });
-//        node = std::move(subexpr);
-//        expect_token(Token::RPAREN, "closing paren");
-//        continue;
-//      }
-//      default:
-//        break;
-//    }
-
-//    token_error(false, token, "unexpected token");
-//  }
-
-//  return node;
-//}
-
-const std::unordered_map<Expr::Type, int> PRECEDENCE = {
+std::unordered_map<Expr::Type, int> PRECEDENCE = {
     {Expr::ARRAY_ACCESS, 15},
     {Expr::MEMBER_ACCESS, 15},
     {Expr::FN_CALL, 15},
@@ -209,8 +144,6 @@ const std::unordered_map<Expr::Type, int> PRECEDENCE = {
 };
 
 const std::unordered_set<Expr::Type> RIGHT_ASSOC = {
-    Expr::POSTFIX_INC,
-    Expr::POSTFIX_DEC,
     Expr::PREFIX_INC,
     Expr::PREFIX_DEC,
     Expr::UNARY_NEGATE,
@@ -231,58 +164,91 @@ public:
     // (for, if, match), comma (struct/array literal, function call), closing paren
     // (function call), closing brace (struct literal), closing square bracket (array
     // literal).
+    ExprCtx ectx;
     while (!ctx_.hasToken({Token::SEMICOLON, Token::LBRACE, Token::COMMA, Token::RPAREN,
         Token::RBRACE, Token::RSQUARE})) {
-      processStack(false);
-
       const auto* tok = ctx_.curToken();
       switch (tok->type) {
       case Token::LPAREN: {
+        // TODO: determine if FN call or just paren'd expr.
         ctx_.consumeToken();
-        s_.emplace_back(parse());
+        ectx.s.emplace_back(parse());
         ctx_.consumeToken(Token::RPAREN);
-        break;
+        continue;
       }
-      case Token::IDENT: s_.emplace_back(std::make_unique<VarRef>(ctx_)); break;
-      case Token::BOOL_LIT: s_.emplace_back(std::make_unique<BoolLit>(ctx_)); break;
-      case Token::INT_LIT: s_.emplace_back(std::make_unique<IntLit>(ctx_)); break;
-      case Token::CHAR_LIT: s_.emplace_back(std::make_unique<CharLit>(ctx_)); break;
-      case Token::STR_LIT: s_.emplace_back(std::make_unique<StrLit>(ctx_)); break;
-      case Token::PLUS: ops_.emplace_back(std::make_unique<BinOp>(Expr::ADD)); break;
-      default: ctx_.compileError("unexpected token");
+      case Token::IDENT: ectx.s.emplace_back(std::make_unique<VarRef>(ctx_)); continue;
+      case Token::BOOL_LIT: ectx.s.emplace_back(std::make_unique<BoolLit>(ctx_)); continue;
+      case Token::INT_LIT: ectx.s.emplace_back(std::make_unique<IntLit>(ctx_)); continue;
+      case Token::CHAR_LIT: ectx.s.emplace_back(std::make_unique<CharLit>(ctx_)); continue;
+      case Token::STR_LIT: ectx.s.emplace_back(std::make_unique<StrLit>(ctx_)); continue;
+      default: break;
+      }
+      if (EXPR_MAP.find(tok->type) != EXPR_MAP.end()) {
+        ectx.processStack(PRECEDENCE[EXPR_MAP[tok->type]], ctx_);
+        ectx.ops.emplace_back(std::make_unique<BinOp>(ctx_));
+      } else {
+        ctx_.compileError("unexpected token");
       }
     }
-    processStack(-1);
-    if (s_.size() != 1) ctx_.compileError("error in expression");
-    return std::move(s_[0]);
+    ectx.processStack(-1, ctx_);
+    if (ectx.s.size() != 1 || !ectx.ops.empty()) ctx_.compileError("error in expression");
+    return std::move(ectx.s[0]);
   }
 
 private:
   Parser::Context& ctx_;
-  std::vector<std::unique_ptr<Expr>> s_;
-  std::vector<std::unique_ptr<BinOp>> ops_;
 
-  bool shouldPopStack(int precedence) const {
-    if (ops_.empty()) return false;
-    auto iter = PRECEDENCE.find(ops_.back()->type);
-    verify_expr(iter != PRECEDENCE.end(), "BUG");
-    if (iter->second > precedence) return true;  // If precedence goes down, we can pop.
-    // If precedence is the same, but it's not right-associative, we can pop.
-    return iter->second == precedence && RIGHT_ASSOC.find(ops_.back()->type) == RIGHT_ASSOC.end();
-  }
+  class ExprCtx {
+  public:
+    std::vector<std::unique_ptr<Expr>> s = {};
+    std::vector<std::unique_ptr<BinOp>> ops = {};
 
-  void processStack(int precedence) {
-    while (shouldPopStack(precedence)) {
-      auto op = std::move(ops_.back());
-      ops_.pop_back();
-      if (s_.size() < 2u) ctx_.compileError("no matching expression for operation");
-      op->right = std::move(s_.back());
-      s_.pop_back();
-      op->left = std::move(s_.back());
-      s_.pop_back();
-      s_.push_back(std::move(op));
+    void processStack(int next_precedence, Parser::Context& ctx) {
+      while (shouldPopStack(next_precedence)) {
+        const bool is_right = RIGHT_ASSOC.find(ops.back()->type) != RIGHT_ASSOC.end();
+        const int cur_precedence = PRECEDENCE[ops.back()->type];
+        std::vector<std::unique_ptr<BinOp>> curops;
+        std::vector<std::unique_ptr<Expr>> curexpr;
+        curexpr.emplace_back(std::move(s.back()));
+        s.pop_back();
+        while (!ops.empty() && PRECEDENCE[ops.back()->type] == cur_precedence) {
+          // TODO: ONly push back expr if it's a binary op.
+          if (s.empty()) ctx.compileError("error in expression");
+          curexpr.emplace_back(std::move(s.back()));
+          curops.emplace_back(std::move(ops.back()));
+          s.pop_back();
+          ops.pop_back();
+        }
+        if (is_right) {
+          curops = reverse(std::move(curops));
+          curexpr = reverse(std::move(curexpr));
+        }
+        collapseOps(curops, curexpr, ctx);
+        s.emplace_back(std::move(curexpr[0]));
+      }
     }
-  }
+
+  private:
+    bool shouldPopStack(int precedence) const {
+      if (ops.empty() || s.empty()) return false;
+      return PRECEDENCE[ops.back()->type] > precedence;  // If precedence goes down, we can pop.
+    }
+
+    static void collapseOps(std::vector<std::unique_ptr<BinOp>>& ops,
+        std::vector<std::unique_ptr<Expr>>& expr, Parser::Context& ctx) {
+      while (!ops.empty()) {
+        verify_expr(expr.size() >= 2u, "BUG");
+        auto op = std::move(ops.back());
+        ops.pop_back();
+        op->right = std::move(expr.back());
+        expr.pop_back();
+        op->left = std::move(expr.back());
+        expr.pop_back();
+        expr.push_back(std::move(op));
+      }
+      if (expr.size() != 1) ctx.compileError("error in expression");
+    }
+  };
 };
 
 }  // namespace
@@ -329,7 +295,9 @@ std::string IntLit::toString() const { return (fmt("IntLit(%d)") % val).str(); }
 std::vector<Node*> IntLit::children() { return {}; }
 void IntLit::generateIr() const {}
 
-CharLit::CharLit(Parser::Context& ctx) { val = int32_t(ctx.consumeToken(Token::CHAR_LIT)->int_val); }
+CharLit::CharLit(Parser::Context& ctx) {
+  val = int32_t(ctx.consumeToken(Token::CHAR_LIT)->int_val);
+}
 std::string CharLit::toString() const { return (fmt("CharLit(%c)") % val).str(); }
 std::vector<Node*> CharLit::children() { return {}; }
 void CharLit::generateIr() const {}
@@ -339,11 +307,9 @@ std::string StrLit::toString() const { return (fmt("StrLit(%s)") % val).str(); }
 std::vector<Node*> StrLit::children() { return {}; }
 void StrLit::generateIr() const {}
 
-BinOp::BinOp(Parser::Context& ctx) {
-  // TODO(Progress): Consume.
-}
+BinOp::BinOp(Parser::Context& ctx) { type = EXPR_MAP[ctx.consumeToken()->type]; }
 std::string BinOp::toString() const { return (fmt("BinOp(%s)") % type).str(); }
-std::vector<Node*> BinOp::children() { return {}; }
+std::vector<Node*> BinOp::children() { return flattenChildren(left, right); }
 void BinOp::generateIr() const {}
 
 VarRef::VarRef(Parser::Context& ctx) {
@@ -475,12 +441,16 @@ void IntfDefn::generateIr() const {}
 
 File::File(Parser::Context& ctx) {
   while (ctx.hasToken()) {
-    const auto* token = ctx.curToken(Token::INTF);
-    if (token->type == Token::INTF) { intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx)); }
+    const auto* token = ctx.curToken({Token::INTF, Token::FN});
+    if (token->type == Token::INTF) {
+      intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx));
+    } else if (token->type == Token::FN) {
+      fn_defns.emplace_back(std::make_unique<FnDefn>(ctx));
+    }
   }
 }
 std::string File::toString() const { return "File"; }
-std::vector<Node*> File::children() { return flattenChildren(intf_defns); }
+std::vector<Node*> File::children() { return flattenChildren(intf_defns, fn_defns); }
 void File::generateIr() const {}
 
 }  // namespace memelang
