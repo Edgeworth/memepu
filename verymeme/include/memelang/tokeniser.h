@@ -14,7 +14,9 @@ struct Token {
   enum Type {
     // Basic tokens:
     PLUS,
+    DPLUS,
     MINUS,
+    DMINUS,
     ASTERISK,
     PERCENT,
     FSLASH,

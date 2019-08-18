@@ -61,9 +61,6 @@ fn_signature : 'fn' typename
     ('()' | '(' fn_var_decl (',' fn_var_decl)* ')') type ;
 fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 
-// Ideas:
-// Switch case (matching?)
-
 // Terminals:
 builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' | 'bit' ;
 // Parse << and >> as two separate tokens to allow stuff like vector<vector<T>>.
