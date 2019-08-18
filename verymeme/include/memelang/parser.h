@@ -42,20 +42,6 @@ private:
   void generateIr() const override
 
 struct Node {
-  //  enum Type {
-  //    // Top level constructs:
-  //    INTF_DEFN, STRUCT_DEFN, FN_DEFN, ENUM_DEFN, IMPL_DEFN,
-  //    // Blocks:
-  //    STMT_BLK, STRUCT_BLK, IMPL_BLK, INTF_BLK, ENUM_BLK, MATCH_BLK,
-  //    // Statements:
-  //    VAR_DEFN, VAR_DECL, STMT_RET, STMT_FOR, STMT_IF, STMT_MATCH, STMT_ASM,
-  //    // Qualifiers:
-  //    TYPENAME, TYPELIST, STATIC,
-  //    // Expressions:
-  //    TYPE, INDEX, INTEGER_LITERAL, IDENT, ADD, SUB, MUL,
-  //    DIV, MOD, FUNCTION_CALL, POINTER, EQUALS, NOT_EQUALS, ACCESS, ASSIGN,
-  //    STRUCT_INITIALISER, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL
-  //  } type;
   Token tok = {};
 
   virtual std::string toString() const = 0;
@@ -190,8 +176,6 @@ struct BinOp : public Expr {
   std::unique_ptr<Expr> left;
   std::unique_ptr<Expr> right;
 
-  explicit BinOp(Expr::Type t) : type(t) {}
-
   DEFNLT(BinOp, left, right);
 };
 
@@ -221,6 +205,7 @@ struct IntfDefn : public Node {
 
 struct File : public Node {
   std::vector<std::unique_ptr<IntfDefn>> intf_defns;
+  std::vector<std::unique_ptr<FnDefn>> fn_defns;
 
   DEFNLT(File, intf_defns);
 };
