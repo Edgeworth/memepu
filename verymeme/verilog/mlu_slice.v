@@ -43,7 +43,7 @@ module mlu_slice(
       common::MLU_OR: out_low = A | B;
       common::MLU_XOR: out_low = A ^ B;
       common::MLU_NOT: out_low = ~A;
-      common::MLU_NOP0: out_low = 0;
+      common::MLU_ANOT: out_low = A & (~B);
       common::MLU_NOP1: out_low = 0;
     endcase
     OUT = {1'b0, out_low == 0, gen, prop, out_low};
@@ -79,7 +79,7 @@ module mlu_slice(
       common::MLU_OR: begin assert (f_out == (A | B)); end
       common::MLU_XOR: begin assert (f_out == (A ^ B)); end
       common::MLU_NOT: begin assert (f_out == ~A); end
-      common::MLU_NOP0: begin assert (f_out == 0); end
+      common::MLU_ANOT: begin assert (f_out == (A & (~B))); end
       common::MLU_NOP1: begin assert (f_out == 0); end
       default: begin assert (0); end
     endcase
