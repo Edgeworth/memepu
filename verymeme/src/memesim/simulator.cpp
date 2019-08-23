@@ -10,6 +10,7 @@
 #include "Vkpu_sram__De_W20_I626f6f742e686578.h"
 #include "Vkpu_vga.h"
 #include "memeasm/assembler.h"
+#include "memeware/constants.h"
 #include "verymeme/string_util.h"
 
 namespace memesim {
@@ -78,14 +79,21 @@ void Simulator::run() {
       case Command::Type::RUN: running = true; break;
       case Command::Type::STOP: running = false; break;
       case Command::Type::STEP: step = true; break;
+      case Command::Type::SET_BREAKPOINT: breakpoints_.insert(cmd->args.i32_0); break;
       case Command::Type::QUIT: return;
       case Command::Type::GET_CPU_STATE: cmd->receiver->push(generateCpuState()); break;
       case Command::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
       case Command::Type::SET_MOUSE:
         // TODO: use constant for this memory mapped address.
-        kpu_.kpu->mmu->ram->mem[0x10] = (cmd->args.i0 & 0xFF) | ((cmd->args.i1 << 8) & 0xFF00);
+        kpu_.kpu->mmu->ram->mem[0x10] =
+            (cmd->args.i32_0 & 0xFF) | ((cmd->args.i32_1 << 8) & 0xFF00);
         break;
+      case Command::Type::SET_KBD: break;
       }
+    }
+    if (running && breakpoints_.count(getRegister(memeware::PC_REG))) {
+      printf("Breakpoint at %u.\n", getRegister(memeware::PC_REG));
+      running = false;
     }
     if (running || step) {
       clockKpu(kpu_);
@@ -93,8 +101,8 @@ void Simulator::run() {
     }
     int64_t dur = duration_cast<milliseconds>(steady_clock::now() - time).count();
     if (running && dur > PRINT_SPEED_MS) {
-      printf("%f MHz - %" PRId64 " cycles in %" PRId64 " ms\n",
-          double(cycle_count) / dur / 1000.f, cycle_count, dur);
+      printf("%f MHz - %" PRId64 " cycles in %" PRId64 " ms\n", double(cycle_count) / dur / 1000.f,
+          cycle_count, dur);
       cycle_count = 0;
       time = steady_clock::now();
     }
@@ -125,7 +133,7 @@ Simulator::CpuStateMessage Simulator::generateCpuState() {
   msg.n_rst = uint32_t(kpu_.kpu->n_rst);
   msg.mnemonic = memeasm::Assembler::generateMnemonicString(
       convertToString(kpu_.kpu->control->microcode->mnemonic), kpu_.kpu->opword_bits);
-  for (int i = 0; i < NUM_REG; ++i) msg.regs[i] = uint32_t(kpu_.kpu->regs->registers->mem[i]);
+  for (int i = 0; i < NUM_REG; ++i) msg.regs[i] = getRegister(i);
 
   return msg;
 }
@@ -148,5 +156,9 @@ Simulator::VgaStateMessage Simulator::generateVgaState() {
 }
 
 void Simulator::scheduleCommand(const Simulator::Command& cmd) { command_queue_.push(cmd); }
+
+uint32_t Simulator::getRegister(int reg) const {
+  return uint32_t(kpu_.kpu->regs->registers->mem[reg]);
+}
 
 }  // namespace memesim
