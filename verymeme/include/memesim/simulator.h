@@ -1,6 +1,7 @@
 #ifndef MEMESIM_SIMULATOR_H
 #define MEMESIM_SIMULATOR_H
 
+#include <unordered_set>
 #include <variant>
 
 #include "Vkpu.h"
@@ -45,13 +46,23 @@ public:
   using Response = std::variant<CpuStateMessage, VgaStateMessage>;
 
   struct CommandArgs {
-    int i0;
-    int i1;
+    int32_t i32_0;
+    int32_t i32_1;
   };
 
   struct Command {
     // TODO(improvement): Simulate real VGA signal. Simulate real mouse and keyboard.
-    enum class Type { RUN, STOP, STEP, GET_CPU_STATE, GET_VGA_STATE, SET_MOUSE, SET_KBD, QUIT } type;
+    enum class Type {
+      RUN,
+      STOP,
+      STEP,
+      SET_BREAKPOINT,
+      GET_CPU_STATE,
+      GET_VGA_STATE,
+      SET_MOUSE,
+      SET_KBD,
+      QUIT,
+    } type;
     CommandArgs args;
     std::shared_ptr<ConcurrentQueue<Response>> receiver;
   };
@@ -68,11 +79,14 @@ public:
 private:
   Vkpu kpu_;
   ConcurrentQueue<Command> command_queue_;
+  std::unordered_set<uint32_t> breakpoints_;
 
+
+  uint32_t getRegister(int reg) const;
   CpuStateMessage generateCpuState();
   VgaStateMessage generateVgaState();
 };
 
 }  // namespace memesim
 
-#endif // MEMESIM_SIMULATOR_H
+#endif  // MEMESIM_SIMULATOR_H
