@@ -49,10 +49,12 @@ void Display::run() {
     while (win_->pollEvent(ev)) {
       switch (ev.type) {
       case sf::Event::Closed: win_->close(); break;
-      case sf::Event::MouseMoved:
-        simulator_->scheduleCommand(
-            {Simulator::Command::Type::SET_MOUSE, {ev.mouseMove.x, ev.mouseMove.y}, receiver_});
+      case sf::Event::MouseMoved: {
+        const int x = ev.mouseMove.x * Simulator::VGA_WIDTH / win_->getSize().x;
+        const int y = ev.mouseMove.y * Simulator::VGA_HEIGHT / win_->getSize().y;
+        simulator_->scheduleCommand({Simulator::Command::Type::SET_MOUSE, {x, y}, receiver_});
         break;
+      }
       default: break;
       }
     }
