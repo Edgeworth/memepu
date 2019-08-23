@@ -59,6 +59,11 @@
 		set up alu
 		set up instruction compression data
 
+System reserved registers:
+	r31 = PC
+	r30 = system reg
+	r29 = system reg
+
 Initialisation:
 	Synchronously deassert reset - wait until the first falling edge after
 	reset is asynchronously deasserted.
