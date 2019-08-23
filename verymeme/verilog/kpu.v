@@ -80,7 +80,7 @@ module kpu(
     .OUT({opword_bits, opword_opcode}));
 
   // Control logic:
-  wire [5:0] control_ctrl_data;
+  wire [7:0] control_ctrl_data;
   wire [1:0] control_reg_sel;
   wire [3:0] control_mlu_plane;
   wire [1:0] control_shifter_plane;
@@ -136,13 +136,13 @@ module kpu(
   assign bus = shifter_out;
   assign bus = timer_out;
   assign bus = mmu_out;
-  assign bus[5:0] = control_ctrl_data;
+  assign bus[7:0] = control_ctrl_data;
   assign bus[15:0] = opword_immediate_out;
   `else
   assign bus = !control_reg_n_out ? reg_out : !control_tmp0_n_out ? tmp0_out :
     !control_tmp1_n_out ? tmp1_out : !control_mlu_n_out ? mlu_out : !control_shifter_n_out ?
     shifter_out : !control_timer_n_out ? timer_out : !control_mmu_n_out ? mmu_out :
-    !control_ctrl_data_n_out ? {26'b0, control_ctrl_data} : !control_opword_immediate_n_out ?
+    !control_ctrl_data_n_out ? {24'b0, control_ctrl_data} : !control_opword_immediate_n_out ?
     {16'b0, opword_immediate_out} : 32'b0;
   `endif
 
