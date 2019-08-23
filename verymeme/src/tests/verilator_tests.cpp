@@ -195,6 +195,10 @@ void testMluOps(Vmlu& mlu, uint64_t a, uint64_t b, uint64_t c_in) {
   mlu.eval();
   TEST_MLU_OP((~a) & 0xFFFFFFFF);
 
+  mlu.OP = memeware::MLU_ANOT;
+  mlu.eval();
+  TEST_MLU_OP(a & (~b));
+
   mlu.C_IN = 1;  // SUB only valid for C_IN == 1.
   mlu.OP = memeware::MLU_SUB;
   mlu.eval();

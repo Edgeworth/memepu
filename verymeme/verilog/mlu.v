@@ -57,7 +57,7 @@ module mlu(
         common::MLU_OR: begin assert (OUT == (A | B)); end
         common::MLU_XOR: begin assert (OUT == (A ^ B)); end
         common::MLU_NOT: begin assert (OUT == ~A); end
-        common::MLU_NOP0: begin assert (OUT == 0); end
+        common::MLU_ANOT: begin assert (OUT == (A & (~B))); end
         common::MLU_NOP1: begin assert (OUT == 0); end
         default: begin assert (0); end
       endcase

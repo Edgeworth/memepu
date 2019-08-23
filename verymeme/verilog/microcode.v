@@ -53,12 +53,14 @@ module microcode(
   // [Opcode 6][rD 5][unused 5][immediate 16]
   localparam OP_LH=7;  // LH rD, I - rD = I - load signed 16 bits
   localparam OP_LHU=2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
-  localparam OP_LW=9;  // LW rD, [rS + signext(I)] - load 32-bit
 
   // [Opcode 6][rD 5][rS 5][immediate 16]
   localparam OP_SW=5;  // SW [rD + signext(I)], rS - store 32-bit
   localparam OP_ADDU=3; // ADDU rD,rS,I - rD = rS + zeroext(I)
   localparam OP_BEQ=8;  // BEQ rA,rB,I - if rA == rB: r31 = r31 + signext(I)
+  localparam OP_LW=9;  // LW rD, [rS + signext(I)] - load 32-bit
+  localparam OP_SLL=10;  // SLL rD,rS,I - rD = rS << (I & 0x1F)
+  localparam OP_SB=11;  // SB [rD + signext(I)], rS - store 8-bit
 
   // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
   localparam OP_ADD3=4;  // ADD rD,rA,rB - rD = rA + rB
@@ -202,6 +204,43 @@ module microcode(
           2: `GO_FETCH()
         endcase
       end
+      OP_SW: begin  // TODO: use offset
+        `SET_MNEMONIC("sb [r%1%,%4$x],r%2%")
+        case (microop_count)
+          0: begin  // Write first register (dst) into tmp0.
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Read value from memory (bottom two address bits discarded)
+            out_plane = OUT_MMU;
+            in_plane = IN_TMP0;
+          end
+          2: begin  // Load 8 bit shift index into TMP1
+            ctrl_data = 8;
+            out_plane = OUT_CTRL_DATA;
+            in_plane = IN_TMP1;
+          end
+          3: begin  // Right shift to discard bits
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_TMP0;
+            shifter_plane = common::SHIFTER_RIGHT;
+          end
+          4: begin  // Left shift to push in 0 bits. Write
+            ctrl_data = 30;
+            reg_sel = REG_SEL_CONTROL;
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_REG;
+            shifter_plane = common::SHIFTER_LEFT;
+          end
+          5: begin  // Write second register value into memory.
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_MMU;
+          end
+          6: `GO_FETCH()
+        endcase
+      end
       OP_ADDU: begin
         `SET_MNEMONIC("addu r%1%,r%2%,%4$x")
         case (microop_count)
@@ -332,6 +371,27 @@ module microcode(
             in_plane = IN_REG;
           end
           2: `GO_FETCH()
+        endcase
+      end
+      OP_SLL: begin
+        `SET_MNEMONIC("sll r%1%,r%2%,%4$x")
+        case (microop_count)
+          0: begin  // Write second reg into tmp0.
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Write immediate value into tmp1.
+            out_plane = OUT_OPWORD_IMMEDIATE;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Write add result into first reg.
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_REG;
+            shifter_plane = common::SHIFTER_LEFT;
+          end
+          3: `GO_FETCH()
         endcase
       end
     endcase

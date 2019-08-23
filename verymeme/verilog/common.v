@@ -26,8 +26,8 @@ package common;
   localparam MLU_OR = 3;
   localparam MLU_XOR = 4;
   localparam MLU_NOT = 5;
-  localparam MLU_NOP0 = 6;  // TODO: Zero and ones - if can't guarantee weakly pulled zero on bus?
-  localparam MLU_NOP1 = 7;
+  localparam MLU_ANOT = 6;  // AND_NOT; Used for masking out bits.
+  localparam MLU_NOP1 = 7; // TODO: Zero and ones - if can't guarantee weakly pulled zero on bus?
 
   localparam SHIFTER_LEFT = 0;
   localparam SHIFTER_RIGHT = 1;
