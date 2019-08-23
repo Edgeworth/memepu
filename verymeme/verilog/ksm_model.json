@@ -49,4 +49,14 @@
     "mnemonic": "lw r%1%,[r%2%,%4$x]",
     "imm_relative": "0"
 }
+,{
+    "opcode": "10",
+    "mnemonic": "sll r%1%,r%2%,%4$x",
+    "imm_relative": "0"
+}
+,{
+    "opcode": "11",
+    "mnemonic": "sb [r%1%,%4$x],r%2%",
+    "imm_relative": "0"
+}
 ]
