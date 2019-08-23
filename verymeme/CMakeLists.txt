@@ -8,6 +8,17 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 project(verymeme)
 
+# Enable IPO if possible.
+include(CheckIPOSupported)
+check_ipo_supported(RESULT result OUTPUT output)
+if(result)
+  message(STATUS "Enabling IPO")
+  cmake_policy(SET CMP0069 NEW)
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+  message(WARNING "IPO is not supported: ${output}")
+endif()
+
 # Find required packages.
 find_package(Boost REQUIRED program_options stacktrace_backtrace)
 find_package(Verilator REQUIRED)

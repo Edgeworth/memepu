@@ -26,7 +26,7 @@
 }
 ,{
     "opcode": "5",
-    "mnemonic": "sw r%1%,[r%2%,%4$x]",
+    "mnemonic": "sw [r%1%,%4$x],r%2%",
     "imm_relative": "0"
 }
 ,{
@@ -46,7 +46,7 @@
 }
 ,{
     "opcode": "9",
-    "mnemonic": "lw r%1%,r%2%,%4$x",
+    "mnemonic": "lw r%1%,[r%2%,%4$x]",
     "imm_relative": "0"
 }
 ]
