@@ -1,6 +1,8 @@
 #ifndef MEMESIM_SIMULATOR_H
 #define MEMESIM_SIMULATOR_H
 
+#include <variant>
+
 #include "Vkpu.h"
 #include "verymeme/concurrent_queue.h"
 
@@ -40,10 +42,18 @@ public:
     uint8_t pixels[VGA_HEIGHT * VGA_WIDTH];
   };
 
+  using Response = std::variant<CpuStateMessage, VgaStateMessage>;
+
+  struct CommandArgs {
+    int i0;
+    int i1;
+  };
+
   struct Command {
-    enum class Type { RUN, STOP, STEP, GET_CPU_STATE, GET_VGA_STATE, QUIT } type;
-    std::shared_ptr<ConcurrentQueue<CpuStateMessage>> cpu_state_receiver;
-    std::shared_ptr<ConcurrentQueue<VgaStateMessage>> vga_state_receiver;
+    // TODO(improvement): Simulate real VGA signal. Simulate real mouse and keyboard.
+    enum class Type { RUN, STOP, STEP, GET_CPU_STATE, GET_VGA_STATE, SET_MOUSE, SET_KBD, QUIT } type;
+    CommandArgs args;
+    std::shared_ptr<ConcurrentQueue<Response>> receiver;
   };
 
   void run();

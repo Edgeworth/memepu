@@ -7,8 +7,7 @@ namespace memesim {
 namespace {}  // namespace
 
 Display::Display(Simulator* simulator)
-    : simulator_(simulator),
-      vga_state_receiver_(new ConcurrentQueue<Simulator::VgaStateMessage>()) {}
+    : simulator_(simulator), receiver_(new ConcurrentQueue<Simulator::Response>()) {}
 
 void Display::run() {
   sf::ContextSettings settings;
@@ -27,10 +26,9 @@ void Display::run() {
   while (win_->isOpen()) {
     win_->clear(sf::Color::Black);
 
-    simulator_->scheduleCommand(
-        {Simulator::Command::Type::GET_VGA_STATE, nullptr, vga_state_receiver_});
+    simulator_->scheduleCommand({Simulator::Command::Type::GET_VGA_STATE, {}, receiver_});
 
-    const auto& state = vga_state_receiver_->yield();
+    const auto& state = std::get<Simulator::VgaStateMessage>(receiver_->yield());
     for (int r = 0; r < Simulator::VGA_HEIGHT; ++r) {
       for (int c = 0; c < Simulator::VGA_WIDTH; ++c) {
         uint8_t val = state.pixels[r * Simulator::VGA_WIDTH + c];
@@ -51,6 +49,10 @@ void Display::run() {
     while (win_->pollEvent(ev)) {
       switch (ev.type) {
       case sf::Event::Closed: win_->close(); break;
+      case sf::Event::MouseMoved:
+        simulator_->scheduleCommand(
+            {Simulator::Command::Type::SET_MOUSE, {ev.mouseMove.x, ev.mouseMove.y}, receiver_});
+        break;
       default: break;
       }
     }

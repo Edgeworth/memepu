@@ -7,6 +7,7 @@
 #include "Vkpu_register_file.h"
 #include "Vkpu_sram__D5_W20.h"
 #include "Vkpu_sram__De_W20.h"
+#include "Vkpu_sram__De_W20_I626f6f742e686578.h"
 #include "Vkpu_vga.h"
 #include "memeasm/assembler.h"
 #include "verymeme/string_util.h"
@@ -68,13 +69,11 @@ void Simulator::run() {
       case Command::Type::STOP: running = false; break;
       case Command::Type::STEP: step = true; break;
       case Command::Type::QUIT: return;
-      case Command::Type::GET_CPU_STATE:
-        verify_expr(cmd->cpu_state_receiver, "require receiver for get cpu state cmd");
-        cmd->cpu_state_receiver->push(generateCpuState());
-        break;
-      case Command::Type::GET_VGA_STATE:
-        verify_expr(cmd->vga_state_receiver, "require receiver for get vga state cmd");
-        cmd->vga_state_receiver->push(generateVgaState());
+      case Command::Type::GET_CPU_STATE: cmd->receiver->push(generateCpuState()); break;
+      case Command::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
+      case Command::Type::SET_MOUSE:
+        kpu_.kpu->mmu->ram->mem[0x10] = cmd->args.i0;  // TODO: use constant for this.
+        kpu_.kpu->mmu->ram->mem[0x11] = cmd->args.i1;
         break;
       }
     }

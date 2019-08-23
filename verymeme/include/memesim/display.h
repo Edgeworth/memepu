@@ -16,7 +16,7 @@ public:
 
 private:
   Simulator* simulator_;
-  std::shared_ptr<ConcurrentQueue<Simulator::VgaStateMessage>> vga_state_receiver_;
+  std::shared_ptr<ConcurrentQueue<Simulator::Response>> receiver_;
 
   std::unique_ptr<sf::RenderWindow> win_;
 };
