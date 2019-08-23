@@ -10,7 +10,7 @@ module control_logic(
   input wire MLU_CARRY,
   input wire MLU_NEGATIVE,
   // Grouped signals
-  output logic [5:0] CTRL_DATA /*verilator public*/,
+  output logic [7:0] CTRL_DATA /*verilator public*/,
   output logic [1:0] REG_SEL /*verilator public*/,
   output logic [3:0] MLU_PLANE /*verilator public*/,
   output logic [1:0] SHIFTER_PLANE /*verilator public*/,
@@ -77,7 +77,7 @@ module control_logic(
   wire misc_plane /*verilator public*/;
   wire opcode_sel /*verilator public*/;
   wire [1:0] cond_var_sel /*verilator public*/;
-  wire [5:0] unused_control;
+  wire [3:0] unused_control;
   // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
   // on rising clock.
   register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(0),
