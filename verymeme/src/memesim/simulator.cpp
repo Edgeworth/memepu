@@ -14,6 +14,14 @@
 
 namespace memesim {
 
+namespace {
+
+const int PRINT_SPEED_MS = 5000;
+
+}  // namespace
+
+using namespace std::chrono;
+
 void Simulator::initializeKpu(Vkpu& kpu) {
   kpu.N_RST_ASYNC = 1;
   // Make sure to start with a high CLK so the two clockKpu's below produce two falling edges.
@@ -57,6 +65,8 @@ void Simulator::run() {
 
   bool running = false;
   bool step;
+  auto time = steady_clock::now();
+  int64_t cycle_count = 0;
   while (true) {
     step = false;
 
@@ -72,12 +82,22 @@ void Simulator::run() {
       case Command::Type::GET_CPU_STATE: cmd->receiver->push(generateCpuState()); break;
       case Command::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
       case Command::Type::SET_MOUSE:
-        kpu_.kpu->mmu->ram->mem[0x10] = cmd->args.i0;  // TODO: use constant for this.
-        kpu_.kpu->mmu->ram->mem[0x11] = cmd->args.i1;
+        // TODO: use constant for this memory mapped address.
+        kpu_.kpu->mmu->ram->mem[0x10] = (cmd->args.i0 & 0xFF) | ((cmd->args.i1 << 8) & 0xFF00);
         break;
       }
     }
-    if (running || step) clockKpu(kpu_);
+    if (running || step) {
+      clockKpu(kpu_);
+      cycle_count++;
+    }
+    int64_t dur = duration_cast<milliseconds>(steady_clock::now() - time).count();
+    if (running && dur > PRINT_SPEED_MS) {
+      printf("Speed: %f MHz - %" PRId64 " cycles in %" PRId64 " ms\n",
+          double(cycle_count) / dur / 1000.f, cycle_count, dur);
+      cycle_count = 0;
+      time = steady_clock::now();
+    }
   }
 }
 
