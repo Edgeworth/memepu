@@ -187,7 +187,7 @@ module microcode(
         endcase
       end
       OP_SW: begin  // TODO: use offset
-        `SET_MNEMONIC("sw r%1%,[r%2%,%4$x]")
+        `SET_MNEMONIC("sw [r%1%,%4$x],r%2%")
         case (microop_count)
           0: begin  // Write first register (dst) into tmp0.
             reg_sel = REG_SEL_OPWORD0;
@@ -319,7 +319,7 @@ module microcode(
         endcase
       end
       OP_LW: begin  // TODO: use offset
-        `SET_MNEMONIC("lw r%1%,r%2%,%4$x")
+        `SET_MNEMONIC("lw r%1%,[r%2%,%4$x]")
         case (microop_count)
           0: begin  // Write second register (src) into tmp0.
             reg_sel = REG_SEL_OPWORD1;

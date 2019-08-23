@@ -93,7 +93,7 @@ void Simulator::run() {
     }
     int64_t dur = duration_cast<milliseconds>(steady_clock::now() - time).count();
     if (running && dur > PRINT_SPEED_MS) {
-      printf("Speed: %f MHz - %" PRId64 " cycles in %" PRId64 " ms\n",
+      printf("%f MHz - %" PRId64 " cycles in %" PRId64 " ms\n",
           double(cycle_count) / dur / 1000.f, cycle_count, dur);
       cycle_count = 0;
       time = steady_clock::now();
