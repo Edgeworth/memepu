@@ -11,7 +11,7 @@ loop0:
   lhu r31,loop0
 end:
 
-lhu r1,255 ; white
+lhu r1,ff ; white
 loop1:
   lw r2,[r3,0] ; grab mouse coords
   add r2,r0,r2 ; compute vram addr
