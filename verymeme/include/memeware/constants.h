@@ -10,6 +10,7 @@ enum Shifter { SHIFTER_LEFT_SHIFT, SHIFTER_RIGHT_SHIFT, SHIFTER_SIGNEXT8, SHIFTE
 constexpr int MLU_SLICE_DEPTH = 12;
 constexpr int MLU_LOOKAHEAD_DEPTH = 17;
 constexpr int MICROCODE_DEPTH = 12;
+constexpr int PC_REG = 31;
 
 }  // namespace memeware
 
