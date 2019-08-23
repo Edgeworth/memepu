@@ -21,8 +21,10 @@ std::vector<std::string> getLines(const std::string& data) {
   std::string line;
   std::vector<std::string> lines;
   while (std::getline(ss, line)) {
-    if (line.back() == '\n') line.pop_back();
-    lines.push_back(std::move(line));
+    int last_idx = 0;
+    while (last_idx < int(line.size()) && line[last_idx] != ';') last_idx++;  // Remove comments.
+    const auto& s = trim(line.substr(0, last_idx), " \t\n");
+    if (!s.empty()) lines.push_back(s);
   }
   return lines;
 }
@@ -43,19 +45,23 @@ Assembler::Assembler(const std::string& model_json) {
     std::string mnemonic_rx = PREAMBLE_RX;
     for (int i = 0; i < int(mnemonic_str.size()); ++i) {
       if (mnemonic_str[i] == '%') {
-        verify_expr(i != int(mnemonic_str.size()) - 1, "ill-formed ksm model (BUG)");
-        char type = mnemonic_str[++i];
+        verify_expr(i < int(mnemonic_str.size()) - 2, "ill-formed ksm model (BUG)");
+        i += 2;  // Skip % and number.
+        char type = mnemonic_str[i];
         Parameter param;
-        if (type == 'd') {
+        if (type == '%') {  // No format specifier, assume register.
           param = Parameter::REGISTER;
-        } else if (type == 'x') {
+        } else if (type == '$') {  // Format specifier, assume immediate and skip specifier.
           param = Parameter::IMMEDIATE;
+          i++;
         } else
           verify_expr(false, "unknown parameter type '%c'", type);
         mnemonic_rx += "([0-9a-zA-Z]+)";
         mnemonic.params.push_back(param);
       } else {
-        mnemonic_rx += mnemonic_str[i];
+        std::string escape = "";
+        if (mnemonic_str[i] == '[' || mnemonic_str[i] == ']') escape = "\\";
+        mnemonic_rx += escape + mnemonic_str[i];
       }
     }
     mnemonic_rx += POSTAMBLE_RX;
@@ -140,7 +146,8 @@ uint32_t Assembler::convertMnemonicStringToOpword(
               imm = labels_[label];
           }
         }
-        verify_expr(int16_t(imm) == imm, "%d: immediate value %" PRId64 " out of range", lnum, imm);
+        verify_expr(imm < 0 ? int16_t(imm) == imm : uint16_t(imm) == imm,
+            "%d: immediate value %" PRId64 " out of range", lnum, imm);
         opword |= uint32_t(imm) << 16u;
         break;
       }

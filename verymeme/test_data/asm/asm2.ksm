@@ -1,0 +1,11 @@
+lhu r0,ffff
+addu r0,r0,1 ; r0 is vram addr
+addu r2,r0,0 ; set r2 to r1
+lhu r3,40
+lhu r1,0 ; r1 is color
+loop:
+  sw r0,[r1,0]
+  addu r0,r0,29
+  lw r1,r3,0
+  or r0,r0,r2  ; make sure vram bit is still set.
+  lhu r31,loop

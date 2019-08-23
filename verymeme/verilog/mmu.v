@@ -17,12 +17,15 @@ module mmu(
   wire ram_n_we;
   wire ram_n_oe;
   wire [31:0] ram_val;
+  // Don't use lower two bits because can't write unaligned.
+  // TODO(improvement): Fault on wrong alignment?
   sram#(.DEPTH(14), .WIDTH(32), .INITIAL("boot.hex")) ram(.ADDR(ADDR[15:2]), .N_WE(ram_n_we),
     .N_OE(ram_n_oe), .IN_DATA(IN), .N_RST(N_RST), .OUT_DATA(ram_val));
 
   wire vga_n_we;
   wire vga_n_oe;
   wire [31:0] vga_val;
+  // Don't use lower two bits because can't write unaligned.
   vga vga(.ADDR({ADDR[15:2]}), .N_WE(vga_n_we), .N_OE(vga_n_oe), .N_RST(N_RST), .IN(IN), .OUT(vga_val));
 
   wire _unused_ok = &{ADDR}; // TODO REMOVE.

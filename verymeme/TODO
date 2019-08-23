@@ -1,4 +1,12 @@
 ### TODO soon
+
+割り込み処理
+マイクロコード関数
+システムコール
+マウスとキーボード入力
+ページング＋仮想アドレス変換
+ページフォルト
+
 #### memecad
 - Check TODOs in codebase
 - Can somehow use cell libraries instead of memecad?
@@ -26,6 +34,9 @@
 
 #### memeroute
 - Finish DSN parsing. Better displaying.
+
+#### memelang
+- Finish parser, write interpreter
 
 ### TODO later
 #### memecad

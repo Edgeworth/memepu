@@ -9,8 +9,7 @@
 	LBS rD, [rS + signext(I)] - load byte sign extend
 	LHU rD, [rS + signext(I)] - load 16-bit zero extend
 	LHS rD, [rS + signext(I)] - load 16-bit sign extend
-	LW rD, [rS + signext(I)] - load 32-bit
-[Opcode 6][rD 5][rS 5][immediate 16]
+	LW rD, [rS + signext(I)] - load 32-bit into rD
 	SB [rD + signext(I)], rS - store 8-bit
 	SH [rD + signext(I)], rS - store 16-bit
 	SW [rD + signext(I)], rS - store 32-bit
