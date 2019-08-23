@@ -22,7 +22,7 @@ module microcode(
   wire cond_var = ADDR[11];
   wire [5:0] opcode = ADDR[10:5];
   wire [4:0] microop_count = ADDR[4:0];
-  logic [5:0] ctrl_data;
+  logic [7:0] ctrl_data;
   logic [1:0] reg_sel; // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
   logic [3:0] out_plane;
   logic [2:0] in_plane;
@@ -35,18 +35,18 @@ module microcode(
   logic opcode_sel;  // 1 bit for deciding between reading from opword reg or bus. 0 is opword.
   logic [1:0] cond_var_sel;
 
-  assign OUT[5:0] = ctrl_data;
-  assign OUT[7:6] = reg_sel;
-  assign OUT[11:8] = out_plane;
-  assign OUT[14:12] = in_plane;
-  assign OUT[15] = misc_plane;
-  assign OUT[18:16] = mlu_op;
-  assign OUT[19] = mlu_carry;
-  assign OUT[21:20] = shifter_plane;
-  assign OUT[22] = shifter_arith;
-  assign OUT[23] = opcode_sel;
-  assign OUT[25:24] = cond_var_sel;
-  assign OUT[31:26] = 0;
+  assign OUT[7:0] = ctrl_data;
+  assign OUT[9:8] = reg_sel;
+  assign OUT[13:10] = out_plane;
+  assign OUT[16:14] = in_plane;
+  assign OUT[17] = misc_plane;
+  assign OUT[20:18] = mlu_op;
+  assign OUT[21] = mlu_carry;
+  assign OUT[23:22] = shifter_plane;
+  assign OUT[24] = shifter_arith;
+  assign OUT[25] = opcode_sel;
+  assign OUT[27:26] = cond_var_sel;
+  assign OUT[31:28] = 0;
 
   localparam OP_RESET=0;
   localparam OP_FETCH=1;
