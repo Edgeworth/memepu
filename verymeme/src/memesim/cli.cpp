@@ -80,15 +80,20 @@ void CommandLine::run() {
     std::string cmd;
     std::cout << "> ";
     std::getline(std::cin, cmd);
-    cmd = trim(cmd, "\\n ");
+    std::stringstream ss(cmd);
+    ss >> cmd;
     if (cmd == "q") {
       simulator_->scheduleCommand({Simulator::Command::Type::QUIT, {}, nullptr});
       break;
     } else if (cmd == "c") {
-      simulator_->scheduleCommand({Simulator::Command::Type::RUN,  {},nullptr});
+      simulator_->scheduleCommand({Simulator::Command::Type::RUN, {}, nullptr});
+    } else if (cmd == "b") {
+      uint32_t addr;
+      ss >> addr;
+      simulator_->scheduleCommand({Simulator::Command::Type::SET_BREAKPOINT, {addr}, receiver_});
     } else {
-      simulator_->scheduleCommand({Simulator::Command::Type::STEP,  {},nullptr});
-      simulator_->scheduleCommand({Simulator::Command::Type::GET_CPU_STATE,  {},receiver_});
+      simulator_->scheduleCommand({Simulator::Command::Type::STEP, {}, receiver_});
+      simulator_->scheduleCommand({Simulator::Command::Type::GET_CPU_STATE, {}, receiver_});
       const auto& state = std::get<Simulator::CpuStateMessage>(receiver_->yield());
       printCpuState(state);
     }
