@@ -73,8 +73,7 @@ void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
 }  // namespace
 
 CommandLine::CommandLine(Simulator* simulator)
-    : simulator_(simulator),
-      cpu_state_receiver_(new ConcurrentQueue<Simulator::CpuStateMessage>()) {}
+    : simulator_(simulator), receiver_(new ConcurrentQueue<Simulator::Response>()) {}
 
 void CommandLine::run() {
   while (true) {
@@ -83,15 +82,14 @@ void CommandLine::run() {
     std::getline(std::cin, cmd);
     cmd = trim(cmd, "\\n ");
     if (cmd == "q") {
-      simulator_->scheduleCommand({Simulator::Command::Type::QUIT, nullptr, nullptr});
+      simulator_->scheduleCommand({Simulator::Command::Type::QUIT, {}, nullptr});
       break;
     } else if (cmd == "c") {
-      simulator_->scheduleCommand({Simulator::Command::Type::RUN, nullptr, nullptr});
+      simulator_->scheduleCommand({Simulator::Command::Type::RUN,  {},nullptr});
     } else {
-      simulator_->scheduleCommand({Simulator::Command::Type::STEP, nullptr, nullptr});
-      simulator_->scheduleCommand(
-          {Simulator::Command::Type::GET_CPU_STATE, cpu_state_receiver_, nullptr});
-      const auto& state = cpu_state_receiver_->yield();
+      simulator_->scheduleCommand({Simulator::Command::Type::STEP,  {},nullptr});
+      simulator_->scheduleCommand({Simulator::Command::Type::GET_CPU_STATE,  {},receiver_});
+      const auto& state = std::get<Simulator::CpuStateMessage>(receiver_->yield());
       printCpuState(state);
     }
   }

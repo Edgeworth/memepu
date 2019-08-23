@@ -14,7 +14,7 @@ public:
 
 private:
   Simulator* simulator_;
-  std::shared_ptr<ConcurrentQueue<Simulator::CpuStateMessage>> cpu_state_receiver_;
+  std::shared_ptr<ConcurrentQueue<Simulator::Response>> receiver_;
 
   static void printCpuState(const Simulator::CpuStateMessage& state);
 };

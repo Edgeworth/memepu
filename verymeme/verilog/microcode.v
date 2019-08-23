@@ -53,6 +53,7 @@ module microcode(
   // [Opcode 6][rD 5][unused 5][immediate 16]
   localparam OP_LH=7;  // LH rD, I - rD = I - load signed 16 bits
   localparam OP_LHU=2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
+  localparam OP_LW=9;  // LW rD, [rS + signext(I)] - load 32-bit
 
   // [Opcode 6][rD 5][rS 5][immediate 16]
   localparam OP_SW=5;  // SW [rD + signext(I)], rS - store 32-bit
@@ -186,7 +187,7 @@ module microcode(
         endcase
       end
       OP_SW: begin  // TODO: use offset
-        `SET_MNEMONIC("sw r%1%,r%2%,%4$x")
+        `SET_MNEMONIC("sw r%1%,[r%2%,%4$x]")
         case (microop_count)
           0: begin  // Write first register (dst) into tmp0.
             reg_sel = REG_SEL_OPWORD0;
@@ -315,6 +316,22 @@ module microcode(
             mlu_op = common::MLU_OR;
           end
           3: `GO_FETCH()
+        endcase
+      end
+      OP_LW: begin  // TODO: use offset
+        `SET_MNEMONIC("lw r%1%,r%2%,%4$x")
+        case (microop_count)
+          0: begin  // Write second register (src) into tmp0.
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Read the value from memory into the first (dst) register.
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_MMU;
+            in_plane = IN_REG;
+          end
+          2: `GO_FETCH()
         endcase
       end
     endcase

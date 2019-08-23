@@ -183,12 +183,13 @@ public:
       case Token::STR_LIT: ectx.s.emplace_back(std::make_unique<StrLit>(ctx_)); continue;
       default: break;
       }
-      if (EXPR_MAP.find(tok->type) != EXPR_MAP.end()) {
-        ectx.processStack(PRECEDENCE[EXPR_MAP[tok->type]], ctx_);
-        ectx.ops.emplace_back(std::make_unique<BinOp>(ctx_));
-      } else {
-        ctx_.compileError("unexpected token");
-      }
+      // TODO(fix)
+//      if (EXPR_MAP.find(tok->type) != EXPR_MAP.end()) {
+//        ectx.processStack(PRECEDENCE[EXPR_MAP[tok->type]], ctx_);
+//        ectx.ops.emplace_back(std::make_unique<BinOp>(ctx_));
+//      } else {
+//        ctx_.compileError("unexpected token");
+//      }
     }
     ectx.processStack(-1, ctx_);
     if (ectx.s.size() != 1 || !ectx.ops.empty()) ctx_.compileError("error in expression");
@@ -307,7 +308,7 @@ std::string StrLit::toString() const { return (fmt("StrLit(%s)") % val).str(); }
 std::vector<Node*> StrLit::children() { return {}; }
 void StrLit::generateIr() const {}
 
-BinOp::BinOp(Parser::Context& ctx) { type = EXPR_MAP[ctx.consumeToken()->type]; }
+BinOp::BinOp(Parser::Context& ctx) { /*type = EXPR_MAP[ctx.consumeToken()->type];*/ } // TODO(fix)
 std::string BinOp::toString() const { return (fmt("BinOp(%s)") % type).str(); }
 std::vector<Node*> BinOp::children() { return flattenChildren(left, right); }
 void BinOp::generateIr() const {}

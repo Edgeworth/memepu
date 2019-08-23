@@ -2,55 +2,51 @@
 {
     "opcode": "0",
     "mnemonic": "rst",
-    "imm_signed": "0",
     "imm_relative": "0"
 }
 ,{
     "opcode": "1",
     "mnemonic": "nop",
-    "imm_signed": "0",
     "imm_relative": "0"
 }
 ,{
     "opcode": "2",
-    "mnemonic": "lhu r%d,%x",
-    "imm_signed": "0",
+    "mnemonic": "lhu r%1%,%4$x",
     "imm_relative": "0"
 }
 ,{
     "opcode": "3",
-    "mnemonic": "addu r%d,r%d,%x",
-    "imm_signed": "0",
+    "mnemonic": "addu r%1%,r%2%,%4$x",
     "imm_relative": "0"
 }
 ,{
     "opcode": "4",
-    "mnemonic": "add r%d,r%d,r%d",
-    "imm_signed": "0",
+    "mnemonic": "add r%1%,r%2%,r%3%",
     "imm_relative": "0"
 }
 ,{
     "opcode": "5",
-    "mnemonic": "sw r%d,r%d,%x",
-    "imm_signed": "0",
+    "mnemonic": "sw r%1%,[r%2%,%4$x]",
     "imm_relative": "0"
 }
 ,{
     "opcode": "6",
-    "mnemonic": "or r%d,r%d,r%d",
-    "imm_signed": "0",
+    "mnemonic": "or r%1%,r%2%,r%3%",
     "imm_relative": "0"
 }
 ,{
     "opcode": "7",
-    "mnemonic": "lh r%d,%x",
-    "imm_signed": "0",
+    "mnemonic": "lh r%1%,%4$x",
     "imm_relative": "0"
 }
 ,{
     "opcode": "8",
-    "mnemonic": "beq r%d,r%d,%x",
-    "imm_signed": "1",
+    "mnemonic": "beq r%1%,r%2%,%4$x",
     "imm_relative": "1"
+}
+,{
+    "opcode": "9",
+    "mnemonic": "lw r%1%,r%2%,%4$x",
+    "imm_relative": "0"
 }
 ]
