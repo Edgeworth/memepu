@@ -1,8 +1,6 @@
 #ifndef MEMEWARE_CONSTANTS_H
 #define MEMEWARE_CONSTANTS_H
 
-#include "Vkpu.h"
-
 namespace memeware {
 
 // See common.v
@@ -17,13 +15,13 @@ constexpr int MICROCODE_DEPTH = 12;
 // Special registers.
 constexpr int NUM_REG = 32;
 constexpr int PC_REG = 31;
-constexpr int WORD_SZ = 4;
 
 // Memory mapped IO
+constexpr int OPWORD_SIZE = 1;
 constexpr int VGA_WIDTH = 256;
 constexpr int VGA_HEIGHT = 256;
-constexpr uint32_t MMIO_VRAM_BASE = 0x10000;
-constexpr uint32_t MMIO_MOUSE_BASE = 0xfffc;
+constexpr uint32_t MMIO_VRAM_BASE = 0x10000;  // TODO change.
+constexpr uint32_t MMIO_MOUSE_BASE = 0xffff;
 
 }  // namespace memeware
 
