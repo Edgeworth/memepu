@@ -31,9 +31,7 @@ void Display::run() {
     const auto& state = std::get<Simulator::VgaStateMessage>(receiver_->yield());
     for (int r = 0; r < memeware::VGA_HEIGHT; ++r) {
       for (int c = 0; c < memeware::VGA_WIDTH; ++c) {
-        uint8_t val = state.pixels[r * memeware::VGA_WIDTH + c];
-        auto col = sf::Color(
-            uint8_t(val >> 5u) * 36, uint8_t((val & 0x1cu) >> 2u) * 36, uint8_t(val & 0x3u) * 63);
+        auto col = sf::Color(state.pixels[r * memeware::VGA_WIDTH + c]);
         img.setPixel(c, r, col);
       }
     }

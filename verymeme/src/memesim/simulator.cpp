@@ -5,9 +5,9 @@
 #include "Vkpu_microcode.h"
 #include "Vkpu_mmu.h"
 #include "Vkpu_register_file.h"
+#include "Vkpu_sram__D10_W20.h"
 #include "Vkpu_sram__D5_W20.h"
-#include "Vkpu_sram__De_W20.h"
-#include "Vkpu_sram__De_W20_I626f6f742e686578.h"
+#include "Vkpu_sram__pi1.h"
 #include "Vkpu_vga.h"
 #include "memeasm/assembler.h"
 #include "memeware/constants.h"
@@ -85,7 +85,7 @@ void Simulator::run() {
       case Cmd::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
       case Cmd::Type::SET_MOUSE:
         // TODO: use constant for this memory mapped address.
-        kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE_BASE / memeware::WORD_SZ] =
+        kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE_BASE] =
             (cmd->args.i32_0 & 0xFF) | ((cmd->args.i32_1 << 8) & 0xFF00);
         break;
       case Cmd::Type::SET_KBD: break;
@@ -141,16 +141,12 @@ Simulator::CpuStateMessage Simulator::generateCpuState() {
 Simulator::VgaStateMessage Simulator::generateVgaState() {
   VgaStateMessage msg = {};
 
-  static_assert(
-      sizeof(kpu_.kpu->mmu->vga->vram0->mem[0]) == sizeof(uint32_t), "wrong size for vga memory");
-  constexpr int NUM_ELTS = sizeof(kpu_.kpu->mmu->vga->vram0->mem) / sizeof(uint32_t);
-  for (int i = 0; i < NUM_ELTS; ++i) {
-    auto val = uint32_t(kpu_.kpu->mmu->vga->vram0->mem[i]);
-    msg.pixels[4 * i] = uint8_t(val & 0xFFu);
-    msg.pixels[4 * i + 1] = uint8_t((val >> 8u) & 0xFFu);
-    msg.pixels[4 * i + 2] = uint8_t((val >> 16u) & 0xFFu);
-    msg.pixels[4 * i + 3] = uint8_t((val >> 24u) & 0xFFu);
-  }
+  const auto& mem = kpu_.kpu->mmu->vga->vram0->mem;
+  static_assert(sizeof(mem[0]) == sizeof(uint32_t) &&
+          sizeof(mem) == memeware::VGA_WIDTH * memeware::VGA_HEIGHT * sizeof(uint32_t),
+      "wrong size for vga memory");
+  for (int i = 0; i < memeware::VGA_WIDTH * memeware::VGA_HEIGHT; ++i)
+    msg.pixels[i] = uint32_t(mem[i]);
 
   return msg;
 }
