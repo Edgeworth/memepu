@@ -11,7 +11,7 @@ module microcode(
   logic [8*20:0] mnemonic /*verilator public*/;
   logic imm_relative /*verilator public*/;
 
-  `ifdef HEXFILEA // TODO undo
+  `ifdef HEXFILE
   // TODO: change to specific lut chip
   lut#(.DEPTH(12), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
     .ADDR(ADDR), .OUT_DATA(OUT),
