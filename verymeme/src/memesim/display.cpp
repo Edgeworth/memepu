@@ -18,20 +18,20 @@ void Display::run() {
   win_->setFramerateLimit(30);
 
   sf::Texture tex;
-  tex.create(Simulator::VGA_WIDTH, Simulator::VGA_HEIGHT);
+  tex.create(memeware::VGA_WIDTH, memeware::VGA_HEIGHT);
 
   sf::Image img;
-  img.create(Simulator::VGA_WIDTH, Simulator::VGA_HEIGHT);
+  img.create(memeware::VGA_WIDTH, memeware::VGA_HEIGHT);
 
   while (win_->isOpen()) {
     win_->clear(sf::Color::Black);
 
-    simulator_->scheduleCommand({Simulator::Command::Type::GET_VGA_STATE, {}, receiver_});
+    simulator_->scheduleCommand({Simulator::Cmd::Type::GET_VGA_STATE, {}, receiver_});
 
     const auto& state = std::get<Simulator::VgaStateMessage>(receiver_->yield());
-    for (int r = 0; r < Simulator::VGA_HEIGHT; ++r) {
-      for (int c = 0; c < Simulator::VGA_WIDTH; ++c) {
-        uint8_t val = state.pixels[r * Simulator::VGA_WIDTH + c];
+    for (int r = 0; r < memeware::VGA_HEIGHT; ++r) {
+      for (int c = 0; c < memeware::VGA_WIDTH; ++c) {
+        uint8_t val = state.pixels[r * memeware::VGA_WIDTH + c];
         auto col = sf::Color(
             uint8_t(val >> 5u) * 36, uint8_t((val & 0x1cu) >> 2u) * 36, uint8_t(val & 0x3u) * 63);
         img.setPixel(c, r, col);
@@ -40,19 +40,22 @@ void Display::run() {
     tex.loadFromImage(img);
 
     sf::Sprite sprite(tex);
-    sprite.setScale(win_->getSize().x / float(Simulator::VGA_WIDTH),
-        win_->getSize().y / float(Simulator::VGA_HEIGHT));
+    sprite.setScale(win_->getSize().x / float(memeware::VGA_WIDTH),
+        win_->getSize().y / float(memeware::VGA_HEIGHT));
     win_->draw(sprite);
     win_->display();
 
     sf::Event ev{};
     while (win_->pollEvent(ev)) {
       switch (ev.type) {
-      case sf::Event::Closed: win_->close(); break;
+      case sf::Event::Closed:
+        simulator_->scheduleCommand({Simulator::Cmd::Type::QUIT, {}, receiver_});
+        win_->close();
+        break;
       case sf::Event::MouseMoved: {
-        const int x = ev.mouseMove.x * Simulator::VGA_WIDTH / win_->getSize().x;
-        const int y = ev.mouseMove.y * Simulator::VGA_HEIGHT / win_->getSize().y;
-        simulator_->scheduleCommand({Simulator::Command::Type::SET_MOUSE, {x, y}, receiver_});
+        const int x = ev.mouseMove.x * memeware::VGA_WIDTH / win_->getSize().x;
+        const int y = ev.mouseMove.y * memeware::VGA_HEIGHT / win_->getSize().y;
+        simulator_->scheduleCommand({Simulator::Cmd::Type::SET_MOUSE, {x, y}, receiver_});
         break;
       }
       default: break;

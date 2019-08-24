@@ -5,16 +5,13 @@
 #include <variant>
 
 #include "Vkpu.h"
+#include "memeware/constants.h"
 #include "verymeme/concurrent_queue.h"
 
 namespace memesim {
 
 class Simulator {
 public:
-  constexpr static int NUM_REG = 32;
-  constexpr static int VGA_WIDTH = 256;
-  constexpr static int VGA_HEIGHT = 256;
-
   struct CpuStateMessage {
     uint32_t bus;
     uint32_t tmp0;
@@ -40,17 +37,17 @@ public:
   };
 
   struct VgaStateMessage {
-    uint8_t pixels[VGA_HEIGHT * VGA_WIDTH];
+    uint8_t pixels[memeware::VGA_HEIGHT * memeware::VGA_WIDTH];
   };
 
   using Response = std::variant<CpuStateMessage, VgaStateMessage>;
 
-  struct CommandArgs {
+  struct CmdArgs {
     int64_t i32_0 = 0;
     int64_t i32_1 = 0;
   };
 
-  struct Command {
+  struct Cmd {
     // TODO(improvement): Simulate real VGA signal. Simulate real mouse and keyboard.
     enum class Type {
       RUN,
@@ -63,14 +60,14 @@ public:
       SET_KBD,
       QUIT,
     } type;
-    CommandArgs args;
+    CmdArgs args;
     std::shared_ptr<ConcurrentQueue<Response>> receiver;
   };
 
   void run();
 
   // This method is thread safe.
-  void scheduleCommand(const Command& cmd);
+  void scheduleCommand(const Cmd& cmd);
 
   static void initializeKpu(Vkpu& kpu);
   static void clockKpu(Vkpu& kpu);
@@ -78,9 +75,8 @@ public:
 
 private:
   Vkpu kpu_;
-  ConcurrentQueue<Command> command_queue_;
+  ConcurrentQueue<Cmd> command_queue_;
   std::unordered_set<uint32_t> breakpoints_;
-
 
   uint32_t getRegister(int reg) const;
   CpuStateMessage generateCpuState();
