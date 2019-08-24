@@ -46,8 +46,8 @@ public:
   using Response = std::variant<CpuStateMessage, VgaStateMessage>;
 
   struct CommandArgs {
-    int64_t i32_0;
-    int64_t i32_1;
+    int64_t i32_0 = 0;
+    int64_t i32_1 = 0;
   };
 
   struct Command {
