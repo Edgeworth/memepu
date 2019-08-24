@@ -5,9 +5,11 @@ add r4,r0,r0 ; finish for clear to black
 lhu r3,fffc ; r3 is mouse mmap io addr
 lhu r1,0 ; r1 is color - black to initialise
 loop0:
+  or r2,r0,r2  ; make sure vram bit is still set.
   sw [r2,0],r1 ; set to black
-  addu r2,r2,1
-  beq r2,r4,end ; todo replace with bne
+  addu r2,r2,4
+  lw r1,[r3,0] ; grab mouse coords
+;  beq r2,r4,end ; todo replace with bne
   lhu r31,loop0
 end:
 
