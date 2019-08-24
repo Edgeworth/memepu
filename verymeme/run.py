@@ -4,6 +4,7 @@ import glob
 import multiprocessing
 import os
 import subprocess
+
 import sys
 import time
 
@@ -59,7 +60,7 @@ def run_command(command):
 
 def create_build_config(hexfile):
   COMMON_FILE = 'verilog/common.v'
-  path = 'build/autogen'
+  path = '/tmp/verymeme'
   if hexfile:
     path += '_hexfile'
     run_command("sed -i 's://\\s*`define HEXFILE:`define HEXFILE:' %s" % COMMON_FILE)
@@ -84,17 +85,6 @@ def run_tests(path):
   run_command(os.path.join(path, 'tests'))
 
 
-def run_synth(synth_cmd):
-  pass  # TODO
-
-
-def run_synths():
-  SYNTHS = ['synth_achronix', 'synth_coolrunner2', 'synth_easic', 'synth_ecp5', 'synth_gowin',
-            'synth_greenpak4', 'synth_ice40', 'synth_intel', 'synth_xilinx']
-  for synth_cmd in SYNTHS:
-    run_synth(synth_cmd)
-
-
 def run_formal_verification():
   # Ignore lut17x8 because it takes too long to run.
   IGNORES = ["workaround.v", "common.v", "lut17x8.v"]
@@ -115,8 +105,6 @@ parser.add_argument('-u', '--unit', action='store_true', default=False, required
                     help='Run unit tests.')
 parser.add_argument('-w', '--memeware', action='store_true', default=False, required=False,
                     help='Generate firmware.')
-parser.add_argument('-s', '--synths', action='store_true', default=False, required=False,
-                    help='Run synthesis for various hardware.')
 parser.add_argument('-g', '--generate_schematic', action='store_true', default=False,
                     required=False, help='Verifies schematics can be generated')
 parser.add_argument('-a', '--all', action='store_true', default=False, required=False,
@@ -131,11 +119,6 @@ if args.unit or args.all:
     print('Running test with hexfile=%s' % str(hexfile))
     path = create_build_config(hexfile=hexfile)
     run_tests(path)
-
-if args.synths or args.all:
-  os.chdir('verilog')
-  run_synths()
-  os.chdir('..')
 
 if args.formal or args.all:
   os.chdir('verilog')
