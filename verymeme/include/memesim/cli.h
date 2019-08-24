@@ -10,11 +10,13 @@ class CommandLine {
 public:
   explicit CommandLine(Simulator* simulator);
 
-  void run();
+  void run(const std::string& initial_cmd);
 
 private:
   Simulator* simulator_;
   std::shared_ptr<ConcurrentQueue<Simulator::Response>> receiver_;
+
+  bool processCmdLine(const std::string& line);
 
   static void printCpuState(const Simulator::CpuStateMessage& state);
 };

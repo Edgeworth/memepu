@@ -1,5 +1,4 @@
 `include "common.v"
-/* verilator lint_off UNOPTFLAT */
 // 8-bit register with asynchronous clear.
 module chip74273(
   input wire [7:0] D,
