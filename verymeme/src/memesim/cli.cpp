@@ -92,10 +92,10 @@ bool CommandLine::processCmdLine(const std::string& line) {
   do {
     ss >> cmd;
     if (cmd == "q") {
-      simulator_->scheduleCommand({Simulator::Command::Type::QUIT, {}, nullptr});
+      simulator_->scheduleCommand({Simulator::Cmd::Type::QUIT, {}, nullptr});
       return true;
     } else if (cmd == "c") {
-      simulator_->scheduleCommand({Simulator::Command::Type::RUN, {}, nullptr});
+      simulator_->scheduleCommand({Simulator::Cmd::Type::RUN, {}, nullptr});
     } else if (cmd == "b") {
       uint32_t addr;
       if (!(ss >> addr)) {
@@ -104,10 +104,10 @@ bool CommandLine::processCmdLine(const std::string& line) {
       } else {
         printf("Set breakpoint at %u\n", addr);
       }
-      simulator_->scheduleCommand({Simulator::Command::Type::SET_BREAKPOINT, {addr}, receiver_});
+      simulator_->scheduleCommand({Simulator::Cmd::Type::SET_BREAKPOINT, {addr}, receiver_});
     } else if (cmd != ";") {
-      simulator_->scheduleCommand({Simulator::Command::Type::STEP, {}, receiver_});
-      simulator_->scheduleCommand({Simulator::Command::Type::GET_CPU_STATE, {}, receiver_});
+      simulator_->scheduleCommand({Simulator::Cmd::Type::STEP, {}, receiver_});
+      simulator_->scheduleCommand({Simulator::Cmd::Type::GET_CPU_STATE, {}, receiver_});
       const auto& state = std::get<Simulator::CpuStateMessage>(receiver_->yield());
       printCpuState(state);
     }

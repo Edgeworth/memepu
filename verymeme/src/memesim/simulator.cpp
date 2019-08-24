@@ -71,24 +71,24 @@ void Simulator::run() {
   while (true) {
     step = false;
 
-    std::optional<Command> cmd;
+    std::optional<Cmd> cmd;
     cmd = running ? command_queue_.tryYield() : command_queue_.yield();
 
     if (cmd) {
       switch (cmd->type) {
-      case Command::Type::RUN: running = true; break;
-      case Command::Type::STOP: running = false; break;
-      case Command::Type::STEP: step = true; break;
-      case Command::Type::SET_BREAKPOINT: breakpoints_.insert(cmd->args.i32_0); break;
-      case Command::Type::QUIT: return;
-      case Command::Type::GET_CPU_STATE: cmd->receiver->push(generateCpuState()); break;
-      case Command::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
-      case Command::Type::SET_MOUSE:
+      case Cmd::Type::RUN: running = true; break;
+      case Cmd::Type::STOP: running = false; break;
+      case Cmd::Type::STEP: step = true; break;
+      case Cmd::Type::SET_BREAKPOINT: breakpoints_.insert(cmd->args.i32_0); break;
+      case Cmd::Type::QUIT: return;
+      case Cmd::Type::GET_CPU_STATE: cmd->receiver->push(generateCpuState()); break;
+      case Cmd::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
+      case Cmd::Type::SET_MOUSE:
         // TODO: use constant for this memory mapped address.
-        kpu_.kpu->mmu->ram->mem[0x10] =
+        kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE_BASE / memeware::WORD_SZ] =
             (cmd->args.i32_0 & 0xFF) | ((cmd->args.i32_1 << 8) & 0xFF00);
         break;
-      case Command::Type::SET_KBD: break;
+      case Cmd::Type::SET_KBD: break;
       }
     }
     if (running && breakpoints_.count(getRegister(memeware::PC_REG))) {
@@ -133,7 +133,7 @@ Simulator::CpuStateMessage Simulator::generateCpuState() {
   msg.n_rst = uint32_t(kpu_.kpu->n_rst);
   msg.mnemonic = memeasm::Assembler::generateMnemonicString(
       convertToString(kpu_.kpu->control->microcode->mnemonic), kpu_.kpu->opword_bits);
-  for (int i = 0; i < NUM_REG; ++i) msg.regs[i] = getRegister(i);
+  for (int i = 0; i < memeware::NUM_REG; ++i) msg.regs[i] = getRegister(i);
 
   return msg;
 }
@@ -155,7 +155,7 @@ Simulator::VgaStateMessage Simulator::generateVgaState() {
   return msg;
 }
 
-void Simulator::scheduleCommand(const Simulator::Command& cmd) { command_queue_.push(cmd); }
+void Simulator::scheduleCommand(const Simulator::Cmd& cmd) { command_queue_.push(cmd); }
 
 uint32_t Simulator::getRegister(int reg) const {
   return uint32_t(kpu_.kpu->regs->registers->mem[reg]);

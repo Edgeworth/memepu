@@ -49,11 +49,10 @@ int main(int argc, char* argv[]) {
   memesim::CommandLine cmd(&simulator);
   memesim::Display display(&simulator);
 
-  std::thread simulator_thread(&memesim::Simulator::run, &simulator);
+  std::thread cmd_thread(&memesim::CommandLine::run, &cmd, initial_cmd);
   std::thread display_thread(&memesim::Display::run, &display);
 
-  cmd.run(initial_cmd);
-
-  display_thread.join();
-  simulator_thread.join();
+  cmd_thread.detach();
+  display_thread.detach();
+  simulator.run();
 }

@@ -20,6 +20,15 @@ else()
   message(WARNING "IPO is not supported: ${output}")
 endif()
 
+# Gold linker.
+include(CheckCCompilerFlag)
+check_c_compiler_flag("-fuse-ld=gold" HAVE_GOLD)
+if(HAVE_GOLD)
+  message("Using gold linker")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=gold")
+endif()
+
 # Find required packages.
 find_package(Boost REQUIRED program_options stacktrace_backtrace)
 find_package(Verilator REQUIRED)
