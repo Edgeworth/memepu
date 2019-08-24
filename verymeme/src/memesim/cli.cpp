@@ -75,30 +75,46 @@ void printTable(const std::vector<std::pair<std::string, std::string>>& table) {
 CommandLine::CommandLine(Simulator* simulator)
     : simulator_(simulator), receiver_(new ConcurrentQueue<Simulator::Response>()) {}
 
-void CommandLine::run() {
+void CommandLine::run(const std::string& initial_cmd) {
+  if (!initial_cmd.empty()) processCmdLine(initial_cmd);
+
   while (true) {
-    std::string cmd;
+    std::string line;
     std::cout << "> ";
-    std::getline(std::cin, cmd);
-    std::stringstream ss(cmd);
+    std::getline(std::cin, line);
+    if (processCmdLine(line)) break;
+  }
+}
+
+bool CommandLine::processCmdLine(const std::string& line) {
+  std::stringstream ss(line);
+  std::string cmd;
+  do {
     ss >> cmd;
     if (cmd == "q") {
       simulator_->scheduleCommand({Simulator::Command::Type::QUIT, {}, nullptr});
-      break;
+      return true;
     } else if (cmd == "c") {
       simulator_->scheduleCommand({Simulator::Command::Type::RUN, {}, nullptr});
     } else if (cmd == "b") {
       uint32_t addr;
-      ss >> addr;
+      if (!(ss >> addr)) {
+        printf("Set breakpoint missing address.\n");
+        return false;
+      } else {
+        printf("Set breakpoint at %u\n", addr);
+      }
       simulator_->scheduleCommand({Simulator::Command::Type::SET_BREAKPOINT, {addr}, receiver_});
-    } else {
+    } else if (cmd != ";") {
       simulator_->scheduleCommand({Simulator::Command::Type::STEP, {}, receiver_});
       simulator_->scheduleCommand({Simulator::Command::Type::GET_CPU_STATE, {}, receiver_});
       const auto& state = std::get<Simulator::CpuStateMessage>(receiver_->yield());
       printCpuState(state);
     }
-  }
+  } while (ss >> cmd);
+  return false;
 }
+
 
 void CommandLine::printCpuState(const Simulator::CpuStateMessage& state) {
   const std::vector<std::pair<std::string, std::string>> table = {
