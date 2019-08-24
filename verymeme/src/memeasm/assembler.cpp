@@ -4,6 +4,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <cinttypes>
 
+#include "memeware/constants.h"
 #include "verymeme/string_util.h"
 
 namespace memeasm {
@@ -13,8 +14,6 @@ namespace {
 const char* PREAMBLE_RX = "\\s*";
 const char* POSTAMBLE_RX = "\\s*(;.*)?";
 const char* LABEL_RX = "([0-9a-zA-Z]+):";
-
-constexpr int OPWORD_SIZE = 4;
 
 std::vector<std::string> getLines(const std::string& data) {
   std::stringstream ss(data);
@@ -93,7 +92,7 @@ void Assembler::assembleInternal(bool first_pass) {
       if (first_pass) {
         verify_expr(labels_.count(label) == 0, "%d: duplicate label definition of %s", lnum + 1,
             label.c_str());
-        labels_[label] = int(bin_.size()) * OPWORD_SIZE;
+        labels_[label] = int(bin_.size()) * memeware::OPWORD_SIZE;
       }
       continue;
     }
@@ -141,7 +140,7 @@ uint32_t Assembler::convertMnemonicStringToOpword(
             verify_expr(
                 labels_.count(label), "%d: missing label definition of %s", lnum, label.c_str());
             if (mnemonic.imm_relative)
-              imm = labels_[label] - bin_.size() * OPWORD_SIZE - OPWORD_SIZE;
+              imm = labels_[label] - bin_.size() * memeware::OPWORD_SIZE - memeware::OPWORD_SIZE;
             else
               imm = labels_[label];
           }

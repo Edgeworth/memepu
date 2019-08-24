@@ -11,7 +11,7 @@ module microcode(
   logic [8*20:0] mnemonic /*verilator public*/;
   logic imm_relative /*verilator public*/;
 
-  `ifdef HEXFILE
+  `ifdef HEXFILEA
   // TODO: change to specific lut chip
   lut#(.DEPTH(12), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
     .ADDR(ADDR), .OUT_DATA(OUT),
@@ -102,6 +102,8 @@ module microcode(
 
   localparam REG_PC=31; // r31 is program counter.
 
+  // TODO: Can change to 4 bit microop counter?
+
   `define SET_MNEMONIC(s) `ifdef verilator mnemonic = $size(mnemonic)'(s); `endif
   // Set opcode to fetch and reset micro-op counter.
   `define GO_FETCH() \
@@ -141,8 +143,8 @@ module microcode(
             out_plane = OUT_MMU;
             in_plane = IN_OPWORD;
           end
-          2: begin // Write 4 into TMP1 for incrementing the program counter. TODO(optimization): Faster increment.
-            ctrl_data = 4;
+          2: begin // Write 1 into TMP1 for incrementing the program counter.
+            ctrl_data = 1;
             reg_sel = REG_SEL_CONTROL;
             out_plane = OUT_CTRL_DATA;
             in_plane = IN_TMP1;
@@ -202,97 +204,6 @@ module microcode(
             in_plane = IN_MMU;
           end
           2: `GO_FETCH()
-        endcase
-      end
-      // TODO: Write formal verification for instructions.
-      OP_SB: begin  // TODO: use offset
-        `SET_MNEMONIC("sb [r%1%,%4$x],r%2%")
-        case (microop_count)
-          0: begin  // Write first register (dst) into tmp0.
-            reg_sel = REG_SEL_OPWORD0;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP0;
-          end
-          1: begin  // Load 3 into TMP1 to shift address.
-            ctrl_data = 3;  // Shifter only takes 5 bits, so no need to mask address.
-            out_plane = OUT_CTRL_DATA;
-            in_plane = IN_TMP1;
-          end
-          2: begin  // Multiply by 8 (<<3) to get shift amounts, write into TMP1.
-            out_plane = OUT_SHIFTER;
-            in_plane = IN_TMP1;
-            shifter_plane = common::SHIFTER_LEFT;
-          end
-          3: begin  // Load val to write from reg.
-            reg_sel = REG_SEL_OPWORD1;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP0;
-          end
-          4: begin  // Shift val and write it to a scratch register.
-            ctrl_data = 30;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_SHIFTER;
-            in_plane = IN_REG;
-            shifter_plane = common::SHIFTER_LEFT;
-          end
-          5: begin  // Build mask - load 0xff into TMP0.
-            ctrl_data = 'hff;
-            out_plane = OUT_CTRL_DATA;
-            in_plane = IN_TMP0;
-          end
-          6: begin  // Shift mask and write into TMP1.
-            out_plane = OUT_SHIFTER;
-            in_plane = IN_TMP1;
-            shifter_plane = common::SHIFTER_LEFT;
-          end
-          7: begin  // Load address again
-            reg_sel = REG_SEL_OPWORD0;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP0;
-          end
-          8: begin  // Read value from memory.
-            out_plane = OUT_MMU;
-            in_plane = IN_TMP0;
-          end
-          9: begin  // Mask out byte and write into scratch register.
-            ctrl_data = 29;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_MLU;
-            in_plane = IN_REG;
-            mlu_op = common::MLU_ANOT;
-          end
-          10: begin  // Load value from scratch register.
-            ctrl_data = 30;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP0;
-          end
-          11: begin  // Mask correct byte from value and write into TMP0.
-            out_plane = OUT_MLU;
-            in_plane = IN_TMP0;
-            mlu_op = common::MLU_AND;
-          end
-          12: begin  // Load masked address from scratch register and write into TMP1.
-            ctrl_data = 29;
-            reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP1;
-          end
-          13: begin  // OR values to produce final value
-            out_plane = OUT_MLU;
-            in_plane = IN_TMP1;
-            mlu_op = common::MLU_OR;
-          end
-          14: begin  // Load address to write again
-            reg_sel = REG_SEL_OPWORD0;
-            out_plane = OUT_REG;
-            in_plane = IN_TMP0;
-          end
-          15: begin  // Write final value into address
-            out_plane = OUT_TMP1;
-            in_plane = IN_MMU;
-          end
-          16: `GO_FETCH()  // TODO: optimise one more microop away
         endcase
       end
       OP_ADDU: begin
