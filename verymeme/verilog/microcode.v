@@ -60,7 +60,7 @@ module microcode(
   localparam OP_BEQ=8;  // BEQ rA,rB,I - if rA == rB: r31 = r31 + signext(I)
   localparam OP_LW=9;  // LW rD, [rS + signext(I)] - load 32-bit
   localparam OP_SLL=10;  // SLL rD,rS,I - rD = rS << (I & 0x1F)
-  localparam OP_SB=11;  // SB [rD + signext(I)], rS - store 8-bit
+  localparam OP_BNE=11;  // BNE rA,rB,I - if rA != rB: r31 = r31 + signext(I)
 
   // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
   localparam OP_ADD3=4;  // ADD rD,rA,rB - rD = rA + rB
@@ -250,6 +250,56 @@ module microcode(
           end
           3: begin
             if (cond_var) begin  // If it was zero, load offset into tmp0 for sign extend.
+              out_plane = OUT_OPWORD_IMMEDIATE;
+              in_plane = IN_TMP0;
+            end else `GO_FETCH()  // Skip if it wasn't zero.
+          end
+          4: begin  // Set shift amount to zero. TODO: Remove this func to optimise?
+            out_plane = OUT_NONE;
+            in_plane = IN_TMP1;
+          end
+          5: begin  // Sign extend and write to TMP1.
+            shifter_plane = common::SHIFTER_SIGNEXT16;
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_TMP1;
+          end
+          6: begin  // Load PC into tmp0.
+            ctrl_data = REG_PC;
+            reg_sel = REG_SEL_CONTROL;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          7: begin  // Add offset and write back to program counter.
+            ctrl_data = REG_PC;
+            reg_sel = REG_SEL_CONTROL;
+            out_plane = OUT_MLU;
+            in_plane = IN_REG;
+            mlu_op = common::MLU_ADD;
+          end
+          8: `GO_FETCH()
+        endcase
+      end
+      OP_BNE: begin
+        `SET_MNEMONIC("bne r%1%,r%2%,%4$x")
+        imm_relative = 1'b1;
+        case (microop_count)
+          0: begin  // Load first register into TMP0
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Load second register into TMP1
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Subtract and observe the ZERO flag on the next microop.
+            mlu_op = common::MLU_SUB;
+            mlu_carry = 1;
+            cond_var_sel = COND_SEL_MLU_ZERO;
+          end
+          3: begin
+            if (!cond_var) begin  // If it was not zero, load offset into tmp0 for sign extend.
               out_plane = OUT_OPWORD_IMMEDIATE;
               in_plane = IN_TMP0;
             end else `GO_FETCH()  // Skip if it wasn't zero.

@@ -86,7 +86,7 @@ void Simulator::run() {
       case Cmd::Type::SET_MOUSE:
         // TODO: use constant for this memory mapped address.
         kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE_BASE] =
-            (cmd->args.i32_0 & 0xFF) | ((cmd->args.i32_1 << 8) & 0xFF00);
+            (cmd->args.i32_0 & 0xFFFF) | ((cmd->args.i32_1 << 16) & 0xFFFF0000);
         break;
       case Cmd::Type::SET_KBD: break;
       }
@@ -145,8 +145,8 @@ Simulator::VgaStateMessage Simulator::generateVgaState() {
   static_assert(sizeof(mem[0]) == sizeof(uint32_t), "wrong vga word size");
   static_assert(memeware::VGA_WIDTH % 4 == 0, "vga width not divisible by word size");
   static_assert(memeware::VGA_HEIGHT % 4 == 0, "vga height not divisible by word size");
-  static_assert(sizeof(mem) >= memeware::VGA_WIDTH * memeware::VGA_HEIGHT * sizeof(uint32_t),
-      "wrong size for vga memory");
+  static_assert(
+      sizeof(mem) >= memeware::VGA_WIDTH * memeware::VGA_HEIGHT / 4, "wrong size for vga memory");
   for (int i = 0; i < memeware::VGA_WIDTH * memeware::VGA_HEIGHT / 4; ++i) {
     msg.pixels[4 * i] = mem[i] & 0xFF;
     msg.pixels[4 * i + 1] = (mem[i] >> 8) & 0xFF;
