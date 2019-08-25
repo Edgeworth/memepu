@@ -176,13 +176,17 @@ module microcode(
             out_plane = OUT_OPWORD_IMMEDIATE;
             in_plane = IN_TMP0;
           end
-          1: begin  // Sign extend and write into the destination register.
+          1: begin  // Make sure to not shift
+            out_plane = OUT_NONE;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Sign extend and write into the destination register.
             reg_sel = REG_SEL_OPWORD0;
             out_plane = OUT_SHIFTER;
             shifter_plane = common::SHIFTER_SIGNEXT16;
             in_plane = IN_REG;
           end
-          2: `GO_FETCH()
+          3: `GO_FETCH()
         endcase
       end
       OP_LHU: begin
