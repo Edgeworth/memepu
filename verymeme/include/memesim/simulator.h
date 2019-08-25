@@ -37,7 +37,7 @@ public:
   };
 
   struct VgaStateMessage {
-    uint32_t pixels[memeware::VGA_HEIGHT * memeware::VGA_WIDTH];
+    uint8_t pixels[memeware::VGA_HEIGHT * memeware::VGA_WIDTH];
   };
 
   using Response = std::variant<CpuStateMessage, VgaStateMessage>;
