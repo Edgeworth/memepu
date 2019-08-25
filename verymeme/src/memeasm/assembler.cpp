@@ -23,7 +23,7 @@ std::vector<std::string> getLines(const std::string& data) {
     int last_idx = 0;
     while (last_idx < int(line.size()) && line[last_idx] != ';') last_idx++;  // Remove comments.
     const auto& s = trim(line.substr(0, last_idx), " \t\n");
-    if (!s.empty()) lines.push_back(s);
+    lines.push_back(s);  // Include blank lines so line numbers are accurate.
   }
   return lines;
 }
@@ -50,12 +50,13 @@ Assembler::Assembler(const std::string& model_json) {
         Parameter param;
         if (type == '%') {  // No format specifier, assume register.
           param = Parameter::REGISTER;
+          mnemonic_rx += "([0-9]+)";
         } else if (type == '$') {  // Format specifier, assume immediate and skip specifier.
           param = Parameter::IMMEDIATE;
+          mnemonic_rx += "([^r][^,]*)";
           i++;
         } else
           verify_expr(false, "unknown parameter type '%c'", type);
-        mnemonic_rx += "([0-9a-zA-Z]+)";
         mnemonic.params.push_back(param);
       } else {
         std::string escape = "";
@@ -85,6 +86,7 @@ void Assembler::assembleInternal(bool first_pass) {
 
   for (int lnum = 0; lnum < int(lines_.size()); ++lnum) {
     const std::string& line = lines_[lnum];
+    if (line.empty()) continue;
 
     std::smatch sm;
     if (std::regex_match(line, sm, label_rx)) {

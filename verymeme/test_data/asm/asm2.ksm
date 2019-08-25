@@ -12,14 +12,30 @@ lhu r1,0 ; r1 is color - black to initialise
 loop0:
   sw [r2,0],r1 ; set to black
   addu r2,r2,1
-  lw r1,[r3,0] ; grab mouse coords
   bne r2,r4,loop0 ; loop if filling screen
-  addu r2,r0,0 ; reset to vga base
-  lhu r31,loop0
 
 lhu r1,ff ; white
+; r2 = mouse y coord
+; r5 = mouse x coord
+; r6 = scratch
+; r7 = vga coords
+; r8 = x coord bottom 2 bits => shift amount
+; r9 = shifted color
+; r10 = prev vram value
 loop1:
   lw r2,[r3,0] ; grab mouse coords
-  add r2,r0,r2 ; compute vram addr
-  sw [r2,0],r1 ; store colour
+  and r5,r2,ffff ; grab mouse x coord
+  xor r2,r2,r5 ; mask out x coords
+  and r8,r5,3 ; grab bottom 2 bits
+  sll r8,r8,3 ; multiply by 8
+  srl r5,r5,2 ; divide by 4
+  srl r6,r2,a ; mouse y mul
+  add r7,r0,r5 ; add x coords
+  add r7,r7,r6 ; add y part
+  srl r6,r2,c ; mouse y mul
+  add r7,r7,r6 ; add y part
+  sll r9,r1,r8 ; shift by alignment
+  lw r10,[r7,0] ; load prev
+  or r10,r10,r9 ; or in
+  sw [r7,0],r10 ; store colour
   lhu r31,loop1
