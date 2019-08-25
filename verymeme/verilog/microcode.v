@@ -132,6 +132,8 @@ module microcode(
       end
       OP_FETCH: begin
         `SET_MNEMONIC("nop")
+        // TODO: Can optimise a bunch of stuff with a separate address bus and data bus +
+        // dual ported ram for registers.
         case (microop_count)
           0: begin  // Copy the program counter into TMP0 to access memory.
             ctrl_data = REG_PC;
@@ -143,7 +145,7 @@ module microcode(
             out_plane = OUT_MMU;
             in_plane = IN_OPWORD;
           end
-          2: begin // Write 1 into TMP1 for incrementing the program counter.
+          2: begin // Write 1 into TMP1 for incrementing the program counter. // TODO: optimise with specific increment instruction.
             ctrl_data = 1;
             reg_sel = REG_SEL_CONTROL;
             out_plane = OUT_CTRL_DATA;
@@ -252,8 +254,7 @@ module microcode(
               in_plane = IN_TMP0;
             end else `GO_FETCH()  // Skip if it wasn't zero.
           end
-          4: begin  // Set shift amount to zero.
-            // TODO(improvement): Shift by 2 bits since instructions must be 4 byte aligned.
+          4: begin  // Set shift amount to zero. TODO: Remove this func to optimise?
             out_plane = OUT_NONE;
             in_plane = IN_TMP1;
           end

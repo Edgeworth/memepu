@@ -142,11 +142,17 @@ Simulator::VgaStateMessage Simulator::generateVgaState() {
   VgaStateMessage msg = {};
 
   const auto& mem = kpu_.kpu->mmu->vga->vram0->mem;
-  static_assert(sizeof(mem[0]) == sizeof(uint32_t) &&
-          sizeof(mem) == memeware::VGA_WIDTH * memeware::VGA_HEIGHT * sizeof(uint32_t),
+  static_assert(sizeof(mem[0]) == sizeof(uint32_t), "wrong vga word size");
+  static_assert(memeware::VGA_WIDTH % 4 == 0, "vga width not divisible by word size");
+  static_assert(memeware::VGA_HEIGHT % 4 == 0, "vga height not divisible by word size");
+  static_assert(sizeof(mem) >= memeware::VGA_WIDTH * memeware::VGA_HEIGHT * sizeof(uint32_t),
       "wrong size for vga memory");
-  for (int i = 0; i < memeware::VGA_WIDTH * memeware::VGA_HEIGHT; ++i)
-    msg.pixels[i] = uint32_t(mem[i]);
+  for (int i = 0; i < memeware::VGA_WIDTH * memeware::VGA_HEIGHT / 4; ++i) {
+    msg.pixels[4 * i] = mem[i] & 0xFF;
+    msg.pixels[4 * i + 1] = (mem[i] >> 8) & 0xFF;
+    msg.pixels[4 * i + 2] = (mem[i] >> 16) & 0xFF;
+    msg.pixels[4 * i + 3] = (mem[i] >> 24) & 0xFF;
+  }
 
   return msg;
 }
