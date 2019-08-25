@@ -1,0 +1,5 @@
+lhu r0, b7b7; r1 is color - black to initialise
+sll r1,r0,10
+sll r1,r1,2
+sll r1,r1,2
+sll r1,r1,2
