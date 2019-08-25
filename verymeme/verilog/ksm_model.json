@@ -54,4 +54,9 @@
     "mnemonic": "sll r%1%,r%2%,%4$x",
     "imm_relative": "0"
 }
+,{
+    "opcode": "11",
+    "mnemonic": "bne r%1%,r%2%,%4$x",
+    "imm_relative": "1"
+}
 ]
