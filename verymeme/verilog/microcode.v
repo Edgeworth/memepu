@@ -61,10 +61,14 @@ module microcode(
   localparam OP_LW=9;  // LW rD, [rS + signext(I)] - load 32-bit
   localparam OP_SLL=10;  // SLL rD,rS,I - rD = rS << (I & 0x1F)
   localparam OP_BNE=11;  // BNE rA,rB,I - if rA != rB: r31 = r31 + signext(I)
+  localparam OP_AND=12;  // AND rD,rS,I - rD = rS & zeroext(I)
+  localparam OP_SRL=14;  // SRL rD,rS,I - rD = rS >> (I & 0x1F)
 
   // [Opcode 6][rD 5][rA 5][rB 5][unused 11]
   localparam OP_ADD3=4;  // ADD rD,rA,rB - rD = rA + rB
-  localparam OP_OR3=6;  // OR rD,rS,I - rD = rS | zeroext(I)
+  localparam OP_OR3=6;  // OR rD,rA,rB - rD = rA | rB
+  localparam OP_XOR3=13;  // XOR rD,rA,rB - rD = rA ^ rB
+  localparam OP_SLL3=15;  // SLL rD,rA,rB - rD = rA << (rB & 0x1F)
 
   localparam REG_SEL_OPWORD0=0;
   localparam REG_SEL_OPWORD1=1;
@@ -133,7 +137,7 @@ module microcode(
       OP_FETCH: begin
         `SET_MNEMONIC("nop")
         // TODO: Can optimise a bunch of stuff with a separate address bus and data bus +
-        // dual ported ram for registers.
+        // dual ported ram for registers. => maybe then can implement multiplication?
         case (microop_count)
           0: begin  // Copy the program counter into TMP0 to access memory.
             ctrl_data = REG_PC;
@@ -225,6 +229,27 @@ module microcode(
             out_plane = OUT_MLU;
             in_plane = IN_REG;
             mlu_op = common::MLU_ADD;
+          end
+          3: `GO_FETCH()
+        endcase
+      end
+      OP_AND: begin
+        `SET_MNEMONIC("and r%1%,r%2%,%4$x")
+        case (microop_count)
+          0: begin  // Write second reg into tmp0.
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Write immediate value into tmp1.
+            out_plane = OUT_OPWORD_IMMEDIATE;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Write add result into first reg.
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_MLU;
+            in_plane = IN_REG;
+            mlu_op = common::MLU_AND;
           end
           3: `GO_FETCH()
         endcase
@@ -373,6 +398,50 @@ module microcode(
           3: `GO_FETCH()
         endcase
       end
+      OP_XOR3: begin
+        `SET_MNEMONIC("xor r%1%,r%2%,r%3%")
+        case (microop_count)
+          0: begin  // Write second reg into tmp0.
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Write third reg into tmp1.
+            reg_sel = REG_SEL_OPWORD2;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Write add result into first reg.
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_MLU;
+            in_plane = IN_REG;
+            mlu_op = common::MLU_XOR;
+          end
+          3: `GO_FETCH()
+        endcase
+      end
+      OP_SLL3: begin
+        `SET_MNEMONIC("sll r%1%,r%2%,r%3%")
+        case (microop_count)
+          0: begin  // Write second reg into tmp0.
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Write third reg into tmp1.
+            reg_sel = REG_SEL_OPWORD2;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Write add result into first reg.
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_REG;
+            shifter_plane = common::SHIFTER_LEFT;
+          end
+          3: `GO_FETCH()
+        endcase
+      end
       OP_LW: begin  // TODO: use offset
         `SET_MNEMONIC("lw r%1%,[r%2%,%4$x]")
         case (microop_count)
@@ -406,6 +475,27 @@ module microcode(
             out_plane = OUT_SHIFTER;
             in_plane = IN_REG;
             shifter_plane = common::SHIFTER_LEFT;
+          end
+          3: `GO_FETCH()
+        endcase
+      end
+      OP_SRL: begin
+        `SET_MNEMONIC("srl r%1%,r%2%,%4$x")
+        case (microop_count)
+          0: begin  // Write second reg into tmp0.
+            reg_sel = REG_SEL_OPWORD1;
+            out_plane = OUT_REG;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Write immediate value into tmp1.
+            out_plane = OUT_OPWORD_IMMEDIATE;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Write add result into first reg.
+            reg_sel = REG_SEL_OPWORD0;
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_REG;
+            shifter_plane = common::SHIFTER_RIGHT;
           end
           3: `GO_FETCH()
         endcase

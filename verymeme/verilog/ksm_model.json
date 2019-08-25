@@ -59,4 +59,24 @@
     "mnemonic": "bne r%1%,r%2%,%4$x",
     "imm_relative": "1"
 }
+,{
+    "opcode": "12",
+    "mnemonic": "and r%1%,r%2%,%4$x",
+    "imm_relative": "0"
+}
+,{
+    "opcode": "13",
+    "mnemonic": "xor r%1%,r%2%,r%3%",
+    "imm_relative": "0"
+}
+,{
+    "opcode": "14",
+    "mnemonic": "srl r%1%,r%2%,%4$x",
+    "imm_relative": "0"
+}
+,{
+    "opcode": "15",
+    "mnemonic": "sll r%1%,r%2%,r%3%",
+    "imm_relative": "0"
+}
 ]
