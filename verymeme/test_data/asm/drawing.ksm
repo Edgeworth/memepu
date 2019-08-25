@@ -1,4 +1,4 @@
-; drawing application
+; drawing application 2019/08/25
 ; r0 = vga base
 ; r1 = colour
 ; r2 = vga cur addr
@@ -9,10 +9,8 @@ addu r0,r0,1 ; r0 is vram addr
 addu r2,r0,0 ; r2=r0
 addu r4,r0,4b00 ; finish for clear to black
 lhu r3,ffff ; r3 is mouse mmap io addr
-lhu r1, 9292; r1 is color - black to initialise
+lhu r1,0 ; r1 is color - black to initialise
 loop0:
-  sll r5,r1,10
-  or r1,r1,r5
   sw [r2,0],r1 ; set to black
   addu r2,r2,1
   bne r2,r4,loop0 ; loop if filling screen

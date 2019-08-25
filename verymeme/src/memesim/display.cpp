@@ -33,8 +33,9 @@ void Display::run() {
     for (int r = 0; r < VGA_HEIGHT; ++r) {
       for (int c = 0; c < VGA_WIDTH; ++c) {
         uint8_t val = state.pixels[r * memeware::VGA_WIDTH + c];
-        auto col = sf::Color(
-            uint8_t(val >> 5u) * 36, uint8_t((val & 0x1cu) >> 2u) * 36, uint8_t(val & 0x3u) * 63);
+        auto col = sf::Color(std::clamp(int(val >> 5u) * 37, 0, 255),
+            std::clamp(int((val & 0x1cu) >> 2u) * 37, 0, 255),
+            std::clamp(int(val & 0x3u) * 85, 0, 255));
         img.setPixel(c, r, col);
       }
     }
