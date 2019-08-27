@@ -8,6 +8,8 @@
 [6] 2019/09/27(金)～2019/10/03(木): ページング＋仮想アドレス変換
 ページフォルト
 
+switch to multiple data busses for optimisation?
+
 #### memecad
 - Check TODOs in codebase
 - Can somehow use cell libraries instead of memecad?

@@ -29,6 +29,7 @@ module shifter(
   wire [31:0] pre_reversed = {IN[0], IN[1], IN[2], IN[3], IN[4], IN[5], IN[6], IN[7], IN[8], IN[9],
       IN[10], IN[11], IN[12], IN[13], IN[14], IN[15], IN[16], IN[17], IN[18], IN[19], IN[20],
       IN[21], IN[22], IN[23], IN[24], IN[25], IN[26], IN[27], IN[28], IN[29], IN[30], IN[31]};
+  // TODO(improvement): Split sign extend into something else so don't have to set shift value to 0?
   wire [31:0] pre_signext8 = {{24{IN[7]}}, IN[7:0]};
   wire [31:0] pre_signext16 = {{16{IN[15]}}, IN[15:0]};
   buffer_mux4x32_decoded pre_step_mux(.A(IN), .B(pre_reversed), .C(pre_signext8), .D(pre_signext16),

@@ -1,5 +1,37 @@
-lhu r0, b7b7; r1 is color - black to initialise
-sll r1,r0,10
-sll r1,r1,2
-sll r1,r1,2
-sll r1,r1,2
+; drawing application
+; r0 = vga base
+; r1 = colour
+; r2 = vga cur addr
+; r3 = mouse mmio addr
+; r4 = vga top
+lhu r0,ffff
+addu r0,r0,1 ; r0 is vram addr
+addu r2,r0,0 ; r2=r0
+addu r4,r0,4b00 ; finish for clear to black
+lhu r3,ffff ; r3 is mouse mmap io addr
+lhu r1, 0; r1 is color - black to initialise
+loop0:
+  sw [r2,0],r1 ; set to black
+  addu r2,r2,1 ; increment
+  bne r2,r4,loop0 ; loop if filling screen
+
+; r4 = vga addr to use
+addu r2,r0,0 ; reset vram addr
+xor r5,r5,r5 ; set r5 = 0
+loop1:
+  addu r4,r2,0 ; set
+  lw r1,[r5,bitmap] ; load
+  sw [r4,0],r1 ; write out
+  lw r1,[r5,bitmap + 1] ; load
+  sw [r4,50],r1 ; write out
+  lw r1,[r5,bitmap + 2] ; load
+  sw [r4,a0],r1 ; write out
+  lw r1,[r5,bitmap + 3] ; load
+  sw [r4,f0],r1 ; write out
+  lhu r31,loop1
+
+bitmap:
+dw 00ff0000
+dw ff00ff00
+dw ffffff00
+dw ff00ff00
