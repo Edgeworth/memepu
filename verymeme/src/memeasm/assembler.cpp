@@ -14,6 +14,7 @@ namespace {
 const char* PREAMBLE_RX = "\\s*";
 const char* POSTAMBLE_RX = "\\s*(;.*)?";
 const char* LABEL_RX = "([0-9a-zA-Z]+):";
+const char* LABEL_REF_RX = "([0-9a-zA-Z]+)\\s*([+]\\s*(\\d+))?";
 
 std::vector<std::string> getLines(const std::string& data) {
   std::stringstream ss(data);
@@ -68,6 +69,13 @@ Assembler::Assembler(const std::string& model_json) {
     mnemonic.rx = std::regex(mnemonic_rx);
     mnemonics_.push_back(mnemonic);
   }
+
+  // Add data word mnemonic:
+  Mnemonic dw = {};
+  dw.opcode = 0;  // Set to zero so it doesn't affect data when OR'd together.
+  dw.rx = std::regex(PREAMBLE_RX + std::string("dw\\s+([0-9a-fA-F]+)") + POSTAMBLE_RX);
+  dw.params.push_back(Parameter::DATA);
+  mnemonics_.push_back(dw);
 }
 
 std::vector<uint32_t> Assembler::assemble(const std::string& data) {
@@ -90,12 +98,7 @@ void Assembler::assembleInternal(bool first_pass) {
 
     std::smatch sm;
     if (std::regex_match(line, sm, label_rx)) {
-      const auto& label = sm[1].str();
-      if (first_pass) {
-        verify_expr(labels_.count(label) == 0, "%d: duplicate label definition of %s", lnum + 1,
-            label.c_str());
-        labels_[label] = int(bin_.size()) * memeware::OPWORD_SIZE;
-      }
+      resolveLabel(sm[1].str(), lnum + 1, first_pass, false);
       continue;
     }
 
@@ -133,18 +136,12 @@ uint32_t Assembler::convertMnemonicStringToOpword(
         break;
       }
       case Parameter::IMMEDIATE: {
-        auto imm = convertFromHex(pstr);
+        int64_t imm = convertFromHex(pstr);
         if (imm == INT64_MIN) {
           if (first_pass) {
             imm = 0;  // Placeholder value.
           } else {
-            const auto& label = pstr;
-            verify_expr(
-                labels_.count(label), "%d: missing label definition of %s", lnum, label.c_str());
-            if (mnemonic.imm_relative)
-              imm = labels_[label] - bin_.size() * memeware::OPWORD_SIZE - memeware::OPWORD_SIZE;
-            else
-              imm = labels_[label];
+            imm = resolveLabel(pstr, lnum, first_pass, mnemonic.imm_relative);
           }
         }
         verify_expr(imm < 0 ? int16_t(imm) == imm : uint16_t(imm) == imm,
@@ -152,11 +149,38 @@ uint32_t Assembler::convertMnemonicStringToOpword(
         opword |= uint32_t(imm) << 16u;
         break;
       }
+      case Parameter::DATA: opword |= uint32_t(convertFromHex(pstr)); break;
       }
     }
     return opword;
   }
   verify_expr(false, "%d: unable to parse %s", lnum, line.c_str());
+}
+
+int64_t Assembler::resolveLabel(
+    const std::string& lstr, int lnum, bool first_pass, bool relative) {
+  std::regex rx(LABEL_REF_RX);
+  std::smatch sm;
+  verify_expr(std::regex_match(lstr, sm, rx), "%d: invalid label %s", lnum, lstr.c_str());
+
+  const auto& label = sm[1].str();
+  if (first_pass) {  // Defining labels in first pass.
+    verify_expr(
+        labels_.count(label) == 0, "%d: duplicate label definition of %s", lnum + 1, label.c_str());
+    labels_[label] = int(bin_.size()) * memeware::OPWORD_SIZE;
+    return 0;
+  }
+
+  // Referencing labels in second pass.
+  verify_expr(labels_.count(label), "%d: missing label definition of %s", lnum, label.c_str());
+  int64_t addr = labels_[label];
+  if (sm[2].matched) {
+    // If we have computation for offset, do it.
+    addr += convertFromInteger(sm[3].str());
+  }
+  if (relative)
+    return addr - bin_.size() * memeware::OPWORD_SIZE - memeware::OPWORD_SIZE;
+  return addr;
 }
 
 }  // namespace memeasm

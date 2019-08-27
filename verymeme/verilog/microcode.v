@@ -200,20 +200,39 @@ module microcode(
           1: `GO_FETCH()
         endcase
       end
-      OP_SW: begin  // TODO: use offset
+      OP_SW: begin
         `SET_MNEMONIC("sw [r%1%,%4$x],r%2%")
         case (microop_count)
-          0: begin  // Write first register (dst) into tmp0.
+          0: begin  // Load offset into TMP0.
+            out_plane = OUT_OPWORD_IMMEDIATE;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Load 0 into TMP1.
+            ctrl_data = 0;
+            out_plane = OUT_CTRL_DATA;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Sign extend and write into tmp1
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_TMP1;
+            shifter_plane = common::SHIFTER_SIGNEXT16;
+          end
+          3: begin  // Write first register (dst) into tmp0.
             reg_sel = REG_SEL_OPWORD0;
             out_plane = OUT_REG;
             in_plane = IN_TMP0;
           end
-          1: begin  // Write second register value into memory.
+          4: begin  // Add offset.
+            out_plane = OUT_MLU;
+            in_plane = IN_TMP0;
+            mlu_op = common::MLU_ADD;
+          end
+          5: begin  // Write second register value into memory.
             reg_sel = REG_SEL_OPWORD1;
             out_plane = OUT_REG;
             in_plane = IN_MMU;
           end
-          2: `GO_FETCH()
+          6: `GO_FETCH()
         endcase
       end
       OP_ADDU: begin
@@ -446,20 +465,39 @@ module microcode(
           3: `GO_FETCH()
         endcase
       end
-      OP_LW: begin  // TODO: use offset
+      OP_LW: begin
         `SET_MNEMONIC("lw r%1%,[r%2%,%4$x]")
         case (microop_count)
-          0: begin  // Write second register (src) into tmp0.
+          0: begin  // Load offset into TMP0.
+            out_plane = OUT_OPWORD_IMMEDIATE;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Load 0 into TMP1.
+            ctrl_data = 0;
+            out_plane = OUT_CTRL_DATA;
+            in_plane = IN_TMP1;
+          end
+          2: begin  // Sign extend and write into tmp1
+            out_plane = OUT_SHIFTER;
+            in_plane = IN_TMP1;
+            shifter_plane = common::SHIFTER_SIGNEXT16;
+          end
+          3: begin  // Write second register (src) into tmp0.
             reg_sel = REG_SEL_OPWORD1;
             out_plane = OUT_REG;
             in_plane = IN_TMP0;
           end
-          1: begin  // Read the value from memory into the first (dst) register.
+          4: begin  // Add offset.
+            out_plane = OUT_MLU;
+            in_plane = IN_TMP0;
+            mlu_op = common::MLU_ADD;
+          end
+          5: begin  // Read the value from memory into the first (dst) register.
             reg_sel = REG_SEL_OPWORD0;
             out_plane = OUT_MMU;
             in_plane = IN_REG;
           end
-          2: `GO_FETCH()
+          6: `GO_FETCH()
         endcase
       end
       OP_SLL: begin
