@@ -96,6 +96,8 @@ bool CommandLine::processCmdLine(const std::string& line) {
       return true;
     } else if (cmd == "c") {
       simulator_->scheduleCommand({Simulator::Cmd::Type::RUN, {}, nullptr});
+    } else if (cmd == "s") {
+      simulator_->scheduleCommand({Simulator::Cmd::Type::STOP, {}, nullptr});
     } else if (cmd == "b") {
       uint32_t addr;
       if (!(ss >> addr)) {
@@ -140,7 +142,7 @@ void CommandLine::printCpuState(const Simulator::CpuStateMessage& state) {
       {"asm", state.mnemonic},
   };
   printTable(table);
-  printf("%s\n", prettyPrintNumbers(hexdump(state.regs, 8)).c_str());
+  printf("%s\n", prettyPrintNumbers(hexdump(state.regs)).c_str());
 }
 
 }  // namespace memesim
