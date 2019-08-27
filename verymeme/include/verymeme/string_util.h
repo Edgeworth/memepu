@@ -43,17 +43,19 @@ std::istream& inputEnum(
 }
 
 template <typename T>
-std::string hexdump(const std::vector<T>& input, int width = 40) {
+std::string hexdump(const std::vector<T>& input, int width = 80) {
   static_assert(sizeof(T) <= sizeof(uint64_t), "input type too large");
   std::stringstream stream;
   int count = 0;
   for (auto c : input) {
     stream << std::hex << std::setw(2 * sizeof(T)) << std::setfill('0') << uint64_t(c);
-    if (++count == width) {
+    count += 2 * sizeof(T);
+    if (count >= width) {
       stream << "\n";
       count = 0;
     } else {
       stream << " ";
+      ++count;
     }
   }
   if (count) stream << "\n";
@@ -61,7 +63,7 @@ std::string hexdump(const std::vector<T>& input, int width = 40) {
 }
 
 template <typename T, std::size_t N>
-std::string hexdump(const T (&input)[N], int width = 40) {
+std::string hexdump(const T (&input)[N], int width = 80) {
   return hexdump(std::vector<T>(input, input + N), width);
 }
 

@@ -13,8 +13,8 @@ namespace {
 
 const char* PREAMBLE_RX = "\\s*";
 const char* POSTAMBLE_RX = "\\s*(;.*)?";
-const char* LABEL_RX = "([0-9a-zA-Z]+):";
-const char* LABEL_REF_RX = "([0-9a-zA-Z]+)\\s*([+]\\s*(\\d+))?";
+const char* LABEL_RX = "([0-9a-zA-Z_]+):";
+const char* LABEL_REF_RX = "([0-9a-zA-Z_]+)\\s*([+]\\s*(\\d+))?";
 
 std::vector<std::string> getLines(const std::string& data) {
   std::stringstream ss(data);

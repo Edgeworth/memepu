@@ -91,13 +91,13 @@ void Simulator::run() {
       case Cmd::Type::SET_KBD: break;
       }
     }
-    if (running && breakpoints_.count(getRegister(memeware::PC_REG))) {
-      printf("Breakpoint at %u.\n", getRegister(memeware::PC_REG));
-      running = false;
-    }
     if (running || step) {
       clockKpu(kpu_);
       cycle_count++;
+    }
+    if (running && breakpoints_.count(getRegister(memeware::PC_REG))) {
+      printf("Breakpoint at %u.\n", getRegister(memeware::PC_REG));
+      running = false;
     }
     int64_t dur = duration_cast<milliseconds>(steady_clock::now() - time).count();
     if (running && dur > PRINT_SPEED_MS) {

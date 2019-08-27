@@ -18,20 +18,561 @@ loop0:
 ; r4 = vga addr to use
 addu r2,r0,0 ; reset vram addr
 xor r5,r5,r5 ; set r5 = 0
+addu r4,r2,50
 loop1:
-  addu r4,r2,0 ; set
-  lw r1,[r5,bitmap] ; load
-  sw [r4,0],r1 ; write out
-  lw r1,[r5,bitmap + 1] ; load
-  sw [r4,50],r1 ; write out
-  lw r1,[r5,bitmap + 2] ; load
-  sw [r4,a0],r1 ; write out
-  lw r1,[r5,bitmap + 3] ; load
-  sw [r4,f0],r1 ; write out
-  lhu r31,loop1
+  lw r1,[r5,bitmapA] ; load
+  sw [r2,0],r1 ; write out
+  lw r1,[r5,bitmapA + 1] ; load
+  sw [r2,50],r1 ; write out
+  lw r1,[r5,bitmapA + 2] ; load
+  sw [r2,a0],r1 ; write out
+  lw r1,[r5,bitmapA + 3] ; load
+  sw [r2,f0],r1 ; write out
+  lw r1,[r5,bitmapA + 4] ; load
+  sw [r2,140],r1 ; write out
+  addu r2,r2,1 ; next
+  addu r5,r5,5
+  bne r2,r4,loop1
+end:
+lhu r31,end
 
-bitmap:
+bitmapspace:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapexclam:
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+dw 00000000
+dw 0000ff00
+bitmapquotedbl:
+dw 00ff00ff
+dw 00ff00ff
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapnumbersign:
+dw 00ff00ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff00ff
+bitmapdollar:
+dw 00ffff00
+dw 0000ffff
+dw 00ffff00
+dw 0000ffff
+dw 0000ff00
+bitmappercent:
+dw 000000ff
 dw 00ff0000
-dw ff00ff00
-dw ffffff00
-dw ff00ff00
+dw 0000ff00
+dw 000000ff
+dw 00ff0000
+bitmapampersand:
+dw 0000ffff
+dw 0000ffff
+dw 00ffffff
+dw 00ff00ff
+dw 00ffff00
+bitmapquotesingle:
+dw 0000ff00
+dw 0000ff00
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapparenleft:
+dw 00ff0000
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+dw 00ff0000
+bitmapparenright:
+dw 000000ff
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+dw 000000ff
+bitmapasterisk:
+dw 00ff00ff
+dw 0000ff00
+dw 00ff00ff
+dw 00000000
+dw 00000000
+bitmapplus:
+dw 00000000
+dw 0000ff00
+dw 00ffffff
+dw 0000ff00
+dw 00000000
+bitmapcomma:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 0000ff00
+dw 000000ff
+bitmaphyphen:
+dw 00000000
+dw 00000000
+dw 00ffffff
+dw 00000000
+dw 00000000
+bitmapperiod:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 0000ff00
+bitmapslash:
+dw 00ff0000
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 000000ff
+bitmapzero:
+dw 00ffff00
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ffff
+bitmapone:
+dw 0000ff00
+dw 0000ffff
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+bitmaptwo:
+dw 0000ffff
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 00ffffff
+bitmapthree:
+dw 0000ffff
+dw 00ff0000
+dw 0000ff00
+dw 00ff0000
+dw 0000ffff
+bitmapfour:
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff0000
+dw 00ff0000
+bitmapfive:
+dw 00ffffff
+dw 000000ff
+dw 0000ffff
+dw 00ff0000
+dw 0000ffff
+bitmapsix:
+dw 00ffff00
+dw 000000ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+bitmapseven:
+dw 00ffffff
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 000000ff
+bitmapeight:
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+bitmapnine:
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff0000
+dw 0000ffff
+bitmapcolon:
+dw 00000000
+dw 0000ff00
+dw 00000000
+dw 0000ff00
+dw 00000000
+bitmapsemicolon:
+dw 00000000
+dw 0000ff00
+dw 00000000
+dw 0000ff00
+dw 000000ff
+bitmapless:
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 0000ff00
+dw 00ff0000
+bitmapequal:
+dw 00000000
+dw 00ffffff
+dw 00000000
+dw 00ffffff
+dw 00000000
+bitmapgreater:
+dw 000000ff
+dw 0000ff00
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+bitmapquestion:
+dw 00ffffff
+dw 00ff0000
+dw 0000ff00
+dw 00000000
+dw 0000ff00
+bitmapat:
+dw 0000ff00
+dw 00ff00ff
+dw 00ffffff
+dw 000000ff
+dw 00ffff00
+bitmapA:
+dw 0000ff00
+dw 00ff00ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ff00ff
+bitmapB:
+dw 0000ffff
+dw 00ff00ff
+dw 0000ffff
+dw 00ff00ff
+dw 0000ffff
+bitmapC:
+dw 00ffff00
+dw 000000ff
+dw 000000ff
+dw 000000ff
+dw 00ffff00
+bitmapD:
+dw 0000ffff
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ffff
+bitmapE:
+dw 00ffffff
+dw 000000ff
+dw 00ffffff
+dw 000000ff
+dw 00ffffff
+bitmapF:
+dw 00ffffff
+dw 000000ff
+dw 00ffffff
+dw 000000ff
+dw 000000ff
+bitmapG:
+dw 00ffff00
+dw 000000ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ffff00
+bitmapH:
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ff00ff
+bitmapI:
+dw 00ffffff
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+dw 00ffffff
+bitmapJ:
+dw 00ff0000
+dw 00ff0000
+dw 00ff0000
+dw 00ff00ff
+dw 0000ff00
+bitmapK:
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ffff
+dw 00ff00ff
+dw 00ff00ff
+bitmapL:
+dw 000000ff
+dw 000000ff
+dw 000000ff
+dw 000000ff
+dw 00ffffff
+bitmapM:
+dw 00ff00ff
+dw 00ffffff
+dw 00ffffff
+dw 00ff00ff
+dw 00ff00ff
+bitmapN:
+dw 00ff00ff
+dw 00ffffff
+dw 00ffffff
+dw 00ffffff
+dw 00ff00ff
+bitmapO:
+dw 0000ff00
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ff00
+bitmapP:
+dw 0000ffff
+dw 00ff00ff
+dw 0000ffff
+dw 000000ff
+dw 000000ff
+bitmapQ:
+dw 0000ff00
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffffff
+dw 00ffff00
+bitmapR:
+dw 0000ffff
+dw 00ff00ff
+dw 00ffffff
+dw 0000ffff
+dw 00ff00ff
+bitmapS:
+dw 00ffff00
+dw 000000ff
+dw 0000ff00
+dw 00ff0000
+dw 0000ffff
+bitmapT:
+dw 00ffffff
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+bitmapU:
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffff00
+bitmapV:
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ff00
+dw 0000ff00
+bitmapW:
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffffff
+dw 00ffffff
+dw 00ff00ff
+bitmapX:
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ff00
+dw 00ff00ff
+dw 00ff00ff
+bitmapY:
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+bitmapZ:
+dw 00ffffff
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 00ffffff
+bitmapbracketleft:
+dw 00ffffff
+dw 000000ff
+dw 000000ff
+dw 000000ff
+dw 00ffffff
+bitmapbackslash:
+dw 00000000
+dw 000000ff
+dw 0000ff00
+dw 00ff0000
+dw 00000000
+bitmapbracketright:
+dw 00ffffff
+dw 00ff0000
+dw 00ff0000
+dw 00ff0000
+dw 00ffffff
+bitmapasciicircum:
+dw 0000ff00
+dw 00ff00ff
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapunderscore:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00ffffff
+bitmapgrave:
+dw 000000ff
+dw 0000ff00
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapa:
+dw 00000000
+dw 0000ffff
+dw 00ffff00
+dw 00ff00ff
+dw 00ffffff
+bitmapb:
+dw 000000ff
+dw 0000ffff
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ffff
+bitmapc:
+dw 00000000
+dw 00ffff00
+dw 000000ff
+dw 000000ff
+dw 00ffff00
+bitmapd:
+dw 00ff0000
+dw 00ffff00
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffff00
+bitmape:
+dw 00000000
+dw 00ffff00
+dw 00ff00ff
+dw 0000ffff
+dw 00ffff00
+bitmapf:
+dw 00ff0000
+dw 0000ff00
+dw 00ffffff
+dw 0000ff00
+dw 0000ff00
+bitmapg:
+dw 000000ff
+dw 0000ffff
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+bitmapi:
+dw 0000ff00
+dw 00000000
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+bitmapj:
+dw 000000ff
+dw 00ff00ff
+dw 0000ffff
+dw 0000ffff
+dw 00ff00ff
+bitmapl:
+dw 0000ffff
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+dw 00ffffff
+bitmapm:
+dw 00000000
+dw 00ffffff
+dw 00ffffff
+dw 00ffffff
+dw 00ff00ff
+bitmapn:
+dw 00000000
+dw 0000ffff
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+bitmapo:
+dw 00000000
+dw 0000ff00
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ff00
+bitmapp:
+dw 00000000
+dw 00ffff00
+dw 000000ff
+dw 000000ff
+dw 000000ff
+bitmaps:
+dw 00000000
+dw 00ffff00
+dw 0000ffff
+dw 00ffff00
+dw 0000ffff
+bitmapt:
+dw 0000ff00
+dw 00ffffff
+dw 0000ff00
+dw 0000ff00
+dw 00ffff00
+bitmapu:
+dw 00000000
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffff00
+bitmapv:
+dw 00000000
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffffff
+dw 0000ff00
+bitmapw:
+dw 00000000
+dw 00ff00ff
+dw 00ffffff
+dw 00ffffff
+dw 00ffffff
+bitmapx:
+dw 00000000
+dw 00ff00ff
+dw 0000ff00
+dw 0000ff00
+dw 00ff00ff
+bitmapy:
+dw 00000000
+dw 00ffffff
+dw 00ffff00
+dw 0000ffff
+dw 00ffffff
+bitmapbraceleft:
+dw 00ffff00
+dw 0000ff00
+dw 000000ff
+dw 0000ff00
+dw 00ffff00
+bitmapbar:
+dw 0000ff00
+dw 0000ff00
+dw 00000000
+dw 0000ff00
+dw 0000ff00
+bitmapbraceright:
+dw 0000ffff
+dw 0000ff00
+dw 00ff0000
+dw 0000ff00
+dw 0000ffff
+bitmapasciitilde:
+dw 00ffff00
+dw 0000ffff
+dw 00000000
+dw 00000000
+dw 00000000
