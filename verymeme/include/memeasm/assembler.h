@@ -17,7 +17,7 @@ public:
   static std::string generateMnemonicString(const std::string& mnemonic_str, uint32_t opword_bits);
 
 private:
-  enum class Parameter { REGISTER, IMMEDIATE };
+  enum class Parameter { REGISTER, IMMEDIATE, DATA };
 
   struct Mnemonic {
     std::regex rx;
@@ -33,6 +33,7 @@ private:
 
   uint32_t convertMnemonicStringToOpword(const std::string& line, int lnum, bool first_pass);
   void assembleInternal(bool first_pass);
+  int64_t resolveLabel(const std::string& label, int lnum, bool first_pass, bool relative);
 };
 
 }  // namespace memeasm
