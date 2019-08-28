@@ -4,18 +4,20 @@ module kpu(
   input wire CLK,
   input wire N_CLK,
   input wire N_RST_ASYNC,
+  input wire INTERRUPT_ASYNC,
   output wire [31:0] BUS
 );
   // Bus.
   wire [31:0] bus /*verilator public*/;
   assign BUS = bus;
 
-  // Synchronously deassert reset on 2nd falling edge.
+  // Synchronously deassert reset on 2nd falling edge
+  // (2nd to give enough time for everything to reset).
   wire n_rst /*verilator public*/;
   // 0 when N_RST_ASYNC is low. Back to 1 upon deasserting N_RST_ASYNC and negedge of CLK.
   wire n_rst_first_edge;
   wire [1:0] unused_n_q;
-  chip74107 jkflip(.J({n_rst_first_edge, 1'b1}), .K(0), .N_CP({CLK, CLK}),
+  chip74107 rst_deassert(.J({n_rst_first_edge, 1'b1}), .K(0), .N_CP({CLK, CLK}),
     .N_R({N_RST_ASYNC, N_RST_ASYNC}), .Q({n_rst, n_rst_first_edge}), .N_Q(unused_n_q));
 
   // Timer:
@@ -101,29 +103,25 @@ module kpu(
   wire control_timer_n_out;
   wire control_ctrl_data_n_out;
   wire control_opword_immediate_n_out;
-  control_logic control(.CLK(CLK), .N_CLK(N_CLK), .N_RST(n_rst),
-    .BUS(bus[7:0]),
-    .OPWORD_OPCODE(opword_opcode),
-    .MLU_ZERO(mlu_zero), .MLU_CARRY(mlu_carry), .MLU_NEGATIVE(mlu_negative),
-    .CTRL_DATA(control_ctrl_data),
-    .REG_SEL(control_reg_sel),
-    .MLU_PLANE(control_mlu_plane),
-    .SHIFTER_PLANE(control_shifter_plane),
-    .SHIFTER_ARITH(control_shifter_arith),
-    .REG_N_IN_CLK(control_reg_n_in_clk),
-    .TMP0_IN_CLK(control_tmp0_in_clk),
-    .TMP1_IN_CLK(control_tmp1_in_clk),
-    .MMU_N_IN_CLK(control_mmu_n_in_clk),
+  control_logic control(
+    .CLK(CLK), .N_CLK(N_CLK), .N_RST(n_rst), .BUS(bus[7:0]), .OPWORD_OPCODE(opword_opcode),
+    // Condition variables.
+    .MLU_ZERO(mlu_zero), .MLU_CARRY(mlu_carry),
+    .MLU_NEGATIVE(mlu_negative), .INTERRUPT_ASYNC(INTERRUPT_ASYNC),
+    // Grouped signals:
+    .CTRL_DATA(control_ctrl_data),  .REG_SEL(control_reg_sel),  .MLU_PLANE(control_mlu_plane),
+    .SHIFTER_PLANE(control_shifter_plane), .SHIFTER_ARITH(control_shifter_arith),
+    // Decoded in plane signals:
+    .REG_N_IN_CLK(control_reg_n_in_clk), .TMP0_IN_CLK(control_tmp0_in_clk),
+    .TMP1_IN_CLK(control_tmp1_in_clk), .MMU_N_IN_CLK(control_mmu_n_in_clk),
     .OPWORD_IN_CLK(control_opword_in_clk),
-    .REG_N_OUT(control_reg_n_out),
-    .TMP0_N_OUT(control_tmp0_n_out),
-    .TMP1_N_OUT(control_tmp1_n_out),
-    .MMU_N_OUT(control_mmu_n_out),
-    .MLU_N_OUT(control_mlu_n_out),
-    .SHIFTER_N_OUT(control_shifter_n_out),
-    .TIMER_N_OUT(control_timer_n_out),
+    // Decoded out plane signals:
+    .REG_N_OUT(control_reg_n_out), .TMP0_N_OUT(control_tmp0_n_out), .TMP1_N_OUT(control_tmp1_n_out),
+    .MMU_N_OUT(control_mmu_n_out), .MLU_N_OUT(control_mlu_n_out),
+    .SHIFTER_N_OUT(control_shifter_n_out), .TIMER_N_OUT(control_timer_n_out),
     .CTRL_DATA_N_OUT(control_ctrl_data_n_out),
     .OPWORD_IMMEDIATE_N_OUT(control_opword_immediate_n_out),
+    // Bootstrapping signals:
     .BOOTSTRAP_DATA(bootstrap_data), .N_BOOTED(n_booted), .BOOTSTRAP_ADDR(bootstrap_addr[11:0]),
     .BOOTSTRAP_N_WE(bootstrap_control_n_we));
 

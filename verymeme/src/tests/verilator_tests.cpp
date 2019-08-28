@@ -413,6 +413,16 @@ TEST_F(KpuTest, OpcodeIsReset) {
   EXPECT_EQ(0u, kpu_.kpu->control->opcode);
 }
 
+TEST_F(KpuTest, InterruptsDisabledAtReset) {
+  memesim::Simulator::initializeKpu(kpu_);
+  EXPECT_TRUE(kpu_.kpu->n_rst);
+  EXPECT_EQ(0u, kpu_.kpu->control->has_interrupt);
+
+  kpu_.kpu->INTERRUPT_ASYNC = 1;
+  memesim::Simulator::clockKpu(kpu_);
+  EXPECT_EQ(0u, kpu_.kpu->control->has_interrupt);
+}
+
 class TimerTest : public VerilatorTest {
 protected:
   Vtimer timer_;

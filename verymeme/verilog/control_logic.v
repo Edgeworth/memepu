@@ -9,6 +9,7 @@ module control_logic(
   input wire MLU_ZERO,
   input wire MLU_CARRY,
   input wire MLU_NEGATIVE,
+  input wire INTERRUPT_ASYNC /* verilator public */,
   // Grouped signals
   output logic [7:0] CTRL_DATA /*verilator public*/,
   output logic [1:0] REG_SEL /*verilator public*/,
@@ -38,15 +39,34 @@ module control_logic(
   input wire BOOTSTRAP_N_WE
 );
   // Inverter:
-  wire [2:0] unused_inverter;
-  chip7404 inverter(.A({3'b0, opcode_sel, mmu_in_clk, reg_in_clk}),
-    .Y({unused_inverter, n_opcode_sel, MMU_N_IN_CLK, REG_N_IN_CLK}));
+  wire [1:0] unused_inverter;
+  wire misc_set_interrupts;
+  chip7404 inverter(.A({2'b0, misc_n_set_interrupts, opcode_sel, mmu_in_clk, reg_in_clk}),
+    .Y({unused_inverter, misc_set_interrupts, n_opcode_sel, MMU_N_IN_CLK, REG_N_IN_CLK}));
 
   // Ander:
-  wire [2:0] unused_and;
+  wire unused_and;
   wire counter_combined_n_rst;
-  chip7408 and_gate(.A({3'b0, microop_counter_n_rst}), .B({3'b0, N_RST}),
-    .Y({unused_and, counter_combined_n_rst}));
+  wire misc_set_interrupts_clk;
+  wire has_interrupt /* verilator public */;
+  chip7408 and_gate(.A({1'b0, preinterrupt, misc_set_interrupts, microop_counter_n_rst}),
+    .B({1'b0, interrupts_enabled, CLK, N_RST}),
+    .Y({unused_and, has_interrupt, misc_set_interrupts_clk, counter_combined_n_rst}));
+
+  // Latch interrupt signal on each rising clock (before falling clock latches microcode).
+  // Set enable interrupts flag on rising clock.
+  wire preinterrupt;
+  wire interrupts_enabled /* verilator public */;
+  wire [1:0] unused_n_q;
+  chip7474 int_flip(.D({CTRL_DATA[0], INTERRUPT_ASYNC}), .CP({misc_set_interrupts_clk, CLK}),
+    .N_R({N_RST, N_RST}), .Q({interrupts_enabled, preinterrupt}), .N_Q(unused_n_q));
+
+  // Cond sel multiplexer:
+  // This must be updated if the signals in microcode.v are changed.
+  wire cond_var /*verilator public*/;
+  wire unused_n_cond_var;
+  chip74151 cond_sel_mux(.I({4'b0, has_interrupt, MLU_NEGATIVE, MLU_CARRY, MLU_ZERO}),
+    .N_E(0), .S({1'b0, cond_var_sel}), .N_Y(unused_n_cond_var), .Y(cond_var));
 
   // Microop counter:
   wire [4:0] microop_count /*verilator public*/;
@@ -74,10 +94,10 @@ module control_logic(
 
   wire [2:0] in_plane /*verilator public*/;
   wire [3:0] out_plane /*verilator public*/;
-  wire misc_plane /*verilator public*/;
+  wire [1:0] misc_plane /*verilator public*/;
   wire opcode_sel /*verilator public*/;
   wire [1:0] cond_var_sel /*verilator public*/;
-  wire [3:0] unused_control;
+  wire [2:0] unused_control;
   // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
   // on rising clock.
   register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(0),
@@ -104,19 +124,13 @@ module control_logic(
         MLU_N_OUT, MMU_N_OUT, TMP1_N_OUT, TMP0_N_OUT, REG_N_OUT, unused_out_none}));
 
   // Misc plane decoder
-  // TODO(optimisation): Can reduce size? 2=>4 decoder (dual).
+  // TODO(optimisation): Can reduce size? 2=>4 decoder (dual), and use other decoder for cond var?
   wire unused_misc_none;
-  wire [5:0] unused_misc_plane;
+  wire [4:0] unused_misc_plane;
   wire microop_counter_n_rst;
-  chip74138 misc_plane_decoder(.A({2'b0, misc_plane}), .N_E1(0), .N_E2(0), .E3(1),
-    .N_Y({unused_misc_plane, microop_counter_n_rst, unused_misc_none}));
-
-  // Cond sel multiplexer:
-  // This must be updated if the signals in microcode.v are changed.
-  wire cond_var /*verilator public*/;
-  wire unused_n_cond_var;
-  chip74151 cond_sel_mux(.I({5'b0, MLU_NEGATIVE, MLU_CARRY, MLU_ZERO}),
-    .N_E(0), .S({1'b0, cond_var_sel}), .N_Y(unused_n_cond_var), .Y(cond_var));
+  wire misc_n_set_interrupts;
+  chip74138 misc_plane_decoder(.A({1'b0, misc_plane}), .N_E1(0), .N_E2(0), .E3(1),
+    .N_Y({unused_misc_plane, misc_n_set_interrupts, microop_counter_n_rst, unused_misc_none}));
 
   `ifdef FORMAL
   // Contract that N_RST is deasserted after at least 2 falling edges.

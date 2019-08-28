@@ -10,6 +10,10 @@
 
 namespace memesim {
 
+void initializeKpu(Vkpu& kpu);
+void clockKpu(Vkpu& kpu);
+void resetKpu(Vkpu& kpu);
+
 class Simulator {
 public:
   struct CpuStateMessage {
@@ -34,6 +38,8 @@ public:
     uint32_t n_rst;
     std::string mnemonic;
     uint32_t regs[32];
+    uint32_t interrupts_enabled;
+    uint32_t has_interrupt;
   };
 
   struct VgaStateMessage {
@@ -69,10 +75,6 @@ public:
   // This method is thread safe.
   void scheduleCommand(const Cmd& cmd);
 
-  static void initializeKpu(Vkpu& kpu);
-  static void clockKpu(Vkpu& kpu);
-  static void resetKpu(Vkpu& kpu);
-
 private:
   Vkpu kpu_;
   ConcurrentQueue<Cmd> command_queue_;
@@ -81,6 +83,7 @@ private:
   uint32_t getRegister(int reg) const;
   CpuStateMessage generateCpuState();
   VgaStateMessage generateVgaState();
+  void clockKpu();
 };
 
 }  // namespace memesim

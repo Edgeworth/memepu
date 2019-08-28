@@ -140,6 +140,8 @@ void CommandLine::printCpuState(const Simulator::CpuStateMessage& state) {
       {"cond var sel", convertToHex(state.cond_var_sel)},
       {"n_rst", convertToBinary<1>(state.n_rst)},
       {"asm", state.mnemonic},
+      {"int enabled", convertToHex(state.interrupts_enabled)},
+      {"has int", convertToHex(state.has_interrupt)},
   };
   printTable(table);
   printf("%s\n", prettyPrintNumbers(hexdump(state.regs)).c_str());

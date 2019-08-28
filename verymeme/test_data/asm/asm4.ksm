@@ -1,0 +1,14 @@
+dw interrupt
+seti
+loop0:
+  lhu r31,loop0
+
+interrupt:
+  lhu r0,ffff
+  lhu r1,ff00
+  lhu r2,fffc ; interrupt clear
+  lhu r3,0
+  sw [r0,1],r1
+  sw [r2,0],r3
+  seti ; todo roll into rfi
+  lhu r31,loop0
