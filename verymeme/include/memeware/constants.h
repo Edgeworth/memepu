@@ -21,7 +21,10 @@ constexpr int OPWORD_SIZE = 1;
 constexpr int VGA_WIDTH = 320;
 constexpr int VGA_HEIGHT = 240;
 constexpr uint32_t MMIO_VRAM_BASE = 0x10000;  // TODO change.
-constexpr uint32_t MMIO_MOUSE_BASE = 0xffff;
+constexpr uint32_t MMIO_MOUSE = 0xffff;
+constexpr uint32_t MMIO_KEYBOARD = 0xfffe;
+constexpr uint32_t MMIO_INTERRUPT_CLEAR = 0xfffc;
+constexpr uint32_t INTERRUPT_VECTOR = 0;
 
 }  // namespace memeware
 

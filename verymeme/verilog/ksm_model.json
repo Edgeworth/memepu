@@ -79,4 +79,19 @@
     "mnemonic": "sll r%1%,r%2%,r%3%",
     "imm_relative": "0"
 }
+,{
+    "opcode": "16",
+    "mnemonic": "int",
+    "imm_relative": "0"
+}
+,{
+    "opcode": "17",
+    "mnemonic": "seti",
+    "imm_relative": "0"
+}
+,{
+    "opcode": "18",
+    "mnemonic": "clri",
+    "imm_relative": "0"
+}
 ]

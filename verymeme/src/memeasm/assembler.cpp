@@ -11,10 +11,12 @@ namespace memeasm {
 
 namespace {
 
+#define IDENT_RX "([a-zA-Z_][0-9a-zA-Z_]*)"
+
 const char* PREAMBLE_RX = "\\s*";
 const char* POSTAMBLE_RX = "\\s*(;.*)?";
-const char* LABEL_RX = "([0-9a-zA-Z_]+):";
-const char* LABEL_REF_RX = "([0-9a-zA-Z_]+)\\s*([+]\\s*(\\d+))?";
+const char* LABEL_RX = IDENT_RX ":";
+const char* LABEL_REF_RX = IDENT_RX "\\s*([+]\\s*(\\d+))?";
 
 std::vector<std::string> getLines(const std::string& data) {
   std::stringstream ss(data);
@@ -73,7 +75,7 @@ Assembler::Assembler(const std::string& model_json) {
   // Add data word mnemonic:
   Mnemonic dw = {};
   dw.opcode = 0;  // Set to zero so it doesn't affect data when OR'd together.
-  dw.rx = std::regex(PREAMBLE_RX + std::string("dw\\s+([0-9a-fA-F]+)") + POSTAMBLE_RX);
+  dw.rx = std::regex(PREAMBLE_RX + std::string("dw\\s+(\\S+)") + POSTAMBLE_RX);
   dw.params.push_back(Parameter::DATA);
   mnemonics_.push_back(dw);
 }
@@ -149,7 +151,15 @@ uint32_t Assembler::convertMnemonicStringToOpword(
         opword |= uint32_t(imm) << 16u;
         break;
       }
-      case Parameter::DATA: opword |= uint32_t(convertFromHex(pstr)); break;
+      case Parameter::DATA:
+        if (!first_pass) {
+          int64_t data = convertFromHex(pstr);
+          if (data == INT64_MIN) data = resolveLabel(pstr, lnum, first_pass, false /* relative */);
+          verify_expr(data != INT64_MIN && data == uint32_t(data),
+              "%d: invalid data parameter '%s'", lnum, pstr.c_str());
+          opword |= uint32_t(data);
+        }
+        break;
       }
     }
     return opword;
@@ -157,8 +167,7 @@ uint32_t Assembler::convertMnemonicStringToOpword(
   verify_expr(false, "%d: unable to parse %s", lnum, line.c_str());
 }
 
-int64_t Assembler::resolveLabel(
-    const std::string& lstr, int lnum, bool first_pass, bool relative) {
+int64_t Assembler::resolveLabel(const std::string& lstr, int lnum, bool first_pass, bool relative) {
   std::regex rx(LABEL_REF_RX);
   std::smatch sm;
   verify_expr(std::regex_match(lstr, sm, rx), "%d: invalid label %s", lnum, lstr.c_str());
@@ -178,8 +187,7 @@ int64_t Assembler::resolveLabel(
     // If we have computation for offset, do it.
     addr += convertFromInteger(sm[3].str());
   }
-  if (relative)
-    return addr - bin_.size() * memeware::OPWORD_SIZE - memeware::OPWORD_SIZE;
+  if (relative) return addr - bin_.size() * memeware::OPWORD_SIZE - memeware::OPWORD_SIZE;
   return addr;
 }
 

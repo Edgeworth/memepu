@@ -1,5 +1,5 @@
 `include "common.v"
-
+/* verilator lint_off UNOPTFLAT */
 // AND
 module chip7408(
   input wire [3:0] A,
