@@ -1,3 +1,7 @@
+[Opcode 6][unused 26]
+  INT - interrupt
+  SETI - enable interrupts
+  CLRI - disable interrupts
 [Opcode 6][rD 5][unused 5][immediate 16]
   LH rD, I - rD = I - load signed 16 bits
   LHU rD, I - rD = signext(I) - load unsigned 16 bits

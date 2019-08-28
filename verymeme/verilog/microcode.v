@@ -26,7 +26,7 @@ module microcode(
   logic [1:0] reg_sel; // 0=>Opcode reg0, 1=>Opcode reg1, 2=>Control logic reg sel.
   logic [3:0] out_plane;
   logic [2:0] in_plane;
-  logic misc_plane; // Misc plane: Micro-op counter reset
+  logic [1:0] misc_plane;
   // Could merge these, but it's confusing, makes routing harder, and causes more switching.
   logic [2:0] mlu_op;  // 3 bits for op select
   logic mlu_carry; // 1 bit for carry.
@@ -39,17 +39,20 @@ module microcode(
   assign OUT[9:8] = reg_sel;
   assign OUT[13:10] = out_plane;
   assign OUT[16:14] = in_plane;
-  assign OUT[17] = misc_plane;
-  assign OUT[20:18] = mlu_op;
-  assign OUT[21] = mlu_carry;
-  assign OUT[23:22] = shifter_plane;
-  assign OUT[24] = shifter_arith;
-  assign OUT[25] = opcode_sel;
-  assign OUT[27:26] = cond_var_sel;
-  assign OUT[31:28] = 0;
+  assign OUT[18:17] = misc_plane;
+  assign OUT[21:19] = mlu_op;
+  assign OUT[22] = mlu_carry;
+  assign OUT[24:23] = shifter_plane;
+  assign OUT[25] = shifter_arith;
+  assign OUT[26] = opcode_sel;
+  assign OUT[28:27] = cond_var_sel;
+  assign OUT[31:29] = 0;
 
   localparam OP_RESET=0;
   localparam OP_FETCH=1;
+  localparam OP_INT=16;
+  localparam OP_SETI=17;
+  localparam OP_CLRI=18;
   // [Opcode 6][rD 5][unused 5][immediate 16]
   localparam OP_LH=7;  // LH rD, I - rD = I - load signed 16 bits
   localparam OP_LHU=2;  // LHU rD, I - rD = signext(I) - load unsigned 16 bits
@@ -94,6 +97,7 @@ module microcode(
   localparam IN_OPCODE=6;
 
   localparam MISC_RESET_MICROOP_COUNTER=1;
+  localparam MISC_SET_INTERRUPTS=2;
 
   localparam OPCODE_SEL_OPCODE_FROM_OPWORD=0;
   localparam OPCODE_SEL_OPCODE_FROM_BUS=1;
@@ -125,13 +129,18 @@ module microcode(
       OP_RESET: begin
         `SET_MNEMONIC("rst")
         case (microop_count)
-          0: begin  // Set program counter to zero.
+          0: begin
+            ctrl_data = 1;
+            out_plane = OUT_CTRL_DATA;
+            in_plane = IN_TMP0;
+          end
+          1: begin  // Set program counter to 1.
             ctrl_data = REG_PC;
             reg_sel = REG_SEL_CONTROL;
-            out_plane = OUT_NONE;
+            out_plane = OUT_TMP0;
             in_plane = IN_REG;
           end
-          1: `GO_FETCH()
+          2: `GO_FETCH()
         endcase
       end
       OP_FETCH: begin
@@ -139,15 +148,24 @@ module microcode(
         // TODO: Can optimise a bunch of stuff with a separate address bus and data bus +
         // dual ported ram for registers. => maybe then can implement multiplication?
         case (microop_count)
-          0: begin  // Copy the program counter into TMP0 to access memory.
+          0: begin  // Check interrupts + copy the program counter into TMP0 to access memory.
             ctrl_data = REG_PC;
             reg_sel = REG_SEL_CONTROL;
             out_plane = OUT_REG;
             in_plane = IN_TMP0;
+            cond_var_sel = COND_SEL_INTERRUPT;
           end
-          1: begin // Read MMU data onto opword.
-            out_plane = OUT_MMU;
-            in_plane = IN_OPWORD;
+          1: begin // Read MMU data onto opword or change to INT instruction.
+            if (cond_var) begin
+              ctrl_data = OP_INT;
+              out_plane = OUT_CTRL_DATA;
+              in_plane = IN_OPCODE;
+              misc_plane = MISC_RESET_MICROOP_COUNTER;
+              opcode_sel = OPCODE_SEL_OPCODE_FROM_BUS;
+            end else begin
+              out_plane = OUT_MMU;
+              in_plane = IN_OPWORD;
+            end
           end
           2: begin // Write 1 into TMP1 for incrementing the program counter. // TODO: optimise with specific increment instruction.
             ctrl_data = 1;
@@ -167,6 +185,44 @@ module microcode(
             misc_plane = MISC_RESET_MICROOP_COUNTER;
             opcode_sel = OPCODE_SEL_OPCODE_FROM_OPWORD;
           end
+        endcase
+      end
+      OP_INT: begin
+        `SET_MNEMONIC("int")
+        case (microop_count)
+          0: begin  // Read interrupt vector.
+            ctrl_data = 0;
+            out_plane = OUT_CTRL_DATA;
+            in_plane = IN_TMP0;
+            misc_plane = MISC_SET_INTERRUPTS;  // Disable interrupts (uses 0 ctrl_data).
+          end
+          1: begin  // Read interrupt vector into program counter.
+            ctrl_data = REG_PC;
+            reg_sel = REG_SEL_CONTROL;
+            out_plane = OUT_MMU;
+            in_plane = IN_REG;
+          end
+          2: `GO_FETCH()
+        endcase
+      end
+      OP_SETI: begin
+        `SET_MNEMONIC("seti")
+        case (microop_count)
+          0: begin  // Enable interrupts
+            ctrl_data = 1;
+            misc_plane = MISC_SET_INTERRUPTS;
+          end
+          1: `GO_FETCH()
+        endcase
+      end
+      OP_CLRI: begin
+        `SET_MNEMONIC("clri")
+        case (microop_count)
+          0: begin  // Disable interrupts
+            ctrl_data = 0;
+            misc_plane = MISC_SET_INTERRUPTS;
+          end
+          1: `GO_FETCH()
         endcase
       end
       OP_LH: begin

@@ -23,7 +23,7 @@ const int PRINT_SPEED_MS = 5000;
 
 using namespace std::chrono;
 
-void Simulator::initializeKpu(Vkpu& kpu) {
+void initializeKpu(Vkpu& kpu) {
   kpu.N_RST_ASYNC = 1;
   // Make sure to start with a high CLK so the two clockKpu's below produce two falling edges.
   kpu.CLK = 1;
@@ -34,7 +34,7 @@ void Simulator::initializeKpu(Vkpu& kpu) {
   resetKpu(kpu);  // Actually reset.
 }
 
-void Simulator::clockKpu(Vkpu& kpu) {
+void clockKpu(Vkpu& kpu) {
   kpu.CLK = 0;
   kpu.N_CLK = 1;
   kpu.eval();
@@ -44,7 +44,7 @@ void Simulator::clockKpu(Vkpu& kpu) {
   kpu.eval();
 }
 
-void Simulator::resetKpu(Vkpu& kpu) {
+void resetKpu(Vkpu& kpu) {
   kpu.CLK = 1;
   kpu.N_CLK = 0;
   kpu.N_RST_ASYNC = 0;
@@ -59,6 +59,11 @@ void Simulator::resetKpu(Vkpu& kpu) {
   kpu.CLK = 0;
   kpu.N_CLK = 1;  // Second falling edge - KPU should be reset now.
   kpu.eval();
+}
+
+void Simulator::clockKpu() {
+  kpu_.INTERRUPT_ASYNC = kpu_.kpu->mmu->ram->mem[memeware::MMIO_INTERRUPT_CLEAR] ? 1 : 0;
+  ::memesim::clockKpu(kpu_);
 }
 
 void Simulator::run() {
@@ -85,14 +90,20 @@ void Simulator::run() {
       case Cmd::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
       case Cmd::Type::SET_MOUSE:
         // TODO: use constant for this memory mapped address.
-        kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE_BASE] =
+        kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE] =
             (cmd->args.i32_0 & 0xFFFF) | ((cmd->args.i32_1 << 16) & 0xFFFF0000);
+//        kpu_.kpu->mmu->ram->mem[memeware::MMIO_INTERRUPT_CLEAR] = 1;
+        // TODO set interrupt? - need some way to distinguish.
         break;
-      case Cmd::Type::SET_KBD: break;
+      case Cmd::Type::SET_KBD:
+        printf("Got kbd: %d\n", int(cmd->args.i32_0));
+        kpu_.kpu->mmu->ram->mem[memeware::MMIO_KEYBOARD] = cmd->args.i32_0;
+        kpu_.kpu->mmu->ram->mem[memeware::MMIO_INTERRUPT_CLEAR] = 1;
+        break;
       }
     }
     if (running || step) {
-      clockKpu(kpu_);
+      clockKpu();
       cycle_count++;
     }
     if (running && breakpoints_.count(getRegister(memeware::PC_REG))) {
@@ -133,6 +144,8 @@ Simulator::CpuStateMessage Simulator::generateCpuState() {
   msg.n_rst = uint32_t(kpu_.kpu->n_rst);
   msg.mnemonic = memeasm::Assembler::generateMnemonicString(
       convertToString(kpu_.kpu->control->microcode->mnemonic), kpu_.kpu->opword_bits);
+  msg.interrupts_enabled = uint32_t(kpu_.kpu->control->interrupts_enabled);
+  msg.has_interrupt = uint32_t(kpu_.kpu->control->has_interrupt);
   for (int i = 0; i < memeware::NUM_REG; ++i) msg.regs[i] = getRegister(i);
 
   return msg;

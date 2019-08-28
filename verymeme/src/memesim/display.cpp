@@ -59,6 +59,9 @@ void Display::run() {
         simulator_->scheduleCommand({Simulator::Cmd::Type::SET_MOUSE, {x, y}, receiver_});
         break;
       }
+      case sf::Event::KeyPressed:
+        simulator_->scheduleCommand({Simulator::Cmd::Type::SET_KBD, {ev.key.code}, receiver_});
+        break;
       default: break;
       }
     }
