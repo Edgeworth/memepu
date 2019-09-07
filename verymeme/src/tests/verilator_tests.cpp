@@ -396,30 +396,30 @@ TEST_F(KpuTest, AsyncResetFromHighClk) {
 }
 
 TEST_F(KpuTest, TimerIsReset) {
-  memesim::Simulator::initializeKpu(kpu_);
+  memesim::initializeKpu(kpu_);
   EXPECT_TRUE(kpu_.kpu->n_rst);
   EXPECT_EQ(0u, kpu_.kpu->timer_val);
 }
 
 TEST_F(KpuTest, MicroopCounterIsReset) {
-  memesim::Simulator::initializeKpu(kpu_);
+  memesim::initializeKpu(kpu_);
   EXPECT_TRUE(kpu_.kpu->n_rst);
   EXPECT_EQ(0u, kpu_.kpu->control->microop_count);
 }
 
 TEST_F(KpuTest, OpcodeIsReset) {
-  memesim::Simulator::initializeKpu(kpu_);
+  memesim::initializeKpu(kpu_);
   EXPECT_TRUE(kpu_.kpu->n_rst);
   EXPECT_EQ(0u, kpu_.kpu->control->opcode);
 }
 
 TEST_F(KpuTest, InterruptsDisabledAtReset) {
-  memesim::Simulator::initializeKpu(kpu_);
+  memesim::initializeKpu(kpu_);
   EXPECT_TRUE(kpu_.kpu->n_rst);
   EXPECT_EQ(0u, kpu_.kpu->control->has_interrupt);
 
   kpu_.kpu->INTERRUPT_ASYNC = 1;
-  memesim::Simulator::clockKpu(kpu_);
+  memesim::clockKpu(kpu_);
   EXPECT_EQ(0u, kpu_.kpu->control->has_interrupt);
 }
 

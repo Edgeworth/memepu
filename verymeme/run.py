@@ -60,6 +60,7 @@ def run_command(command):
 
 def create_build_config(hexfile):
   COMMON_FILE = 'verilog/common.v'
+  VERYMEME_DIR = os.getcwd()
   path = '/tmp/verymeme'
   if hexfile:
     path += '_hexfile'
@@ -68,9 +69,9 @@ def create_build_config(hexfile):
   if not exists:
     os.makedirs(path)
   os.chdir(path)
-  run_command('cmake BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release ../..')
+  run_command('cmake BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release %s' % VERYMEME_DIR)
   run_command('make -j $(nproc)')
-  os.chdir('../..')
+  os.chdir(VERYMEME_DIR)
   if hexfile:
     run_command("sed -i 's:`define HEXFILE:// `define HEXFILE:' %s" % COMMON_FILE)
   return path
@@ -98,6 +99,11 @@ def run_formal_verification():
   WorkerQueue().run(commands)
 
 
+def check_pwd():
+  if not os.path.exists('verilog'):
+    print('Current directory %s is wrong, go to memepu/verymeme' % os.getcwd())
+    sys.exit(1)
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--formal', action='store_true', default=False, required=False,
                     help='Run formal verification.')
@@ -110,6 +116,8 @@ parser.add_argument('-g', '--generate_schematic', action='store_true', default=F
 parser.add_argument('-a', '--all', action='store_true', default=False, required=False,
                     help='Run all.')
 args = parser.parse_args()
+
+check_pwd()
 
 if args.memeware or args.all:
   generate_memeware()
