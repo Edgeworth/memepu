@@ -1,13 +1,16 @@
 import re
 import sys
 
+
 def map_byte(val):
   m = ['00', 'ff']
-  return m[val & 1] + m[(val >> 1) & 1] + m[(val >> 2) & 1] +m[(val >> 3) & 1]
+  return m[val & 1] + m[(val >> 1) & 1] + m[(val >> 2) & 1] + m[(val >> 3) & 1]
 
 
 def parse_bdf(data):
-  res = re.findall(r'STARTCHAR (\w+).*?ENCODING (\d+).*?BBX (\d+) (\d+) (\d+) (\d+).*?BITMAP\n(([0-9a-fA-F]+\n)*)ENDCHAR', data, re.S)
+  res = re.findall(
+    r'STARTCHAR (\w+).*?ENCODING (\d+).*?BBX (\d+) (\d+) (\d+) (\d+).*?BITMAP\n(([0-9a-fA-F]+\n)*)ENDCHAR',
+    data, re.S)
   m = {}
   for name, num, w, h, xoff, yoff, bytes, _ in res:
     bytes = bytes.strip().split('\n')

@@ -35,4 +35,4 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   return reversed;
 }
 
-#endif // VERYMEME_UTIL_H
+#endif  // VERYMEME_UTIL_H

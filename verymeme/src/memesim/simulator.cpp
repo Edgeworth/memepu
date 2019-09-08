@@ -92,7 +92,7 @@ void Simulator::run() {
         // TODO: use constant for this memory mapped address.
         kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE] =
             (cmd->args.i32_0 & 0xFFFF) | ((cmd->args.i32_1 << 16) & 0xFFFF0000);
-//        kpu_.kpu->mmu->ram->mem[memeware::MMIO_INTERRUPT_CLEAR] = 1;
+        //        kpu_.kpu->mmu->ram->mem[memeware::MMIO_INTERRUPT_CLEAR] = 1;
         // TODO set interrupt? - need some way to distinguish.
         break;
       case Cmd::Type::SET_KBD:

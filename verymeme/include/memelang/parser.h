@@ -38,14 +38,12 @@ private:
   type& operator=(const type&) = delete; \
   ~type() = default; \
   std::string toString() const override; \
-  std::vector<Node*> children() override; \
-  void generateIr() const override
+  std::vector<Node*> children() override
 
 struct Node {
   Token tok = {};
 
   virtual std::string toString() const = 0;
-  virtual void generateIr() const = 0;
   virtual std::vector<Node*> children() = 0;
   void visit(const std::function<void(Node&, int)>& f, int depth = 0) {
     f(*this, depth);
@@ -135,7 +133,7 @@ struct Expr : public Node {
     LOR,
     TERNARY,
     ASSIGNMENT,
-    COUNT,
+    COUNT
   };
 };
 
@@ -171,12 +169,13 @@ struct VarRef : public Expr {
   DEFNLT(VarRef, name);
 };
 
-struct BinOp : public Expr {
+struct Op : public Expr {
   Expr::Type type;
+  bool is_binop = false;
   std::unique_ptr<Expr> left;
   std::unique_ptr<Expr> right;
 
-  DEFNLT(BinOp, left, right);
+  DEFNLT(Op, left, right);
 };
 
 // Statement related:

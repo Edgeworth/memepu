@@ -76,7 +76,7 @@ struct Token {
     BOOL_LIT,
     IDENT,
     COMMENT,
-    COUNT,
+    COUNT
   } type;
   int loc = -1;
   int size = -1;
