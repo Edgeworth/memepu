@@ -19,9 +19,9 @@ const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
     {"}", Tok::RBRACE}, {"<", Tok::LANGLE}, {">", Tok::RANGLE}, {"[", Tok::LSQUARE},
     {"]", Tok::RSQUARE}, {";", Tok::SEMICOLON}, {":", Tok::COLON}, {"?", Tok::QUESTION},
     {",", Tok::COMMA}, {".", Tok::DOT}, {"~", Tok::TILDE}, {"!", Tok::EXCLAMATION},
-    {"&", Tok::AMPERSAND}, {"&&", Tok::DAMPERSAND}, {"|", Tok::BAR}, {"||", Tok::DBAR},
-    {"=", Tok::EQUAL}, {"==", Tok::DEQUAL}, {"!=", Tok::NEQUAL}, {"<=", Tok::LTEQUAL},
-    {">=", Tok::GTEQUAL},
+    {"&", Tok::AMPERSAND}, {"&&", Tok::DAMPERSAND}, {"^", Tok::CARET}, {"|", Tok::BAR},
+    {"||", Tok::DBAR}, {"=", Tok::EQUAL}, {"==", Tok::DEQUAL}, {"!=", Tok::NEQUAL},
+    {"<=", Tok::LTEQUAL}, {">=", Tok::GTEQUAL},
     // Keywords:
     {"intf", Tok::INTF}, {"struct", Tok::STRUCT}, {"enum", Tok::ENUM}, {"impl", Tok::IMPL},
     {"fn", Tok::FN}, {"if", Tok::IF}, {"else", Tok::ELSE}, {"match", Tok::MATCH}, {"for", Tok::FOR},
@@ -37,7 +37,7 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
   const static std::string TOKEN_TYPES[] = {"PLUS", "DPLUS", "MINUS", "DMINUS", "ASTERISK",
       "PERCENT", "FSLASH", "QUOTE", "DQUOTE", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LANGLE",
       "RANGLE", "LSQUARE", "RSQUARE", "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE",
-      "EXCLAMATION", "AMPERSAND", "DAMPERSAND", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL",
+      "EXCLAMATION", "AMPERSAND", "DAMPERSAND", "CARET", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL",
       "LTEQUAL", "GTEQUAL", "INTF", "STRUCT", "ENUM", "IMPL", "FN", "IF", "ELSE", "MATCH", "FOR",
       "RETURN", "VAR", "STATIC", "CONST", "AUTO", "I8", "I16", "I32", "U8", "U16", "U32", "BOOL",
       "BIT", "ASM", "STR_LIT", "INT_LIT", "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
