@@ -103,9 +103,11 @@ std::unordered_map<Token::Type, Expr::Type> BINOP_MAP = {{Token::DOT, Expr::MEMB
     {Token::PLUS, Expr::ADD}, {Token::ASTERISK, Expr::MUL}, {Token::FSLASH, Expr::DIV},
     {Token::MINUS, Expr::SUB}};
 
-// TODO how to decide if postfix/prefix.
-std::unordered_map<Token::Type, Expr::Type> UNOP_MAP = {{Token::DPLUS, Expr::POSTFIX_INC},
-    {Token::DMINUS, Expr::POSTFIX_DEC}, {Token::MINUS, Expr::UNARY_NEGATE},
+std::unordered_map<Token::Type, Expr::Type> POSTFIX_UNOP_MAP = {
+    {Token::DPLUS, Expr::POSTFIX_INC}, {Token::DMINUS, Expr::POSTFIX_DEC}};
+
+std::unordered_map<Token::Type, Expr::Type> PREFIX_UNOP_MAP = {{Token::DPLUS, Expr::PREFIX_INC},
+    {Token::DMINUS, Expr::PREFIX_DEC}, {Token::MINUS, Expr::UNARY_NEGATE},
     {Token::AMPERSAND, Expr::UNARY_ADDR}, {Token::ASTERISK, Expr::UNARY_DEREF},
     {Token::TILDE, Expr::UNARY_BINVERT}, {Token::EXCLAMATION, Expr::UNARY_LINVERT}};
 
@@ -179,17 +181,21 @@ private:
     void addExpr(std::unique_ptr<Expr> e) { s_.emplace_back(std::move(e)); }
 
     void addOp(Token::Type type) {
-      const bool can_binop = s_.size() - binop_count == 1;
-      if (can_binop && BINOP_MAP.count(type)) {
+      const bool can_postfix = s_.size() - binop_count == 1;
+      if (can_postfix && POSTFIX_UNOP_MAP.count(type)) {
+        processStack(PRECEDENCE[POSTFIX_UNOP_MAP[type]]);
+        ops_.emplace_back(std::make_unique<Op>(ctx_));
+        ops_.back()->type = POSTFIX_UNOP_MAP[type];
+      } else if (can_postfix && BINOP_MAP.count(type)) {
         processStack(PRECEDENCE[BINOP_MAP[type]]);
         binop_count++;
         ops_.emplace_back(std::make_unique<Op>(ctx_));
         ops_.back()->type = BINOP_MAP[type];
         ops_.back()->is_binop = true;
-      } else if (UNOP_MAP.count(type)) {
-        processStack(PRECEDENCE[UNOP_MAP[type]]);
+      } else if (PREFIX_UNOP_MAP.count(type)) {
+        processStack(PRECEDENCE[PREFIX_UNOP_MAP[type]]);
         ops_.emplace_back(std::make_unique<Op>(ctx_));
-        ops_.back()->type = UNOP_MAP[type];
+        ops_.back()->type = PREFIX_UNOP_MAP[type];
       } else {
         ctx_.compileError("unexpected token");
       }
