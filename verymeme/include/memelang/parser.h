@@ -16,7 +16,7 @@ class Parser {
 public:
   struct Context;
 
-  Parser(const FileContents* contents, std::vector<Token> tokens);
+  Parser(const FileContents* contents, std::vector<Tok> tokens);
   ~Parser();
 
   bool parse();
@@ -41,7 +41,7 @@ private:
   std::vector<Node*> children() override
 
 struct Node {
-  Token tok = {};
+  Tok tok = {};
   virtual ~Node() = default;
 
   virtual std::string toString() const = 0;
@@ -180,6 +180,11 @@ struct Op : public Expr {
 };
 
 // Statement related:
+struct Return : public Node {
+  std::unique_ptr<Expr> ret;
+
+  DEFNLT(Return, ret);
+};
 
 // Block related:
 struct StmtBlk : public Node {
