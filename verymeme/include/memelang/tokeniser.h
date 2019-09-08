@@ -39,6 +39,7 @@ struct Tok {
     EXCLAMATION,
     AMPERSAND,
     DAMPERSAND,
+    CARET,
     BAR,
     DBAR,
     EQUAL,

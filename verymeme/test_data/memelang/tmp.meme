@@ -1,21 +1,20 @@
 enum Unit {}
 
-fn takesbyvalue(arr: [42]i8) i8 {
-  return arr[0];
+fn bubblesort<T>(v: const* vector<*T>) Unit {
+  for (var i: i32 = 0; i < v.size(); i++) {
+    for (var j: i32 = 0; j < v.size() - 1; j++) {
+      if (v[j] > v[j + 1]) {
+        swap(v[j], v[j + 1]);
+      }
+    }
+  }
 }
 
-fn takesbyref(arr: *[42]i8) i8 {
-  return arr[0];
-}
-
-fn takesbyptr(arr: *i8) i8 {
-  return arr[0];
-}
-
-fn main() i8 {
-  var arr: [42]i8 = {0, 1, 2, 3,};
-  takesbyvalue(arr);
-  takesbyref(&arr);
-  takesbyptr(&arr);
-  return 4;
+fn main() i32 {
+  var v: auto = vector<int8>.new();
+  v.push(4);
+  v.push(3);
+  v.push(1);
+  bubblesort(&v);
+  return 0;
 }

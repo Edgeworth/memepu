@@ -179,6 +179,12 @@ struct VarDecl : public Node {
   DEFNLT(VarDecl, name, type);
 };
 
+struct FnCallArgs : public Expr {
+  std::vector<std::unique_ptr<Expr>> args;
+
+  DEFNLT(FnCallArgs, args);
+};
+
 struct FnSig : public Node {
   std::unique_ptr<Typename> tname;
   std::vector<std::unique_ptr<VarDecl>> params;
@@ -186,6 +192,13 @@ struct FnSig : public Node {
   bool is_static = false;  // Only allowed in structs.
 
   DEFNLT(FnSig, tname, params, ret_type, is_static);
+};
+
+// Block related:
+struct StmtBlk : public Node {
+  std::vector<std::unique_ptr<Node>> stmts;
+
+  DEFNLT(StmtBlk, stmts);
 };
 
 // Statement related:
@@ -202,11 +215,13 @@ struct Var : public Node {
   DEFNLT(Var, decl, defn);
 };
 
-// Block related:
-struct StmtBlk : public Node {
-  std::vector<std::unique_ptr<Node>> stmts;
+struct For : public Node {
+  std::unique_ptr<Var> var_defn;
+  std::unique_ptr<Expr> cond;
+  std::unique_ptr<Expr> update;
+  std::unique_ptr<StmtBlk> blk;
 
-  DEFNLT(StmtBlk, stmts);
+  DEFNLT(For, var_defn, cond, update, blk);
 };
 
 // Top level constructs:
