@@ -7,21 +7,11 @@ namespace memeroute {
 
 namespace {
 
-const sf::Color PRIMARY_COLOR[5] = {
-    sf::Color(20, 55, 173, 150),
-    sf::Color(89, 113, 193, 150),
-    sf::Color(56, 84, 178, 150),
-    sf::Color(14, 42, 133, 150),
-    sf::Color(9, 31, 105, 150),
-};
+const sf::Color PRIMARY_COLOR[5] = {sf::Color(20, 55, 173, 150), sf::Color(89, 113, 193, 150),
+    sf::Color(56, 84, 178, 150), sf::Color(14, 42, 133, 150), sf::Color(9, 31, 105, 150)};
 
-const sf::Color SECONDARY_COLOR[5] = {
-    sf::Color(255, 44, 0, 150),
-    sf::Color(255, 126, 99, 150),
-    sf::Color(255, 91, 57, 150),
-    sf::Color(197, 34, 0, 150),
-    sf::Color(155, 27, 0, 150),
-};
+const sf::Color SECONDARY_COLOR[5] = {sf::Color(255, 44, 0, 150), sf::Color(255, 126, 99, 150),
+    sf::Color(255, 91, 57, 150), sf::Color(197, 34, 0, 150), sf::Color(155, 27, 0, 150)};
 
 const sf::Color LIGHT_GREY = sf::Color(240, 240, 240);
 const float SCALE_FACTOR = 1.2f;

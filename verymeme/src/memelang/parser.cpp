@@ -99,61 +99,29 @@ struct Parser::Context {
 
 namespace {
 
-std::unordered_map<Token::Type, Expr::Type> BINOP_MAP = {
-    {Token::DOT, Expr::MEMBER_ACCESS}, {Token::PLUS, Expr::ADD}, {Token::ASTERISK, Expr::MUL}};
+std::unordered_map<Token::Type, Expr::Type> BINOP_MAP = {{Token::DOT, Expr::MEMBER_ACCESS},
+    {Token::PLUS, Expr::ADD}, {Token::ASTERISK, Expr::MUL}, {Token::FSLASH, Expr::DIV},
+    {Token::MINUS, Expr::SUB}};
 
 // TODO how to decide if postfix/prefix.
-std::unordered_map<Token::Type, Expr::Type> UNOP_MAP = {
-    {Token::DPLUS, Expr::POSTFIX_INC}
-};
+std::unordered_map<Token::Type, Expr::Type> UNOP_MAP = {{Token::DPLUS, Expr::POSTFIX_INC},
+    {Token::DMINUS, Expr::POSTFIX_DEC}, {Token::MINUS, Expr::UNARY_NEGATE},
+    {Token::AMPERSAND, Expr::UNARY_ADDR}, {Token::ASTERISK, Expr::UNARY_DEREF},
+    {Token::TILDE, Expr::UNARY_BINVERT}, {Token::EXCLAMATION, Expr::UNARY_LINVERT}};
 
-std::unordered_map<Expr::Type, int> PRECEDENCE = {
-    {Expr::ARRAY_ACCESS, 15},
-    {Expr::MEMBER_ACCESS, 15},
-    {Expr::FN_CALL, 15},
-    {Expr::POSTFIX_INC, 15},
-    {Expr::POSTFIX_DEC, 15},
-    {Expr::PREFIX_INC, 14},
-    {Expr::PREFIX_DEC, 14},
-    {Expr::UNARY_NEGATE, 14},
-    {Expr::UNARY_LINVERT, 14},
-    {Expr::UNARY_BINVERT, 14},
-    {Expr::UNARY_DEREF, 14},
-    {Expr::UNARY_ADDR, 14},
-    {Expr::MUL, 13},
-    {Expr::DIV, 13},
-    {Expr::MOD, 13},
-    {Expr::ADD, 12},
-    {Expr::SUB, 12},
-    {Expr::LSHIFT, 11},
-    {Expr::ARITH_RSHIFT, 11},
-    {Expr::RSHIFT, 11},
-    {Expr::LEQ, 10},
-    {Expr::GEQ, 10},
-    {Expr::LT, 10},
-    {Expr::GT, 10},
-    {Expr::EQ, 9},
-    {Expr::NEQ, 9},
-    {Expr::BAND, 8},
-    {Expr::BXOR, 7},
-    {Expr::BOR, 6},
-    {Expr::LAND, 5},
-    {Expr::LOR, 4},
-    {Expr::TERNARY, 3},
-    {Expr::ASSIGNMENT, 2},
-};
+std::unordered_map<Expr::Type, int> PRECEDENCE = {{Expr::ARRAY_ACCESS, 15},
+    {Expr::MEMBER_ACCESS, 15}, {Expr::FN_CALL, 15}, {Expr::POSTFIX_INC, 15},
+    {Expr::POSTFIX_DEC, 15}, {Expr::PREFIX_INC, 14}, {Expr::PREFIX_DEC, 14},
+    {Expr::UNARY_NEGATE, 14}, {Expr::UNARY_LINVERT, 14}, {Expr::UNARY_BINVERT, 14},
+    {Expr::UNARY_DEREF, 14}, {Expr::UNARY_ADDR, 14}, {Expr::MUL, 13}, {Expr::DIV, 13},
+    {Expr::MOD, 13}, {Expr::ADD, 12}, {Expr::SUB, 12}, {Expr::LSHIFT, 11}, {Expr::ARITH_RSHIFT, 11},
+    {Expr::RSHIFT, 11}, {Expr::LEQ, 10}, {Expr::GEQ, 10}, {Expr::LT, 10}, {Expr::GT, 10},
+    {Expr::EQ, 9}, {Expr::NEQ, 9}, {Expr::BAND, 8}, {Expr::BXOR, 7}, {Expr::BOR, 6},
+    {Expr::LAND, 5}, {Expr::LOR, 4}, {Expr::TERNARY, 3}, {Expr::ASSIGNMENT, 2}};
 
-const std::unordered_set<Expr::Type> RIGHT_ASSOC = {
-    Expr::PREFIX_INC,
-    Expr::PREFIX_DEC,
-    Expr::UNARY_NEGATE,
-    Expr::UNARY_LINVERT,
-    Expr::UNARY_BINVERT,
-    Expr::UNARY_DEREF,
-    Expr::UNARY_ADDR,
-    Expr::TERNARY,
-    Expr::ASSIGNMENT,
-};
+const std::unordered_set<Expr::Type> RIGHT_ASSOC = {Expr::PREFIX_INC, Expr::PREFIX_DEC,
+    Expr::UNARY_NEGATE, Expr::UNARY_LINVERT, Expr::UNARY_BINVERT, Expr::UNARY_DEREF,
+    Expr::UNARY_ADDR, Expr::TERNARY, Expr::ASSIGNMENT};
 
 class ExpressionParser {
 public:
@@ -164,7 +132,8 @@ public:
     // (for, if, match), comma (struct/array literal, function call), closing paren
     // (function call), closing brace (struct literal), closing square bracket (array
     // literal).
-    ExprCtx ectx;
+    // TODO: distinguish opening brace from match vs opening brace from literal
+    ExprCtx ectx(ctx_);
     while (!ctx_.hasToken({Token::SEMICOLON, Token::LBRACE, Token::COMMA, Token::RPAREN,
         Token::RBRACE, Token::RSQUARE})) {
       const auto* tok = ctx_.curToken();
@@ -172,28 +141,26 @@ public:
       case Token::LPAREN: {
         // TODO: determine if FN call or just paren'd expr.
         ctx_.consumeToken();
-        ectx.s.emplace_back(parse());
+        ectx.addExpr(parse());
         ctx_.consumeToken(Token::RPAREN);
         continue;
       }
-      case Token::IDENT: ectx.s.emplace_back(std::make_unique<VarRef>(ctx_)); continue;
-      case Token::BOOL_LIT: ectx.s.emplace_back(std::make_unique<BoolLit>(ctx_)); continue;
-      case Token::INT_LIT: ectx.s.emplace_back(std::make_unique<IntLit>(ctx_)); continue;
-      case Token::CHAR_LIT: ectx.s.emplace_back(std::make_unique<CharLit>(ctx_)); continue;
-      case Token::STR_LIT: ectx.s.emplace_back(std::make_unique<StrLit>(ctx_)); continue;
+      case Token::LANGLE: {
+        ctx_.consumeToken();
+        ectx.addExpr(parse());
+        ctx_.consumeToken(Token::RANGLE);
+        continue;
+      }
+      case Token::IDENT: ectx.addExpr(std::make_unique<VarRef>(ctx_)); continue;
+      case Token::BOOL_LIT: ectx.addExpr(std::make_unique<BoolLit>(ctx_)); continue;
+      case Token::INT_LIT: ectx.addExpr(std::make_unique<IntLit>(ctx_)); continue;
+      case Token::CHAR_LIT: ectx.addExpr(std::make_unique<CharLit>(ctx_)); continue;
+      case Token::STR_LIT: ectx.addExpr(std::make_unique<StrLit>(ctx_)); continue;
       default: break;
       }
-      // TODO(fix)
-//      if (EXPR_MAP.find(tok->type) != EXPR_MAP.end()) {
-//        ectx.processStack(PRECEDENCE[EXPR_MAP[tok->type]], ctx_);
-//        ectx.ops.emplace_back(std::make_unique<BinOp>(ctx_));
-//      } else {
-//        ctx_.compileError("unexpected token");
-//      }
+      ectx.addOp(tok->type);
     }
-    ectx.processStack(-1, ctx_);
-    if (ectx.s.size() != 1 || !ectx.ops.empty()) ctx_.compileError("error in expression");
-    return std::move(ectx.s[0]);
+    return ectx.finish();
   }
 
 private:
@@ -201,53 +168,88 @@ private:
 
   class ExprCtx {
   public:
-    std::vector<std::unique_ptr<Expr>> s = {};
-    std::vector<std::unique_ptr<BinOp>> ops = {};
+    explicit ExprCtx(Parser::Context& ctx) : ctx_(ctx) {}
 
-    void processStack(int next_precedence, Parser::Context& ctx) {
+    std::unique_ptr<Expr> finish() {
+      processStack(-1);
+      if (s_.size() != 1 || !ops_.empty()) ctx_.compileError("error in expression");
+      return std::move(s_[0]);
+    }
+
+    void addExpr(std::unique_ptr<Expr> e) { s_.emplace_back(std::move(e)); }
+
+    void addOp(Token::Type type) {
+      const bool can_binop = s_.size() - binop_count == 1;
+      if (can_binop && BINOP_MAP.count(type)) {
+        processStack(PRECEDENCE[BINOP_MAP[type]]);
+        binop_count++;
+        ops_.emplace_back(std::make_unique<Op>(ctx_));
+        ops_.back()->type = BINOP_MAP[type];
+        ops_.back()->is_binop = true;
+      } else if (UNOP_MAP.count(type)) {
+        processStack(PRECEDENCE[UNOP_MAP[type]]);
+        ops_.emplace_back(std::make_unique<Op>(ctx_));
+        ops_.back()->type = UNOP_MAP[type];
+      } else {
+        ctx_.compileError("unexpected token");
+      }
+      ctx_.consumeToken();
+    }
+
+  private:
+    Parser::Context& ctx_;
+    std::vector<std::unique_ptr<Expr>> s_ = {};
+    std::vector<std::unique_ptr<Op>> ops_ = {};
+    int binop_count = 0;
+
+    bool shouldPopStack(int precedence) const {
+      if (ops_.empty() || s_.empty()) return false;
+      return PRECEDENCE[ops_.back()->type] > precedence;  // If precedence goes down, we can pop.
+    }
+
+    void processStack(int next_precedence) {
       while (shouldPopStack(next_precedence)) {
-        const bool is_right = RIGHT_ASSOC.find(ops.back()->type) != RIGHT_ASSOC.end();
-        const int cur_precedence = PRECEDENCE[ops.back()->type];
-        std::vector<std::unique_ptr<BinOp>> curops;
+        const bool is_right = RIGHT_ASSOC.find(ops_.back()->type) != RIGHT_ASSOC.end();
+        const int cur_precedence = PRECEDENCE[ops_.back()->type];
+        std::vector<std::unique_ptr<Op>> curops;
         std::vector<std::unique_ptr<Expr>> curexpr;
-        curexpr.emplace_back(std::move(s.back()));
-        s.pop_back();
-        while (!ops.empty() && PRECEDENCE[ops.back()->type] == cur_precedence) {
-          // TODO: ONly push back expr if it's a binary op.
-          if (s.empty()) ctx.compileError("error in expression");
-          curexpr.emplace_back(std::move(s.back()));
-          curops.emplace_back(std::move(ops.back()));
-          s.pop_back();
-          ops.pop_back();
+        curexpr.emplace_back(std::move(s_.back()));
+        s_.pop_back();
+        while (!ops_.empty() && PRECEDENCE[ops_.back()->type] == cur_precedence) {
+          if (ops_.back()->is_binop) {
+            binop_count--;
+            if (s_.empty()) ctx_.compileError("error in expression");
+            curexpr.emplace_back(std::move(s_.back()));
+            s_.pop_back();
+          }
+          curops.emplace_back(std::move(ops_.back()));
+          ops_.pop_back();
         }
         if (is_right) {
           curops = reverse(std::move(curops));
           curexpr = reverse(std::move(curexpr));
         }
-        collapseOps(curops, curexpr, ctx);
-        s.emplace_back(std::move(curexpr[0]));
+        collapseOps(curops, curexpr);
+        s_.emplace_back(std::move(curexpr[0]));
       }
     }
 
-  private:
-    bool shouldPopStack(int precedence) const {
-      if (ops.empty() || s.empty()) return false;
-      return PRECEDENCE[ops.back()->type] > precedence;  // If precedence goes down, we can pop.
-    }
-
-    static void collapseOps(std::vector<std::unique_ptr<BinOp>>& ops,
-        std::vector<std::unique_ptr<Expr>>& expr, Parser::Context& ctx) {
+    void collapseOps(
+        std::vector<std::unique_ptr<Op>>& ops, std::vector<std::unique_ptr<Expr>>& expr) {
       while (!ops.empty()) {
-        verify_expr(expr.size() >= 2u, "BUG");
+        verify_expr(!expr.empty(), "BUG");
         auto op = std::move(ops.back());
         ops.pop_back();
-        op->right = std::move(expr.back());
-        expr.pop_back();
+        if (op->is_binop) {
+          op->right = std::move(expr.back());
+          expr.pop_back();
+        }
+        verify_expr(!expr.empty(), "BUG");
         op->left = std::move(expr.back());
         expr.pop_back();
         expr.push_back(std::move(op));
       }
-      if (expr.size() != 1) ctx.compileError("error in expression");
+      if (expr.size() != 1 && !ops.empty()) ctx_.compileError("error in expression");
     }
   };
 };
@@ -272,7 +274,7 @@ Parser::~Parser() = default;
 bool Parser::parse() {
   try {
     root_ = std::make_unique<File>(*ctx_);
-  } catch (const std::exception& e) { verify_expr(false, "%s\n", e.what()); }
+  } catch (const std::exception& e) { verify_expr(false, "%s", e.what()); }
   return true;
 }
 
@@ -289,36 +291,32 @@ std::string BoolLit::toString() const {
   return (fmt("BoolLit(%s)") % (val ? "true" : "false")).str();
 }
 std::vector<Node*> BoolLit::children() { return {}; }
-void BoolLit::generateIr() const {}
 
 IntLit::IntLit(Parser::Context& ctx) { val = ctx.consumeToken(Token::INT_LIT)->int_val; }
 std::string IntLit::toString() const { return (fmt("IntLit(%d)") % val).str(); }
 std::vector<Node*> IntLit::children() { return {}; }
-void IntLit::generateIr() const {}
 
 CharLit::CharLit(Parser::Context& ctx) {
   val = int32_t(ctx.consumeToken(Token::CHAR_LIT)->int_val);
 }
 std::string CharLit::toString() const { return (fmt("CharLit(%c)") % val).str(); }
 std::vector<Node*> CharLit::children() { return {}; }
-void CharLit::generateIr() const {}
 
 StrLit::StrLit(Parser::Context& ctx) { val = ctx.consumeToken(Token::STR_LIT)->str_val; }
 std::string StrLit::toString() const { return (fmt("StrLit(%s)") % val).str(); }
 std::vector<Node*> StrLit::children() { return {}; }
-void StrLit::generateIr() const {}
 
-BinOp::BinOp(Parser::Context& ctx) { /*type = EXPR_MAP[ctx.consumeToken()->type];*/ } // TODO(fix)
-std::string BinOp::toString() const { return (fmt("BinOp(%s)") % type).str(); }
-std::vector<Node*> BinOp::children() { return flattenChildren(left, right); }
-void BinOp::generateIr() const {}
+Op::Op(Parser::Context&) {}
+std::string Op::toString() const { return (fmt("Op(%s)") % type).str(); }
+std::vector<Node*> Op::children() {
+  return is_binop ? flattenChildren(left, right) : flattenChildren(left);
+}
 
 VarRef::VarRef(Parser::Context& ctx) {
   name = ctx.consumeToken(Token::IDENT)->toString(ctx.contents);
 }
 std::string VarRef::toString() const { return (fmt("VarRef(%s)") % name).str(); }
 std::vector<Node*> VarRef::children() { return {}; }
-void VarRef::generateIr() const {}
 
 Typelist::Typelist(Parser::Context& ctx) {
   ctx.consumeToken(Token::LANGLE);
@@ -333,7 +331,6 @@ Typelist::Typelist(Parser::Context& ctx) {
 
 std::string Typelist::toString() const { return "Typelist"; }
 std::vector<Node*> Typelist::children() { return {}; }
-void Typelist::generateIr() const {}
 
 Typename::Typename(Parser::Context& ctx) {
   name = ctx.consumeToken(Token::IDENT)->toString(ctx.contents);
@@ -341,7 +338,6 @@ Typename::Typename(Parser::Context& ctx) {
 }
 std::string Typename::toString() const { return (fmt("Typename %s") % name).str(); }
 std::vector<Node*> Typename::children() { return flattenChildren(tlist); }
-void Typename::generateIr() const {}
 
 Qualifier::Qualifier(Parser::Context& ctx) {
   if (ctx.hasToken(Token::LSQUARE)) {
@@ -356,7 +352,6 @@ Qualifier::Qualifier(Parser::Context& ctx) {
 }
 std::string Qualifier::toString() const { return "Qualifier"; }
 std::vector<Node*> Qualifier::children() { return {}; }
-void Qualifier::generateIr() const {}
 
 Type::Type(Parser::Context& ctx) {
   while (ctx.hasToken({Token::ASTERISK, Token::LSQUARE}))
@@ -378,7 +373,6 @@ Type::Type(Parser::Context& ctx) {
 }
 std::string Type::toString() const { return (fmt("Type %s") % name).str(); }
 std::vector<Node*> Type::children() { return flattenChildren(quals, params); }
-void Type::generateIr() const {}
 
 FnVarDecl::FnVarDecl(Parser::Context& ctx) {
   name = ctx.consumeToken(Token::IDENT)->toString(ctx.contents);
@@ -387,7 +381,6 @@ FnVarDecl::FnVarDecl(Parser::Context& ctx) {
 }
 std::string FnVarDecl::toString() const { return (fmt("FnVarDecl %s") % name).str(); }
 std::vector<Node*> FnVarDecl::children() { return {type.get()}; }
-void FnVarDecl::generateIr() const {}
 
 FnSig::FnSig(Parser::Context& ctx) {
   ctx.consumeToken(Token::FN);
@@ -402,7 +395,6 @@ FnSig::FnSig(Parser::Context& ctx) {
 }
 std::string FnSig::toString() const { return "FnSig"; }
 std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret_type); }
-void FnSig::generateIr() const {}
 
 StmtBlk::StmtBlk(Parser::Context& ctx) {
   ctx.consumeToken(Token::LBRACE);
@@ -416,7 +408,6 @@ StmtBlk::StmtBlk(Parser::Context& ctx) {
 }
 std::string StmtBlk::toString() const { return "StmtBlk"; }
 std::vector<Node*> StmtBlk::children() { return flattenChildren(stmts); }
-void StmtBlk::generateIr() const {}
 
 FnDefn::FnDefn(Parser::Context& ctx) {
   sig = std::make_unique<FnSig>(ctx);
@@ -424,7 +415,6 @@ FnDefn::FnDefn(Parser::Context& ctx) {
 }
 std::string FnDefn::toString() const { return "FnDefn"; }
 std::vector<Node*> FnDefn::children() { return flattenChildren(sig, blk); }
-void FnDefn::generateIr() const {}
 
 IntfDefn::IntfDefn(Parser::Context& ctx) {
   ctx.consumeToken(Token::INTF);
@@ -438,7 +428,6 @@ IntfDefn::IntfDefn(Parser::Context& ctx) {
 }
 std::string IntfDefn::toString() const { return "Intf"; }
 std::vector<Node*> IntfDefn::children() { return flattenChildren(decls); }
-void IntfDefn::generateIr() const {}
 
 File::File(Parser::Context& ctx) {
   while (ctx.hasToken()) {
@@ -452,6 +441,5 @@ File::File(Parser::Context& ctx) {
 }
 std::string File::toString() const { return "File"; }
 std::vector<Node*> File::children() { return flattenChildren(intf_defns, fn_defns); }
-void File::generateIr() const {}
 
 }  // namespace memelang

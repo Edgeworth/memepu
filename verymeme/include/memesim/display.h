@@ -23,4 +23,4 @@ private:
 
 }  // namespace memesim
 
-#endif // MEMESIM_DISPLAY_H
+#endif  // MEMESIM_DISPLAY_H
