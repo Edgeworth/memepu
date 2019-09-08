@@ -102,6 +102,7 @@ private:
   std::string curtok_;
   std::vector<Token> tokens_;
   int idx_ = 0;
+  bool can_merge_ = true;
 
   static bool startsNewToken(char c);
 

@@ -42,6 +42,7 @@ private:
 
 struct Node {
   Token tok = {};
+  virtual ~Node() = default;
 
   virtual std::string toString() const = 0;
   virtual std::vector<Node*> children() = 0;

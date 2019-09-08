@@ -55,6 +55,7 @@ std::vector<Token> Tokeniser::tokenise() {
 
     if (atCompleteToken() || startsNewToken(c)) pushCurrentToken();
     if (!isspace(c)) curtok_ += c;
+    else can_merge_ = false;  // Can't merge across spaces.
   }
   pushCurrentToken();
 
@@ -74,7 +75,7 @@ void Tokeniser::pushCurrentToken() {
   }
 
   // Try to merge tokens together.
-  if (!tokens_.empty()) {
+  if (!tokens_.empty() && can_merge_) {
     auto prevtok = tokens_.back();
     std::string mergetok = contents_->getSpan(prevtok.loc, prevtok.size) + curtok_;
     auto merge_iter = SIMPLE_TOKENS.find(mergetok);
@@ -122,6 +123,8 @@ void Tokeniser::pushCurrentToken() {
 
   tokens_.push_back({type, idx_ - int(curtok_.size()), int(curtok_.size()), int_val, str_val});
   curtok_ = "";
+  // Added a new token, we can potentially merge it next.
+  can_merge_ = true;
 }
 
 bool Tokeniser::startsNewToken(char c) {

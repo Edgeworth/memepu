@@ -104,6 +104,7 @@ def check_pwd():
     print('Current directory %s is wrong, go to memepu/verymeme' % os.getcwd())
     sys.exit(1)
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--formal', action='store_true', default=False, required=False,
                     help='Run formal verification.')

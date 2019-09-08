@@ -7,27 +7,40 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native -O3")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -march=native -O3")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+# Fuzzing
+if ("${USE_AFL}" STREQUAL "clang")
+  message(STATUS "Using american fuzzy lop with clang")
+  set(CMAKE_C_COMPILER "afl-clang-fast")
+  set(CMAKE_CXX_COMPILER "afl-clang-fast++")
+elseif (${USE_AFL})
+  message(STATUS "Using american fuzzy lop with gcc")
+  set(CMAKE_C_COMPILER "afl-gcc")
+  set(CMAKE_CXX_COMPILER "afl-g++")
+endif ()
+
 project(verymeme)
 
 # Enable IPO if possible.
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result OUTPUT output)
-if(result)
+if (result)
   message(STATUS "Enabling IPO")
   cmake_policy(SET CMP0069 NEW)
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-else()
+else ()
   message(WARNING "IPO is not supported: ${output}")
-endif()
+endif ()
 
-# Gold linker.
-include(CheckCCompilerFlag)
-check_c_compiler_flag("-fuse-ld=gold" HAVE_GOLD)
-if(HAVE_GOLD)
-  message("Using gold linker")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=gold")
-endif()
+# Backtrace is slow so skip for AFL.
+if (${USE_AFL})
+  add_definitions(-DBOOST_STACKTRACE_USE_NOOP)
+else ()
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_definitions(-DBOOST_STACKTRACE_USE_ADDR2LINE)
+  else ()
+    add_definitions(-DBOOST_STACKTRACE_USE_BACKTRACE)
+  endif ()
+endif ()
 
 # Find required packages.
 find_package(Boost REQUIRED program_options stacktrace_backtrace)
@@ -39,6 +52,21 @@ find_package(Threads REQUIRED)
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_DIR})
 include(ECMEnableSanitizers)
+
+include(CheckCCompilerFlag)
+check_c_compiler_flag("-fuse-ld=gold" HAVE_GOLD)
+check_c_compiler_flag("-fuse-ld=lld" HAVE_LLD)
+
+if (HAVE_LLD AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  message(STATUS "Using lld linker")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld")
+elseif (HAVE_GOLD)
+  # Gold linker.
+  message(STATUS "Using gold linker")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=gold")
+endif()
 
 # Download and unpack googletest at configure time
 configure_file(cmake/DownloadGTest.cmake googletest-download/CMakeLists.txt)
@@ -61,7 +89,6 @@ include(GoogleTest)
 
 # Verilator debug option.
 #add_definitions(-DVL_DEBUG)
-add_definitions(-DBOOST_STACKTRACE_USE_BACKTRACE)
 
 # Build verilog files using verilator.
 add_subdirectory(verilog)
