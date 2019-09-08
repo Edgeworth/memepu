@@ -24,8 +24,7 @@ void fcInternal(std::vector<Node*>& cs, const T& head, const Args&... tail) {
     if (head) cs.push_back(head.get());
   } else {
     for (const auto& p : head) {
-      verify_expr(p != nullptr, "BUG");
-      cs.push_back(p.get());
+      if (p != nullptr) cs.push_back(p.get());
     }
   }
   fcInternal(cs, tail...);
@@ -74,11 +73,13 @@ struct Parser::Context {
   }
 
   bool hasToken() const { return hasToken(std::vector<Tok::Type>{}); }
-  bool hasToken(Tok::Type type) const { return hasToken(std::vector<Tok::Type>{type}); }
-  bool hasToken(const std::vector<Tok::Type>& ts) const {
-    if (idx >= int(toks.size())) return false;
+  bool hasToken(Tok::Type type, int peek = 0) const {
+    return hasToken(std::vector<Tok::Type>{type}, peek);
+  }
+  bool hasToken(const std::vector<Tok::Type>& ts, int peek = 0) const {
+    if (idx + peek >= int(toks.size())) return false;
     if (ts.empty()) return true;
-    const auto& token = toks[idx];
+    const auto& token = toks[idx + peek];
     return std::any_of(ts.begin(), ts.end(), [token](auto type) { return token.type == type; });
   }
 
@@ -128,14 +129,11 @@ public:
   explicit ExpressionParser(Parser::Context& ctx) : ctx_(ctx) {}
 
   std::unique_ptr<Expr> parse() {
-    // A top level expression must end either with semicolon (statement), opening brace
-    // (for, if, match), comma (struct/array literal, function call), closing paren
-    // (function call), closing brace (struct literal), closing square bracket (array
-    // literal).
-    // TODO: distinguish opening brace from match vs opening brace from literal
+    // A top level expression must end either with semicolon (statement), comma (struct/array
+    // literal, function call), closing paren (function call, for, if, match), closing brace
+    // (compound literal), closing square bracket (array index).
     ExprCtx ectx(ctx_);
-    while (!ctx_.hasToken(
-        {Tok::SEMICOLON, Tok::LBRACE, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
+    while (!ctx_.hasToken({Tok::SEMICOLON, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
       const auto* tok = ctx_.curToken();
       switch (tok->type) {
       case Tok::LPAREN: {
@@ -151,6 +149,7 @@ public:
         ctx_.consumeToken(Tok::RANGLE);
         continue;
       }
+      case Tok::LBRACE: ectx.addExpr(std::make_unique<CompoundLit>(ctx_)); continue;
       case Tok::IDENT: ectx.addExpr(std::make_unique<VarRef>(ctx_)); continue;
       case Tok::BOOL_LIT: ectx.addExpr(std::make_unique<BoolLit>(ctx_)); continue;
       case Tok::INT_LIT: ectx.addExpr(std::make_unique<IntLit>(ctx_)); continue;
@@ -308,11 +307,17 @@ StrLit::StrLit(Parser::Context& ctx) { val = ctx.consumeToken(Tok::STR_LIT)->str
 std::string StrLit::toString() const { return (fmt("StrLit(%s)") % val).str(); }
 std::vector<Node*> StrLit::children() { return {}; }
 
+CompoundLit::CompoundLit(Parser::Context& ctx) {
+  ctx.consumeToken(Tok::LBRACE);
+  while (!ctx.hasToken(Tok::RBRACE)) lits.emplace_back(ExpressionParser(ctx).parse());
+  ctx.consumeToken(Tok::RBRACE);
+}
+std::string CompoundLit::toString() const { return "CompoundLit"; }
+std::vector<Node*> CompoundLit::children() { return {}; }
+
 Op::Op(Parser::Context&) {}
 std::string Op::toString() const { return (fmt("Op(%s)") % type).str(); }
-std::vector<Node*> Op::children() {
-  return is_binop ? flattenChildren(left, right) : flattenChildren(left);
-}
+std::vector<Node*> Op::children() { return flattenChildren(left, right); }
 
 VarRef::VarRef(Parser::Context& ctx) {
   name = ctx.consumeToken(Tok::IDENT)->toString(ctx.contents);
@@ -352,11 +357,14 @@ Qualifier::Qualifier(Parser::Context& ctx) {
     ctx.consumeToken(Tok::ASTERISK);
   }
 }
-std::string Qualifier::toString() const { return "Qualifier"; }
+std::string Qualifier::toString() const {
+  return (fmt("Qualifier const: %1% ptr: %2%, array: %3%") % cnst % ptr % array).str();
+}
 std::vector<Node*> Qualifier::children() { return {}; }
 
 Type::Type(Parser::Context& ctx) {
-  while (ctx.hasToken({Tok::ASTERISK, Tok::LSQUARE}))
+  while (ctx.hasToken({Tok::ASTERISK, Tok::LSQUARE}) ||
+      (ctx.hasToken(Tok::CONST) && ctx.hasToken(Tok::ASTERISK, 1)))
     quals.emplace_back(std::make_unique<Qualifier>(ctx));
   cnst = ctx.maybeConsumeToken(Tok::CONST);
   if (ctx.hasToken(Tok::IDENT)) {
@@ -376,20 +384,20 @@ Type::Type(Parser::Context& ctx) {
 std::string Type::toString() const { return (fmt("Type %s") % name).str(); }
 std::vector<Node*> Type::children() { return flattenChildren(quals, params); }
 
-FnVarDecl::FnVarDecl(Parser::Context& ctx) {
-  name = ctx.consumeToken(Tok::IDENT)->toString(ctx.contents);
+VarDecl::VarDecl(Parser::Context& ctx) {
+  name = std::make_unique<VarRef>(ctx);
   ctx.consumeToken(Tok::COLON);
   type = std::make_unique<Type>(ctx);
 }
-std::string FnVarDecl::toString() const { return (fmt("FnVarDecl %s") % name).str(); }
-std::vector<Node*> FnVarDecl::children() { return {type.get()}; }
+std::string VarDecl::toString() const { return "VarDecl"; }
+std::vector<Node*> VarDecl::children() { return flattenChildren(name, type); }
 
 FnSig::FnSig(Parser::Context& ctx) {
   ctx.consumeToken(Tok::FN);
   tname = std::make_unique<Typename>(ctx);
   ctx.consumeToken(Tok::LPAREN);
   while (ctx.curToken()->type != Tok::RPAREN) {
-    params.emplace_back(std::make_unique<FnVarDecl>(ctx));
+    params.emplace_back(std::make_unique<VarDecl>(ctx));
     if (!ctx.maybeConsumeToken(Tok::COMMA)) break;
   }
   ctx.consumeToken(Tok::RPAREN);
@@ -405,12 +413,24 @@ Return::Return(Parser::Context& ctx) {
 std::string Return::toString() const { return "Return"; }
 std::vector<Node*> Return::children() { return flattenChildren(ret); }
 
+Var::Var(Parser::Context& ctx) {
+  ctx.consumeToken(Tok::VAR);
+  decl = std::make_unique<VarDecl>(ctx);
+  if (ctx.hasToken(Tok::EQUAL)) {
+    ctx.consumeToken();
+    defn = ExpressionParser(ctx).parse();
+  }
+}
+std::string Var::toString() const { return "Var"; }
+std::vector<Node*> Var::children() { return flattenChildren(decl, defn); }
+
 StmtBlk::StmtBlk(Parser::Context& ctx) {
   ctx.consumeToken(Tok::LBRACE);
   while (!ctx.hasToken(Tok::RBRACE)) {
     // TODO(Progress): var defn, decl, ret, for, if, match, asm
     switch (ctx.curToken()->type) {
     case Tok::RETURN: stmts.emplace_back(std::make_unique<Return>(ctx)); break;
+    case Tok::VAR: stmts.emplace_back(std::make_unique<Var>(ctx)); break;
     default: stmts.emplace_back(ExpressionParser(ctx).parse()); break;
     }
     ctx.consumeToken(Tok::SEMICOLON);
@@ -440,13 +460,29 @@ IntfDefn::IntfDefn(Parser::Context& ctx) {
 std::string IntfDefn::toString() const { return "Intf"; }
 std::vector<Node*> IntfDefn::children() { return flattenChildren(decls); }
 
+EnumDefn::EnumDefn(Parser::Context& ctx) {
+  ctx.consumeToken(Tok::ENUM);
+  tname = std::make_unique<Typename>(ctx);
+  ctx.consumeToken(Tok::LBRACE);
+  while (!ctx.hasToken(Tok::RBRACE)) {
+    if (ctx.hasToken(Tok::COMMA, 1))
+      untyped_enums.emplace_back(ctx.consumeToken(Tok::IDENT)->toString(ctx.contents));
+    else
+      typed_enums.emplace_back(std::make_unique<VarDecl>(ctx));
+    ctx.consumeToken(Tok::COMMA);
+  }
+  ctx.consumeToken(Tok::RBRACE);
+}
+std::string EnumDefn::toString() const { return (fmt("Enum (%1% untyped)") % untyped_enums.size()).str(); }
+std::vector<Node*> EnumDefn::children() { return flattenChildren(tname, typed_enums); }
+
 File::File(Parser::Context& ctx) {
   while (ctx.hasToken()) {
-    const auto* token = ctx.curToken({Tok::INTF, Tok::FN});
-    if (token->type == Tok::INTF) {
-      intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx));
-    } else if (token->type == Tok::FN) {
-      fn_defns.emplace_back(std::make_unique<FnDefn>(ctx));
+    switch (ctx.curToken()->type) {
+      case Tok::INTF: intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx)); break;
+      case Tok::FN: fn_defns.emplace_back(std::make_unique<FnDefn>(ctx)); break;
+      case Tok::ENUM: enum_defns.emplace_back(std::make_unique<EnumDefn>(ctx)); break;
+      default: ctx.compileError("unexpected token"); break;
     }
   }
 }

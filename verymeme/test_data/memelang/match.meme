@@ -1,10 +1,10 @@
 enum Result<T, E> {
-  Ok(T),
-  Error(E),
+  Ok: T,
+  Error: E,
 }
 
 fn trysomething(succeed: i8) Result<i8, bool> {
-  if succeed > 3 {
+  if (succeed > 3) {
     return Ok(5);
   } else {
     return Err(false);
@@ -13,7 +13,7 @@ fn trysomething(succeed: i8) Result<i8, bool> {
 }
 
 fn main() i8 {
-  match trysomething(4) {
+  match (trysomething(4)) {
     Ok(v) {
       print("Got value");
     } Err(e) {
