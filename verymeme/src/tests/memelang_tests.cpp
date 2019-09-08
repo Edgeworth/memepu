@@ -17,15 +17,15 @@ TEST_F(MemelangTokeniserTest, BasicTest) {
   auto tokens = tokeniser.tokenise();
   std::vector<Token::Type> types;
   for (const auto& tok : tokens) types.push_back(tok.type);
-  // TODO: Change DMINUS back to MINUS MINUS? => ---a vs a--- => need to do in parser?
   const Token::Type expected[] = {Token::FN, Token::IDENT, Token::LPAREN, Token::RPAREN, Token::I32,
       Token::LBRACE, Token::MINUS, Token::LPAREN, Token::INT_LIT, Token::PLUS, Token::INT_LIT,
       Token::RPAREN, Token::ASTERISK, Token::LPAREN, Token::INT_LIT, Token::FSLASH, Token::INT_LIT,
       Token::RPAREN, Token::MINUS, Token::MINUS, Token::INT_LIT, Token::SEMICOLON, Token::IDENT,
-      Token::MINUS, Token::MINUS, Token::INT_LIT, Token::SEMICOLON, Token::IDENT, Token::MINUS,
-      Token::MINUS, Token::MINUS, Token::IDENT, Token::SEMICOLON, Token::RETURN, Token::INT_LIT,
-      Token::SEMICOLON, Token::RBRACE};
-  //  EXPECT_THAT(types, ElementsAreArray(expected));
+      Token::DMINUS, Token::INT_LIT, Token::SEMICOLON, Token::IDENT, Token::DMINUS, Token::MINUS,
+      Token::IDENT, Token::SEMICOLON, Token::DMINUS, Token::MINUS, Token::IDENT, Token::DPLUS,
+      Token::PLUS, Token::IDENT, Token::DMINUS, Token::MINUS, Token::IDENT, Token::SEMICOLON,
+      Token::RETURN, Token::INT_LIT, Token::SEMICOLON, Token::RBRACE};
+  EXPECT_THAT(types, ElementsAreArray(expected));
 }
 
 TEST_F(MemelangTokeniserTest, ParsingTest) {
@@ -93,7 +93,7 @@ TEST_F(MemelangTokeniserTest, ParsingTest) {
       Token::SEMICOLON, Token::IDENT, Token::PLUS, Token::PLUS, Token::LBRACE, Token::RETURN,
       Token::INT_LIT, Token::SEMICOLON, Token::RBRACE, Token::COMMENT, Token::RETURN,
       Token::INT_LIT, Token::SEMICOLON, Token::RBRACE};
-  //  EXPECT_THAT(types, ElementsAreArray(expected));
+//  EXPECT_THAT(types, ElementsAreArray(expected));
 }
 
 }  // namespace
