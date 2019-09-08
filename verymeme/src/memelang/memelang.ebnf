@@ -32,7 +32,7 @@ stmt_var_defn : stmt_var_decl '=' expr ';' ;
 
 // Expression related:
 literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | compound_lit;
-compound_lit : LBRACE ((IDENT ':' expr ',')* | (expr ',')*) RBRACE ;
+compound_lit : LBRACE ((IDENT ':' expr ',')*  | (expr ',')*) RBRACE ;
 expr : expr '[' expr ']'  // Array subscript
     | fn_call  // Function call
     | expr '.' (fn_call | IDENT)  // Member access

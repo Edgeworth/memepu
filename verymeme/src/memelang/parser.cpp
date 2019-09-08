@@ -100,7 +100,7 @@ namespace {
 
 std::unordered_map<Tok::Type, Expr::Type> BINOP_MAP = {{Tok::DOT, Expr::MEMBER_ACCESS},
     {Tok::PLUS, Expr::ADD}, {Tok::ASTERISK, Expr::MUL}, {Tok::FSLASH, Expr::DIV},
-    {Tok::MINUS, Expr::SUB}};
+    {Tok::MINUS, Expr::SUB}, {Tok::LSQUARE, Expr::ARRAY_ACCESS}, {Tok::LPAREN, Expr::FN_CALL}};
 
 std::unordered_map<Tok::Type, Expr::Type> POSTFIX_UNOP_MAP = {
     {Tok::DPLUS, Expr::POSTFIX_INC}, {Tok::DMINUS, Expr::POSTFIX_DEC}};
@@ -135,30 +135,37 @@ public:
     ExprCtx ectx(ctx_);
     while (!ctx_.hasToken({Tok::SEMICOLON, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
       const auto* tok = ctx_.curToken();
+      printf("Processing tok %s\n", tok->toString(ctx_.contents).c_str());
+
       switch (tok->type) {
       case Tok::LPAREN: {
-        // TODO: determine if FN call or just paren'd expr.
+        // If we can do postfix, add function call operation. Otherwise, it's just a paren'd expr.
+        if (ectx.canDoPostfixOp()) ectx.addOp(tok->type);
         ctx_.consumeToken();
         ectx.addExpr(parse());
         ctx_.consumeToken(Tok::RPAREN);
-        continue;
+        break;
       }
-      case Tok::LANGLE: {
+      case Tok::LSQUARE: {
+        ectx.addOp(tok->type);
         ctx_.consumeToken();
         ectx.addExpr(parse());
-        ctx_.consumeToken(Tok::RANGLE);
-        continue;
+        ctx_.consumeToken(Tok::RSQUARE);
+        break;
       }
-      case Tok::LBRACE: ectx.addExpr(std::make_unique<CompoundLit>(ctx_)); continue;
-      case Tok::IDENT: ectx.addExpr(std::make_unique<VarRef>(ctx_)); continue;
-      case Tok::BOOL_LIT: ectx.addExpr(std::make_unique<BoolLit>(ctx_)); continue;
-      case Tok::INT_LIT: ectx.addExpr(std::make_unique<IntLit>(ctx_)); continue;
-      case Tok::CHAR_LIT: ectx.addExpr(std::make_unique<CharLit>(ctx_)); continue;
-      case Tok::STR_LIT: ectx.addExpr(std::make_unique<StrLit>(ctx_)); continue;
-      default: break;
+      case Tok::LBRACE: ectx.addExpr(std::make_unique<CompoundLit>(ctx_)); break;
+      case Tok::IDENT: ectx.addExpr(std::make_unique<VarRef>(ctx_)); break;
+      case Tok::BOOL_LIT: ectx.addExpr(std::make_unique<BoolLit>(ctx_)); break;
+      case Tok::INT_LIT: ectx.addExpr(std::make_unique<IntLit>(ctx_)); break;
+      case Tok::CHAR_LIT: ectx.addExpr(std::make_unique<CharLit>(ctx_)); break;
+      case Tok::STR_LIT: ectx.addExpr(std::make_unique<StrLit>(ctx_)); break;
+      default:
+        ectx.addOp(tok->type);
+        ctx_.consumeToken();
+        break;
       }
-      ectx.addOp(tok->type);
     }
+    printf("finishing\n");
     return ectx.finish();
   }
 
@@ -178,12 +185,12 @@ private:
     void addExpr(std::unique_ptr<Expr> e) { s_.emplace_back(std::move(e)); }
 
     void addOp(Tok::Type type) {
-      const bool can_postfix = s_.size() - binop_count == 1;
-      if (can_postfix && POSTFIX_UNOP_MAP.count(type)) {
+      printf("size: %d, count: %d\n", int(s_.size()), binop_count);
+      if (canDoPostfixOp() && POSTFIX_UNOP_MAP.count(type)) {
         processStack(PRECEDENCE[POSTFIX_UNOP_MAP[type]]);
         ops_.emplace_back(std::make_unique<Op>(ctx_));
         ops_.back()->type = POSTFIX_UNOP_MAP[type];
-      } else if (can_postfix && BINOP_MAP.count(type)) {
+      } else if (canDoPostfixOp() && BINOP_MAP.count(type)) {
         processStack(PRECEDENCE[BINOP_MAP[type]]);
         binop_count++;
         ops_.emplace_back(std::make_unique<Op>(ctx_));
@@ -196,7 +203,10 @@ private:
       } else {
         ctx_.compileError("unexpected token");
       }
-      ctx_.consumeToken();
+    }
+
+    bool canDoPostfixOp() const {
+      return s_.size() - binop_count == 1;
     }
 
   private:
@@ -309,7 +319,10 @@ std::vector<Node*> StrLit::children() { return {}; }
 
 CompoundLit::CompoundLit(Parser::Context& ctx) {
   ctx.consumeToken(Tok::LBRACE);
-  while (!ctx.hasToken(Tok::RBRACE)) lits.emplace_back(ExpressionParser(ctx).parse());
+  while (!ctx.hasToken(Tok::RBRACE)) {
+    lits.emplace_back(ExpressionParser(ctx).parse());
+    ctx.consumeToken(Tok::COMMA);
+  }
   ctx.consumeToken(Tok::RBRACE);
 }
 std::string CompoundLit::toString() const { return "CompoundLit"; }
@@ -473,16 +486,18 @@ EnumDefn::EnumDefn(Parser::Context& ctx) {
   }
   ctx.consumeToken(Tok::RBRACE);
 }
-std::string EnumDefn::toString() const { return (fmt("Enum (%1% untyped)") % untyped_enums.size()).str(); }
+std::string EnumDefn::toString() const {
+  return (fmt("Enum (%1% untyped)") % untyped_enums.size()).str();
+}
 std::vector<Node*> EnumDefn::children() { return flattenChildren(tname, typed_enums); }
 
 File::File(Parser::Context& ctx) {
   while (ctx.hasToken()) {
     switch (ctx.curToken()->type) {
-      case Tok::INTF: intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx)); break;
-      case Tok::FN: fn_defns.emplace_back(std::make_unique<FnDefn>(ctx)); break;
-      case Tok::ENUM: enum_defns.emplace_back(std::make_unique<EnumDefn>(ctx)); break;
-      default: ctx.compileError("unexpected token"); break;
+    case Tok::INTF: intf_defns.emplace_back(std::make_unique<IntfDefn>(ctx)); break;
+    case Tok::FN: fn_defns.emplace_back(std::make_unique<FnDefn>(ctx)); break;
+    case Tok::ENUM: enum_defns.emplace_back(std::make_unique<EnumDefn>(ctx)); break;
+    default: ctx.compileError("unexpected token"); break;
     }
   }
 }
