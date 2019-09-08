@@ -27,8 +27,7 @@ const std::map<char, std::tuple<TermColor, TermColor, TermStyle>> COLOR_MAP = {
     {'c', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
     {'d', {TermColor::FG_RED, TermColor::BG_DEFAULT, TermStyle::BOLD}},
     {'e', {TermColor::FG_GREEN, TermColor::BG_DEFAULT, TermStyle::BOLD}},
-    {'f', {TermColor::FG_RED, TermColor::BG_DEFAULT, TermStyle::BOLD}},
-};
+    {'f', {TermColor::FG_RED, TermColor::BG_DEFAULT, TermStyle::BOLD}}};
 
 std::string prettyPrintNumbers(const std::string& s) {
   std::string pretty;
@@ -116,7 +115,6 @@ bool CommandLine::processCmdLine(const std::string& line) {
   } while (ss >> cmd);
   return false;
 }
-
 
 void CommandLine::printCpuState(const Simulator::CpuStateMessage& state) {
   const std::vector<std::pair<std::string, std::string>> table = {

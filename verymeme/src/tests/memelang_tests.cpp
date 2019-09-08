@@ -25,7 +25,7 @@ TEST_F(MemelangTokeniserTest, BasicTest) {
       Token::MINUS, Token::MINUS, Token::INT_LIT, Token::SEMICOLON, Token::IDENT, Token::MINUS,
       Token::MINUS, Token::MINUS, Token::IDENT, Token::SEMICOLON, Token::RETURN, Token::INT_LIT,
       Token::SEMICOLON, Token::RBRACE};
-//  EXPECT_THAT(types, ElementsAreArray(expected));
+  //  EXPECT_THAT(types, ElementsAreArray(expected));
 }
 
 TEST_F(MemelangTokeniserTest, ParsingTest) {
@@ -93,7 +93,7 @@ TEST_F(MemelangTokeniserTest, ParsingTest) {
       Token::SEMICOLON, Token::IDENT, Token::PLUS, Token::PLUS, Token::LBRACE, Token::RETURN,
       Token::INT_LIT, Token::SEMICOLON, Token::RBRACE, Token::COMMENT, Token::RETURN,
       Token::INT_LIT, Token::SEMICOLON, Token::RBRACE};
-//  EXPECT_THAT(types, ElementsAreArray(expected));
+  //  EXPECT_THAT(types, ElementsAreArray(expected));
 }
 
 }  // namespace
