@@ -1,14 +1,21 @@
+enum Unit {}
+
+fn takesbyvalue(arr: [42]i8) i8 {
+  return arr[0];
+}
+
+fn takesbyref(arr: *[42]i8) i8 {
+  return arr[0];
+}
+
+fn takesbyptr(arr: *i8) i8 {
+  return arr[0];
+}
+
 fn main() i8 {
-  var val: i8 = 2;
-  var ptr: *i8 = &val;
-  var pptr: **i8 = &ptr;
-
-  var cval: const i8 = 2;
-  var cptr_ci8: const* const i8 = &cval;
-  var cptr_cptr_ci8: const* const* const i8 = &cptr_ci8;
-
-  var array_cptr_ci8: [42] const* const i8 = [];
-  var cptr_array_ci8: const* [42] const i8 = 0;
-
-  var multidim_array: [40][30]i8 = [];
+  var arr: [42]i8 = {0, 1, 2, 3,};
+  takesbyvalue(arr);
+  takesbyref(&arr);
+  takesbyptr(&arr);
+  return 4;
 }

@@ -1,4 +1,4 @@
 struct Empty {}
 fn main() i8 {
-  var e: Empty = Empty{};
+  var e: Empty = {};
 }
