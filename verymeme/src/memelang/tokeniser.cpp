@@ -11,41 +11,40 @@ namespace {
 constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t\r\n?,:.=";
 
 // Stores the tokens which are just a simple string match.
-const std::unordered_map<std::string, Token::Type> SIMPLE_TOKENS = {
+const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
     // Basic tokens:
-    {"+", Token::PLUS}, {"++", Token::DPLUS}, {"-", Token::MINUS}, {"--", Token::DMINUS},
-    {"*", Token::ASTERISK}, {"%", Token::PERCENT}, {"/", Token::FSLASH}, {"'", Token::QUOTE},
-    {"\"", Token::DQUOTE}, {"(", Token::LPAREN}, {")", Token::RPAREN}, {"{", Token::LBRACE},
-    {"}", Token::RBRACE}, {"<", Token::LANGLE}, {">", Token::RANGLE}, {"[", Token::LSQUARE},
-    {"]", Token::RSQUARE}, {";", Token::SEMICOLON}, {":", Token::COLON}, {"?", Token::QUESTION},
-    {",", Token::COMMA}, {".", Token::DOT}, {"~", Token::TILDE}, {"!", Token::EXCLAMATION},
-    {"&", Token::AMPERSAND}, {"&&", Token::DAMPERSAND}, {"|", Token::BAR}, {"||", Token::DBAR},
-    {"=", Token::EQUAL}, {"==", Token::DEQUAL}, {"!=", Token::NEQUAL}, {"<=", Token::LTEQUAL},
-    {">=", Token::GTEQUAL},
+    {"+", Tok::PLUS}, {"++", Tok::DPLUS}, {"-", Tok::MINUS}, {"--", Tok::DMINUS},
+    {"*", Tok::ASTERISK}, {"%", Tok::PERCENT}, {"/", Tok::FSLASH}, {"'", Tok::QUOTE},
+    {"\"", Tok::DQUOTE}, {"(", Tok::LPAREN}, {")", Tok::RPAREN}, {"{", Tok::LBRACE},
+    {"}", Tok::RBRACE}, {"<", Tok::LANGLE}, {">", Tok::RANGLE}, {"[", Tok::LSQUARE},
+    {"]", Tok::RSQUARE}, {";", Tok::SEMICOLON}, {":", Tok::COLON}, {"?", Tok::QUESTION},
+    {",", Tok::COMMA}, {".", Tok::DOT}, {"~", Tok::TILDE}, {"!", Tok::EXCLAMATION},
+    {"&", Tok::AMPERSAND}, {"&&", Tok::DAMPERSAND}, {"|", Tok::BAR}, {"||", Tok::DBAR},
+    {"=", Tok::EQUAL}, {"==", Tok::DEQUAL}, {"!=", Tok::NEQUAL}, {"<=", Tok::LTEQUAL},
+    {">=", Tok::GTEQUAL},
     // Keywords:
-    {"intf", Token::INTF}, {"struct", Token::STRUCT}, {"enum", Token::ENUM}, {"impl", Token::IMPL},
-    {"fn", Token::FN}, {"if", Token::IF}, {"else", Token::ELSE}, {"match", Token::MATCH},
-    {"for", Token::FOR}, {"return", Token::RETURN}, {"static", Token::STATIC},
-    {"const", Token::CONST}, {"auto", Token::AUTO}, {"i8", Token::I8}, {"i16", Token::I16},
-    {"i32", Token::I32}, {"u8", Token::U8}, {"u16", Token::U16}, {"u32", Token::U32},
-    {"bool", Token::BOOL}, {"bit", Token::BIT},
+    {"intf", Tok::INTF}, {"struct", Tok::STRUCT}, {"enum", Tok::ENUM}, {"impl", Tok::IMPL},
+    {"fn", Tok::FN}, {"if", Tok::IF}, {"else", Tok::ELSE}, {"match", Tok::MATCH}, {"for", Tok::FOR},
+    {"return", Tok::RETURN}, {"var", Tok::VAR}, {"static", Tok::STATIC}, {"const", Tok::CONST},
+    {"auto", Tok::AUTO}, {"i8", Tok::I8}, {"i16", Tok::I16}, {"i32", Tok::I32}, {"u8", Tok::U8},
+    {"u16", Tok::U16}, {"u32", Tok::U32}, {"bool", Tok::BOOL}, {"bit", Tok::BIT},
     // Specially handled tokens:
-    {"asm", Token::ASM}, {"//", Token::COMMENT}};
+    {"asm", Tok::ASM}, {"//", Tok::COMMENT}};
 
 }  // namespace
 
-std::ostream& operator<<(std::ostream& str, const Token::Type& o) {
+std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
   const static std::string TOKEN_TYPES[] = {"PLUS", "DPLUS", "MINUS", "DMINUS", "ASTERISK",
       "PERCENT", "FSLASH", "QUOTE", "DQUOTE", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LANGLE",
       "RANGLE", "LSQUARE", "RSQUARE", "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE",
       "EXCLAMATION", "AMPERSAND", "DAMPERSAND", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL",
       "LTEQUAL", "GTEQUAL", "INTF", "STRUCT", "ENUM", "IMPL", "FN", "IF", "ELSE", "MATCH", "FOR",
-      "RETURN", "STATIC", "CONST", "AUTO", "I8", "I16", "I32", "U8", "U16", "U32", "BOOL", "BIT",
-      "ASM", "STR_LIT", "INT_LIT", "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
+      "RETURN", "VAR", "STATIC", "CONST", "AUTO", "I8", "I16", "I32", "U8", "U16", "U32", "BOOL",
+      "BIT", "ASM", "STR_LIT", "INT_LIT", "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
   return outputEnum(str, o, TOKEN_TYPES);
 }
 
-std::vector<Token> Tokeniser::tokenise() {
+std::vector<Tok> Tokeniser::tokenise() {
   tokens_.clear();
   const auto& data = contents_->data();
   for (idx_ = 0; idx_ < int(data.size()); ++idx_) {
@@ -55,7 +54,8 @@ std::vector<Token> Tokeniser::tokenise() {
 
     if (atCompleteToken() || startsNewToken(c)) pushCurrentToken();
     if (!isspace(c)) curtok_ += c;
-    else can_merge_ = false;  // Can't merge across spaces.
+    else
+      can_merge_ = false;  // Can't merge across spaces.
   }
   pushCurrentToken();
 
@@ -65,13 +65,13 @@ std::vector<Token> Tokeniser::tokenise() {
 void Tokeniser::pushCurrentToken() {
   if (curtok_.empty()) return;
 
-  Token::Type type;
+  Tok::Type type;
   std::string str_val = curtok_;
   auto cur_iter = SIMPLE_TOKENS.find(curtok_);
   if (cur_iter != SIMPLE_TOKENS.end()) {
     type = cur_iter->second;
   } else {
-    type = Token::IDENT;
+    type = Tok::IDENT;
   }
 
   // Try to merge tokens together.
@@ -89,33 +89,33 @@ void Tokeniser::pushCurrentToken() {
   const auto& data = contents_->data();
   int64_t int_val = INT64_MIN;
   switch (type) {
-  case Token::QUOTE:
-    type = Token::CHAR_LIT;
+  case Tok::QUOTE:
+    type = Tok::CHAR_LIT;
     str_val = grabEscapedChar();
     verify_expr(isChar('\'', "unexpected EOF"), "unterminated char literal");
     idx_++;  // Skip '.
     break;
-  case Token::DQUOTE:
-    type = Token::STR_LIT;
+  case Tok::DQUOTE:
+    type = Tok::STR_LIT;
     while (!isChar('"', "missing closing quote for string literal")) str_val += grabEscapedChar();
     idx_++;  // Skip ".
     break;
-  case Token::ASM:
+  case Tok::ASM:
     while (!isChar('{', "asm block has no opening brace")) idx_++;
     idx_++;  // Skip {.
     while (!isChar('}', "asm block has no closing brace")) str_val += data[idx_++];
     idx_++;  // Skip }.
     break;
-  case Token::IDENT: {
+  case Tok::IDENT: {
     int_val = convertFromInteger(curtok_);
-    if (int_val != INT64_MIN) type = Token::INT_LIT;
+    if (int_val != INT64_MIN) type = Tok::INT_LIT;
     if (curtok_ == "false" || curtok_ == "true") {
       int_val = curtok_ == "true";
-      type = Token::BOOL_LIT;
+      type = Tok::BOOL_LIT;
     }
     break;
   }
-  case Token::COMMENT:
+  case Tok::COMMENT:
     while (!isChar('\n', "file not newline terminated")) idx_++;
     break;
   default: break;

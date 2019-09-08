@@ -10,7 +10,7 @@
 
 namespace memelang {
 
-struct Token {
+struct Tok {
   enum Type {
     // Basic tokens:
     PLUS,
@@ -57,6 +57,7 @@ struct Token {
     MATCH,
     FOR,
     RETURN,
+    VAR,
     STATIC,
     CONST,
     AUTO,
@@ -95,12 +96,12 @@ class Tokeniser {
 public:
   explicit Tokeniser(const FileContents* contents) : contents_(contents) {}
 
-  std::vector<Token> tokenise();
+  std::vector<Tok> tokenise();
 
 private:
   const FileContents* contents_;
   std::string curtok_;
-  std::vector<Token> tokens_;
+  std::vector<Tok> tokens_;
   int idx_ = 0;
   bool can_merge_ = true;
 
@@ -112,7 +113,7 @@ private:
   char grabEscapedChar();
 };
 
-std::ostream& operator<<(std::ostream& str, const Token::Type& o);
+std::ostream& operator<<(std::ostream& str, const Tok::Type& o);
 
 }  // namespace memelang
 

@@ -7,93 +7,84 @@
 namespace {
 
 using MemelangTokeniserTest = testing::Test;
-using Token = memelang::Token;
+using memelang::Tok;
 using ::testing::ElementsAreArray;
 
 TEST_F(MemelangTokeniserTest, BasicTest) {
-  const std::string expression = readFile("test_data/memelang/expression.meme");
+  const std::string expression = readFile("test_data/memelang/lexing/expression.meme");
   const auto contents = memelang::FileContents("expression.meme", expression);
   memelang::Tokeniser tokeniser(&contents);
   auto tokens = tokeniser.tokenise();
-  std::vector<Token::Type> types;
+  std::vector<Tok::Type> types;
   for (const auto& tok : tokens) types.push_back(tok.type);
-  const Token::Type expected[] = {Token::FN, Token::IDENT, Token::LPAREN, Token::RPAREN, Token::I32,
-      Token::LBRACE, Token::MINUS, Token::LPAREN, Token::INT_LIT, Token::PLUS, Token::INT_LIT,
-      Token::RPAREN, Token::ASTERISK, Token::LPAREN, Token::INT_LIT, Token::FSLASH, Token::INT_LIT,
-      Token::RPAREN, Token::MINUS, Token::MINUS, Token::INT_LIT, Token::SEMICOLON, Token::IDENT,
-      Token::DMINUS, Token::INT_LIT, Token::SEMICOLON, Token::IDENT, Token::DMINUS, Token::MINUS,
-      Token::IDENT, Token::SEMICOLON, Token::DMINUS, Token::MINUS, Token::IDENT, Token::DPLUS,
-      Token::PLUS, Token::IDENT, Token::DMINUS, Token::MINUS, Token::IDENT, Token::SEMICOLON,
-      Token::RETURN, Token::INT_LIT, Token::SEMICOLON, Token::RBRACE};
+  const Tok::Type expected[] = {Tok::FN, Tok::IDENT, Tok::LPAREN, Tok::RPAREN, Tok::I32,
+      Tok::LBRACE, Tok::MINUS, Tok::LPAREN, Tok::INT_LIT, Tok::PLUS, Tok::INT_LIT, Tok::RPAREN,
+      Tok::ASTERISK, Tok::LPAREN, Tok::INT_LIT, Tok::FSLASH, Tok::INT_LIT, Tok::RPAREN, Tok::MINUS,
+      Tok::MINUS, Tok::INT_LIT, Tok::SEMICOLON, Tok::IDENT, Tok::DMINUS, Tok::INT_LIT,
+      Tok::SEMICOLON, Tok::IDENT, Tok::DMINUS, Tok::MINUS, Tok::IDENT, Tok::SEMICOLON, Tok::DMINUS,
+      Tok::MINUS, Tok::IDENT, Tok::DPLUS, Tok::PLUS, Tok::IDENT, Tok::DMINUS, Tok::MINUS,
+      Tok::IDENT, Tok::SEMICOLON, Tok::RETURN, Tok::INT_LIT, Tok::SEMICOLON, Tok::RBRACE};
   EXPECT_THAT(types, ElementsAreArray(expected));
 }
 
 TEST_F(MemelangTokeniserTest, ParsingTest) {
-  const std::string expression = readFile("test_data/memelang/parsing.meme");
+  const std::string expression = readFile("test_data/memelang/lexing/complex.meme");
   const auto contents = memelang::FileContents("parsing.meme", expression);
   memelang::Tokeniser tokeniser(&contents);
   auto tokens = tokeniser.tokenise();
-  std::vector<Token::Type> types;
+  std::vector<Tok::Type> types;
   for (const auto& tok : tokens) types.push_back(tok.type);
-  const Token::Type expected[] = {Token::ENUM, Token::IDENT, Token::LBRACE, Token::RBRACE,
-      Token::ENUM, Token::IDENT, Token::LBRACE, Token::IDENT, Token::COMMA, Token::IDENT,
-      Token::COMMA, Token::IDENT, Token::LPAREN, Token::IDENT, Token::RPAREN, Token::COMMA,
-      Token::RBRACE, Token::ENUM, Token::IDENT, Token::LANGLE, Token::IDENT, Token::COMMA,
-      Token::IDENT, Token::RANGLE, Token::LBRACE, Token::IDENT, Token::LPAREN, Token::IDENT,
-      Token::RPAREN, Token::COMMA, Token::IDENT, Token::LPAREN, Token::IDENT, Token::RPAREN,
-      Token::COMMA, Token::RBRACE, Token::FN, Token::IDENT, Token::LANGLE, Token::IDENT,
-      Token::RANGLE, Token::LPAREN, Token::CONST, Token::ASTERISK, Token::IDENT, Token::IDENT,
-      Token::RPAREN, Token::IDENT, Token::LBRACE, Token::RBRACE, Token::STRUCT, Token::IDENT,
-      Token::LBRACE, Token::I8, Token::IDENT, Token::SEMICOLON, Token::BIT, Token::IDENT,
-      Token::COLON, Token::INT_LIT, Token::SEMICOLON, Token::BOOL, Token::IDENT, Token::SEMICOLON,
-      Token::STATIC, Token::FN, Token::IDENT, Token::LPAREN, Token::RPAREN, Token::IDENT,
-      Token::LBRACE, Token::RBRACE, Token::RBRACE, Token::INTF, Token::IDENT, Token::LBRACE,
-      Token::RBRACE, Token::INTF, Token::IDENT, Token::LANGLE, Token::IDENT, Token::RANGLE,
-      Token::LBRACE, Token::RBRACE, Token::IMPL, Token::IDENT, Token::FOR, Token::IDENT,
-      Token::LBRACE, Token::RBRACE, Token::IMPL, Token::LANGLE, Token::IDENT, Token::RANGLE,
-      Token::IDENT, Token::LANGLE, Token::IDENT, Token::RANGLE, Token::FOR, Token::IDENT,
-      Token::LBRACE, Token::RBRACE, Token::FN, Token::IDENT, Token::LPAREN, Token::RPAREN,
-      Token::I8, Token::LBRACE, Token::ASM, Token::ASM, Token::IDENT, Token::IDENT,
-      Token::SEMICOLON, Token::IDENT, Token::IDENT, Token::EQUAL, Token::IDENT, Token::LBRACE,
-      Token::RBRACE, Token::SEMICOLON, Token::IDENT, Token::IDENT, Token::EQUAL, Token::IDENT,
-      Token::LPAREN, Token::IDENT, Token::RPAREN, Token::SEMICOLON, Token::IDENT, Token::DOT,
-      Token::IDENT, Token::EQUAL, Token::INT_LIT, Token::SEMICOLON, Token::I8, Token::IDENT,
-      Token::EQUAL, Token::INT_LIT, Token::SEMICOLON, Token::I8, Token::IDENT, Token::EQUAL,
-      Token::INT_LIT, Token::SEMICOLON, Token::LSQUARE, Token::INT_LIT, Token::RSQUARE,
-      Token::IDENT, Token::EQUAL, Token::LSQUARE, Token::RSQUARE, Token::SEMICOLON, Token::IDENT,
-      Token::LSQUARE, Token::INT_LIT, Token::MINUS, Token::INT_LIT, Token::RSQUARE, Token::EQUAL,
-      Token::BOOL_LIT, Token::DAMPERSAND, Token::LPAREN, Token::BOOL_LIT, Token::DBAR, Token::IDENT,
-      Token::RPAREN, Token::QUESTION, Token::IDENT, Token::AMPERSAND, Token::INT_LIT, Token::COLON,
-      Token::INT_LIT, Token::IDENT, Token::INT_LIT, Token::BAR, Token::INT_LIT, Token::SEMICOLON,
-      Token::IF, Token::IDENT, Token::DEQUAL, Token::IDENT, Token::DOT, Token::IDENT, Token::DBAR,
-      Token::IDENT, Token::LSQUARE, Token::INT_LIT, Token::MINUS, Token::INT_LIT, Token::RSQUARE,
-      Token::NEQUAL, Token::IDENT, Token::DBAR, Token::IDENT, Token::LTEQUAL, Token::IDENT,
-      Token::DBAR, Token::IDENT, Token::RANGLE, Token::IDENT, Token::DBAR, Token::IDENT,
-      Token::GTEQUAL, Token::IDENT, Token::DOT, Token::IDENT, Token::DBAR, Token::IDENT,
-      Token::LANGLE, Token::IDENT, Token::LSQUARE, Token::INT_LIT, Token::RSQUARE, Token::LBRACE,
-      Token::IDENT, Token::LANGLE, Token::I8, Token::RANGLE, Token::LPAREN, Token::IDENT,
-      Token::RPAREN, Token::SEMICOLON, Token::RBRACE, Token::ELSE, Token::IF, Token::BOOL_LIT,
-      Token::LBRACE, Token::RBRACE, Token::ELSE, Token::LBRACE, Token::MATCH, Token::IDENT,
-      Token::LBRACE, Token::INT_LIT, Token::LBRACE, Token::RBRACE, Token::INT_LIT, Token::LBRACE,
-      Token::RBRACE, Token::INT_LIT, Token::LBRACE, Token::IDENT, Token::LPAREN, Token::INT_LIT,
-      Token::RPAREN, Token::SEMICOLON, Token::RBRACE, Token::RBRACE, Token::MATCH, Token::IDENT,
-      Token::LBRACE, Token::IDENT, Token::LBRACE, Token::RBRACE, Token::IDENT, Token::LBRACE,
-      Token::RBRACE, Token::IDENT, Token::LPAREN, Token::IDENT, Token::RPAREN, Token::LBRACE,
-      Token::IDENT, Token::LPAREN, Token::IDENT, Token::RPAREN, Token::SEMICOLON, Token::RBRACE,
-      Token::RBRACE, Token::RBRACE, Token::CONST, Token::AUTO, Token::IDENT, Token::EQUAL,
-      Token::MINUS, Token::LPAREN, Token::INT_LIT, Token::PLUS, Token::INT_LIT, Token::RPAREN,
-      Token::ASTERISK, Token::LPAREN, Token::INT_LIT, Token::FSLASH, Token::INT_LIT, Token::RPAREN,
-      Token::MINUS, Token::MINUS, Token::INT_LIT, Token::SEMICOLON, Token::IDENT, Token::MINUS,
-      Token::MINUS, Token::INT_LIT, Token::PERCENT, Token::INT_LIT, Token::SEMICOLON, Token::IDENT,
-      Token::MINUS, Token::MINUS, Token::MINUS, Token::IDENT, Token::SEMICOLON, Token::IDENT,
-      Token::SEMICOLON, Token::IDENT, Token::SEMICOLON, Token::IDENT, Token::SEMICOLON,
-      Token::IDENT, Token::SEMICOLON, Token::IDENT, Token::SEMICOLON, Token::INT_LIT, Token::DOT,
-      Token::INT_LIT, Token::SEMICOLON, Token::FOR, Token::I8, Token::IDENT, Token::EQUAL,
-      Token::INT_LIT, Token::SEMICOLON, Token::IDENT, Token::LANGLE, Token::INT_LIT,
-      Token::SEMICOLON, Token::IDENT, Token::PLUS, Token::PLUS, Token::LBRACE, Token::RETURN,
-      Token::INT_LIT, Token::SEMICOLON, Token::RBRACE, Token::COMMENT, Token::RETURN,
-      Token::INT_LIT, Token::SEMICOLON, Token::RBRACE};
-//  EXPECT_THAT(types, ElementsAreArray(expected));
+  const Tok::Type expected[] = {Tok::ENUM, Tok::IDENT, Tok::LBRACE, Tok::RBRACE, Tok::ENUM,
+      Tok::IDENT, Tok::LBRACE, Tok::IDENT, Tok::COMMA, Tok::IDENT, Tok::COMMA, Tok::IDENT,
+      Tok::LPAREN, Tok::IDENT, Tok::RPAREN, Tok::COMMA, Tok::RBRACE, Tok::ENUM, Tok::IDENT,
+      Tok::LANGLE, Tok::IDENT, Tok::COMMA, Tok::IDENT, Tok::RANGLE, Tok::LBRACE, Tok::IDENT,
+      Tok::LPAREN, Tok::IDENT, Tok::RPAREN, Tok::COMMA, Tok::IDENT, Tok::LPAREN, Tok::IDENT,
+      Tok::RPAREN, Tok::COMMA, Tok::RBRACE, Tok::FN, Tok::IDENT, Tok::LANGLE, Tok::IDENT,
+      Tok::RANGLE, Tok::LPAREN, Tok::CONST, Tok::ASTERISK, Tok::IDENT, Tok::IDENT, Tok::RPAREN,
+      Tok::IDENT, Tok::LBRACE, Tok::RBRACE, Tok::STRUCT, Tok::IDENT, Tok::LBRACE, Tok::I8,
+      Tok::IDENT, Tok::SEMICOLON, Tok::BIT, Tok::IDENT, Tok::COLON, Tok::INT_LIT, Tok::SEMICOLON,
+      Tok::BOOL, Tok::IDENT, Tok::SEMICOLON, Tok::STATIC, Tok::FN, Tok::IDENT, Tok::LPAREN,
+      Tok::RPAREN, Tok::IDENT, Tok::LBRACE, Tok::RBRACE, Tok::RBRACE, Tok::INTF, Tok::IDENT,
+      Tok::LBRACE, Tok::RBRACE, Tok::INTF, Tok::IDENT, Tok::LANGLE, Tok::IDENT, Tok::RANGLE,
+      Tok::LBRACE, Tok::RBRACE, Tok::IMPL, Tok::IDENT, Tok::FOR, Tok::IDENT, Tok::LBRACE,
+      Tok::RBRACE, Tok::IMPL, Tok::LANGLE, Tok::IDENT, Tok::RANGLE, Tok::IDENT, Tok::LANGLE,
+      Tok::IDENT, Tok::RANGLE, Tok::FOR, Tok::IDENT, Tok::LBRACE, Tok::RBRACE, Tok::FN, Tok::IDENT,
+      Tok::LPAREN, Tok::RPAREN, Tok::I8, Tok::LBRACE, Tok::ASM, Tok::ASM, Tok::IDENT, Tok::IDENT,
+      Tok::SEMICOLON, Tok::IDENT, Tok::IDENT, Tok::EQUAL, Tok::IDENT, Tok::LBRACE, Tok::RBRACE,
+      Tok::SEMICOLON, Tok::IDENT, Tok::IDENT, Tok::EQUAL, Tok::IDENT, Tok::LPAREN, Tok::IDENT,
+      Tok::RPAREN, Tok::SEMICOLON, Tok::IDENT, Tok::DOT, Tok::IDENT, Tok::EQUAL, Tok::INT_LIT,
+      Tok::SEMICOLON, Tok::I8, Tok::IDENT, Tok::EQUAL, Tok::INT_LIT, Tok::SEMICOLON, Tok::I8,
+      Tok::IDENT, Tok::EQUAL, Tok::INT_LIT, Tok::SEMICOLON, Tok::LSQUARE, Tok::INT_LIT,
+      Tok::RSQUARE, Tok::IDENT, Tok::EQUAL, Tok::LSQUARE, Tok::RSQUARE, Tok::SEMICOLON, Tok::IDENT,
+      Tok::LSQUARE, Tok::INT_LIT, Tok::MINUS, Tok::INT_LIT, Tok::RSQUARE, Tok::EQUAL, Tok::BOOL_LIT,
+      Tok::DAMPERSAND, Tok::LPAREN, Tok::BOOL_LIT, Tok::DBAR, Tok::IDENT, Tok::RPAREN,
+      Tok::QUESTION, Tok::IDENT, Tok::AMPERSAND, Tok::INT_LIT, Tok::COLON, Tok::INT_LIT, Tok::IDENT,
+      Tok::INT_LIT, Tok::BAR, Tok::INT_LIT, Tok::SEMICOLON, Tok::IF, Tok::IDENT, Tok::DEQUAL,
+      Tok::IDENT, Tok::DOT, Tok::IDENT, Tok::DBAR, Tok::IDENT, Tok::LSQUARE, Tok::INT_LIT,
+      Tok::MINUS, Tok::INT_LIT, Tok::RSQUARE, Tok::NEQUAL, Tok::IDENT, Tok::DBAR, Tok::IDENT,
+      Tok::LTEQUAL, Tok::IDENT, Tok::DBAR, Tok::IDENT, Tok::RANGLE, Tok::IDENT, Tok::DBAR,
+      Tok::IDENT, Tok::GTEQUAL, Tok::IDENT, Tok::DOT, Tok::IDENT, Tok::DBAR, Tok::IDENT,
+      Tok::LANGLE, Tok::IDENT, Tok::LSQUARE, Tok::INT_LIT, Tok::RSQUARE, Tok::LBRACE, Tok::IDENT,
+      Tok::LANGLE, Tok::I8, Tok::RANGLE, Tok::LPAREN, Tok::IDENT, Tok::RPAREN, Tok::SEMICOLON,
+      Tok::RBRACE, Tok::ELSE, Tok::IF, Tok::BOOL_LIT, Tok::LBRACE, Tok::RBRACE, Tok::ELSE,
+      Tok::LBRACE, Tok::MATCH, Tok::IDENT, Tok::LBRACE, Tok::INT_LIT, Tok::LBRACE, Tok::RBRACE,
+      Tok::INT_LIT, Tok::LBRACE, Tok::RBRACE, Tok::INT_LIT, Tok::LBRACE, Tok::IDENT, Tok::LPAREN,
+      Tok::INT_LIT, Tok::RPAREN, Tok::SEMICOLON, Tok::RBRACE, Tok::RBRACE, Tok::MATCH, Tok::IDENT,
+      Tok::LBRACE, Tok::IDENT, Tok::LBRACE, Tok::RBRACE, Tok::IDENT, Tok::LBRACE, Tok::RBRACE,
+      Tok::IDENT, Tok::LPAREN, Tok::IDENT, Tok::RPAREN, Tok::LBRACE, Tok::IDENT, Tok::LPAREN,
+      Tok::IDENT, Tok::RPAREN, Tok::SEMICOLON, Tok::RBRACE, Tok::RBRACE, Tok::RBRACE, Tok::CONST,
+      Tok::AUTO, Tok::IDENT, Tok::EQUAL, Tok::MINUS, Tok::LPAREN, Tok::INT_LIT, Tok::PLUS,
+      Tok::INT_LIT, Tok::RPAREN, Tok::ASTERISK, Tok::LPAREN, Tok::INT_LIT, Tok::FSLASH,
+      Tok::INT_LIT, Tok::RPAREN, Tok::MINUS, Tok::MINUS, Tok::INT_LIT, Tok::SEMICOLON, Tok::IDENT,
+      Tok::MINUS, Tok::MINUS, Tok::INT_LIT, Tok::PERCENT, Tok::INT_LIT, Tok::SEMICOLON, Tok::IDENT,
+      Tok::MINUS, Tok::MINUS, Tok::MINUS, Tok::IDENT, Tok::SEMICOLON, Tok::IDENT, Tok::SEMICOLON,
+      Tok::IDENT, Tok::SEMICOLON, Tok::IDENT, Tok::SEMICOLON, Tok::IDENT, Tok::SEMICOLON,
+      Tok::IDENT, Tok::SEMICOLON, Tok::INT_LIT, Tok::DOT, Tok::INT_LIT, Tok::SEMICOLON, Tok::FOR,
+      Tok::I8, Tok::IDENT, Tok::EQUAL, Tok::INT_LIT, Tok::SEMICOLON, Tok::IDENT, Tok::LANGLE,
+      Tok::INT_LIT, Tok::SEMICOLON, Tok::IDENT, Tok::PLUS, Tok::PLUS, Tok::LBRACE, Tok::RETURN,
+      Tok::INT_LIT, Tok::SEMICOLON, Tok::RBRACE, Tok::COMMENT, Tok::RETURN, Tok::INT_LIT,
+      Tok::SEMICOLON, Tok::RBRACE};
+  //  EXPECT_THAT(types, ElementsAreArray(expected));
 }
 
 }  // namespace

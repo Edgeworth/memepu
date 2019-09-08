@@ -1,7 +1,7 @@
 #include "verymeme/util.h"
 
-#include <sstream>
 #include <boost/stacktrace.hpp>
+#include <sstream>
 
 std::string getStacktrace() {
   std::stringstream s;
