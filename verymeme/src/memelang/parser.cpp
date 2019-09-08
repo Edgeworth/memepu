@@ -100,7 +100,12 @@ namespace {
 
 std::unordered_map<Tok::Type, Expr::Type> BINOP_MAP = {{Tok::DOT, Expr::MEMBER_ACCESS},
     {Tok::PLUS, Expr::ADD}, {Tok::ASTERISK, Expr::MUL}, {Tok::FSLASH, Expr::DIV},
-    {Tok::MINUS, Expr::SUB}, {Tok::LSQUARE, Expr::ARRAY_ACCESS}, {Tok::LPAREN, Expr::FN_CALL}};
+    {Tok::MINUS, Expr::SUB}, {Tok::LSQUARE, Expr::ARRAY_ACCESS}, {Tok::LPAREN, Expr::FN_CALL},
+    {Tok::LANGLE, Expr::LT}, {Tok::LTEQUAL, Expr::LEQ}, {Tok::RANGLE, Expr::GT},
+    {Tok::GTEQUAL, Expr::GEQ}, {Tok::PERCENT, Expr::MOD}, {Tok::DEQUAL, Expr::EQ},
+    {Tok::NEQUAL, Expr::NEQ}, {Tok::DAMPERSAND, Expr::LAND}, {Tok::AMPERSAND, Expr::BAND},
+    {Tok::CARET, Expr::BXOR}, {Tok::DBAR, Expr::LOR}, {Tok::BAR, Expr::BOR},
+    {Tok::EQUAL, Expr::ASSIGNMENT}};
 
 std::unordered_map<Tok::Type, Expr::Type> POSTFIX_UNOP_MAP = {
     {Tok::DPLUS, Expr::POSTFIX_INC}, {Tok::DMINUS, Expr::POSTFIX_DEC}};
@@ -135,14 +140,17 @@ public:
     ExprCtx ectx(ctx_);
     while (!ctx_.hasToken({Tok::SEMICOLON, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
       const auto* tok = ctx_.curToken();
-      printf("Processing tok %s\n", tok->toString(ctx_.contents).c_str());
-
       switch (tok->type) {
+        // TODO handle bitshift, ternary, and types.
       case Tok::LPAREN: {
         // If we can do postfix, add function call operation. Otherwise, it's just a paren'd expr.
-        if (ectx.canDoPostfixOp()) ectx.addOp(tok->type);
         ctx_.consumeToken();
-        ectx.addExpr(parse());
+        if (ectx.canDoPostfixOp()) {
+          ectx.addOp(tok->type);
+          ectx.addExpr(std::make_unique<FnCallArgs>(ctx_));
+        } else {
+          ectx.addExpr(parse());
+        }
         ctx_.consumeToken(Tok::RPAREN);
         break;
       }
@@ -152,8 +160,8 @@ public:
         ectx.addExpr(parse());
         ctx_.consumeToken(Tok::RSQUARE);
         break;
-      }
       case Tok::LBRACE: ectx.addExpr(std::make_unique<CompoundLit>(ctx_)); break;
+      }
       case Tok::IDENT: ectx.addExpr(std::make_unique<VarRef>(ctx_)); break;
       case Tok::BOOL_LIT: ectx.addExpr(std::make_unique<BoolLit>(ctx_)); break;
       case Tok::INT_LIT: ectx.addExpr(std::make_unique<IntLit>(ctx_)); break;
@@ -165,7 +173,6 @@ public:
         break;
       }
     }
-    printf("finishing\n");
     return ectx.finish();
   }
 
@@ -185,7 +192,6 @@ private:
     void addExpr(std::unique_ptr<Expr> e) { s_.emplace_back(std::move(e)); }
 
     void addOp(Tok::Type type) {
-      printf("size: %d, count: %d\n", int(s_.size()), binop_count);
       if (canDoPostfixOp() && POSTFIX_UNOP_MAP.count(type)) {
         processStack(PRECEDENCE[POSTFIX_UNOP_MAP[type]]);
         ops_.emplace_back(std::make_unique<Op>(ctx_));
@@ -205,9 +211,7 @@ private:
       }
     }
 
-    bool canDoPostfixOp() const {
-      return s_.size() - binop_count == 1;
-    }
+    bool canDoPostfixOp() const { return s_.size() - binop_count == 1; }
 
   private:
     Parser::Context& ctx_;
@@ -405,6 +409,15 @@ VarDecl::VarDecl(Parser::Context& ctx) {
 std::string VarDecl::toString() const { return "VarDecl"; }
 std::vector<Node*> VarDecl::children() { return flattenChildren(name, type); }
 
+FnCallArgs::FnCallArgs(Parser::Context& ctx) {
+  while (ctx.curToken()->type != Tok::RPAREN) {
+    args.emplace_back(ExpressionParser(ctx).parse());
+    if (!ctx.maybeConsumeToken(Tok::COMMA)) break;
+  }
+}
+std::string FnCallArgs::toString() const { return "FnCallArgs"; }
+std::vector<Node*> FnCallArgs::children() { return flattenChildren(args); }
+
 FnSig::FnSig(Parser::Context& ctx) {
   ctx.consumeToken(Tok::FN);
   tname = std::make_unique<Typename>(ctx);
@@ -418,6 +431,23 @@ FnSig::FnSig(Parser::Context& ctx) {
 }
 std::string FnSig::toString() const { return "FnSig"; }
 std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret_type); }
+
+StmtBlk::StmtBlk(Parser::Context& ctx) {
+  ctx.consumeToken(Tok::LBRACE);
+  while (!ctx.hasToken(Tok::RBRACE)) {
+    // TODO(Progress): if, match, asm
+    switch (ctx.curToken()->type) {
+    case Tok::RETURN: stmts.emplace_back(std::make_unique<Return>(ctx)); break;
+    case Tok::VAR: stmts.emplace_back(std::make_unique<Var>(ctx)); break;
+    case Tok::FOR: stmts.emplace_back(std::make_unique<For>(ctx)); break;
+    default: stmts.emplace_back(ExpressionParser(ctx).parse()); break;
+    }
+    ctx.consumeToken(Tok::SEMICOLON);
+  }
+  ctx.consumeToken(Tok::RBRACE);
+}
+std::string StmtBlk::toString() const { return "StmtBlk"; }
+std::vector<Node*> StmtBlk::children() { return flattenChildren(stmts); }
 
 Return::Return(Parser::Context& ctx) {
   ctx.consumeToken(Tok::RETURN);
@@ -437,21 +467,19 @@ Var::Var(Parser::Context& ctx) {
 std::string Var::toString() const { return "Var"; }
 std::vector<Node*> Var::children() { return flattenChildren(decl, defn); }
 
-StmtBlk::StmtBlk(Parser::Context& ctx) {
-  ctx.consumeToken(Tok::LBRACE);
-  while (!ctx.hasToken(Tok::RBRACE)) {
-    // TODO(Progress): var defn, decl, ret, for, if, match, asm
-    switch (ctx.curToken()->type) {
-    case Tok::RETURN: stmts.emplace_back(std::make_unique<Return>(ctx)); break;
-    case Tok::VAR: stmts.emplace_back(std::make_unique<Var>(ctx)); break;
-    default: stmts.emplace_back(ExpressionParser(ctx).parse()); break;
-    }
-    ctx.consumeToken(Tok::SEMICOLON);
-  }
-  ctx.consumeToken(Tok::RBRACE);
+For::For(Parser::Context& ctx) {
+  ctx.consumeToken(Tok::FOR);
+  ctx.consumeToken(Tok::LPAREN);
+  var_defn = std::make_unique<Var>(ctx);
+  ctx.consumeToken(Tok::SEMICOLON);
+  cond = ExpressionParser(ctx).parse();
+  ctx.consumeToken(Tok::SEMICOLON);
+  update = ExpressionParser(ctx).parse();
+  ctx.consumeToken(Tok::RPAREN);
+  blk = std::make_unique<StmtBlk>(ctx);
 }
-std::string StmtBlk::toString() const { return "StmtBlk"; }
-std::vector<Node*> StmtBlk::children() { return flattenChildren(stmts); }
+std::string For::toString() const { return "For"; }
+std::vector<Node*> For::children() { return flattenChildren(var_defn, cond, update, blk); }
 
 FnDefn::FnDefn(Parser::Context& ctx) {
   sig = std::make_unique<FnSig>(ctx);
