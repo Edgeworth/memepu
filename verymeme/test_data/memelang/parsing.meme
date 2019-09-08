@@ -6,7 +6,7 @@ enum Result<R, E> {
   Ok: R, Err: E,
 }
 fn test<T>(a: const *T) Unit {}
-struct A { v: i8; y: bit: 5; z: bool; static fn new() Unit {} }
+struct A { v: i8; y: i32; z: bool; static fn new() Unit {} }
 intf Intf {}
 intf IntfT<T> {}
 impl Intf for A {}
