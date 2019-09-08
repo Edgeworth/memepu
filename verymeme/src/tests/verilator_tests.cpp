@@ -267,8 +267,12 @@ public:
       else
         EXPECT_EQ(IN >> SHFT, shifter_.OUT);
       break;
-    case memeware::SHIFTER_SIGNEXT8: EXPECT_EQ(int32_t(int8_t(IN)) << SHFT, shifter_.OUT); break;
-    case memeware::SHIFTER_SIGNEXT16: EXPECT_EQ(int32_t(int16_t(IN)) << SHFT, shifter_.OUT); break;
+    case memeware::SHIFTER_SIGNEXT8:
+      EXPECT_EQ(uint32_t(int32_t(int8_t(IN))) << SHFT, shifter_.OUT);
+      break;
+    case memeware::SHIFTER_SIGNEXT16:
+      EXPECT_EQ(uint32_t(int32_t(int16_t(IN))) << SHFT, shifter_.OUT);
+      break;
     }
   }
 

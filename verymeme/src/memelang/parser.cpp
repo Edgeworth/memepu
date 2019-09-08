@@ -20,7 +20,7 @@ void fcInternal(std::vector<Node*>&) {}
 
 template <typename T, typename... Args>
 void fcInternal(std::vector<Node*>& cs, const T& head, const Args&... tail) {
-  if constexpr (std::is_assignable_v<T, nullptr_t>) {
+  if constexpr (std::is_assignable_v<T, std::nullptr_t>) {
     if (head) cs.push_back(head.get());
   } else {
     for (const auto& p : head) {
