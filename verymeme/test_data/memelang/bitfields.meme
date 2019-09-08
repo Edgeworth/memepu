@@ -4,7 +4,7 @@ struct Bitfields {
 }
 
 fn main() i8 {
-  var arr: [42]i8 = [0, 1, 2, 3];
+  var arr: [42]i8 = {0, 1, 2, 3,};
   takesbyvalue(arr);
   takesbyref(&arr);
   takesbyptr(&arr);

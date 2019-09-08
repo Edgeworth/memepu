@@ -10,31 +10,29 @@ impl_defn : 'impl' typelist? typename 'for' typename impl_blk ;
 
 // Block related:
 stmt_blk : LBRACE stmt* RBRACE ;
-struct_blk : LBRACE ('static'? fn_defn | struct_var_decl ';')* RBRACE ;
+struct_blk : LBRACE ('static'? fn_defn | member_var_decl ';')* RBRACE ;
 impl_blk : LBRACE fn_defn* RBRACE ;
 intf_blk : LBRACE fn_decl* RBRACE ;
-// TODO: Support structure like objects?
-enum_blk : LBRACE (IDENT ('(' type ')')? ',')* RBRACE ;
+enum_blk : LBRACE ((IDENT | member_var_decl) ',')* RBRACE ;  // No type means no associated data.
 // TODO: Ranges / OR / values / tuples / destructuring?
 match_blk : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_blk)* RBRACE ;
 
 // Statement related:
 stmt : expr ';' | stmt_var_defn | stmt_var_decl ';' | stmt_ret | stmt_for | stmt_if | stmt_match | ASM ;
 stmt_ret : 'return' expr ';' ;
-stmt_for : 'for' stmt_var_defn expr ';' expr stmt_blk ;
-stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
-stmt_match : 'match' expr match_blk ;
+stmt_for : 'for' '(' stmt_var_defn expr ';' expr ')' stmt_blk ;
+stmt_if : 'if' '(' expr ')' stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
+stmt_match : 'match' '(' expr ')' match_blk ;
 
 // Variable related:
-struct_var_decl : IDENT ':' type (':' int_lit)? ;  // Optional bitfield.
+member_var_decl : IDENT ':' type;
 stmt_var_decl : 'var' IDENT ':' ('const'? 'auto' | type);
 fn_var_decl : IDENT ':' type;
 stmt_var_defn : stmt_var_decl '=' expr ';' ;
 
 // Expression related:
-literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | struct_lit | array_lit;
-struct_lit : type LBRACE (IDENT ':' expr ',')* RBRACE ;
-array_lit : '[]' | '[' expr (',' expr)* ']';
+literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | compound_lit;
+compound_lit : LBRACE ((IDENT ':' expr ',')* | (expr ',')*) RBRACE ;
 expr : expr '[' expr ']'  // Array subscript
     | fn_call  // Function call
     | expr '.' (fn_call | IDENT)  // Member access

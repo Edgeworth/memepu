@@ -52,6 +52,7 @@ struct Node {
   }
 };
 
+// Type related:
 struct Typelist : public Node {
   std::vector<std::string> names;
 
@@ -80,22 +81,6 @@ struct Type : public Node {
   bool cnst = false;
 
   DEFNLT(Type, name, quals, params, cnst);
-};
-
-struct FnVarDecl : public Node {
-  std::string name;
-  std::unique_ptr<Type> type;
-
-  DEFNLT(FnVarDecl, name, type);
-};
-
-struct FnSig : public Node {
-  std::unique_ptr<Typename> tname;
-  std::vector<std::unique_ptr<FnVarDecl>> params;
-  std::unique_ptr<Type> ret_type;
-  bool is_static = false;  // Only allowed in structs.
-
-  DEFNLT(FnSig, tname, params, ret_type, is_static);
 };
 
 // Expression related:
@@ -164,6 +149,12 @@ struct StrLit : public Expr {
   DEFNLT(StrLit, val);
 };
 
+struct CompoundLit : public Expr {
+  std::vector<std::unique_ptr<Expr>> lits;
+
+  DEFNLT(CompoundLit, lits);
+};
+
 struct VarRef : public Expr {
   std::string name;
 
@@ -179,11 +170,36 @@ struct Op : public Expr {
   DEFNLT(Op, left, right);
 };
 
+// Function related:
+
+struct VarDecl : public Node {
+  std::unique_ptr<VarRef> name;
+  std::unique_ptr<Type> type;
+
+  DEFNLT(VarDecl, name, type);
+};
+
+struct FnSig : public Node {
+  std::unique_ptr<Typename> tname;
+  std::vector<std::unique_ptr<VarDecl>> params;
+  std::unique_ptr<Type> ret_type;
+  bool is_static = false;  // Only allowed in structs.
+
+  DEFNLT(FnSig, tname, params, ret_type, is_static);
+};
+
 // Statement related:
 struct Return : public Node {
   std::unique_ptr<Expr> ret;
 
   DEFNLT(Return, ret);
+};
+
+struct Var : public Node {
+  std::unique_ptr<VarDecl> decl;
+  std::unique_ptr<Expr> defn;
+
+  DEFNLT(Var, decl, defn);
 };
 
 // Block related:
@@ -208,9 +224,18 @@ struct IntfDefn : public Node {
   DEFNLT(IntfDefn, tname, decls);
 };
 
+struct EnumDefn : public Node {
+  std::unique_ptr<Typename> tname;
+  std::vector<std::unique_ptr<VarDecl>> typed_enums;
+  std::vector<std::string> untyped_enums;
+
+  DEFNLT(EnumDefn, tname, typed_enums, untyped_enums);
+};
+
 struct File : public Node {
   std::vector<std::unique_ptr<IntfDefn>> intf_defns;
   std::vector<std::unique_ptr<FnDefn>> fn_defns;
+  std::vector<std::unique_ptr<EnumDefn>> enum_defns;
 
   DEFNLT(File, intf_defns);
 };
