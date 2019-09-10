@@ -224,6 +224,13 @@ struct For : public Node {
   DEFNLT(For, var_defn, cond, update, blk);
 };
 
+struct If : public Node {
+  std::unique_ptr<Expr> cond;
+  std::unique_ptr<StmtBlk> blk;
+
+  DEFNLT(If, cond,  blk);
+};
+
 // Top level constructs:
 struct FnDefn : public Node {
   std::unique_ptr<FnSig> sig;
