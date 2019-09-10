@@ -435,14 +435,23 @@ std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret
 StmtBlk::StmtBlk(Parser::Context& ctx) {
   ctx.consumeToken(Tok::LBRACE);
   while (!ctx.hasToken(Tok::RBRACE)) {
-    // TODO(Progress): if, match, asm
+    // TODO(Progress): match, asm
     switch (ctx.curToken()->type) {
-    case Tok::RETURN: stmts.emplace_back(std::make_unique<Return>(ctx)); break;
-    case Tok::VAR: stmts.emplace_back(std::make_unique<Var>(ctx)); break;
+    case Tok::RETURN:
+      stmts.emplace_back(std::make_unique<Return>(ctx));
+      ctx.consumeToken(Tok::SEMICOLON);
+      break;
+    case Tok::VAR:
+      stmts.emplace_back(std::make_unique<Var>(ctx));
+      ctx.consumeToken(Tok::SEMICOLON);
+      break;
     case Tok::FOR: stmts.emplace_back(std::make_unique<For>(ctx)); break;
-    default: stmts.emplace_back(ExpressionParser(ctx).parse()); break;
+    case Tok::IF: stmts.emplace_back(std::make_unique<If>(ctx)); break;
+    default:
+      stmts.emplace_back(ExpressionParser(ctx).parse());
+      ctx.consumeToken(Tok::SEMICOLON);
+      break;
     }
-    ctx.consumeToken(Tok::SEMICOLON);
   }
   ctx.consumeToken(Tok::RBRACE);
 }
@@ -480,6 +489,16 @@ For::For(Parser::Context& ctx) {
 }
 std::string For::toString() const { return "For"; }
 std::vector<Node*> For::children() { return flattenChildren(var_defn, cond, update, blk); }
+
+If::If(Parser::Context& ctx) {
+  ctx.consumeToken(Tok::IF);
+  ctx.consumeToken(Tok::LPAREN);
+  cond = ExpressionParser(ctx).parse();
+  ctx.consumeToken(Tok::RPAREN);
+  blk = std::make_unique<StmtBlk>(ctx);
+}
+std::string If::toString() const { return "If"; }
+std::vector<Node*> If::children() { return flattenChildren(cond, blk); }
 
 FnDefn::FnDefn(Parser::Context& ctx) {
   sig = std::make_unique<FnSig>(ctx);

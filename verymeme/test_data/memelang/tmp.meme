@@ -11,10 +11,11 @@ fn bubblesort<T>(v: const* vector<*T>) Unit {
 }
 
 fn main() i32 {
-  var v: auto = vector<int8>.new();
+  var v: auto = vector<i8>.new();
   v.push(4);
   v.push(3);
   v.push(1);
   bubblesort(&v);
+  var d: auto = vector<i16>(v);
   return 0;
 }
