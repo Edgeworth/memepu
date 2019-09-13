@@ -17,5 +17,6 @@ fn main() i32 {
   v.push(1);
   bubblesort(&v);
   var d: auto = vector<i16>(v);
+  a * *vector<i16>(v);
   return 0;
 }

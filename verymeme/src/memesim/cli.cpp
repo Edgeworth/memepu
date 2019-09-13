@@ -98,7 +98,7 @@ bool CommandLine::processCmdLine(const std::string& line) {
     } else if (cmd == "s") {
       simulator_->scheduleCommand({Simulator::Cmd::Type::STOP, {}, nullptr});
     } else if (cmd == "b") {
-      uint32_t addr;
+      uint32_t addr = 0;
       if (!(ss >> addr)) {
         printf("Set breakpoint missing address.\n");
         return false;
