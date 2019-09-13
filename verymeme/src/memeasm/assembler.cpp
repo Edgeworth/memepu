@@ -62,7 +62,7 @@ Assembler::Assembler(const std::string& model_json) {
           verify_expr(false, "unknown parameter type '%c'", type);
         mnemonic.params.push_back(param);
       } else {
-        std::string escape = "";
+        std::string escape;
         if (mnemonic_str[i] == '[' || mnemonic_str[i] == ']') escape = "\\";
         mnemonic_rx += escape + mnemonic_str[i];
       }
