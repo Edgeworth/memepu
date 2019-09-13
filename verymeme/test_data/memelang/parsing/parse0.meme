@@ -1,0 +1,8 @@
+fn main() i32 {
+  var v: auto = vector<i8>.new();
+  v.push(1);
+  bubblesort(&v);
+  var d: auto = vector<i16>(v);
+  a * *vector<i16>(v);
+  return 0;
+}
