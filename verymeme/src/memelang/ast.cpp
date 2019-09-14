@@ -78,14 +78,14 @@ Op::Op(Parser::Ctx&) {}
 std::string Op::toString() const { return (fmt("Op(%s)") % type).str(); }
 std::vector<Node*> Op::children() { return flattenChildren(left, right); }
 
-VarRef::VarRef(Parser::Ctx& c) { name = c.consumeTok(Tok::IDENT)->toString(c.cts); }
+VarRef::VarRef(Parser::Ctx& c) { name = c.consumeTok(Tok::IDENT)->str_val; }
 std::string VarRef::toString() const { return (fmt("VarRef(%s)") % name).str(); }
 std::vector<Node*> VarRef::children() { return {}; }
 
 Typelist::Typelist(Parser::Ctx& c) {
   c.consumeTok(Tok::LANGLE);
   while (true) {
-    names.push_back(c.consumeTok(Tok::IDENT)->toString(c.cts));
+    names.push_back(c.consumeTok(Tok::IDENT)->str_val);
     if (c.hasTok(Tok::COMMA)) c.consumeTok();
     else
       break;
@@ -97,7 +97,7 @@ std::string Typelist::toString() const { return "Typelist"; }
 std::vector<Node*> Typelist::children() { return {}; }
 
 Typename::Typename(Parser::Ctx& c) {
-  name = c.consumeTok(Tok::IDENT)->toString(c.cts);
+  name = c.consumeTok(Tok::IDENT)->str_val;
   if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
 }
 std::string Typename::toString() const { return (fmt("Typename %s") % name).str(); }
@@ -125,7 +125,7 @@ Type::Type(Parser::Ctx& c) {
     quals.emplace_back(std::make_unique<Qualifier>(c));
   cnst = c.maybeConsumeTok(Tok::CONST);
   if (c.hasTok(Tok::IDENT)) {
-    name = c.consumeTok(Tok::IDENT)->toString(c.cts);
+    name = c.consumeTok(Tok::IDENT)->str_val;
     if (c.hasTok(Tok::LANGLE)) {
       c.consumeTok(Tok::LANGLE);
       while (c.curTok()->type != Tok::RANGLE) {
@@ -135,7 +135,7 @@ Type::Type(Parser::Ctx& c) {
       c.consumeTok(Tok::RANGLE);
     }
   } else {
-    name = c.consumeTok(BUILTIN_TYPES)->toString(c.cts);
+    name = c.consumeTok(BUILTIN_TYPES)->str_val;
   }
 }
 std::string Type::toString() const { return (fmt("Type %s") % name).str(); }
@@ -266,7 +266,7 @@ EnumDefn::EnumDefn(Parser::Ctx& c) {
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
     if (c.hasTok(Tok::COMMA, 1))
-      untyped_enums.emplace_back(c.consumeTok(Tok::IDENT)->toString(c.cts));
+      untyped_enums.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
     else
       typed_enums.emplace_back(std::make_unique<VarDecl>(c));
     c.consumeTok(Tok::COMMA);

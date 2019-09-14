@@ -42,49 +42,52 @@ std::unique_ptr<Node> ExprParser::parse() {
   // A top level expression must end either with semicolon (statement), comma (struct/array
   // literal, function call), closing paren (function call, for, if, match), closing brace
   // (compound literal), closing square bracket (array index).
-  ExprCtx ectx(ctx_);
-  while (!ctx_.hasTok({Tok::SEMICOLON, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
-    const auto* tok = ctx_.curTok();
-
-    if (ctx_.hasTok(BUILTIN_TYPES)) {
-      ectx.addExpr(std::make_unique<Type>(ctx_));
+  ExprCtx ec(c_);
+  while (!c_.hasTok({Tok::SEMICOLON, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
+    const auto* tok = c_.curTok();
+    if (c_.hasTok(BUILTIN_TYPES)) {
+      ec.addExpr(std::make_unique<Type>(c_));
       continue;
     }
 
     switch (tok->type) {
     // TODO handle bitshift, ternary, and types.
-    case Tok::LPAREN: {
+    case Tok::LPAREN:
       // If we can do postfix, add function call operation. Otherwise, it's just a paren'd expr.
-      ctx_.consumeTok();
-      if (ectx.canFinish()) {
-        ectx.addOp(tok->type);
-        ectx.addExpr(std::make_unique<FnCallArgs>(ctx_));
+      c_.consumeTok();
+      if (ec.canFinish()) {
+        ec.addOp(tok->type);
+        ec.addExpr(std::make_unique<FnCallArgs>(c_));
       } else {
-        ectx.addExpr(parse());
+        ec.addExpr(parse());
       }
-      ctx_.consumeTok(Tok::RPAREN);
+      c_.consumeTok(Tok::RPAREN);
       break;
-    }
-    case Tok::LSQUARE: {
-      ectx.addOp(tok->type);
-      ctx_.consumeTok();
-      ectx.addExpr(parse());
-      ctx_.consumeTok(Tok::RSQUARE);
+    case Tok::LSQUARE:
+      ec.addOp(tok->type);
+      c_.consumeTok();
+      ec.addExpr(parse());
+      c_.consumeTok(Tok::RSQUARE);
       break;
-    case Tok::LBRACE: ectx.addExpr(std::make_unique<CompoundLit>(ctx_)); break;
-    }
-    case Tok::IDENT: ectx.addExpr(std::make_unique<VarRef>(ctx_)); break;
-    case Tok::BOOL_LIT: ectx.addExpr(std::make_unique<BoolLit>(ctx_)); break;
-    case Tok::INT_LIT: ectx.addExpr(std::make_unique<IntLit>(ctx_)); break;
-    case Tok::CHAR_LIT: ectx.addExpr(std::make_unique<CharLit>(ctx_)); break;
-    case Tok::STR_LIT: ectx.addExpr(std::make_unique<StrLit>(ctx_)); break;
+    case Tok::LBRACE: ec.addExpr(std::make_unique<CompoundLit>(c_)); break;
+    case Tok::IDENT:
+      if (c_.type_idents.count(tok->str_val)) {  // If it's the name of a type, take type.
+        ec.addExpr(std::make_unique<Type>(c_));
+      } else {
+        ec.addExpr(std::make_unique<VarRef>(c_));
+      }
+      break;
+    case Tok::BOOL_LIT: ec.addExpr(std::make_unique<BoolLit>(c_)); break;
+    case Tok::INT_LIT: ec.addExpr(std::make_unique<IntLit>(c_)); break;
+    case Tok::CHAR_LIT: ec.addExpr(std::make_unique<CharLit>(c_)); break;
+    case Tok::STR_LIT: ec.addExpr(std::make_unique<StrLit>(c_)); break;
     default:
-      ectx.addOp(tok->type);
-      ctx_.consumeTok();
+      ec.addOp(tok->type);
+      c_.consumeTok();
       break;
     }
   }
-  return ectx.finish();
+  return ec.finish();
 }
 
 std::unique_ptr<Node> ExprParser::ExprCtx::finish() {
