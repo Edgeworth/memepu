@@ -21,38 +21,38 @@ File
      VarRef(v)
      Type(auto)
     Op(FN_CALL)
-     FnCallArgs
      Op(MEMBER_ACCESS)
-      VarRef(new)
       Type(vector)
        Type(i8)
+      VarRef(new)
+     FnCallArgs
    Op(FN_CALL)
+    Op(MEMBER_ACCESS)
+     VarRef(v)
+     VarRef(push)
     FnCallArgs
      IntLit(1)
-    Op(MEMBER_ACCESS)
-     VarRef(push)
-     VarRef(v)
    Op(FN_CALL)
+    VarRef(bubblesort)
     FnCallArgs
      VarRef(&v)
-    VarRef(bubblesort)
    Var
     VarDecl
      VarRef(d)
      Type(auto)
     Op(FN_CALL)
-     FnCallArgs
-      VarRef(v)
      Type(vector)
       Type(i16)
+     FnCallArgs
+      VarRef(v)
    Op(MUL)
+    VarRef(a)
     Op(UNARY_DEREF)
      Op(FN_CALL)
-      FnCallArgs
-       VarRef(v)
       Type(vector)
        Type(i16)
-    VarRef(a)
+      FnCallArgs
+       VarRef(v)
    Return
     IntLit(0)
  Enum(0 untyped)
