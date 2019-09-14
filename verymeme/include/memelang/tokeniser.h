@@ -86,10 +86,13 @@ struct Tok {
   std::string str_val = "";
 
   std::string desc(const FileContents* contents) const {
-    return (boost::format("Token(%s, '%s',  %d:%d, %s, \"%s\")") % type %
-        contents->getSpan(loc, size) % contents->getLineNumber(loc) % contents->getColNumber(loc) %
-        (int_val == INT64_MIN ? "no int" : std::to_string(int_val)) % str_val)
-        .str();
+    std::string d = (boost::format("Token(%s, %d:%d, '%s'") % type % contents->getLineNumber(loc) %
+        contents->getColNumber(loc) % contents->getSpan(loc, size))
+                        .str();
+    if (int_val != INT64_MIN) d += (boost::format(", %d") % int_val).str();
+    if (!str_val.empty()) d += (boost::format(", '%s'") % str_val).str();
+    d += ")";
+    return d;
   }
 };
 
@@ -102,8 +105,9 @@ public:
 private:
   const FileContents* contents_;
   std::string curtok_;
-  std::vector<Tok> tokens_;
+  std::vector<Tok> toks_;
   int idx_ = 0;
+  int prev_idx_ = 0;
   bool can_merge_ = true;
 
   static bool startsNewToken(char c);

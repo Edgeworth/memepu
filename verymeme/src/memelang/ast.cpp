@@ -175,7 +175,7 @@ std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret
 StmtBlk::StmtBlk(Parser::Ctx& c) {
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
-    // TODO(Progress): match, asm
+    // TODO(Progress): match
     switch (c.curTok()->type) {
     case Tok::RETURN:
       stmts.emplace_back(std::make_unique<Return>(c));
@@ -187,6 +187,7 @@ StmtBlk::StmtBlk(Parser::Ctx& c) {
       break;
     case Tok::FOR: stmts.emplace_back(std::make_unique<For>(c)); break;
     case Tok::IF: stmts.emplace_back(std::make_unique<If>(c)); break;
+    case Tok::ASM: stmts.emplace_back(std::make_unique<Asm>(c)); break;
     default:
       stmts.emplace_back(ExprParser(c).parse());
       c.consumeTok(Tok::SEMICOLON);
@@ -197,6 +198,10 @@ StmtBlk::StmtBlk(Parser::Ctx& c) {
 }
 std::string StmtBlk::toString() const { return "StmtBlk"; }
 std::vector<Node*> StmtBlk::children() { return flattenChildren(stmts); }
+
+Asm::Asm(Parser::Ctx& c) { src = c.consumeTok(Tok::ASM)->str_val; }
+std::string Asm::toString() const { return "Asm(" + src + ")"; }
+std::vector<Node*> Asm::children() { return {}; }
 
 Return::Return(Parser::Ctx& c) {
   c.consumeTok(Tok::RETURN);

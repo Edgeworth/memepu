@@ -8,7 +8,7 @@ namespace memelang {
 
 namespace {
 
-constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t\r\n?,:.=";
+constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t\r\n?,:.=\"'";
 
 // Stores the tokens which are just a simple string match.
 const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
@@ -29,7 +29,7 @@ const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
     {"auto", Tok::AUTO}, {"i8", Tok::I8}, {"i16", Tok::I16}, {"i32", Tok::I32}, {"u8", Tok::U8},
     {"u16", Tok::U16}, {"u32", Tok::U32}, {"bool", Tok::BOOL}, {"bit", Tok::BIT},
     // Specially handled tokens:
-    {"asm", Tok::ASM}, {"//", Tok::COMMENT}};
+    {"asm", Tok::ASM}, {"//", Tok::COMMENT}, {"\"", Tok::DQUOTE}, {"'", Tok::QUOTE}};
 
 }  // namespace
 
@@ -45,21 +45,23 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
 }
 
 std::vector<Tok> Tokeniser::tokenise() {
-  tokens_.clear();
+  toks_.clear();
   const auto& data = contents_->data();
-  for (idx_ = 0; idx_ < int(data.size()); ++idx_) {
-    char c = data[idx_];
-    verify_expr(isprint(c) || c == '\n', "unprintable character '%c' at %d:%d", c,
-        contents_->getLineNumber(idx_), contents_->getColNumber(idx_));
+  for (int i = 0; i < int(data.size()); ++i)
+    verify_expr(isprint(data[i]) || data[i] == '\n', "unprintable character '%c' at %d:%d", data[i],
+        contents_->getLineNumber(i), contents_->getColNumber(i));
 
-    if (atCompleteToken() || startsNewToken(c)) pushCurrentToken();
-    if (!isspace(c)) curtok_ += c;
+  while (idx_ < int(data.size())) {
+    if (startsNewToken(data[idx_]) || atCompleteToken()) pushCurrentToken();
+
+    if (!isspace(data[idx_])) curtok_ += data[idx_];
     else
       can_merge_ = false;  // Can't merge across spaces.
+    idx_++;
   }
   pushCurrentToken();
 
-  return tokens_;
+  return toks_;
 }
 
 void Tokeniser::pushCurrentToken() {
@@ -75,14 +77,15 @@ void Tokeniser::pushCurrentToken() {
   }
 
   // Try to merge tokens together.
-  if (!tokens_.empty() && can_merge_) {
-    auto prevtok = tokens_.back();
+  if (!toks_.empty() && can_merge_) {
+    auto prevtok = toks_.back();
     std::string mergetok = contents_->getSpan(prevtok.loc, prevtok.size) + curtok_;
     auto merge_iter = SIMPLE_TOKENS.find(mergetok);
     if (merge_iter != SIMPLE_TOKENS.end()) {
-      tokens_.pop_back();
       type = merge_iter->second;
-      curtok_ = std::move(mergetok);
+      curtok_ = str_val = std::move(mergetok);
+      prev_idx_ = prevtok.loc;
+      toks_.pop_back();
     }
   }
 
@@ -97,16 +100,18 @@ void Tokeniser::pushCurrentToken() {
     break;
   case Tok::DQUOTE:
     type = Tok::STR_LIT;
+    str_val.clear();
     while (!isChar('"', "missing closing quote for string literal")) str_val += grabEscapedChar();
     idx_++;  // Skip ".
     break;
   case Tok::ASM:
     while (!isChar('{', "asm block has no opening brace")) idx_++;
     idx_++;  // Skip {.
+    str_val.clear();
     while (!isChar('}', "asm block has no closing brace")) str_val += data[idx_++];
     idx_++;  // Skip }.
     break;
-  case Tok::IDENT: {
+  case Tok::IDENT:
     int_val = convertFromInteger(curtok_);
     if (int_val != INT64_MIN) type = Tok::INT_LIT;
     if (curtok_ == "false" || curtok_ == "true") {
@@ -114,17 +119,18 @@ void Tokeniser::pushCurrentToken() {
       type = Tok::BOOL_LIT;
     }
     break;
-  }
   case Tok::COMMENT:
     while (!isChar('\n', "file not newline terminated")) idx_++;
     break;
   default: break;
   }
 
-  tokens_.push_back({type, idx_ - int(curtok_.size()), int(curtok_.size()), int_val, str_val});
+  while (isspace(data[prev_idx_])) prev_idx_++;  // Skip initial whitespace.
+  toks_.push_back({type, prev_idx_, idx_ - prev_idx_, int_val, str_val});
   curtok_ = "";
   // Added a new token, we can potentially merge it next.
   can_merge_ = true;
+  prev_idx_ = idx_;
 }
 
 bool Tokeniser::startsNewToken(char c) {
@@ -154,6 +160,7 @@ char Tokeniser::grabEscapedChar() {
   case 'r': return '\r';
   case 't': return '\t';
   case '\'': return '\'';
+  case '\\': return '\\';
   case '"': return '"';
   default: verify_expr(false, "unknown escape sequence \\%c", data[idx_ - 1]);
   }

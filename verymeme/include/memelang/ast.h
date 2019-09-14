@@ -180,6 +180,12 @@ struct StmtBlk : public Node {
 };
 
 // Statement related:
+struct Asm : public Node {
+  std::string src;
+
+  DEFNLT(Asm, src);
+};
+
 struct Return : public Node {
   std::unique_ptr<Node> ret;
 
