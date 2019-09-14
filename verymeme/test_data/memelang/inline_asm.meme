@@ -13,4 +13,7 @@ fn main() i8 {
     lhu r3,5
   }
   asm {}
+  // a comment
+  "a string"
+  'a'
 }
