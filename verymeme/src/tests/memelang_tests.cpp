@@ -19,10 +19,9 @@ std::vector<std::pair<fs::path, fs::path>> getFileGoldenPairs(const std::string&
   for (const auto& p : paths) {
     const auto orig = fs::path(p).replace_extension(".meme");
     const auto golden = fs::path(p).replace_extension(".golden");
-    printf("%s %s %s\n", p.string().c_str(), orig.string().c_str(), golden.string().c_str());
     verify_expr(
         fs::exists(orig) && fs::exists(golden), "missing golden pair for %s", p.string().c_str());
-    pairs.push_back({orig, golden});
+    pairs.emplace_back(orig, golden);
   }
   return pairs;
 }
@@ -38,7 +37,7 @@ TEST_F(MemelangTokeniserTest, GoldenTest) {
     memelang::Tokeniser tokeniser(&cts);
     std::vector<std::string> tokstrs;
     for (const auto& tok : tokeniser.tokenise()) tokstrs.push_back(tok.desc(&cts));
-    EXPECT_EQ(golden, join(tokstrs, "\n", true));
+    EXPECT_EQ(golden, join(tokstrs, "\n", true)) << " on file " << orig_path.string();
   }
 }
 
@@ -51,7 +50,7 @@ TEST_F(MemelangParserTest, GoldenTest) {
     const auto cts = memelang::FileContents(orig_path.filename().string(), orig);
     memelang::Parser parser(&cts, memelang::Tokeniser(&cts).tokenise());
     EXPECT_TRUE(parser.parse());
-    EXPECT_EQ(golden, parser.astToString());
+    EXPECT_EQ(golden, parser.astToString()) << " on file " << orig_path.string();
   }
 }
 

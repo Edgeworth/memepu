@@ -7,10 +7,7 @@ File
    Var
     VarDecl
      VarRef(e)
-     Type(auto)
-    Op(FN_CALL)
      Type(Empty)
-     FnCallArgs
-      CompoundLit
+    CompoundLit
  Struct
   Typename(Empty)

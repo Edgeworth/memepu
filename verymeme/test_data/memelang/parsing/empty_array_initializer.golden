@@ -1,0 +1,12 @@
+File
+ FnDefn
+  FnSig
+   Typename(main)
+   Type(i8)
+  StmtBlk
+   Var
+    VarDecl
+     VarRef(array)
+     Type(i8)
+      Qualifier(const: 0 ptr: 0, array: 5)
+    CompoundLit
