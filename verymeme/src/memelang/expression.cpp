@@ -162,6 +162,9 @@ void ExprParser::ExprCtx::collapseOps(
     verify_expr(!expr.empty(), "BUG");
     op->left = std::move(expr.back());
     expr.pop_back();
+    // Processing in reverse order for left associative, so fix individual node orientations.
+    if (op->is_binop && !RIGHT_ASSOC.count(op->type))
+      std::swap(op->left, op->right);
     expr.push_back(std::move(op));
   }
   if (expr.size() != 1 && !ops.empty()) c_.compileError("error in expression");
