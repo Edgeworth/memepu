@@ -11,4 +11,5 @@ fn main() i8 {
   var cptr_array_ci8: const* [42] const i8 = 0;
 
   var multidim_array: [40][30]i8 = {};
+  var cmultidim_array: [40][30]const i8 = {};
 }

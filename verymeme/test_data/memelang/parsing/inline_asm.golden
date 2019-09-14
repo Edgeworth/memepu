@@ -1,0 +1,21 @@
+File
+ FnDefn
+  FnSig
+   Typename(main)
+   Type(i8)
+  StmtBlk
+   Asm(
+    lhu r3,5
+  )
+   Asm(
+    lhu r3,5
+    lhu r3,5
+  )
+   Asm(
+    lhu r3,5
+    lhu r3,5
+    lhu r3,5
+  )
+   Asm()
+   StrLit(a string)
+   CharLit(0)
