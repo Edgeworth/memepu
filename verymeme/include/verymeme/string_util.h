@@ -95,4 +95,6 @@ std::string convertToBinary(int val) {
   return bs.to_string();
 }
 
+std::string join(const std::vector<std::string>& l, std::string j, bool terminate = false);
+
 #endif  // VERYMEME_STRING_UTIL_H
