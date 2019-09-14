@@ -31,3 +31,11 @@ int64_t convertFromInteger(const std::string& s) {
   if (end != s.c_str() + s.size() || int32_t(val) != val) return INT64_MIN;
   return val;
 }
+
+std::string join(const std::vector<std::string>& l, std::string j, bool terminate) {
+  std::string ret;
+  for (int i = 0; i < int(l.size()) - 1; ++i) ret += l[i] + j;
+  ret += l.back();
+  if (terminate) ret += j;
+  return ret;
+}

@@ -1,0 +1,16 @@
+File
+ FnDefn
+  FnSig
+   Typename(main)
+   Type(i8)
+  StmtBlk
+   Var
+    VarDecl
+     VarRef(e)
+     Type(auto)
+    Op(FN_CALL)
+     FnCallArgs
+      CompoundLit
+     Type(Empty)
+ Struct
+  Typename(Empty)

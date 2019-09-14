@@ -1,3 +1,8 @@
+enum Unit {}
+fn bubblesort<T>(v: const* vector<*T>) Unit {}
+struct vector<T> {
+  fn push(v: i32) Unit {}
+}
 fn main() i32 {
   var v: auto = vector<i8>.new();
   v.push(1);
