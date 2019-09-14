@@ -232,12 +232,21 @@ struct EnumDefn : public Node {
   DEFNLT(EnumDefn, tname, typed_enums, untyped_enums);
 };
 
+struct StructDefn : public Node {
+  std::unique_ptr<Typename> tname;
+  std::vector<std::unique_ptr<VarDecl>> var_decls;
+  std::vector<std::unique_ptr<FnDefn>> fn_defns;
+
+  DEFNLT(StructDefn, tname, var_decls, fn_defns);
+};
+
 struct File : public Node {
-  std::vector<std::unique_ptr<IntfDefn>> intf_defns;
   std::vector<std::unique_ptr<FnDefn>> fn_defns;
   std::vector<std::unique_ptr<EnumDefn>> enum_defns;
+  std::vector<std::unique_ptr<IntfDefn>> intf_defns;
+  std::vector<std::unique_ptr<StructDefn>> struct_defns;
 
-  DEFNLT(File, intf_defns);
+  DEFNLT(File, fn_defns, enum_defns, intf_defns, struct_defns);
 };
 
 #undef DEFNLT

@@ -93,14 +93,14 @@ Typelist::Typelist(Parser::Ctx& c) {
   c.consumeTok(Tok::RANGLE);
 }
 
-std::string Typelist::toString() const { return "Typelist"; }
+std::string Typelist::toString() const { return "Typelist(" + join(names, ", ") + ")"; }
 std::vector<Node*> Typelist::children() { return {}; }
 
 Typename::Typename(Parser::Ctx& c) {
   name = c.consumeTok(Tok::IDENT)->str_val;
   if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
 }
-std::string Typename::toString() const { return (fmt("Typename %s") % name).str(); }
+std::string Typename::toString() const { return (fmt("Typename(%s)") % name).str(); }
 std::vector<Node*> Typename::children() { return flattenChildren(tlist); }
 
 Qualifier::Qualifier(Parser::Ctx& c) {
@@ -115,7 +115,7 @@ Qualifier::Qualifier(Parser::Ctx& c) {
   }
 }
 std::string Qualifier::toString() const {
-  return (fmt("Qualifier const: %1% ptr: %2%, array: %3%") % cnst % ptr % array).str();
+  return (fmt("Qualifier(const: %1% ptr: %2%, array: %3%)") % cnst % ptr % array).str();
 }
 std::vector<Node*> Qualifier::children() { return {}; }
 
@@ -138,7 +138,7 @@ Type::Type(Parser::Ctx& c) {
     name = c.consumeTok(BUILTIN_TYPES)->str_val;
   }
 }
-std::string Type::toString() const { return (fmt("Type %s") % name).str(); }
+std::string Type::toString() const { return (fmt("Type(%s)") % name).str(); }
 std::vector<Node*> Type::children() { return flattenChildren(quals, params); }
 
 VarDecl::VarDecl(Parser::Ctx& c) {
@@ -265,8 +265,7 @@ EnumDefn::EnumDefn(Parser::Ctx& c) {
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
-    if (c.hasTok(Tok::COMMA, 1))
-      untyped_enums.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
+    if (c.hasTok(Tok::COMMA, 1)) untyped_enums.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
     else
       typed_enums.emplace_back(std::make_unique<VarDecl>(c));
     c.consumeTok(Tok::COMMA);
@@ -274,21 +273,40 @@ EnumDefn::EnumDefn(Parser::Ctx& c) {
   c.consumeTok(Tok::RBRACE);
 }
 std::string EnumDefn::toString() const {
-  return (fmt("Enum (%1% untyped)") % untyped_enums.size()).str();
+  return (fmt("Enum(%1% untyped)") % untyped_enums.size()).str();
 }
 std::vector<Node*> EnumDefn::children() { return flattenChildren(tname, typed_enums); }
+
+StructDefn::StructDefn(Parser::Ctx& c) {
+  c.consumeTok(Tok::STRUCT);
+  tname = std::make_unique<Typename>(c);
+  c.consumeTok(Tok::LBRACE);
+  while (!c.hasTok(Tok::RBRACE)) {
+    if (c.hasTok({Tok::FN, Tok::STATIC})) fn_defns.emplace_back(std::make_unique<FnDefn>(c));
+    else {
+      var_decls.emplace_back(std::make_unique<VarDecl>(c));
+      c.consumeTok(Tok::SEMICOLON);
+    }
+  }
+  c.consumeTok(Tok::RBRACE);
+}
+std::string StructDefn::toString() const { return "Struct"; }
+std::vector<Node*> StructDefn::children() { return flattenChildren(tname, var_decls, fn_defns); }
 
 File::File(Parser::Ctx& c) {
   while (c.hasTok()) {
     switch (c.curTok()->type) {
-    case Tok::INTF: intf_defns.emplace_back(std::make_unique<IntfDefn>(c)); break;
     case Tok::FN: fn_defns.emplace_back(std::make_unique<FnDefn>(c)); break;
     case Tok::ENUM: enum_defns.emplace_back(std::make_unique<EnumDefn>(c)); break;
+    case Tok::INTF: intf_defns.emplace_back(std::make_unique<IntfDefn>(c)); break;
+    case Tok::STRUCT: struct_defns.emplace_back(std::make_unique<StructDefn>(c)); break;
     default: c.compileError("unexpected token"); break;
     }
   }
 }
 std::string File::toString() const { return "File"; }
-std::vector<Node*> File::children() { return flattenChildren(intf_defns, fn_defns); }
+std::vector<Node*> File::children() {
+  return flattenChildren(fn_defns, enum_defns, intf_defns, struct_defns);
+}
 
 }  // namespace memelang
