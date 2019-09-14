@@ -10,32 +10,36 @@
 
 namespace memelang {
 
+const inline std::vector<Tok::Type> BUILTIN_TYPES = {
+    Tok::AUTO, Tok::I8, Tok::I16, Tok::I32, Tok::U8, Tok::U16, Tok::U32, Tok::BOOL, Tok::BIT};
+
 struct File;
 
 class Parser {
 public:
-  class Context {
+  class Ctx {
   public:
     const FileContents* cts;
     std::vector<std::string> type_idents;
 
-    Context(const FileContents* cts, std::vector<Tok> tokens);
+    Ctx(const FileContents* cts, std::vector<Tok> tokens);
 
-    const Tok* curToken() const { return curToken(std::vector<Tok::Type>{}); }
-    const Tok* curToken(const std::vector<Tok::Type>& ts) const;
+    const Tok* curTok() const { return curTok(std::vector<Tok::Type>{}); }
+    const Tok* curTok(const std::vector<Tok::Type>& ts) const;
 
-    const Tok* consumeToken() { return consumeToken(std::vector<Tok::Type>{}); }
-    const Tok* consumeToken(Tok::Type type) { return consumeToken(std::vector<Tok::Type>{type}); }
-    const Tok* consumeToken(const std::vector<Tok::Type>& ts);
-    bool maybeConsumeToken(Tok::Type type);
+    const Tok* consumeTok() { return consumeTok(std::vector<Tok::Type>{}); }
+    const Tok* consumeTok(Tok::Type type) { return consumeTok(std::vector<Tok::Type>{type}); }
+    const Tok* consumeTok(const std::vector<Tok::Type>& ts);
+    bool maybeConsumeTok(Tok::Type type);
 
-    bool hasToken() const { return hasToken(std::vector<Tok::Type>{}); }
-    bool hasToken(Tok::Type type, int peek = 0) const {
-      return hasToken(std::vector<Tok::Type>{type}, peek);
+    bool hasTok() const { return hasTok(std::vector<Tok::Type>{}); }
+    bool hasTok(Tok::Type type, int peek = 0) const {
+      return hasTok(std::vector<Tok::Type>{type}, peek);
     }
-    bool hasToken(const std::vector<Tok::Type>& ts, int peek = 0) const;
+    bool hasTok(const std::vector<Tok::Type>& ts, int peek = 0) const;
 
     void compileError(const std::string& msg) const;
+    void reset() { idx_ = 0; }
 
   private:
     std::vector<Tok> toks_;
@@ -51,7 +55,7 @@ public:
 private:
   void collectTypeIdents();
 
-  std::unique_ptr<Context> ctx_;
+  std::unique_ptr<Ctx> c_;
   std::unique_ptr<File> root_;
 };
 

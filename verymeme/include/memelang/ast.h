@@ -11,7 +11,7 @@ namespace memelang {
 #define DEFNLT(type, ...) \
   auto getTie() const { return std::tie(__VA_ARGS__); } \
   bool operator<(const type& o) const { return getTie() < o.getTie(); } \
-  explicit type(Parser::Context& ctx); \
+  explicit type(Parser::Ctx& c); \
   type(type&&) = default; \
   type& operator=(type&&) = default; \
   type(const type&) = delete; \
@@ -64,94 +64,92 @@ struct Type : public Node {
 };
 
 // Expression related:
-struct Expr : public Node {
-  enum Type {
-    ARRAY_ACCESS,
-    MEMBER_ACCESS,
-    FN_CALL,
-    POSTFIX_INC,
-    POSTFIX_DEC,
-    PREFIX_INC,
-    PREFIX_DEC,
-    UNARY_NEGATE,
-    UNARY_LINVERT,
-    UNARY_BINVERT,
-    UNARY_DEREF,
-    UNARY_ADDR,
-    MUL,
-    DIV,
-    MOD,
-    ADD,
-    SUB,
-    LSHIFT,
-    ARITH_RSHIFT,
-    RSHIFT,
-    LEQ,
-    GEQ,
-    LT,
-    GT,
-    EQ,
-    NEQ,
-    BAND,
-    BXOR,
-    BOR,
-    LAND,
-    LOR,
-    TERNARY,
-    ASSIGNMENT,
-    COUNT
-  };
+
+enum class Expr {
+  ARRAY_ACCESS,
+  MEMBER_ACCESS,
+  FN_CALL,
+  POSTFIX_INC,
+  POSTFIX_DEC,
+  PREFIX_INC,
+  PREFIX_DEC,
+  UNARY_NEGATE,
+  UNARY_LINVERT,
+  UNARY_BINVERT,
+  UNARY_DEREF,
+  UNARY_ADDR,
+  MUL,
+  DIV,
+  MOD,
+  ADD,
+  SUB,
+  LSHIFT,
+  ARITH_RSHIFT,
+  RSHIFT,
+  LEQ,
+  GEQ,
+  LT,
+  GT,
+  EQ,
+  NEQ,
+  BAND,
+  BXOR,
+  BOR,
+  LAND,
+  LOR,
+  TERNARY,
+  ASSIGNMENT,
+  COUNT
 };
 
-std::ostream& operator<<(std::ostream& str, const Expr::Type& o);
+std::ostream& operator<<(std::ostream& str, const Expr& o);
 
-struct BoolLit : public Expr {
+struct BoolLit : public Node {
   bool val;
 
   DEFNLT(BoolLit, val);
 };
 
-struct IntLit : public Expr {
+struct IntLit : public Node {
   int64_t val;
 
   DEFNLT(IntLit, val);
 };
 
-struct CharLit : public Expr {
+struct CharLit : public Node {
   int32_t val;
 
   DEFNLT(CharLit, val);
 };
 
-struct StrLit : public Expr {
+struct StrLit : public Node {
   std::string val;
 
   DEFNLT(StrLit, val);
 };
 
-struct CompoundLit : public Expr {
-  std::vector<std::unique_ptr<Expr>> lits;
+struct CompoundLit : public Node {
+  std::vector<std::unique_ptr<Node>> lits;
 
   DEFNLT(CompoundLit, lits);
 };
 
-struct VarRef : public Expr {
+struct VarRef : public Node {
   std::string name;
 
   DEFNLT(VarRef, name);
 };
 
-struct Op : public Expr {
-  Expr::Type type;
+struct Op : public Node {
+  Expr type;
   bool is_binop = false;
-  std::unique_ptr<Expr> left;
-  std::unique_ptr<Expr> right;
+  std::unique_ptr<Node> left;
+  std::unique_ptr<Node> right;
 
   DEFNLT(Op, left, right);
 };
 
 // Function related:
-
 struct VarDecl : public Node {
   std::unique_ptr<VarRef> name;
   std::unique_ptr<Type> type;
@@ -159,8 +157,8 @@ struct VarDecl : public Node {
   DEFNLT(VarDecl, name, type);
 };
 
-struct FnCallArgs : public Expr {
-  std::vector<std::unique_ptr<Expr>> args;
+struct FnCallArgs : public Node {
+  std::vector<std::unique_ptr<Node>> args;
 
   DEFNLT(FnCallArgs, args);
 };
@@ -183,29 +181,29 @@ struct StmtBlk : public Node {
 
 // Statement related:
 struct Return : public Node {
-  std::unique_ptr<Expr> ret;
+  std::unique_ptr<Node> ret;
 
   DEFNLT(Return, ret);
 };
 
 struct Var : public Node {
   std::unique_ptr<VarDecl> decl;
-  std::unique_ptr<Expr> defn;
+  std::unique_ptr<Node> defn;
 
   DEFNLT(Var, decl, defn);
 };
 
 struct For : public Node {
   std::unique_ptr<Var> var_defn;
-  std::unique_ptr<Expr> cond;
-  std::unique_ptr<Expr> update;
+  std::unique_ptr<Node> cond;
+  std::unique_ptr<Node> update;
   std::unique_ptr<StmtBlk> blk;
 
   DEFNLT(For, var_defn, cond, update, blk);
 };
 
 struct If : public Node {
-  std::unique_ptr<Expr> cond;
+  std::unique_ptr<Node> cond;
   std::unique_ptr<StmtBlk> blk;
 
   DEFNLT(If, cond, blk);

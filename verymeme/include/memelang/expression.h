@@ -6,34 +6,34 @@
 
 namespace memelang {
 
-class ExpressionParser {
+class ExprParser {
 public:
-  explicit ExpressionParser(Parser::Context& ctx) : ctx_(ctx) {}
+  explicit ExprParser(Parser::Ctx& ctx) : ctx_(ctx) {}
 
-  std::unique_ptr<Expr> parse();
+  std::unique_ptr<Node> parse();
 
 private:
-  Parser::Context& ctx_;
+  Parser::Ctx& ctx_;
 
   class ExprCtx {
   public:
-    explicit ExprCtx(Parser::Context& ctx) : ctx_(ctx) {}
+    explicit ExprCtx(Parser::Ctx& c) : c_(c) {}
 
-    std::unique_ptr<Expr> finish();
-    void addExpr(std::unique_ptr<Expr> e) { s_.emplace_back(std::move(e)); }
+    std::unique_ptr<Node> finish();
+    void addExpr(std::unique_ptr<Node> e) { s_.emplace_back(std::move(e)); }
     void addOp(Tok::Type type);
-    bool canDoPostfixOp() const { return s_.size() - binop_count == 1; }
+    bool canFinish() const { return s_.size() - binop_count == 1; }
 
   private:
-    Parser::Context& ctx_;
-    std::vector<std::unique_ptr<Expr>> s_ = {};
+    Parser::Ctx& c_;
+    std::vector<std::unique_ptr<Node>> s_ = {};
     std::vector<std::unique_ptr<Op>> ops_ = {};
     int binop_count = 0;
 
     bool shouldPopStack(int precedence) const;
     void processStack(int next_precedence);
     void collapseOps(
-        std::vector<std::unique_ptr<Op>>& ops, std::vector<std::unique_ptr<Expr>>& expr);
+        std::vector<std::unique_ptr<Op>>& ops, std::vector<std::unique_ptr<Node>>& expr);
   };
 };
 
