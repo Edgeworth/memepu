@@ -18,6 +18,12 @@ elseif (${USE_AFL})
   set(CMAKE_CXX_COMPILER "afl-g++")
 endif ()
 
+# Use shared libraries for faster linking in Debug mode.
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  message(STATUS "Building using shared libraries")
+  set(BUILD_SHARED_LIBS ON)
+endif ()
+
 project(verymeme)
 
 # Enable IPO if possible.
@@ -66,7 +72,7 @@ elseif (HAVE_GOLD)
   message(STATUS "Using gold linker")
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=gold")
-endif()
+endif ()
 
 # Download and unpack googletest at configure time
 configure_file(cmake/DownloadGTest.cmake googletest-download/CMakeLists.txt)
