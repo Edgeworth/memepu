@@ -20,7 +20,7 @@ public:
   class Ctx {
   public:
     const FileContents* cts;
-    std::vector<std::string> type_idents;
+    std::unordered_set<std::string> type_idents;
 
     Ctx(const FileContents* cts, std::vector<Tok> tokens);
 

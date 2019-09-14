@@ -8,12 +8,12 @@ namespace memelang {
 
 class ExprParser {
 public:
-  explicit ExprParser(Parser::Ctx& ctx) : ctx_(ctx) {}
+  explicit ExprParser(Parser::Ctx& ctx) : c_(ctx) {}
 
   std::unique_ptr<Node> parse();
 
 private:
-  Parser::Ctx& ctx_;
+  Parser::Ctx& c_;
 
   class ExprCtx {
   public:

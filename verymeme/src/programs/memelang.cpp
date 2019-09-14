@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
   memelang::FileContents contents(argv[1], readFile(argv[1]));
   memelang::Tokeniser tokeniser(&contents);
   auto tokens = tokeniser.tokenise();
-  for (const auto& token : tokens) { printf("%s\n", token.toString(&contents).c_str()); }
+  for (const auto& token : tokens) { printf("%s\n", token.desc(&contents).c_str()); }
   memelang::Parser parser(&contents, tokens);
   parser.parse();
   printf("AST:\n%s\n", parser.astToString().c_str());

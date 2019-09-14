@@ -38,8 +38,7 @@ void Parser::collectTypeIdents() {
     if (c_->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM})) {
       c_->consumeTok();
       // Next token should be the ident.
-      c_->type_idents.push_back(c_->consumeTok()->toString(c_->cts));
-      printf("TYPE IDENT: %s\n", c_->type_idents.back().c_str());
+      c_->type_idents.insert(c_->consumeTok()->str_val);
     } else {
       c_->consumeTok();
     }
@@ -71,7 +70,7 @@ void Parser::Ctx::compileError(const std::string& msg) const {
   if (hasTok()) {
     const auto* token = curTok();
     loc = (fmt("%d:%d - \"%s\"") % cts->getLineNumber(token->loc) % cts->getColNumber(token->loc) %
-        token->toString(cts))
+        token->desc(cts))
               .str();
   }
   throw std::runtime_error(
