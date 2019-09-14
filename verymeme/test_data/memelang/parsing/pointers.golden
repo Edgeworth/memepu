@@ -14,14 +14,16 @@ File
      VarRef(ptr)
      Type(i8)
       Qualifier(const: 0 ptr: 1, array: 0)
-    VarRef(&val)
+    Op(UNARY_ADDR)
+     VarRef(val)
    Var
     VarDecl
      VarRef(pptr)
      Type(i8)
       Qualifier(const: 0 ptr: 1, array: 0)
       Qualifier(const: 0 ptr: 1, array: 0)
-    VarRef(&ptr)
+    Op(UNARY_ADDR)
+     VarRef(ptr)
    Var
     VarDecl
      VarRef(cval)
@@ -32,14 +34,16 @@ File
      VarRef(cptr_ci8)
      Type(const i8)
       Qualifier(const: 1 ptr: 1, array: 0)
-    VarRef(&cval)
+    Op(UNARY_ADDR)
+     VarRef(cval)
    Var
     VarDecl
      VarRef(cptr_cptr_ci8)
      Type(const i8)
       Qualifier(const: 1 ptr: 1, array: 0)
       Qualifier(const: 1 ptr: 1, array: 0)
-    VarRef(&cptr_ci8)
+    Op(UNARY_ADDR)
+     VarRef(cptr_ci8)
    Var
     VarDecl
      VarRef(array_cptr_ci8)

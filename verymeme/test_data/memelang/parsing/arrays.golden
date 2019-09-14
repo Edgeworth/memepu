@@ -1,0 +1,70 @@
+File
+ FnDefn
+  FnSig
+   Typename(takesbyvalue)
+   VarDecl
+    VarRef(arr)
+    Type(i8)
+     Qualifier(const: 0 ptr: 0, array: 42)
+   Type(i8)
+  StmtBlk
+   Return
+    Op(ARRAY_ACCESS)
+     VarRef(arr)
+     IntLit(0)
+ FnDefn
+  FnSig
+   Typename(takesbyref)
+   VarDecl
+    VarRef(arr)
+    Type(i8)
+     Qualifier(const: 0 ptr: 1, array: 0)
+     Qualifier(const: 0 ptr: 0, array: 42)
+   Type(i8)
+  StmtBlk
+   Return
+    Op(ARRAY_ACCESS)
+     VarRef(arr)
+     IntLit(0)
+ FnDefn
+  FnSig
+   Typename(takesbyptr)
+   VarDecl
+    VarRef(arr)
+    Type(i8)
+     Qualifier(const: 0 ptr: 1, array: 0)
+   Type(i8)
+  StmtBlk
+   Return
+    Op(ARRAY_ACCESS)
+     VarRef(arr)
+     IntLit(0)
+ FnDefn
+  FnSig
+   Typename(main)
+   Type(i8)
+  StmtBlk
+   Var
+    VarDecl
+     VarRef(arr)
+     Type(i8)
+      Qualifier(const: 0 ptr: 0, array: 42)
+    CompoundLit
+   Op(FN_CALL)
+    VarRef(takesbyvalue)
+    FnCallArgs
+     VarRef(arr)
+   Op(FN_CALL)
+    VarRef(takesbyref)
+    FnCallArgs
+     Op(UNARY_ADDR)
+      VarRef(arr)
+   Op(FN_CALL)
+    VarRef(takesbyptr)
+    FnCallArgs
+     Op(UNARY_ADDR)
+      VarRef(arr)
+   Return
+    IntLit(4)
+ Enum(0 untyped)
+  Typename(Unit)
