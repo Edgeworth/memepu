@@ -67,7 +67,7 @@ CompoundLit::CompoundLit(Parser::Ctx& c) {
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
     lits.emplace_back(ExprParser(c).parse());
-    c.consumeTok(Tok::COMMA);
+    if (!c.maybeConsumeTok(Tok::COMMA)) break;
   }
   c.consumeTok(Tok::RBRACE);
 }
