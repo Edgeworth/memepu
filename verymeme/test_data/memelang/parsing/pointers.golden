@@ -1,0 +1,70 @@
+File
+ FnDefn
+  FnSig
+   Typename(main)
+   Type(i8)
+  StmtBlk
+   Var
+    VarDecl
+     VarRef(val)
+     Type(i8)
+    IntLit(2)
+   Var
+    VarDecl
+     VarRef(ptr)
+     Type(i8)
+      Qualifier(const: 0 ptr: 1, array: 0)
+    VarRef(&val)
+   Var
+    VarDecl
+     VarRef(pptr)
+     Type(i8)
+      Qualifier(const: 0 ptr: 1, array: 0)
+      Qualifier(const: 0 ptr: 1, array: 0)
+    VarRef(&ptr)
+   Var
+    VarDecl
+     VarRef(cval)
+     Type(const i8)
+    IntLit(2)
+   Var
+    VarDecl
+     VarRef(cptr_ci8)
+     Type(const i8)
+      Qualifier(const: 1 ptr: 1, array: 0)
+    VarRef(&cval)
+   Var
+    VarDecl
+     VarRef(cptr_cptr_ci8)
+     Type(const i8)
+      Qualifier(const: 1 ptr: 1, array: 0)
+      Qualifier(const: 1 ptr: 1, array: 0)
+    VarRef(&cptr_ci8)
+   Var
+    VarDecl
+     VarRef(array_cptr_ci8)
+     Type(const i8)
+      Qualifier(const: 0 ptr: 0, array: 42)
+      Qualifier(const: 1 ptr: 1, array: 0)
+    CompoundLit
+   Var
+    VarDecl
+     VarRef(cptr_array_ci8)
+     Type(const i8)
+      Qualifier(const: 1 ptr: 1, array: 0)
+      Qualifier(const: 0 ptr: 0, array: 42)
+    IntLit(0)
+   Var
+    VarDecl
+     VarRef(multidim_array)
+     Type(i8)
+      Qualifier(const: 0 ptr: 0, array: 40)
+      Qualifier(const: 0 ptr: 0, array: 30)
+    CompoundLit
+   Var
+    VarDecl
+     VarRef(cmultidim_array)
+     Type(const i8)
+      Qualifier(const: 0 ptr: 0, array: 40)
+      Qualifier(const: 0 ptr: 0, array: 30)
+    CompoundLit
