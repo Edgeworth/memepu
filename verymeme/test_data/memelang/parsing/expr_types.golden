@@ -35,7 +35,8 @@ File
    Op(FN_CALL)
     VarRef(bubblesort)
     FnCallArgs
-     VarRef(&v)
+     Op(UNARY_ADDR)
+      VarRef(v)
    Var
     VarDecl
      VarRef(d)
