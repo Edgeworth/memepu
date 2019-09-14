@@ -85,7 +85,7 @@ struct Tok {
   int64_t int_val = INT64_MIN;
   std::string str_val = "";
 
-  std::string toString(const FileContents* contents) const {
+  std::string desc(const FileContents* contents) const {
     return (boost::format("Token(%s, '%s',  %d:%d, %s, \"%s\")") % type %
         contents->getSpan(loc, size) % contents->getLineNumber(loc) % contents->getColNumber(loc) %
         (int_val == INT64_MIN ? "no int" : std::to_string(int_val)) % str_val)
