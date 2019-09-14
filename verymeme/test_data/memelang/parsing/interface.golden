@@ -1,0 +1,12 @@
+File
+ Intf
+  FnSig
+   Typename(testFunc)
+   Type(i8)
+  FnSig
+   Typename(testFunc2)
+   VarDecl
+    VarRef(a)
+    Type(T)
+     Qualifier(const: 0 ptr: 1, array: 0)
+   Type(i16)

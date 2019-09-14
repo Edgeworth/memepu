@@ -2,7 +2,6 @@
 
 #include <numeric>
 #include <unordered_map>
-#include <utility>
 
 #include "memelang/ast.h"
 #include "verymeme/string_util.h"
@@ -46,8 +45,13 @@ void Parser::collectTypeIdents() {
   c_->reset();
 }
 
-Parser::Ctx::Ctx(const FileContents* cts, std::vector<Tok> tokens)
-    : cts(cts), toks_(std::move(tokens)) {}
+Parser::Ctx::Ctx(const FileContents* cts, const std::vector<Tok>& tokens)
+    : cts(cts), toks_() {
+  for (const auto& tok : tokens) {
+    if (tok.type != Tok::COMMENT)
+      toks_.push_back(tok);
+  }
+}
 
 const Tok* Parser::Ctx::curTok(const std::vector<Tok::Type>& ts) const {
   if (!hasTok()) compileError("unexpected end of file");

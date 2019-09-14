@@ -138,7 +138,9 @@ Type::Type(Parser::Ctx& c) {
     name = c.consumeTok(BUILTIN_TYPES)->str_val;
   }
 }
-std::string Type::toString() const { return (fmt("Type(%s)") % name).str(); }
+std::string Type::toString() const {
+  return (fmt("Type(%s%s)") % (cnst ? "const " : "") % name).str();
+}
 std::vector<Node*> Type::children() { return flattenChildren(quals, params); }
 
 VarDecl::VarDecl(Parser::Ctx& c) {
@@ -159,6 +161,7 @@ std::string FnCallArgs::toString() const { return "FnCallArgs"; }
 std::vector<Node*> FnCallArgs::children() { return flattenChildren(args); }
 
 FnSig::FnSig(Parser::Ctx& c) {
+  is_static = c.maybeConsumeTok(Tok::STATIC);
   c.consumeTok(Tok::FN);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LPAREN);

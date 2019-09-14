@@ -22,7 +22,7 @@ public:
     const FileContents* cts;
     std::unordered_set<std::string> type_idents;
 
-    Ctx(const FileContents* cts, std::vector<Tok> tokens);
+    Ctx(const FileContents* cts, const std::vector<Tok>& tokens);
 
     const Tok* curTok() const { return curTok(std::vector<Tok::Type>{}); }
     const Tok* curTok(const std::vector<Tok::Type>& ts) const;
