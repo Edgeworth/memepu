@@ -22,6 +22,7 @@ namespace memelang {
 
 struct Node {
   Tok tok = {};
+  explicit Node(Parser::Ctx& c) : tok(*c.curTok()) {}
   virtual ~Node() = default;
 
   virtual std::string toString() const = 0;

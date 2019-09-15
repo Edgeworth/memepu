@@ -45,25 +45,25 @@ std::ostream& operator<<(std::ostream& str, const Expr& o) {
   return outputEnum(str, o, EXPR_TYPES);
 }
 
-BoolLit::BoolLit(Parser::Ctx& c) { val = bool(c.consumeTok(Tok::BOOL_LIT)->int_val); }
+BoolLit::BoolLit(Parser::Ctx& c) : Node(c) { val = bool(c.consumeTok(Tok::BOOL_LIT)->int_val); }
 std::string BoolLit::toString() const {
   return (fmt("BoolLit(%s)") % (val ? "true" : "false")).str();
 }
 std::vector<Node*> BoolLit::children() { return {}; }
 
-IntLit::IntLit(Parser::Ctx& c) { val = c.consumeTok(Tok::INT_LIT)->int_val; }
+IntLit::IntLit(Parser::Ctx& c) : Node(c) { val = c.consumeTok(Tok::INT_LIT)->int_val; }
 std::string IntLit::toString() const { return (fmt("IntLit(%d)") % val).str(); }
 std::vector<Node*> IntLit::children() { return {}; }
 
-CharLit::CharLit(Parser::Ctx& c) { val = int32_t(c.consumeTok(Tok::CHAR_LIT)->int_val); }
+CharLit::CharLit(Parser::Ctx& c) : Node(c) { val = int32_t(c.consumeTok(Tok::CHAR_LIT)->int_val); }
 std::string CharLit::toString() const { return (fmt("CharLit(%c)") % val).str(); }
 std::vector<Node*> CharLit::children() { return {}; }
 
-StrLit::StrLit(Parser::Ctx& c) { val = c.consumeTok(Tok::STR_LIT)->str_val; }
+StrLit::StrLit(Parser::Ctx& c) : Node(c) { val = c.consumeTok(Tok::STR_LIT)->str_val; }
 std::string StrLit::toString() const { return (fmt("StrLit(%s)") % val).str(); }
 std::vector<Node*> StrLit::children() { return {}; }
 
-CompoundLit::CompoundLit(Parser::Ctx& c) {
+CompoundLit::CompoundLit(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
     lits.emplace_back(ExprParser(c).parse());
@@ -74,15 +74,15 @@ CompoundLit::CompoundLit(Parser::Ctx& c) {
 std::string CompoundLit::toString() const { return "CompoundLit"; }
 std::vector<Node*> CompoundLit::children() { return {}; }
 
-Op::Op(Parser::Ctx&) {}
+Op::Op(Parser::Ctx& c) : Node(c) {}
 std::string Op::toString() const { return (fmt("Op(%s)") % type).str(); }
 std::vector<Node*> Op::children() { return flattenChildren(left, right); }
 
-VarRef::VarRef(Parser::Ctx& c) { name = c.consumeTok(Tok::IDENT)->str_val; }
+VarRef::VarRef(Parser::Ctx& c) : Node(c) { name = c.consumeTok(Tok::IDENT)->str_val; }
 std::string VarRef::toString() const { return (fmt("VarRef(%s)") % name).str(); }
 std::vector<Node*> VarRef::children() { return {}; }
 
-Typelist::Typelist(Parser::Ctx& c) {
+Typelist::Typelist(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LANGLE);
   while (true) {
     names.push_back(c.consumeTok(Tok::IDENT)->str_val);
@@ -96,14 +96,14 @@ Typelist::Typelist(Parser::Ctx& c) {
 std::string Typelist::toString() const { return "Typelist(" + join(names, ", ") + ")"; }
 std::vector<Node*> Typelist::children() { return {}; }
 
-Typename::Typename(Parser::Ctx& c) {
+Typename::Typename(Parser::Ctx& c) : Node(c) {
   name = c.consumeTok(Tok::IDENT)->str_val;
   if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
 }
 std::string Typename::toString() const { return (fmt("Typename(%s)") % name).str(); }
 std::vector<Node*> Typename::children() { return flattenChildren(tlist); }
 
-Qualifier::Qualifier(Parser::Ctx& c) {
+Qualifier::Qualifier(Parser::Ctx& c) : Node(c) {
   if (c.hasTok(Tok::LSQUARE)) {
     c.consumeTok(Tok::LSQUARE);
     array = c.consumeTok(Tok::INT_LIT)->int_val;
@@ -119,7 +119,7 @@ std::string Qualifier::toString() const {
 }
 std::vector<Node*> Qualifier::children() { return {}; }
 
-Type::Type(Parser::Ctx& c) {
+Type::Type(Parser::Ctx& c) : Node(c) {
   while (c.hasTok({Tok::ASTERISK, Tok::LSQUARE}) ||
       (c.hasTok(Tok::CONST) && c.hasTok(Tok::ASTERISK, 1)))
     quals.emplace_back(std::make_unique<Qualifier>(c));
@@ -143,7 +143,7 @@ std::string Type::toString() const {
 }
 std::vector<Node*> Type::children() { return flattenChildren(quals, params); }
 
-VarDecl::VarDecl(Parser::Ctx& c) {
+VarDecl::VarDecl(Parser::Ctx& c) : Node(c) {
   ref = std::make_unique<VarRef>(c);
   c.consumeTok(Tok::COLON);
   type = std::make_unique<Type>(c);
@@ -151,7 +151,7 @@ VarDecl::VarDecl(Parser::Ctx& c) {
 std::string VarDecl::toString() const { return "VarDecl"; }
 std::vector<Node*> VarDecl::children() { return flattenChildren(ref, type); }
 
-FnCallArgs::FnCallArgs(Parser::Ctx& c) {
+FnCallArgs::FnCallArgs(Parser::Ctx& c) : Node(c) {
   while (c.curTok()->type != Tok::RPAREN) {
     args.emplace_back(ExprParser(c).parse());
     if (!c.maybeConsumeTok(Tok::COMMA)) break;
@@ -160,7 +160,7 @@ FnCallArgs::FnCallArgs(Parser::Ctx& c) {
 std::string FnCallArgs::toString() const { return "FnCallArgs"; }
 std::vector<Node*> FnCallArgs::children() { return flattenChildren(args); }
 
-FnSig::FnSig(Parser::Ctx& c) {
+FnSig::FnSig(Parser::Ctx& c) : Node(c) {
   is_static = c.maybeConsumeTok(Tok::STATIC);
   c.consumeTok(Tok::FN);
   tname = std::make_unique<Typename>(c);
@@ -175,7 +175,7 @@ FnSig::FnSig(Parser::Ctx& c) {
 std::string FnSig::toString() const { return "FnSig"; }
 std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret_type); }
 
-StmtBlk::StmtBlk(Parser::Ctx& c) {
+StmtBlk::StmtBlk(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
     // TODO(Progress): match
@@ -202,18 +202,18 @@ StmtBlk::StmtBlk(Parser::Ctx& c) {
 std::string StmtBlk::toString() const { return "StmtBlk"; }
 std::vector<Node*> StmtBlk::children() { return flattenChildren(stmts); }
 
-Asm::Asm(Parser::Ctx& c) { src = c.consumeTok(Tok::ASM)->str_val; }
+Asm::Asm(Parser::Ctx& c) : Node(c) { src = c.consumeTok(Tok::ASM)->str_val; }
 std::string Asm::toString() const { return "Asm(" + src + ")"; }
 std::vector<Node*> Asm::children() { return {}; }
 
-Return::Return(Parser::Ctx& c) {
+Return::Return(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::RETURN);
   ret = ExprParser(c).parse();
 }
 std::string Return::toString() const { return "Return"; }
 std::vector<Node*> Return::children() { return flattenChildren(ret); }
 
-VarDefn::VarDefn(Parser::Ctx& c) {
+VarDefn::VarDefn(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::VAR);
   decl = std::make_unique<VarDecl>(c);
   if (c.hasTok(Tok::EQUAL)) {
@@ -224,7 +224,7 @@ VarDefn::VarDefn(Parser::Ctx& c) {
 std::string VarDefn::toString() const { return "VarDefn"; }
 std::vector<Node*> VarDefn::children() { return flattenChildren(decl, defn); }
 
-For::For(Parser::Ctx& c) {
+For::For(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::FOR);
   c.consumeTok(Tok::LPAREN);
   var_defn = std::make_unique<VarDefn>(c);
@@ -238,7 +238,7 @@ For::For(Parser::Ctx& c) {
 std::string For::toString() const { return "For"; }
 std::vector<Node*> For::children() { return flattenChildren(var_defn, cond, update, blk); }
 
-If::If(Parser::Ctx& c) {
+If::If(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::IF);
   c.consumeTok(Tok::LPAREN);
   cond = ExprParser(c).parse();
@@ -252,14 +252,14 @@ If::If(Parser::Ctx& c) {
 std::string If::toString() const { return "If"; }
 std::vector<Node*> If::children() { return flattenChildren(cond, then, els); }
 
-Fn::Fn(Parser::Ctx& c) {
+Fn::Fn(Parser::Ctx& c) : Node(c) {
   sig = std::make_unique<FnSig>(c);
   blk = std::make_unique<StmtBlk>(c);
 }
 std::string Fn::toString() const { return "Fn"; }
 std::vector<Node*> Fn::children() { return flattenChildren(sig, blk); }
 
-Intf::Intf(Parser::Ctx& c) {
+Intf::Intf(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::INTF);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
@@ -272,7 +272,7 @@ Intf::Intf(Parser::Ctx& c) {
 std::string Intf::toString() const { return "Intf"; }
 std::vector<Node*> Intf::children() { return flattenChildren(sigs); }
 
-Enum::Enum(Parser::Ctx& c) {
+Enum::Enum(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::ENUM);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
@@ -289,7 +289,7 @@ std::string Enum::toString() const {
 }
 std::vector<Node*> Enum::children() { return flattenChildren(tname, typed_enums); }
 
-Struct::Struct(Parser::Ctx& c) {
+Struct::Struct(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::STRUCT);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
@@ -305,7 +305,7 @@ Struct::Struct(Parser::Ctx& c) {
 std::string Struct::toString() const { return "Struct"; }
 std::vector<Node*> Struct::children() { return flattenChildren(tname, var_decls, fns); }
 
-Impl::Impl(Parser::Ctx& c) {
+Impl::Impl(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::IMPL);
   if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
   tintf = std::make_unique<Typename>(c);
@@ -318,7 +318,7 @@ Impl::Impl(Parser::Ctx& c) {
 std::string Impl::toString() const { return "Impl"; }
 std::vector<Node*> Impl::children() { return flattenChildren(tlist, tintf, tstruct, fns); }
 
-File::File(Parser::Ctx& c) {
+File::File(Parser::Ctx& c) : Node(c) {
   while (c.hasTok()) {
     switch (c.curTok()->type) {
     case Tok::FN: fns.emplace_back(std::make_unique<Fn>(c)); break;
