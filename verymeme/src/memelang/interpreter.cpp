@@ -10,7 +10,7 @@ namespace {
 
 template <typename T, typename R>
 T* g(R* n) {
-  verify_expr(typeid(*n) == typeid(T), "BUG");
+  bug_unless(typeid(*n) == typeid(T));
   return reinterpret_cast<T*>(n);
 }
 
@@ -21,9 +21,13 @@ T* g(std::unique_ptr<R>& n) {
 
 }  // namespace
 
-#define CHECK(expr) do { \
+#define CHECK(expr) \
+  do { \
     auto val = (expr); \
-    if (val) { unnestScope(); return val; } \
+    if (val) { \
+      unnestScope(); \
+      return val; \
+    } \
   } while (0)
 
 Interpreter::Interpreter(memelang::File* file, const memelang::FileContents* cts)
@@ -40,14 +44,11 @@ void Interpreter::run() {
   popScope();
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runFn(Fn* fn) {
-  return runStmtBlk(fn->blk.get());
-}
+std::shared_ptr<Interpreter::Value> Interpreter::runFn(Fn* fn) { return runStmtBlk(fn->blk.get()); }
 
 std::shared_ptr<Interpreter::Value> Interpreter::runStmtBlk(StmtBlk* blk) {
   nestScope();
-  for (auto& stmt : blk->stmts)
-    CHECK(runStmt(stmt.get()));
+  for (auto& stmt : blk->stmts) CHECK(runStmt(stmt.get()));
   unnestScope();
   return nullptr;
 }
@@ -156,14 +157,14 @@ void Interpreter::pushScope() {
 }
 
 void Interpreter::popScope() {
-  verify_expr(!vars_.empty(), "BUG");
+  bug_unless(!vars_.empty());
   vars_.pop_back();
 }
 
 void Interpreter::nestScope() { vars_.back().emplace_back(); }
 
 void Interpreter::unnestScope() {
-  verify_expr(!vars_.back().empty(), "BUG");
+  bug_unless(!vars_.back().empty());
   vars_.back().pop_back();
 }
 
@@ -179,7 +180,7 @@ std::shared_ptr<Interpreter::Value> Interpreter::getVar(Node* n, const std::stri
 }
 
 std::shared_ptr<Interpreter::Value> Interpreter::maybeGetVar(const std::string& name) const {
-  verify_expr(!vars_.empty(), "BUG");
+  bug_unless(!vars_.empty());
   for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
     auto iter = scope_iter->find(name);
     if (iter != scope_iter->end()) return iter->second;

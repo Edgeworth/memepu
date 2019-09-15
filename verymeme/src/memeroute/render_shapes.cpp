@@ -13,7 +13,7 @@ float length(const sf::Vector2f& v) { return std::sqrt(v.x * v.x + v.y * v.y); }
 
 sf::Vector2f normalize(const sf::Vector2f& v) {
   const auto len = length(v);
-  verify_expr(len > EP, "BUG: attempt to normalize zero length vector");
+  bug_unless(len > EP);
   return v / length(v);
 }
 
@@ -119,7 +119,7 @@ std::vector<sf::VertexArray> createVertexArraysFromShape(
   }
   case Shape::Type::RECT: return {createRect(rectToFloatRect(shape.rect), tf, color, false)};
   }
-  verify_expr(false, "BUG");
+  bug_unless(false);
 }
 
 void DisplayList::draw(sf::RenderWindow& window) {
