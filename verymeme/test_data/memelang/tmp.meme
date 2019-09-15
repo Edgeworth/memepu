@@ -1,4 +1,4 @@
 fn main() i32 {
   var d : i32 = 5;
-  printf("Hello world %d", d);
+  printf("Hello world %d\n", d);
 }
