@@ -1,5 +1,5 @@
 File
- FnDefn
+ Fn
   FnSig
    Typename(bubblesort)
     Typelist(T)
@@ -11,7 +11,7 @@ File
       Qualifier(const: 0 ptr: 1, array: 0)
    Type(Unit)
   StmtBlk
- FnDefn
+ Fn
   FnSig
    Typename(main)
    Type(i32)
@@ -61,7 +61,7 @@ File
  Struct
   Typename(vector)
    Typelist(T)
-  FnDefn
+  Fn
    FnSig
     Typename(push)
     VarDecl
