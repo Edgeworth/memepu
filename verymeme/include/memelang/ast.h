@@ -216,43 +216,53 @@ struct If : public Node {
 };
 
 // Top level constructs:
-struct FnDefn : public Node {
+struct Fn : public Node {
   std::unique_ptr<FnSig> sig;
   std::unique_ptr<StmtBlk> blk;
 
-  DEFNLT(FnDefn, sig, blk);
+  DEFNLT(Fn, sig, blk);
 };
 
-struct IntfDefn : public Node {
+struct Intf : public Node {
   std::unique_ptr<Typename> tname;
-  std::vector<std::unique_ptr<FnSig>> decls;
+  std::vector<std::unique_ptr<FnSig>> sigs;
 
-  DEFNLT(IntfDefn, tname, decls);
+  DEFNLT(Intf, tname, sigs);
 };
 
-struct EnumDefn : public Node {
+struct Enum : public Node {
   std::unique_ptr<Typename> tname;
   std::vector<std::unique_ptr<VarDecl>> typed_enums;
   std::vector<std::string> untyped_enums;
 
-  DEFNLT(EnumDefn, tname, typed_enums, untyped_enums);
+  DEFNLT(Enum, tname, typed_enums, untyped_enums);
 };
 
-struct StructDefn : public Node {
+struct Struct : public Node {
   std::unique_ptr<Typename> tname;
   std::vector<std::unique_ptr<VarDecl>> var_decls;
-  std::vector<std::unique_ptr<FnDefn>> fn_defns;
+  std::vector<std::unique_ptr<Fn>> fns;
 
-  DEFNLT(StructDefn, tname, var_decls, fn_defns);
+  DEFNLT(Struct, tname, var_decls, fns);
+};
+
+struct Impl : public Node {
+  std::unique_ptr<Typelist> tlist;
+  std::unique_ptr<Typename> tintf;
+  std::unique_ptr<Typename> tstruct;
+  std::vector<std::unique_ptr<Fn>> fns;
+
+  DEFNLT(Impl, tlist, tintf, tstruct, fns);
 };
 
 struct File : public Node {
-  std::vector<std::unique_ptr<FnDefn>> fn_defns;
-  std::vector<std::unique_ptr<EnumDefn>> enum_defns;
-  std::vector<std::unique_ptr<IntfDefn>> intf_defns;
-  std::vector<std::unique_ptr<StructDefn>> struct_defns;
+  std::vector<std::unique_ptr<Fn>> fns;
+  std::vector<std::unique_ptr<Enum>> enums;
+  std::vector<std::unique_ptr<Intf>> intfs;
+  std::vector<std::unique_ptr<Struct>> structs;
+  std::vector<std::unique_ptr<Impl>> impls;
 
-  DEFNLT(File, fn_defns, enum_defns, intf_defns, struct_defns);
+  DEFNLT(File, fns, enums, intfs, structs, impls);
 };
 
 #undef DEFNLT

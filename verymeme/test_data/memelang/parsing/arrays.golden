@@ -1,5 +1,5 @@
 File
- FnDefn
+ Fn
   FnSig
    Typename(takesbyvalue)
    VarDecl
@@ -12,7 +12,7 @@ File
     Op(ARRAY_ACCESS)
      VarRef(arr)
      IntLit(0)
- FnDefn
+ Fn
   FnSig
    Typename(takesbyref)
    VarDecl
@@ -26,7 +26,7 @@ File
     Op(ARRAY_ACCESS)
      VarRef(arr)
      IntLit(0)
- FnDefn
+ Fn
   FnSig
    Typename(takesbyptr)
    VarDecl
@@ -39,7 +39,7 @@ File
     Op(ARRAY_ACCESS)
      VarRef(arr)
      IntLit(0)
- FnDefn
+ Fn
   FnSig
    Typename(main)
    Type(i8)
