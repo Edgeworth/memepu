@@ -46,10 +46,11 @@ public:
     int idx_ = 0;
   };
 
-  Parser(const FileContents* contents, const std::vector<Tok>& tokens);
+  Parser(const FileContents* cts, const std::vector<Tok>& toks);
   ~Parser();
 
   bool parse();
+  File* getFile() { return root_.get(); }
   std::string astToString();
 
 private:

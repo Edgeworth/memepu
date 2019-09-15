@@ -11,8 +11,8 @@ namespace memelang {
 
 using fmt = boost::format;
 
-Parser::Parser(const FileContents* contents, const std::vector<Tok>& tokens)
-    : c_(new Ctx(contents, tokens)), root_() {}
+Parser::Parser(const FileContents* cts, const std::vector<Tok>& toks)
+    : c_(new Ctx(cts, toks)), root_() {}
 
 Parser::~Parser() = default;
 
