@@ -29,19 +29,10 @@ fn main() i8 {
   if (e == st.v || d[23 - 2] != a || a <= e || a > e || e >= st.v || e < d[3]) {
     test<i8>(&e);
   } else if (true) {} else {
-    match (a) {
-      1 {}
-      2 {}
-      3 {print(5);}
-    }
-    match (test_enum) {
-      Test1 {}
-      Test2 {}
-      Test3(x) {print(x);}
-    }
+    a+b;
   }
   var b: const auto = -(34 + 32) * (55 / 3) - -4;
-  a-- 4 % 2;
+  a - -4 % 2;
   a--- b;
   'a';
   '\\';
