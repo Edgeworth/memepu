@@ -7,10 +7,21 @@
 
 // Crash so AFL can find bugs.
 #ifdef __AFL_COMPILER
-#define CRASH 1
+#define AFL 1
 #else
-#define CRASH 0
+#define AFL 0
 #endif
+
+#define bug_unless(expr) \
+  do { \
+    if (!(expr)) { \
+      if (!AFL) { \
+        fprintf(stderr, "BUG at %s:%d: ", __func__, __LINE__); \
+        fprintf(stderr, "Stack:\n%s\n", getStacktrace().c_str()); \
+      } \
+      abort(); \
+    } \
+  } while (0)
 
 #define verify_expr(expr, ...) \
   do { \
@@ -19,8 +30,7 @@
       fprintf(stderr, __VA_ARGS__); \
       fprintf(stderr, "\n"); \
       fprintf(stderr, "Stack:\n%s\n", getStacktrace().c_str()); \
-      if (CRASH) abort(); \
-      else exit(1); \
+      exit(1); \
     } \
   } while (0)
 

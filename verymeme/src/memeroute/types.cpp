@@ -77,7 +77,7 @@ Rect Shape::getBoundingBox() const {
   }
   case Type::RECT: return rect;
   }
-  verify_expr(false, "BUG");
+  bug_unless(false);
 }
 
 Point Pin::toParentCoord(const Point& local) const { return local + p; }

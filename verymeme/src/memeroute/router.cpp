@@ -64,7 +64,7 @@ public:
     float size_fitness = 0;
     std::sort(pop.genes.begin(), pop.genes.end());
     for (int i = 0; i < int(pop.genes.size()); ++i) {
-      verify_expr(pop.genes[i].fitness >= 0.0f, "BUG: %f", pop.genes[i].fitness);
+      bug_unless(pop.genes[i].fitness >= 0.0f);
       pop.total_fitness += pop.genes[i].fitness;
       if (i < pop_size_) size_fitness += pop.genes[i].fitness;
     }
@@ -81,7 +81,7 @@ public:
       int sel = 0;
       for (; sel < int(pop.genes.size()) && round_robin_sum <= selection; ++sel)
         round_robin_sum += pop.genes[sel].fitness;
-      verify_expr(sel != 0, "BUG");
+      bug_unless(sel != 0);
       return_pop.genes.push_back(mutate(pop.genes[sel - 1]));
     }
     return return_pop;
@@ -120,9 +120,9 @@ RouterWorker::InvocationParams invocationParamsFromGene(
     const std::vector<std::string>& net_names, const PermutationGA::Gene& gene) {
   RouterWorker::InvocationParams params = {};
   params.net_names.reserve(net_names.size());
-  verify_expr(net_names.size() == gene.nums.size(), "BUG");
+  bug_unless(net_names.size() == gene.nums.size());
   for (int idx : gene.nums) {
-    verify_expr(idx >= 0 && idx < int(net_names.size()), "BUG");
+    bug_unless(idx >= 0 && idx < int(net_names.size()));
     params.net_names.push_back(net_names[idx]);
   }
   return params;

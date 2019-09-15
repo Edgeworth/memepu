@@ -153,14 +153,14 @@ void ExprParser::ExprCtx::processStack(int next_precedence) {
 void ExprParser::ExprCtx::collapseOps(
     std::vector<std::unique_ptr<Op>>& ops, std::vector<std::unique_ptr<Node>>& expr) {
   while (!ops.empty()) {
-    verify_expr(!expr.empty(), "BUG");
+    bug_unless(!expr.empty());
     auto op = std::move(ops.back());
     ops.pop_back();
     if (op->is_binop) {
       op->right = std::move(expr.back());
       expr.pop_back();
     }
-    verify_expr(!expr.empty(), "BUG");
+    bug_unless(!expr.empty());
     op->left = std::move(expr.back());
     expr.pop_back();
     // Processing in reverse order for left associative, so fix individual node orientations.

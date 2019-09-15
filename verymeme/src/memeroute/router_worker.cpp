@@ -207,7 +207,7 @@ bool RouterWorker::bfsOnce(const State& start) {
     const State s = q.front();
     q.pop();
     const int cur_seen = seen_[s.p.y][s.p.x][s.layer];
-    verify_expr(cur_seen, "BUG, cur_seen is false");
+    bug_unless(cur_seen);
 
     for (const auto& dp : DP9) {
       const State& new_s = s.transitionTo(dp);
