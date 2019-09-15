@@ -12,7 +12,7 @@ File
    Type(Unit)
   StmtBlk
    For
-    Var
+    VarDefn
      VarDecl
       VarRef(i)
       Type(i32)
@@ -28,7 +28,7 @@ File
      VarRef(i)
     StmtBlk
      For
-      Var
+      VarDefn
        VarDecl
         VarRef(j)
         Type(i32)

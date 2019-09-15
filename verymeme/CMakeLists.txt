@@ -121,7 +121,8 @@ set(MEMELANG_SOURCES
     src/memelang/parser.cpp include/memelang/parser.h
     src/memelang/file_contents.cpp include/memelang/file_contents.h
     src/memelang/ast.cpp include/memelang/ast.h
-    src/memelang/expression.cpp include/memelang/expression.h)
+    src/memelang/expression.cpp include/memelang/expression.h
+    src/memelang/interpreter.cpp include/memelang/interpreter.h)
 set(MEMEROUTE_SOURCES
     src/memeroute/parser.cpp include/memeroute/parser.h
     src/memeroute/types.cpp include/memeroute/types.h
