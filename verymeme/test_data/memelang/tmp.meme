@@ -1,25 +1,3 @@
-enum Unit {}
-
-fn bubblesort<T>(v: const* vector<*T>) Unit {
-  for (var i: i32 = 0; i < v.size(); i++) {
-    for (var j: i32 = 0; j < v.size() - 1; j++) {
-      if (v[j] > v[j + 1]) {
-        swap(v[j], v[j + 1]);
-      }
-    }
-  }
-}
-
-intf vector<T> {
-}
-
 fn main() i32 {
-  var v: auto = vector<i8>.new();
-  v.push(4);
-  v.push(3);
-  v.push(1);
-  bubblesort(&v);
-  var d: auto = vector<i16>(v);
-  a * *vector<i16>(v);
-  return 0;
+   (true || !false) ? ~0 & 1 : 1 ^ 2 | 3;
 }
