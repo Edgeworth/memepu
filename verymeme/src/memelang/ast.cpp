@@ -248,27 +248,27 @@ If::If(Parser::Ctx& c) {
 std::string If::toString() const { return "If"; }
 std::vector<Node*> If::children() { return flattenChildren(cond, blk); }
 
-FnDefn::FnDefn(Parser::Ctx& c) {
+Fn::Fn(Parser::Ctx& c) {
   sig = std::make_unique<FnSig>(c);
   blk = std::make_unique<StmtBlk>(c);
 }
-std::string FnDefn::toString() const { return "FnDefn"; }
-std::vector<Node*> FnDefn::children() { return flattenChildren(sig, blk); }
+std::string Fn::toString() const { return "Fn"; }
+std::vector<Node*> Fn::children() { return flattenChildren(sig, blk); }
 
-IntfDefn::IntfDefn(Parser::Ctx& c) {
+Intf::Intf(Parser::Ctx& c) {
   c.consumeTok(Tok::INTF);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
   while (c.hasTok(Tok::FN)) {
-    decls.emplace_back(std::make_unique<FnSig>(c));
+    sigs.emplace_back(std::make_unique<FnSig>(c));
     c.consumeTok(Tok::SEMICOLON);
   }
   c.consumeTok(Tok::RBRACE);
 }
-std::string IntfDefn::toString() const { return "Intf"; }
-std::vector<Node*> IntfDefn::children() { return flattenChildren(decls); }
+std::string Intf::toString() const { return "Intf"; }
+std::vector<Node*> Intf::children() { return flattenChildren(sigs); }
 
-EnumDefn::EnumDefn(Parser::Ctx& c) {
+Enum::Enum(Parser::Ctx& c) {
   c.consumeTok(Tok::ENUM);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
@@ -280,17 +280,17 @@ EnumDefn::EnumDefn(Parser::Ctx& c) {
   }
   c.consumeTok(Tok::RBRACE);
 }
-std::string EnumDefn::toString() const {
+std::string Enum::toString() const {
   return (fmt("Enum(%1% untyped)") % untyped_enums.size()).str();
 }
-std::vector<Node*> EnumDefn::children() { return flattenChildren(tname, typed_enums); }
+std::vector<Node*> Enum::children() { return flattenChildren(tname, typed_enums); }
 
-StructDefn::StructDefn(Parser::Ctx& c) {
+Struct::Struct(Parser::Ctx& c) {
   c.consumeTok(Tok::STRUCT);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
-    if (c.hasTok({Tok::FN, Tok::STATIC})) fn_defns.emplace_back(std::make_unique<FnDefn>(c));
+    if (c.hasTok({Tok::FN, Tok::STATIC})) fns.emplace_back(std::make_unique<Fn>(c));
     else {
       var_decls.emplace_back(std::make_unique<VarDecl>(c));
       c.consumeTok(Tok::SEMICOLON);
@@ -298,23 +298,35 @@ StructDefn::StructDefn(Parser::Ctx& c) {
   }
   c.consumeTok(Tok::RBRACE);
 }
-std::string StructDefn::toString() const { return "Struct"; }
-std::vector<Node*> StructDefn::children() { return flattenChildren(tname, var_decls, fn_defns); }
+std::string Struct::toString() const { return "Struct"; }
+std::vector<Node*> Struct::children() { return flattenChildren(tname, var_decls, fns); }
+
+Impl::Impl(Parser::Ctx& c) {
+  c.consumeTok(Tok::IMPL);
+  if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
+  tintf = std::make_unique<Typename>(c);
+  c.consumeTok(Tok::FOR);
+  tstruct = std::make_unique<Typename>(c);
+  c.consumeTok(Tok::LBRACE);
+  while (!c.hasTok(Tok::RBRACE)) fns.emplace_back(std::make_unique<Fn>(c));
+  c.consumeTok(Tok::RBRACE);
+}
+std::string Impl::toString() const { return "Impl"; }
+std::vector<Node*> Impl::children() { return flattenChildren(tlist, tintf, tstruct, fns); }
 
 File::File(Parser::Ctx& c) {
   while (c.hasTok()) {
     switch (c.curTok()->type) {
-    case Tok::FN: fn_defns.emplace_back(std::make_unique<FnDefn>(c)); break;
-    case Tok::ENUM: enum_defns.emplace_back(std::make_unique<EnumDefn>(c)); break;
-    case Tok::INTF: intf_defns.emplace_back(std::make_unique<IntfDefn>(c)); break;
-    case Tok::STRUCT: struct_defns.emplace_back(std::make_unique<StructDefn>(c)); break;
+    case Tok::FN: fns.emplace_back(std::make_unique<Fn>(c)); break;
+    case Tok::ENUM: enums.emplace_back(std::make_unique<Enum>(c)); break;
+    case Tok::INTF: intfs.emplace_back(std::make_unique<Intf>(c)); break;
+    case Tok::STRUCT: structs.emplace_back(std::make_unique<Struct>(c)); break;
+    case Tok::IMPL: impls.emplace_back(std::make_unique<Impl>(c)); break;
     default: c.compileError("unexpected token"); break;
     }
   }
 }
 std::string File::toString() const { return "File"; }
-std::vector<Node*> File::children() {
-  return flattenChildren(fn_defns, enum_defns, intf_defns, struct_defns);
-}
+std::vector<Node*> File::children() { return flattenChildren(fns, enums, intfs, structs); }
 
 }  // namespace memelang
