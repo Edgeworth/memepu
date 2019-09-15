@@ -1,0 +1,179 @@
+name = memelang
+file_extensions [] = meme;
+
+// Foreground #F8F8F2
+// Grey #75715E
+// Red #F92672
+// Orange #FD971F
+// Light Orange #E69F66
+// Yellow #E6DB74
+// Green #A6E22E
+// Blue #66D9EF
+// Purple #AE81FF
+
+__ident = ([a-zA-Z_]+[a-zA-Z0-9_]*)
+
+styles [] {
+.comment : style {
+  color = #75715E
+  textmate_scope = comment
+}
+.keyword : style {
+  color = #F92672
+  textmate_scope = keyword
+}
+.storage_type : style {
+  color = #66D9EF
+  textmate_scope = storage.type
+}
+.storage_modifier : style {
+  color = #F92672
+  textmate_scope = storage.modifier
+}
+.entity : style {
+  color = #66D9EF
+  textmate_scope = entity.name
+}
+.definition : style {
+  color = #A6E22E
+  textmate_scope = punctuation.definition
+}
+.numeric : style {
+  color = #AE81FF
+  textmate_scope = constant.numeric
+}
+.constant : style {
+  color = #F92672
+  textmate_scope = constant.language
+}
+.operator : style {
+  color = white
+  textmate_scope = keyword.operator
+}
+.punctuation : style {
+  color = white
+  textmate_scope = punctuation
+}
+.text : style {
+  color = #E6DB74
+  ace_scope = text
+  textmate_scope = text
+}
+.other : style {
+  color = #F8F8F2
+  textmate_scope = text
+}
+.illegal : style {
+  color = #F8F8F2
+  background_color = red
+  textmate_scope = invalid
+}
+}
+
+contexts [] {
+main : context {
+  : pattern {
+    regex \= (//.*)
+    styles [] = .comment;
+  }
+
+  : pattern {
+    regex \= (fn|intf|impl|struct|enum)(\s+)$${__ident}
+    styles [] = .storage_type, .other, .definition;
+  }
+
+  : pattern {
+    regex \= (var|i8|i16|i32|u8|u16|u32|bool|impl|intf|struct|enum|fn|asm)
+    styles [] = .storage_type;
+  }
+
+  : pattern {
+    regex \= (static|auto|const)
+    styles [] = .storage_modifier;
+  }
+
+  : pattern {
+    regex \= (return|for|if|match)
+    styles [] = .keyword;
+  }
+
+  : pattern {
+    regex \= $${__ident}(\s*)(\()
+    styles [] = .entity, .other, .punctuation;
+  }
+
+  : pattern {
+    regex \= (\b\d+)
+    styles [] = .numeric;
+  }
+
+  : pattern {
+    regex \= (true|false)
+    styles [] = .constant;
+  }
+
+  : inline_push {
+    regex \= (\{)
+    styles [] = .punctuation;
+    : pop {
+      regex \= (\})
+      styles [] = .punctuation;
+    }
+    : include "main" ;
+  }
+
+  : pattern {
+    regex \= ([:=<>\-+*/%|!&.?~^])
+    styles [] = .operator;
+  }
+
+  : pattern {
+    regex \= ([;(){}<>,\[\]])
+    styles [] = .punctuation;
+  }
+
+  : inline_push {
+    regex \= (\")
+    styles [] = .punctuation;
+    : pop {
+      regex \= (\")
+      styles [] = .punctuation;
+    }
+    : pattern {
+      regex \= (\\(?:\\|"|'))
+      styles [] = .text;
+    }
+    : pattern {
+      regex \= ([^'"\\]+)
+      styles [] = .text;
+    }
+  }
+
+  : inline_push {
+    regex \= (\')
+    styles [] = .punctuation;
+    : pop {
+      regex \= (\')
+      styles [] = .punctuation;
+    }
+    : pattern {
+      regex \= (\\(?:\\|'|"))
+      styles [] = .text;
+    }
+    : pattern {
+      regex \= ([^'"\\]+)
+      styles [] = .text;
+    }
+  }
+
+  : pattern {
+    regex \= $${__ident}
+    styles [] = .other;
+  }
+
+  : pattern {
+    regex \= ([^\s])
+    styles [] = .illegal;
+  }
+}
+}

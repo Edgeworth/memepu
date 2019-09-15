@@ -61,7 +61,7 @@ fn_signature : 'fn' typename
 fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 
 // Terminals:
-builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' | 'bit' ;
+builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' ;
 // Parse << and >> as two separate tokens to allow stuff like vector<vector<T>>.
 binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' '>' | '>' '>' | '<' '<' | '<=' | '>=' | '<' | '>'
     | '==' | '!=' |  '&' | '^' | '|' | '&&' | '||';
