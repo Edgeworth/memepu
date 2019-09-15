@@ -9,16 +9,16 @@
 namespace memelang {
 
 #define DEFNLT(type, ...) \
-    auto getTie() const { return std::tie(__VA_ARGS__); } \
-    bool operator<(const type& o) const { return getTie() < o.getTie(); } \
-    explicit type(Parser::Ctx& c); \
-    type(type&&) = default; \
-    type& operator=(type&&) = default; \
-    type(const type&) = delete; \
-    type& operator=(const type&) = delete; \
-    ~type() = default; \
-    std::string toString() const override; \
-    std::vector<Node*> children() override
+  auto getTie() const { return std::tie(__VA_ARGS__); } \
+  bool operator<(const type& o) const { return getTie() < o.getTie(); } \
+  explicit type(Parser::Ctx& c); \
+  type(type&&) = default; \
+  type& operator=(type&&) = default; \
+  type(const type&) = delete; \
+  type& operator=(const type&) = delete; \
+  ~type() = default; \
+  std::string toString() const override; \
+  std::vector<Node*> children() override
 
 struct Node {
   Tok tok = {};
@@ -174,7 +174,9 @@ struct FnSig : public Node {
 };
 
 // Block related:
+struct If;
 struct StmtBlk : public Node {
+  StmtBlk(std::unique_ptr<If> ifst, Parser::Ctx& c );
   std::vector<std::unique_ptr<Node>> stmts;
 
   DEFNLT(StmtBlk, stmts);
@@ -211,8 +213,8 @@ struct For : public Node {
 
 struct If : public Node {
   std::unique_ptr<Node> cond;
-  std::unique_ptr<Node> then;
-  std::unique_ptr<Node> els;
+  std::unique_ptr<StmtBlk> then;
+  std::unique_ptr<StmtBlk> els;
 
   DEFNLT(If, cond, then, els);
 };

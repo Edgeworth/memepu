@@ -199,6 +199,9 @@ StmtBlk::StmtBlk(Parser::Ctx& c) : Node(c) {
   }
   c.consumeTok(Tok::RBRACE);
 }
+StmtBlk::StmtBlk(std::unique_ptr<If> ifst, Parser::Ctx& c) : Node(c) {
+  stmts.emplace_back(std::move(ifst));
+}
 std::string StmtBlk::toString() const { return "StmtBlk"; }
 std::vector<Node*> StmtBlk::children() { return flattenChildren(stmts); }
 
@@ -246,7 +249,8 @@ If::If(Parser::Ctx& c) : Node(c) {
   then = std::make_unique<StmtBlk>(c);
   if (c.maybeConsumeTok(Tok::ELSE)) {
     if (c.hasTok(Tok::LBRACE)) els = std::make_unique<StmtBlk>(c);
-    else els = std::make_unique<If>(c);  // Special case for "else if"
+    else
+      els = std::make_unique<StmtBlk>(std::make_unique<If>(c), c);  // Special case for "else if"
   }
 }
 std::string If::toString() const { return "If"; }

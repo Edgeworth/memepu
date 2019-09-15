@@ -5,6 +5,13 @@
 #include <string>
 #include <vector>
 
+// Crash so AFL can find bugs.
+#ifdef __AFL_COMPILER
+#define CRASH 1
+#else
+#define CRASH 0
+#endif
+
 #define verify_expr(expr, ...) \
   do { \
     if (!(expr)) { \
@@ -12,7 +19,8 @@
       fprintf(stderr, __VA_ARGS__); \
       fprintf(stderr, "\n"); \
       fprintf(stderr, "Stack:\n%s\n", getStacktrace().c_str()); \
-      exit(1); \
+      if (CRASH) abort(); \
+      else exit(1); \
     } \
   } while (0)
 
