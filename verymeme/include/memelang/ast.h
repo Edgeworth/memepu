@@ -9,16 +9,16 @@
 namespace memelang {
 
 #define DEFNLT(type, ...) \
-  auto getTie() const { return std::tie(__VA_ARGS__); } \
-  bool operator<(const type& o) const { return getTie() < o.getTie(); } \
-  explicit type(Parser::Ctx& c); \
-  type(type&&) = default; \
-  type& operator=(type&&) = default; \
-  type(const type&) = delete; \
-  type& operator=(const type&) = delete; \
-  ~type() = default; \
-  std::string toString() const override; \
-  std::vector<Node*> children() override
+    auto getTie() const { return std::tie(__VA_ARGS__); } \
+    bool operator<(const type& o) const { return getTie() < o.getTie(); } \
+    explicit type(Parser::Ctx& c); \
+    type(type&&) = default; \
+    type& operator=(type&&) = default; \
+    type(const type&) = delete; \
+    type& operator=(const type&) = delete; \
+    ~type() = default; \
+    std::string toString() const override; \
+    std::vector<Node*> children() override
 
 struct Node {
   Tok tok = {};
@@ -151,10 +151,10 @@ struct Op : public Node {
 
 // Function related:
 struct VarDecl : public Node {
-  std::unique_ptr<VarRef> name;
+  std::unique_ptr<VarRef> ref;
   std::unique_ptr<Type> type;
 
-  DEFNLT(VarDecl, name, type);
+  DEFNLT(VarDecl, ref, type);
 };
 
 struct FnCallArgs : public Node {
@@ -192,15 +192,15 @@ struct Return : public Node {
   DEFNLT(Return, ret);
 };
 
-struct Var : public Node {
+struct VarDefn : public Node {
   std::unique_ptr<VarDecl> decl;
   std::unique_ptr<Node> defn;
 
-  DEFNLT(Var, decl, defn);
+  DEFNLT(VarDefn, decl, defn);
 };
 
 struct For : public Node {
-  std::unique_ptr<Var> var_defn;
+  std::unique_ptr<VarDefn> var_defn;
   std::unique_ptr<Node> cond;
   std::unique_ptr<Node> update;
   std::unique_ptr<StmtBlk> blk;

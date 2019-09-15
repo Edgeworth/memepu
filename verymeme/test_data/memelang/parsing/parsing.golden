@@ -18,16 +18,16 @@ File
    Asm(
     lhu r30, 3
   )
-   Var
+   VarDefn
     VarDecl
      VarRef(decl)
      Type(A)
-   Var
+   VarDefn
     VarDecl
      VarRef(st)
      Type(A)
     CompoundLit
-   Var
+   VarDefn
     VarDecl
      VarRef(test_enum)
      Type(TestEnum)
@@ -40,17 +40,17 @@ File
      VarRef(st)
      VarRef(v)
     IntLit(3)
-   Var
+   VarDefn
     VarDecl
      VarRef(e)
      Type(i8)
     IntLit(0)
-   Var
+   VarDefn
     VarDecl
      VarRef(a)
      Type(i8)
     IntLit(2)
-   Var
+   VarDefn
     VarDecl
      VarRef(d)
      Type(i8)
@@ -141,7 +141,7 @@ File
       Op(ADD)
        VarRef(a)
        VarRef(b)
-   Var
+   VarDefn
     VarDecl
      VarRef(b)
      Type(const auto)
@@ -189,7 +189,7 @@ File
      VarRef(c)
     VarRef(d)
    For
-    Var
+    VarDefn
      VarDecl
       VarRef(f)
       Type(i8)

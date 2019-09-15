@@ -16,7 +16,7 @@ File
    Typename(main)
    Type(i32)
   StmtBlk
-   Var
+   VarDefn
     VarDecl
      VarRef(v)
      Type(auto)
@@ -37,7 +37,7 @@ File
     FnCallArgs
      Op(UNARY_ADDR)
       VarRef(v)
-   Var
+   VarDefn
     VarDecl
      VarRef(d)
      Type(auto)

@@ -44,7 +44,7 @@ File
    Typename(main)
    Type(i8)
   StmtBlk
-   Var
+   VarDefn
     VarDecl
      VarRef(arr)
      Type(i8)

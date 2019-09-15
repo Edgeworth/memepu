@@ -4,19 +4,19 @@ File
    Typename(main)
    Type(i8)
   StmtBlk
-   Var
+   VarDefn
     VarDecl
      VarRef(val)
      Type(i8)
     IntLit(2)
-   Var
+   VarDefn
     VarDecl
      VarRef(ptr)
      Type(i8)
       Qualifier(const: 0 ptr: 1, array: 0)
     Op(UNARY_ADDR)
      VarRef(val)
-   Var
+   VarDefn
     VarDecl
      VarRef(pptr)
      Type(i8)
@@ -24,19 +24,19 @@ File
       Qualifier(const: 0 ptr: 1, array: 0)
     Op(UNARY_ADDR)
      VarRef(ptr)
-   Var
+   VarDefn
     VarDecl
      VarRef(cval)
      Type(const i8)
     IntLit(2)
-   Var
+   VarDefn
     VarDecl
      VarRef(cptr_ci8)
      Type(const i8)
       Qualifier(const: 1 ptr: 1, array: 0)
     Op(UNARY_ADDR)
      VarRef(cval)
-   Var
+   VarDefn
     VarDecl
      VarRef(cptr_cptr_ci8)
      Type(const i8)
@@ -44,28 +44,28 @@ File
       Qualifier(const: 1 ptr: 1, array: 0)
     Op(UNARY_ADDR)
      VarRef(cptr_ci8)
-   Var
+   VarDefn
     VarDecl
      VarRef(array_cptr_ci8)
      Type(const i8)
       Qualifier(const: 0 ptr: 0, array: 42)
       Qualifier(const: 1 ptr: 1, array: 0)
     CompoundLit
-   Var
+   VarDefn
     VarDecl
      VarRef(cptr_array_ci8)
      Type(const i8)
       Qualifier(const: 1 ptr: 1, array: 0)
       Qualifier(const: 0 ptr: 0, array: 42)
     IntLit(0)
-   Var
+   VarDefn
     VarDecl
      VarRef(multidim_array)
      Type(i8)
       Qualifier(const: 0 ptr: 0, array: 40)
       Qualifier(const: 0 ptr: 0, array: 30)
     CompoundLit
-   Var
+   VarDefn
     VarDecl
      VarRef(cmultidim_array)
      Type(const i8)
