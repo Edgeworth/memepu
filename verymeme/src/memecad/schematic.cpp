@@ -106,9 +106,8 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   std::vector<Sheet::Label> labels;
   for (int i = 0; i < int(child_labels.size()); ++i) {
     auto conn_iter = mapping.find(child_labels[i].text);
-    verify_expr(conn_iter != mapping.end(),
-        "BUG: should have association from child label '%s' to parent label",
-        child_labels[i].text.c_str());
+    // Should have association from child label  to parent label
+    bug_unless(conn_iter != mapping.end());
     Sheet::Label& parent_label = labels.emplace_back(createParentLabel(conn_iter->second.bit));
     parent_label.connectToRefField(ref.fields[i]);
     aabbs.push_back(parent_label.getBoundingBox());

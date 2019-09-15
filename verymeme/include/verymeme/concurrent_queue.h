@@ -14,7 +14,7 @@ public:
   T yield() {
     std::unique_lock<std::mutex> lock(q_lock_);
     while (q_.empty()) has_items_cv_.wait(lock);
-    verify_expr(!q_.empty(), "BUG");
+    bug_unless(!q_.empty());
     T val = std::move(q_.front());
     q_.pop();
     return val;
