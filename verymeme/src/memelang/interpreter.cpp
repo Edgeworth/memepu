@@ -21,42 +21,66 @@ T* g(std::unique_ptr<R>& n) {
 
 }  // namespace
 
+#define CHECK(expr) do { \
+    auto val = (expr); \
+    if (val) { unnestScope(); return val; } \
+  } while (0)
+
 Interpreter::Interpreter(memelang::File* file, const memelang::FileContents* cts)
     : f_(file), cts_(cts) {}
 
 void Interpreter::run() {
-  printf("===BEGIN PROGRAM===");
+  printf("===BEGIN PROGRAM===\n");
   for (auto& fn : f_->fns) {
     // TODO: typelist / fn selection
     fns_[fn->sig->tname->name] = fn.get();
   }
-  verify_expr(fns_.count("main"), "no main function");
-  runFn(fns_["main"]);
+  pushScope();
+  runFn(getFn(nullptr, "main"));
+  popScope();
 }
 
-void Interpreter::runFn(Fn* fn) {
-  printf("In fn %s\n", fn->sig->tname->name.c_str());
-
-  for (auto& stmt : fn->blk->stmts) { runStmt(stmt.get()); }
+std::shared_ptr<Interpreter::Value> Interpreter::runFn(Fn* fn) {
+  return runStmtBlk(fn->blk.get());
 }
 
-void Interpreter::runStmt(Node* stmt) {
-  printf("In statement: %s\n", typeid(*stmt).name());
+std::shared_ptr<Interpreter::Value> Interpreter::runStmtBlk(StmtBlk* blk) {
+  nestScope();
+  for (auto& stmt : blk->stmts)
+    CHECK(runStmt(stmt.get()));
+  unnestScope();
+  return nullptr;
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::runStmt(Node* stmt) {
   if (typeid(*stmt) == typeid(VarDefn)) {
-    runVar(g<VarDefn>(stmt));
+    runVarDefn(g<VarDefn>(stmt));
+  } else if (typeid(*stmt) == typeid(VarDecl)) {
+    return runVarDecl(g<VarDecl>(stmt));
   } else if (typeid(*stmt) == typeid(Op)) {
-    runOp(g<Op>(stmt));
+    return runOp(g<Op>(stmt));
   } else if (typeid(*stmt) == typeid(For)) {
-    runFor(g<For>(stmt));
+    return runFor(g<For>(stmt));
+  } else if (typeid(*stmt) == typeid(Return)) {
+    return eval(g<Return>(stmt)->ret.get());
+  } else if (typeid(*stmt) == typeid(If)) {
+    return runIf(g<If>(stmt));
   } else {
-    error("unimplemented statement " + stmt->toString());
+    error(stmt, "unimplemented statement " + stmt->toString());
   }
+  return nullptr;
 }
-void Interpreter::runVar(VarDefn* var) {
-  const auto& name = var->decl->ref->name;
-  printf("In var: %s\n", var->decl->ref->name.c_str());
-  if (vars_.count(name)) error(var, "redeclaration of var " + name);
-  vars_[name] = std::make_shared<Value>(Value{g<IntLit>(var->defn)->val, g<Type>(var->decl->type)});
+
+void Interpreter::runVarDefn(VarDefn* defn) {
+  // TODO check type
+  runVarDecl(defn->decl.get())->int_val = eval(defn->defn.get())->int_val;
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::runVarDecl(VarDecl* decl) {
+  const auto& name = decl->ref->name;
+  if (maybeGetVar(name)) error(decl, "redeclaration of var " + name);
+  vars_.back().back()[name] = std::make_shared<Value>(Value{{}, decl->type.get()});
+  return vars_.back().back()[name];
 }
 
 std::shared_ptr<Interpreter::Value> Interpreter::runOp(Op* op) {
@@ -71,38 +95,105 @@ std::shared_ptr<Interpreter::Value> Interpreter::runOp(Op* op) {
       for (int i = 1; i < int(args->args.size()); ++i)
         fmt = fmt % eval(args->args[i].get())->int_val;
       printf("%s", fmt.str().c_str());
+
+      // TODO: Return proper value.
+      return nullptr;
     }
-    // TODO: Return proper value.
-    return std::make_shared<Value>();
+
+    std::vector<std::shared_ptr<Value>> params;
+    for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
+    pushScope();
+    auto* fn = getFn(call, call->name);
+    if (fn->sig->params.size() != params.size()) error(op, "wrong number of arguments");
+    for (int i = 0; i < int(fn->sig->params.size()); ++i) {
+      auto* decl = fn->sig->params[i].get();
+      runStmt(decl);
+      getVar(decl->ref.get(), decl->ref->name)->assign(params[i].get());
+    }
+    auto val = runFn(fn);
+    popScope();
+    return val;
   }
   case Expr::ASSIGNMENT: return eval(op->left.get())->assign(eval(op->right.get()).get());
   case Expr::ADD: return eval(op->left.get())->add(eval(op->right.get()).get());
+  case Expr::SUB: return eval(op->left.get())->sub(eval(op->right.get()).get());
+  case Expr::LT: return eval(op->left.get())->lt(eval(op->right.get()).get());
+  case Expr::PREFIX_INC: return eval(op->left.get())->preinc();
+  case Expr::EQ: return eval(op->left.get())->eq(eval(op->right.get()).get());
   default: verify_expr(false, "unhandled op: %s", op->toString().c_str());
   }
 }
 
-void Interpreter::error(Node* n, const std::string& msg) const {
-  verify_expr(false, "error at '%s' (%d:%d): %s", cts_->getSpan(n->tok.loc, n->tok.size).c_str(),
-      cts_->getLineNumber(n->tok.loc), cts_->getColNumber(n->tok.loc), msg.c_str());
+std::shared_ptr<Interpreter::Value> Interpreter::runFor(For* fr) {
+  runVarDefn(fr->var_defn.get());
+  while (eval(fr->cond.get())->int_val) {
+    CHECK(runStmtBlk(fr->blk.get()));
+    eval(fr->update.get());
+  }
+  return nullptr;
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::getVar(Node* ref) const {
-  auto* var = g<VarRef>(ref);
-  auto iter = vars_.find(var->name);
-  if (iter == vars_.end()) error(ref, "undeclared variable " + var->name);
-  return iter->second;
+std::shared_ptr<Interpreter::Value> Interpreter::runIf(If* ifst) {
+  if (eval(ifst->cond.get())->int_val) CHECK(runStmtBlk(ifst->then.get()));
+  else if (ifst->els)
+    CHECK(runStmtBlk(ifst->els.get()));
+  return nullptr;
 }
 
 std::shared_ptr<Interpreter::Value> Interpreter::eval(Node* n) {
   if (typeid(*n) == typeid(Op)) return runOp(g<Op>(n));
-  if (typeid(*n) == typeid(VarRef)) return getVar(n);
+  if (typeid(*n) == typeid(VarRef)) return getVar(n, g<VarRef>(n)->name);
   // TODO use type
   if (typeid(*n) == typeid(IntLit))
     return std::make_shared<Value>(Value{g<IntLit>(n)->val, nullptr});
   error(n, "unimplemented eval node " + n->toString());
+  return nullptr;
 }
 
-void Interpreter::runFor(For* fr) {}
+void Interpreter::pushScope() {
+  vars_.emplace_back();
+  nestScope();
+}
+
+void Interpreter::popScope() {
+  verify_expr(!vars_.empty(), "BUG");
+  vars_.pop_back();
+}
+
+void Interpreter::nestScope() { vars_.back().emplace_back(); }
+
+void Interpreter::unnestScope() {
+  verify_expr(!vars_.back().empty(), "BUG");
+  vars_.back().pop_back();
+}
+
+Fn* Interpreter::getFn(Node* n, std::string name) {
+  if (!fns_.count(name)) error(n, "no function " + name);
+  return fns_[name];
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::getVar(Node* n, const std::string& name) const {
+  auto val = maybeGetVar(name);
+  if (!val) error(n, "undeclared variable " + name);
+  return val;
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::maybeGetVar(const std::string& name) const {
+  verify_expr(!vars_.empty(), "BUG");
+  for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
+    auto iter = scope_iter->find(name);
+    if (iter != scope_iter->end()) return iter->second;
+  }
+  return nullptr;
+}
+
+void Interpreter::error(Node* n, const std::string& msg) const {
+  if (n)
+    verify_expr(false, "error at '%s' (%d:%d): %s", cts_->getSpan(n->tok.loc, n->tok.size).c_str(),
+        cts_->getLineNumber(n->tok.loc), cts_->getColNumber(n->tok.loc), msg.c_str());
+  else
+    verify_expr(false, "error: %s", msg.c_str());
+}
 
 std::shared_ptr<Interpreter::Value> Interpreter::Value::assign(Interpreter::Value* val) {
   // TODO support other vals.
@@ -113,6 +204,27 @@ std::shared_ptr<Interpreter::Value> Interpreter::Value::assign(Interpreter::Valu
 std::shared_ptr<Interpreter::Value> Interpreter::Value::add(Interpreter::Value* val) {
   // TODO support other vals.
   return std::make_shared<Value>(Value{int_val + val->int_val, type});
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::Value::sub(Interpreter::Value* val) {
+  // TODO support other vals.
+  return std::make_shared<Value>(Value{int_val - val->int_val, type});
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::Value::lt(Interpreter::Value* val) {
+  // TODO support other vals.
+  return std::make_shared<Value>(Value{int_val < val->int_val, nullptr});
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::Value::eq(Interpreter::Value* val) {
+  // TODO support other vals.
+  return std::make_shared<Value>(Value{int_val == val->int_val, nullptr});
+}
+
+std::shared_ptr<Interpreter::Value> Interpreter::Value::preinc() {
+  // TODO support other vals.
+  int_val++;
+  return std::make_shared<Value>(*this);
 }
 
 }  // namespace memelang
