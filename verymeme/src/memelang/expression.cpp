@@ -13,7 +13,7 @@ std::unordered_map<Tok::Type, Expr> BINOP_MAP = {{Tok::DOT, Expr::MEMBER_ACCESS}
     {Tok::GTEQUAL, Expr::GEQ}, {Tok::PERCENT, Expr::MOD}, {Tok::DEQUAL, Expr::EQ},
     {Tok::NEQUAL, Expr::NEQ}, {Tok::DAMPERSAND, Expr::LAND}, {Tok::AMPERSAND, Expr::BAND},
     {Tok::CARET, Expr::BXOR}, {Tok::DBAR, Expr::LOR}, {Tok::BAR, Expr::BOR},
-    {Tok::EQUAL, Expr::ASSIGNMENT}};
+    {Tok::EQUAL, Expr::ASSIGNMENT}, {Tok::QUESTION, Expr::TERNARY}, {Tok::COLON, Expr::TERNARY}};
 
 std::unordered_map<Tok::Type, Expr> POSTFIX_UNOP_MAP = {
     {Tok::DPLUS, Expr::POSTFIX_INC}, {Tok::DMINUS, Expr::POSTFIX_DEC}};
@@ -34,7 +34,7 @@ std::unordered_map<Expr, int> PRECEDENCE = {{Expr::ARRAY_ACCESS, 15}, {Expr::MEM
 
 const std::unordered_set<Expr> RIGHT_ASSOC = {Expr::PREFIX_INC, Expr::PREFIX_DEC,
     Expr::UNARY_NEGATE, Expr::UNARY_LINVERT, Expr::UNARY_BINVERT, Expr::UNARY_DEREF,
-    Expr::UNARY_ADDR, Expr::TERNARY, Expr::ASSIGNMENT};
+    Expr::UNARY_ADDR, Expr::TERNARY, Expr::ASSIGNMENT, Expr::TERNARY};
 
 }  // namespace
 

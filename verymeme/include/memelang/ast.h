@@ -210,9 +210,10 @@ struct For : public Node {
 
 struct If : public Node {
   std::unique_ptr<Node> cond;
-  std::unique_ptr<StmtBlk> blk;
+  std::unique_ptr<Node> then;
+  std::unique_ptr<Node> els;
 
-  DEFNLT(If, cond, blk);
+  DEFNLT(If, cond, then, els);
 };
 
 // Top level constructs:

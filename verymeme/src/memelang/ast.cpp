@@ -243,10 +243,14 @@ If::If(Parser::Ctx& c) {
   c.consumeTok(Tok::LPAREN);
   cond = ExprParser(c).parse();
   c.consumeTok(Tok::RPAREN);
-  blk = std::make_unique<StmtBlk>(c);
+  then = std::make_unique<StmtBlk>(c);
+  if (c.maybeConsumeTok(Tok::ELSE)) {
+    if (c.hasTok(Tok::LBRACE)) els = std::make_unique<StmtBlk>(c);
+    else els = std::make_unique<If>(c);  // Special case for "else if"
+  }
 }
 std::string If::toString() const { return "If"; }
-std::vector<Node*> If::children() { return flattenChildren(cond, blk); }
+std::vector<Node*> If::children() { return flattenChildren(cond, then, els); }
 
 Fn::Fn(Parser::Ctx& c) {
   sig = std::make_unique<FnSig>(c);
