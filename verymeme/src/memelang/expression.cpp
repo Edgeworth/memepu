@@ -13,7 +13,8 @@ std::unordered_map<Tok::Type, Expr> BINOP_MAP = {{Tok::DOT, Expr::MEMBER_ACCESS}
     {Tok::GTEQUAL, Expr::GEQ}, {Tok::PERCENT, Expr::MOD}, {Tok::DEQUAL, Expr::EQ},
     {Tok::NEQUAL, Expr::NEQ}, {Tok::DAMPERSAND, Expr::LAND}, {Tok::AMPERSAND, Expr::BAND},
     {Tok::CARET, Expr::BXOR}, {Tok::DBAR, Expr::LOR}, {Tok::BAR, Expr::BOR},
-    {Tok::EQUAL, Expr::ASSIGNMENT}, {Tok::QUESTION, Expr::TERNARY}, {Tok::COLON, Expr::TERNARY}};
+    {Tok::PERCENT, Expr::MOD}, {Tok::EQUAL, Expr::ASSIGNMENT}, {Tok::QUESTION, Expr::TERNARY},
+    {Tok::COLON, Expr::TERNARY}};
 
 std::unordered_map<Tok::Type, Expr> POSTFIX_UNOP_MAP = {
     {Tok::DPLUS, Expr::POSTFIX_INC}, {Tok::DMINUS, Expr::POSTFIX_DEC}};
