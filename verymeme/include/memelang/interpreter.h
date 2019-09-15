@@ -12,22 +12,27 @@ public:
   void run();
 
 private:
-  struct Var {
+  struct Value {
     int64_t int_val;
     Type* type;
+
+    std::shared_ptr<Value> assign(Value* val);
+    std::shared_ptr<Value> add(Value* val);
   };
 
   File* f_;
   const FileContents* cts_;
   std::unordered_map<std::string, Fn*> fns_;
-  std::unordered_map<std::string, std::unique_ptr<Var>> sym_; // TODO
+  std::unordered_map<std::string, std::shared_ptr<Value>> vars_; // TODO
 
   void runFn(Fn* fn);
   void runStmt(Node* stmt);
   void runVar(VarDefn* var);
-  void runOp(Op* op);
+  void runFor(For* fr);
+  std::shared_ptr<Value> runOp(Op* op);
+  std::shared_ptr<Value> eval(Node* n);
 
-  Var* getVar(Node* n, const std::string& name) const;
+  std::shared_ptr<Value> getVar(Node* ref) const;
 
   void error(Node* n, const std::string& msg) const;
 };
