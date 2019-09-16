@@ -73,8 +73,10 @@ std::shared_ptr<Interpreter::Value> Interpreter::runStmt(Node* stmt) {
 }
 
 void Interpreter::runVarDefn(VarDefn* defn) {
+  auto var = runVarDecl(defn->decl.get());
   // TODO check type
-  runVarDecl(defn->decl.get())->int_val = eval(defn->defn.get())->int_val;
+  if (defn->defn)
+    var->assign(eval(defn->defn.get()).get());
 }
 
 std::shared_ptr<Interpreter::Value> Interpreter::runVarDecl(VarDecl* decl) {
@@ -87,7 +89,8 @@ std::shared_ptr<Interpreter::Value> Interpreter::runVarDecl(VarDecl* decl) {
 std::shared_ptr<Interpreter::Value> Interpreter::runOp(Op* op) {
   switch (op->type) {
   case Expr::FN_CALL: {
-    auto* call = g<VarRef>(op->left);
+    if (typeid(*(op->left.get())) != typeid(VarRef)) return std::make_shared<Value>();  // TODO don't skip types
+    auto* call = g<VarRef>(op->left);  // TODO can be type.
     auto* args = g<FnCallArgs>(op->right);
     if (call->name == "printf") {
       if (args->args.empty()) error(op, "printf requires at least 1 argument");
@@ -168,7 +171,7 @@ void Interpreter::unnestScope() {
   vars_.back().pop_back();
 }
 
-Fn* Interpreter::getFn(Node* n, std::string name) {
+Fn* Interpreter::getFn(Node* n, const std::string& name) {
   if (!fns_.count(name)) error(n, "no function " + name);
   return fns_[name];
 }
