@@ -45,7 +45,7 @@ private:
   void popScope();
   void nestScope();  // Nests scope inside current scope-space.
   void unnestScope();
-  Fn* getFn(Node* n, std::string name);
+  Fn* getFn(Node* n, const std::string& name);
   std::shared_ptr<Value> getVar(Node* n, const std::string& name) const;
   std::shared_ptr<Value> maybeGetVar(const std::string& name) const;
 
