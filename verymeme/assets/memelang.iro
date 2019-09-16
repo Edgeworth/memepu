@@ -11,16 +11,26 @@ file_extensions [] = meme;
 // Blue #66D9EF
 // Purple #AE81FF
 
-__ident = ([a-zA-Z_]+[a-zA-Z0-9_]*)
-
 styles [] {
 .comment : style {
   color = #75715E
-  textmate_scope = comment
+  textmate_scope = comment.line
 }
 .keyword : style {
   color = #F92672
   textmate_scope = keyword
+}
+.keyword_operator : style {
+  color = white
+  textmate_scope = keyword.operator
+}
+.constant_numeric : style {
+  color = #AE81FF
+  textmate_scope = constant.numeric
+}
+.constant : style {
+  color = #F92672
+  textmate_scope = constant.language
 }
 .storage_type : style {
   color = #66D9EF
@@ -30,38 +40,65 @@ styles [] {
   color = #F92672
   textmate_scope = storage.modifier
 }
-.entity : style {
-  color = #66D9EF
-  textmate_scope = entity.name
-}
-.definition : style {
+.entity_function : style {
   color = #A6E22E
-  textmate_scope = punctuation.definition
+  textmate_scope = entity.name.function
 }
-.numeric : style {
-  color = #AE81FF
-  textmate_scope = constant.numeric
+.entity_struct : style {
+  color = #A6E22E
+  textmate_scope = entity.name.struct
 }
-.constant : style {
-  color = #F92672
-  textmate_scope = constant.language
+.entity_enum : style {
+  color = #A6E22E
+  textmate_scope = entity.name.enum
 }
-.operator : style {
-  color = white
-  textmate_scope = keyword.operator
+.entity_interface : style {
+  color = #A6E22E
+  textmate_scope = entity.name.interface
+}
+.entity_impl : style {
+  color = #A6E22E
+  textmate_scope = entity.name.impl
+}
+.variable_function : style {
+  color = #66D9EF
+  textmate_scope = variable.function
 }
 .punctuation : style {
   color = white
   textmate_scope = punctuation
 }
-.text : style {
+.punctuation_separator : style {
+  color = white
+  textmate_scope = punctuation.separator
+}
+.punctuation_terminator : style {
+  color = white
+  textmate_scope = punctuation.terminator
+}
+.string_begin : style {
   color = #E6DB74
-  ace_scope = text
-  textmate_scope = text
+  textmate_scope = punctuation.definition.string.begin
+}
+.string_end : style {
+  color = #E6DB74
+  textmate_scope = punctuation.definition.string.end
+}
+.string_quoted_single : style {
+  color = #E6DB74
+  textmate_scope = string.quoted.single
+}
+.string_quoted_double : style {
+  color = #E6DB74
+  textmate_scope = string.quoted.double
+}
+.escaped : style {
+  color = #AE81FF
+  textmate_scope = constant.character.escape
 }
 .other : style {
   color = #F8F8F2
-  textmate_scope = text
+  textmate_scope = source
 }
 .illegal : style {
   color = #F8F8F2
@@ -70,6 +107,9 @@ styles [] {
 }
 }
 
+__ident = ([a-zA-Z_]+[a-zA-Z0-9_]*)
+__escape = (\\\\(?:\\\\|'|"|t|r|n))
+
 contexts [] {
 main : context {
   : pattern {
@@ -77,9 +117,30 @@ main : context {
     styles [] = .comment;
   }
 
+  // TODO: Templates
   : pattern {
-    regex \= (fn|intf|impl|struct|enum)(\s+)$${__ident}
-    styles [] = .storage_type, .other, .definition;
+    regex \= (fn)(\s+)$${__ident}
+    styles [] = .storage_type, .other, .entity_function;
+  }
+
+  : pattern {
+    regex \= (intf)(\s+)$${__ident}
+    styles [] = .storage_type, .other, .entity_interface;
+  }
+
+  : pattern {
+    regex \= (impl)(\s+)$${__ident}
+    styles [] = .storage_type, .other, .entity_impl;
+  }
+
+  : pattern {
+    regex \= (struct)(\s+)$${__ident}
+    styles [] = .storage_type, .other, .entity_struct;
+  }
+
+  : pattern {
+    regex \= (enum)(\s+)$${__ident}
+    styles [] = .storage_type, .other, .entity_enum;
   }
 
   : pattern {
@@ -99,12 +160,12 @@ main : context {
 
   : pattern {
     regex \= $${__ident}(\s*)(\()
-    styles [] = .entity, .other, .punctuation;
+    styles [] = .variable_function, .other, .punctuation;
   }
 
   : pattern {
     regex \= (\b\d+)
-    styles [] = .numeric;
+    styles [] = .constant_numeric;
   }
 
   : pattern {
@@ -124,45 +185,55 @@ main : context {
 
   : pattern {
     regex \= ([:=<>\-+*/%|!&.?~^])
-    styles [] = .operator;
+    styles [] = .keyword_operator;
   }
 
   : pattern {
-    regex \= ([;(){}<>,\[\]])
+    regex \= ([(){}<>\[\]])
     styles [] = .punctuation;
+  }
+
+  : pattern {
+    regex \= ([,:])
+    styles [] = .punctuation_separator;
+  }
+
+  : pattern {
+    regex \= ([;])
+    styles [] = .punctuation_terminator;
   }
 
   : inline_push {
     regex \= (\")
-    styles [] = .punctuation;
+    styles [] = .string_begin;
     : pop {
       regex \= (\")
-      styles [] = .punctuation;
+      styles [] = .string_end;
     }
     : pattern {
-      regex \= (\\(?:\\|"|'))
-      styles [] = .text;
+      regex \= $${__escape}
+      styles [] = .escaped;
     }
     : pattern {
-      regex \= ([^'"\\]+)
-      styles [] = .text;
+      regex \= ([^"\\]+)
+      styles [] = .string_quoted_double;
     }
   }
 
   : inline_push {
     regex \= (\')
-    styles [] = .punctuation;
+    styles [] = .string_begin;
     : pop {
       regex \= (\')
-      styles [] = .punctuation;
+      styles [] = .string_end;
     }
     : pattern {
-      regex \= (\\(?:\\|'|"))
-      styles [] = .text;
+      regex \= $${__escape}
+      styles [] = .escaped;
     }
     : pattern {
-      regex \= ([^'"\\]+)
-      styles [] = .text;
+      regex \= ([^'\\]+)
+      styles [] = .string_quoted_single;
     }
   }
 

@@ -30,11 +30,11 @@
             <key>match</key>
             <string>(//.*)</string>
             <key>name</key>
-            <string>comment.memelang</string>
+            <string>comment.line.memelang</string>
           </dict>
           <dict>
             <key>match</key>
-            <string>(fn|intf|impl|struct|enum)(\s+)([a-zA-Z_]+[a-zA-Z0-9_]*)</string>
+            <string>(fn)(\s+)([a-zA-Z_]+[a-zA-Z0-9_]*)</string>
             <key>captures</key>
             <dict>
               <key>1</key>
@@ -45,18 +45,106 @@
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>text.memelang</string>
+                <string>source.memelang</string>
               </dict>
               <key>3</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.memelang</string>
+                <string>entity.name.function.memelang</string>
               </dict>
             </dict>
           </dict>
           <dict>
             <key>match</key>
-            <string>(var|i8|i16|i32|u8|u16|u32|bool|impl|intf|struct|enum|fn)</string>
+            <string>(intf)(\s+)([a-zA-Z_]+[a-zA-Z0-9_]*)</string>
+            <key>captures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>storage.type.memelang</string>
+              </dict>
+              <key>2</key>
+              <dict>
+                <key>name</key>
+                <string>source.memelang</string>
+              </dict>
+              <key>3</key>
+              <dict>
+                <key>name</key>
+                <string>entity.name.interface.memelang</string>
+              </dict>
+            </dict>
+          </dict>
+          <dict>
+            <key>match</key>
+            <string>(impl)(\s+)([a-zA-Z_]+[a-zA-Z0-9_]*)</string>
+            <key>captures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>storage.type.memelang</string>
+              </dict>
+              <key>2</key>
+              <dict>
+                <key>name</key>
+                <string>source.memelang</string>
+              </dict>
+              <key>3</key>
+              <dict>
+                <key>name</key>
+                <string>entity.name.impl.memelang</string>
+              </dict>
+            </dict>
+          </dict>
+          <dict>
+            <key>match</key>
+            <string>(struct)(\s+)([a-zA-Z_]+[a-zA-Z0-9_]*)</string>
+            <key>captures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>storage.type.memelang</string>
+              </dict>
+              <key>2</key>
+              <dict>
+                <key>name</key>
+                <string>source.memelang</string>
+              </dict>
+              <key>3</key>
+              <dict>
+                <key>name</key>
+                <string>entity.name.struct.memelang</string>
+              </dict>
+            </dict>
+          </dict>
+          <dict>
+            <key>match</key>
+            <string>(enum)(\s+)([a-zA-Z_]+[a-zA-Z0-9_]*)</string>
+            <key>captures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>storage.type.memelang</string>
+              </dict>
+              <key>2</key>
+              <dict>
+                <key>name</key>
+                <string>source.memelang</string>
+              </dict>
+              <key>3</key>
+              <dict>
+                <key>name</key>
+                <string>entity.name.enum.memelang</string>
+              </dict>
+            </dict>
+          </dict>
+          <dict>
+            <key>match</key>
+            <string>(var|i8|i16|i32|u8|u16|u32|bool|impl|intf|struct|enum|fn|asm)</string>
             <key>name</key>
             <string>storage.type.memelang</string>
           </dict>
@@ -80,12 +168,12 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.memelang</string>
+                <string>variable.function.memelang</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>text.memelang</string>
+                <string>source.memelang</string>
               </dict>
               <key>3</key>
               <dict>
@@ -143,9 +231,21 @@
           </dict>
           <dict>
             <key>match</key>
-            <string>([\x{003b}\x{0028}\x{0029}\x{007b}\x{007d}\x{003c}\x{003e}\x{002c}\[\]])</string>
+            <string>([\x{0028}\x{0029}\x{007b}\x{007d}\x{003c}\x{003e}\[\]])</string>
             <key>name</key>
             <string>punctuation.memelang</string>
+          </dict>
+          <dict>
+            <key>match</key>
+            <string>([\x{002c}\x{003a}])</string>
+            <key>name</key>
+            <string>punctuation.separator.memelang</string>
+          </dict>
+          <dict>
+            <key>match</key>
+            <string>([\x{003b}])</string>
+            <key>name</key>
+            <string>punctuation.terminator.memelang</string>
           </dict>
           <dict>
             <key>begin</key>
@@ -155,7 +255,7 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.memelang</string>
+                <string>punctuation.definition.string.begin.memelang</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -172,7 +272,7 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.memelang</string>
+                <string>punctuation.definition.string.end.memelang</string>
               </dict>
             </dict>
           </dict>
@@ -184,7 +284,7 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.memelang</string>
+                <string>punctuation.definition.string.begin.memelang</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -201,7 +301,7 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.memelang</string>
+                <string>punctuation.definition.string.end.memelang</string>
               </dict>
             </dict>
           </dict>
@@ -209,7 +309,7 @@
             <key>match</key>
             <string>([a-zA-Z_]+[a-zA-Z0-9_]*)</string>
             <key>name</key>
-            <string>text.memelang</string>
+            <string>source.memelang</string>
           </dict>
           <dict>
             <key>match</key>
@@ -235,15 +335,15 @@
         <array>
           <dict>
             <key>match</key>
-            <string>(\\(?:\\|&quot;|&apos;))</string>
+            <string>(\\(?:\\|&apos;|&quot;|t|r|n))</string>
             <key>name</key>
-            <string>text.memelang</string>
+            <string>constant.character.escape.memelang</string>
           </dict>
           <dict>
             <key>match</key>
-            <string>([^\x{0027}\x{0022}\x{005c}]+)</string>
+            <string>([^\x{0022}\x{005c}]+)</string>
             <key>name</key>
-            <string>text.memelang</string>
+            <string>string.quoted.double.memelang</string>
           </dict>
         </array>
       </dict>
@@ -253,15 +353,15 @@
         <array>
           <dict>
             <key>match</key>
-            <string>(\\(?:\\|&apos;|&quot;))</string>
+            <string>(\\(?:\\|&apos;|&quot;|t|r|n))</string>
             <key>name</key>
-            <string>text.memelang</string>
+            <string>constant.character.escape.memelang</string>
           </dict>
           <dict>
             <key>match</key>
-            <string>([^\x{0027}\x{0022}\x{005c}]+)</string>
+            <string>([^\x{0027}\x{005c}]+)</string>
             <key>name</key>
-            <string>text.memelang</string>
+            <string>string.quoted.single.memelang</string>
           </dict>
         </array>
       </dict>
