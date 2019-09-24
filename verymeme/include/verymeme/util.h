@@ -34,6 +34,7 @@
     } \
   } while (0)
 
+#define unimplemented() verify_expr(false, "UNIMPLEMENTED")
 constexpr float EP = 1e-6;
 
 std::string getStacktrace();
@@ -52,5 +53,8 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   for (int i = int(vec.size()) - 1; i >= 0; --i) reversed.emplace_back(std::move(vec[i]));
   return reversed;
 }
+
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 #endif  // VERYMEME_UTIL_H

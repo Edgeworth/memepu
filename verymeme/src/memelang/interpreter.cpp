@@ -1,10 +1,11 @@
 #include "memelang/interpreter.h"
 
+#include <iostream>
 #include <memory>
 
 #include "verymeme/util.h"
 
-namespace memelang {
+namespace memelang::interpreter {
 
 namespace {
 
@@ -44,16 +45,16 @@ void Interpreter::run() {
   popScope();
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runFn(Fn* fn) { return runStmtBlk(fn->blk.get()); }
+ValPtr Interpreter::runFn(Fn* fn) { return runStmtBlk(fn->blk.get()); }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runStmtBlk(StmtBlk* blk) {
+ValPtr Interpreter::runStmtBlk(StmtBlk* blk) {
   nestScope();
   for (auto& stmt : blk->stmts) CHECK(runStmt(stmt.get()));
   unnestScope();
   return nullptr;
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runStmt(Node* stmt) {
+ValPtr Interpreter::runStmt(Node* stmt) {
   if (typeid(*stmt) == typeid(VarDefn)) {
     runVarDefn(g<VarDefn>(stmt));
   } else if (typeid(*stmt) == typeid(VarDecl)) {
@@ -74,22 +75,21 @@ std::shared_ptr<Interpreter::Value> Interpreter::runStmt(Node* stmt) {
 
 void Interpreter::runVarDefn(VarDefn* defn) {
   auto var = runVarDecl(defn->decl.get());
-  // TODO check type
-  if (defn->defn)
-    var->assign(eval(defn->defn.get()).get());
+  if (defn->defn) Val::assign(var, eval(defn->defn.get()));
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runVarDecl(VarDecl* decl) {
+ValPtr Interpreter::runVarDecl(VarDecl* decl) {
   const auto& name = decl->ref->name;
   if (maybeGetVar(name)) error(decl, "redeclaration of var " + name);
-  vars_.back().back()[name] = std::make_shared<Value>(Value{{}, decl->type.get()});
+  vars_.back().back()[name] = Val::fromAstType(decl->type.get());
   return vars_.back().back()[name];
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runOp(Op* op) {
+ValPtr Interpreter::runOp(Op* op) {
   switch (op->type) {
   case Expr::FN_CALL: {
-    if (typeid(*(op->left.get())) != typeid(VarRef)) return std::make_shared<Value>();  // TODO don't skip types
+    if (typeid(*(op->left.get())) != typeid(VarRef))
+      return std::make_shared<Val>();  // TODO don't skip types
     auto* call = g<VarRef>(op->left);  // TODO can be type.
     auto* args = g<FnCallArgs>(op->right);
     if (call->name == "printf") {
@@ -97,59 +97,87 @@ std::shared_ptr<Interpreter::Value> Interpreter::runOp(Op* op) {
       boost::format fmt = boost::format(g<StrLit>(args->args[0])->val);
       // TODO(progress): Support other than int vars.
       for (int i = 1; i < int(args->args.size()); ++i)
-        fmt = fmt % eval(args->args[i].get())->int_val;
+        std::visit(overloaded{[&fmt](auto&& v) {
+          using T = std::decay_t<decltype(v)>;
+          if constexpr (std::is_same_v<uintptr_t, T>) fmt = fmt % reinterpret_cast<char*>(v);
+          else if constexpr (std::is_integral_v<T>) fmt = fmt % v;
+          else
+            unimplemented();
+        }},
+            eval(args->args[i].get())->v);
       printf("%s", fmt.str().c_str());
 
       // TODO: Return proper value.
       return nullptr;
+    } else if (call->name == "readf") {
+      if (args->args.size() != 2) error(op, "readf requires 2 arguments");
+      auto read_ptr = eval(args->args[0].get());
+      auto read_sz = eval(args->args[1].get());
+      if (*read_ptr->type != Type{.name = U8, .quals = {{}, {.ptr = true}}})
+        error(op, "wrong type: " + read_ptr->type->toString());
+      if (*read_sz->type != Type{.name = I32})  // TODO: require U32.
+        error(op, "wrong type: " + read_sz->type->toString());
+      std::cin.getline(
+          reinterpret_cast<char*>(std::get<uintptr_t>(read_ptr->v)), std::get<int32_t>(read_sz->v));
+
+      return std::make_shared<Val>(
+          Val{.v = int32_t(std::cin.gcount()), .type = std::make_shared<Type>(Type{.name = I32})});
     }
 
-    std::vector<std::shared_ptr<Value>> params;
+    std::vector<std::shared_ptr<Val>> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
     pushScope();
     auto* fn = getFn(call, call->name);
     if (fn->sig->params.size() != params.size()) error(op, "wrong number of arguments");
     for (int i = 0; i < int(fn->sig->params.size()); ++i) {
-      auto* decl = fn->sig->params[i].get();
-      runStmt(decl);
-      getVar(decl->ref.get(), decl->ref->name)->assign(params[i].get());
+      auto& decl = fn->sig->params[i];
+      runStmt(decl.get());
+      Val::assign(getVar(decl->ref.get(), decl->ref->name), params[i]);
     }
     auto val = runFn(fn);
     popScope();
     return val;
   }
-  case Expr::ASSIGNMENT: return eval(op->left.get())->assign(eval(op->right.get()).get());
-  case Expr::ADD: return eval(op->left.get())->add(eval(op->right.get()).get());
-  case Expr::SUB: return eval(op->left.get())->sub(eval(op->right.get()).get());
-  case Expr::LT: return eval(op->left.get())->lt(eval(op->right.get()).get());
-  case Expr::PREFIX_INC: return eval(op->left.get())->preinc();
-  case Expr::EQ: return eval(op->left.get())->eq(eval(op->right.get()).get());
-  default: verify_expr(false, "unhandled op: %s", op->toString().c_str());
+  case Expr::ASSIGNMENT: return Val::assign(eval(op->left.get()), eval(op->right.get()));
+  case Expr::ADD: return Val::add(eval(op->left.get()), eval(op->right.get()));
+  case Expr::SUB: return Val::sub(eval(op->left.get()), eval(op->right.get()));
+  case Expr::LT: return Val::lt(eval(op->left.get()), eval(op->right.get()));
+  case Expr::EQ: return Val::eq(eval(op->left.get()), eval(op->right.get()));
+  case Expr::ARRAY_ACCESS: return Val::array_access(eval(op->left.get()), eval(op->right.get()));
+  case Expr::PREFIX_INC: return Val::preinc(eval(op->left.get()));
+  case Expr::UNARY_ADDR: return Val::addr(eval(op->left.get()));
+  default: error(op, "unhandled op");
   }
+  return nullptr;
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runFor(For* fr) {
+ValPtr Interpreter::runFor(For* fr) {
   runVarDefn(fr->var_defn.get());
-  while (eval(fr->cond.get())->int_val) {
+  while (std::get<bool>(eval(fr->cond.get())->v)) {
     CHECK(runStmtBlk(fr->blk.get()));
     eval(fr->update.get());
   }
   return nullptr;
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::runIf(If* ifst) {
-  if (eval(ifst->cond.get())->int_val) CHECK(runStmtBlk(ifst->then.get()));
+ValPtr Interpreter::runIf(If* ifst) {
+  if (std::get<bool>(eval(ifst->cond.get())->v)) CHECK(runStmtBlk(ifst->then.get()));
   else if (ifst->els)
     CHECK(runStmtBlk(ifst->els.get()));
   return nullptr;
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::eval(Node* n) {
+ValPtr Interpreter::eval(Node* n) {
   if (typeid(*n) == typeid(Op)) return runOp(g<Op>(n));
   if (typeid(*n) == typeid(VarRef)) return getVar(n, g<VarRef>(n)->name);
-  // TODO use type
   if (typeid(*n) == typeid(IntLit))
-    return std::make_shared<Value>(Value{g<IntLit>(n)->val, nullptr});
+    return std::make_shared<Val>(
+        Val{.v = int32_t(g<IntLit>(n)->val), .type = std::make_shared<Type>(Type{.name = I32})});
+  if (typeid(*n) == typeid(CompoundLit)) {
+    auto* lit = g<CompoundLit>(n);
+    // TODO set value
+    return std::make_shared<Val>(Val{.type = nullptr});  // nullptr for deduced type
+  }
   error(n, "unimplemented eval node " + n->toString());
   return nullptr;
 }
@@ -176,13 +204,13 @@ Fn* Interpreter::getFn(Node* n, const std::string& name) {
   return fns_[name];
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::getVar(Node* n, const std::string& name) const {
+ValPtr Interpreter::getVar(Node* n, const std::string& name) const {
   auto val = maybeGetVar(name);
   if (!val) error(n, "undeclared variable " + name);
   return val;
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::maybeGetVar(const std::string& name) const {
+ValPtr Interpreter::maybeGetVar(const std::string& name) const {
   bug_unless(!vars_.empty());
   for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
     auto iter = scope_iter->find(name);
@@ -199,36 +227,177 @@ void Interpreter::error(Node* n, const std::string& msg) const {
     verify_expr(false, "error: %s", msg.c_str());
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::Value::assign(Interpreter::Value* val) {
-  // TODO support other vals.
-  int_val = val->int_val;
-  return std::make_shared<Value>(*this);
+ValPtr Val::assign(ValPtr l, ValPtr r) {
+  auto cpy = Val::copy(r);  // Deep copy.
+  l->v = cpy->v;
+  l->type = cpy->type;
+  return l;
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::Value::add(Interpreter::Value* val) {
-  // TODO support other vals.
-  return std::make_shared<Value>(Value{int_val + val->int_val, type});
+ValPtr Val::add(ValPtr l, ValPtr r) {
+  // TODO: Need to look at type, not variant.
+  // TODO: Implement for non-integral.
+  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value) return v + std::get<T>(r->v);
+    unimplemented();
+    return 0;
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, std::make_shared<Type>(*l->type)});
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::Value::sub(Interpreter::Value* val) {
-  // TODO support other vals.
-  return std::make_shared<Value>(Value{int_val - val->int_val, type});
+ValPtr Val::sub(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value) return v - std::get<T>(r->v);
+    unimplemented();
+    return 0;
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, std::make_shared<Type>(*l->type)});
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::Value::lt(Interpreter::Value* val) {
-  // TODO support other vals.
-  return std::make_shared<Value>(Value{int_val < val->int_val, nullptr});
+ValPtr Val::lt(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  bool res = std::visit(overloaded{[&r](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    return v < std::get<T>(r->v);
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, std::make_shared<Type>(Type{.name = BOOL})});
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::Value::eq(Interpreter::Value* val) {
-  // TODO support other vals.
-  return std::make_shared<Value>(Value{int_val == val->int_val, nullptr});
+ValPtr Val::eq(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  bool res = std::visit(overloaded{[&r](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    return v == std::get<T>(r->v);
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, std::make_shared<Type>(Type{.name = BOOL})});
 }
 
-std::shared_ptr<Interpreter::Value> Interpreter::Value::preinc() {
-  // TODO support other vals.
-  int_val++;
-  return std::make_shared<Value>(*this);
+ValPtr Val::array_access(ValPtr l, ValPtr r) {
+  auto& array_val = std::get<ArrayVal>(l->v);
+  const int64_t idx = std::get<int32_t>(r->v);  // TODO not only int32 ?
+  return array_val[idx];
 }
 
-}  // namespace memelang
+ValPtr Val::preinc(ValPtr l) {
+  // TODO: Implement for non-integral.
+
+  std::visit(overloaded{[](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
+    else
+      unimplemented();
+  }},
+      l->v);
+  return l;
+}
+
+ValPtr Val::addr(const ValPtr& l) {
+  auto new_type = std::make_shared<Type>(*l->type);
+  new_type->quals.emplace_back();
+  new_type->quals.back().ptr = true;
+  auto new_value = std::make_shared<Val>();
+  new_value->v = reinterpret_cast<uintptr_t>(l.get());
+  new_value->type = new_type;
+  return new_value;
+}
+
+ValPtr Val::copy(const ValPtr& l) {
+  auto new_storage = std::visit(overloaded{[](auto&& v) -> ValStorage {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value) return v;
+    else if constexpr (std::is_same_v<T, ArrayVal>) {
+      ArrayVal arr;
+      for (auto& item : v) arr.emplace_back(Val::copy(item));
+      return arr;
+    } else {
+      StructVal strct;
+      for (auto& kv : v) strct[kv.first] = Val::copy(kv.second);
+      return strct;
+    }
+  }},
+      l->v);
+
+  auto new_type = std::make_shared<Type>(*l->type);
+  return std::make_shared<Val>(Val{new_storage, new_type});
+}
+
+ValPtr Val::deref(const ValPtr& l) {
+  auto new_storage = ValStorage{};
+  auto new_type = std::make_shared<Type>(*l->type);
+  return std::make_shared<Val>(Val{new_storage, new_type});
+}
+
+ValPtr Val::fromAstType(memelang::Type* ast_type) {
+  auto type = Type::fromAstType(ast_type);
+  std::vector<Qualifier> partial_quals;
+  ValPtr val;
+  for (const auto& qual : type->quals) {
+    partial_quals.emplace_back(qual);
+    ValStorage new_storage;
+    auto new_type = std::make_shared<Type>(
+        Type{.name = type->name, .quals = partial_quals, .params = type->params});
+
+    // Qualifiers only hold one bit of info.
+    bug_unless(!(qual.array && qual.ptr));
+    if (qual.array) {
+      bug_unless(!qual.ptr && val);
+      ArrayVal arr;
+      for (int idx = 0; idx < qual.array - 1; ++idx) arr.emplace_back(Val::copy(val));
+      arr.emplace_back(std::move(val));
+      new_storage = std::move(arr);
+    } else if (qual.ptr) {
+      bug_unless(!qual.array && val);
+      unimplemented();
+    } else {
+      // Handle base type.
+      bug_unless(!val);
+      if (type->name == BOOL) {
+        new_storage = false;
+      } else if (type->name == I8) {
+        new_storage = int8_t(0);
+      } else if (type->name == I16) {
+        new_storage = int16_t(0);
+      } else if (type->name == I32) {
+        new_storage = int32_t(0);
+      } else if (type->name == U8) {
+        new_storage = uint8_t(0);
+      } else if (type->name == U16) {
+        new_storage = uint16_t(0);
+      } else if (type->name == U32) {
+        new_storage = uint32_t(0);
+      } else {
+        bug_unless(false);
+      }
+    }
+
+    val = std::make_shared<Val>(Val{std::move(new_storage), std::move(new_type)});
+  }
+  return val;
+}
+
+TypePtr Type::fromAstType(memelang::Type* type) {
+  auto new_type = std::make_shared<Type>();
+  new_type->name = type->name;
+  new_type->quals.emplace_back();  // Put one qualifier to hold const for the main type.
+  new_type->quals.back().cnst = type->cnst;
+
+  // Look through qualifiers reversed.
+  for (auto i = type->quals.rbegin(); i != type->quals.rend(); ++i) {
+    new_type->quals.emplace_back();
+    new_type->quals.back().array = (*i)->array;
+    new_type->quals.back().ptr = (*i)->ptr;
+    new_type->quals.back().cnst = (*i)->cnst;
+  }
+
+  for (const auto& param : type->params) new_type->params.emplace_back(fromAstType(param.get()));
+  return new_type;
+}
+
+}  // namespace memelang::interpreter
