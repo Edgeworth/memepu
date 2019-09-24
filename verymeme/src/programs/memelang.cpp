@@ -12,6 +12,6 @@ int main(int argc, char* argv[]) {
   memelang::Parser parser(&cts, tokens);
   parser.parse();
   printf("AST:\n%s\n", parser.astToString().c_str());
-  memelang::Interpreter interp(parser.getFile(), &cts);
+  memelang::interpreter::Interpreter interp(parser.getFile(), &cts);
   interp.run();
 }
