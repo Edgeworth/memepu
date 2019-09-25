@@ -211,6 +211,14 @@ struct For : public Node {
   DEFNLT(For, var_defn, cond, update, blk);
 };
 
+struct While : public Node {
+  std::unique_ptr<Node> cond;
+  std::unique_ptr<StmtBlk> blk;
+
+  DEFNLT(While, cond, blk);
+};
+
+
 struct If : public Node {
   std::unique_ptr<Node> cond;
   std::unique_ptr<StmtBlk> then;

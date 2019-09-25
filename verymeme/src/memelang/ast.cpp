@@ -85,7 +85,9 @@ std::vector<Node*> VarRef::children() { return {}; }
 Typelist::Typelist(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LANGLE);
   while (true) {
-    names.push_back(c.consumeTok(Tok::IDENT)->str_val);
+    if (!c.hasTok(Tok::IDENT) && !c.hasTok(BUILTIN_TYPES))
+      c.compileError("typelist must contain type");
+    names.push_back(c.consumeTok()->str_val);
     if (c.hasTok(Tok::COMMA)) c.consumeTok();
     else
       break;
@@ -115,7 +117,9 @@ Qualifier::Qualifier(Parser::Ctx& c) : Node(c) {
   }
 }
 std::string Qualifier::toString() const {
-  return (fmt("Qualifier(const: %1% ptr: %2%, array: %3%)") % cnst % ptr % array->toString()).str();
+  return (fmt("Qualifier(const: %1% ptr: %2%, array: %3%)") % cnst % ptr %
+      (array ? array->toString() : "0"))
+      .str();
 }
 std::vector<Node*> Qualifier::children() { return flattenChildren(array); }
 
@@ -189,6 +193,7 @@ StmtBlk::StmtBlk(Parser::Ctx& c) : Node(c) {
       c.consumeTok(Tok::SEMICOLON);
       break;
     case Tok::FOR: stmts.emplace_back(std::make_unique<For>(c)); break;
+    case Tok::WHILE: stmts.emplace_back(std::make_unique<While>(c)); break;
     case Tok::IF: stmts.emplace_back(std::make_unique<If>(c)); break;
     case Tok::ASM: stmts.emplace_back(std::make_unique<Asm>(c)); break;
     default:
@@ -240,6 +245,16 @@ For::For(Parser::Ctx& c) : Node(c) {
 }
 std::string For::toString() const { return "For"; }
 std::vector<Node*> For::children() { return flattenChildren(var_defn, cond, update, blk); }
+
+While::While(Parser::Ctx& c) : Node(c) {
+  c.consumeTok(Tok::WHILE);
+  c.consumeTok(Tok::LPAREN);
+  cond = ExprParser(c).parse();
+  c.consumeTok(Tok::RPAREN);
+  blk = std::make_unique<StmtBlk>(c);
+}
+std::string While::toString() const { return "While"; }
+std::vector<Node*> While::children() { return flattenChildren(cond, blk); }
 
 If::If(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::IF);

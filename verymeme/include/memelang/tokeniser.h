@@ -57,6 +57,7 @@ struct Tok {
     ELSE,
     MATCH,
     FOR,
+    WHILE,
     RETURN,
     VAR,
     STATIC,
@@ -69,7 +70,6 @@ struct Tok {
     U16,
     U32,
     BOOL,
-    BIT,
     // Complex tokens
     ASM,
     STR_LIT,
