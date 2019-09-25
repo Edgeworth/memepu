@@ -154,7 +154,7 @@ main : context {
   }
 
   : pattern {
-    regex \= (return|for|if|match)
+    regex \= (return|for|while|if|match)
     styles [] = .keyword;
   }
 

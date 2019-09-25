@@ -63,6 +63,8 @@ ValPtr Interpreter::runStmt(Node* stmt) {
     return runOp(g<Op>(stmt));
   } else if (typeid(*stmt) == typeid(For)) {
     return runFor(g<For>(stmt));
+  } else if (typeid(*stmt) == typeid(While)) {
+    return runWhile(g<While>(stmt));
   } else if (typeid(*stmt) == typeid(Return)) {
     return eval(g<Return>(stmt)->ret.get());
   } else if (typeid(*stmt) == typeid(If)) {
@@ -158,6 +160,12 @@ ValPtr Interpreter::runFor(For* fr) {
     CHECK(runStmtBlk(fr->blk.get()));
     eval(fr->update.get());
   }
+  return nullptr;
+}
+
+ValPtr Interpreter::runWhile(While* wh) {
+  while (std::get<bool>(eval(wh->cond.get())->v))
+    CHECK(runStmtBlk(wh->blk.get()));
   return nullptr;
 }
 

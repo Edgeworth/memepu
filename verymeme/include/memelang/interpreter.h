@@ -102,6 +102,7 @@ private:
   void runVarDefn(VarDefn* defn);
   ValPtr runVarDecl(VarDecl* decl);
   ValPtr runFor(For* fr);
+  ValPtr runWhile(While* wh);
   ValPtr runIf(If* ifst);
   ValPtr runOp(Op* op);
 

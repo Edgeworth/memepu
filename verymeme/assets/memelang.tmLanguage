@@ -156,7 +156,7 @@
           </dict>
           <dict>
             <key>match</key>
-            <string>(return|for|if|match)</string>
+            <string>(return|for|while|if|match)</string>
             <key>name</key>
             <string>keyword.memelang</string>
           </dict>
