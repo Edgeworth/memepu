@@ -1,13 +1,35 @@
 // fn readf(data: *u8, size: i32) i32 {}
 
-struct string {
+intf Indexable<T> {
+  fn index(idx: u32) *T;
+}
 
+fn strlen(s: *u8) u32 {
+  var len: u32 = 0;
+  while (s[len++] != 0) {}
+  return len;
+}
+
+struct string {
+  data: *u8;
+  len: u32;
+
+  static fn new(s: *u8) string {
+    return {data: s, len: strlen(s)};
+  }
+}
+
+impl Indexable<u8> for string {
+  fn index(idx: u32) *u8 {
+    return &data[idx];
+  }
 }
 
 fn main() i32 {
-  var SIZE : const i32 = 128;
-  var data : [SIZE]u8;
-  var nbytes : i32 = readf(&data[0], SIZE);
+  var SIZE: const u32 = 128;
+  var data: [SIZE]u8;
+  var nbytes: u32 = readf(&data[0], SIZE);
   printf("got %d bytes: '%s'\n", nbytes, &data[0]);
+  printf("strlen result: %d\n", strlen(&data[0]));
   return 0;
 }
