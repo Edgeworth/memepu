@@ -48,11 +48,11 @@ struct Typename : public Node {
 };
 
 struct Qualifier : public Node {
+  std::unique_ptr<Node> array;
   bool cnst = false;
   bool ptr = false;
-  int64_t array = 0;
 
-  DEFNLT(Qualifier, cnst, ptr, array);
+  DEFNLT(Qualifier, array, cnst, ptr);
 };
 
 struct Type : public Node {
