@@ -106,7 +106,7 @@ std::vector<Node*> Typename::children() { return flattenChildren(tlist); }
 Qualifier::Qualifier(Parser::Ctx& c) : Node(c) {
   if (c.hasTok(Tok::LSQUARE)) {
     c.consumeTok(Tok::LSQUARE);
-    array = c.consumeTok(Tok::INT_LIT)->int_val;
+    array = ExprParser(c).parse();
     c.consumeTok(Tok::RSQUARE);
   } else {
     if (c.maybeConsumeTok(Tok::CONST)) cnst = true;
@@ -115,9 +115,9 @@ Qualifier::Qualifier(Parser::Ctx& c) : Node(c) {
   }
 }
 std::string Qualifier::toString() const {
-  return (fmt("Qualifier(const: %1% ptr: %2%, array: %3%)") % cnst % ptr % array).str();
+  return (fmt("Qualifier(const: %1% ptr: %2%, array: %3%)") % cnst % ptr % array->toString()).str();
 }
-std::vector<Node*> Qualifier::children() { return {}; }
+std::vector<Node*> Qualifier::children() { return flattenChildren(array); }
 
 Type::Type(Parser::Ctx& c) : Node(c) {
   while (c.hasTok({Tok::ASTERISK, Tok::LSQUARE}) ||

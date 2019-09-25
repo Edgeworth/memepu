@@ -81,7 +81,7 @@ void Interpreter::runVarDefn(VarDefn* defn) {
 ValPtr Interpreter::runVarDecl(VarDecl* decl) {
   const auto& name = decl->ref->name;
   if (maybeGetVar(name)) error(decl, "redeclaration of var " + name);
-  vars_.back().back()[name] = Val::fromAstType(decl->type.get());
+  vars_.back().back()[name] = valFromAstType(decl->type.get());
   return vars_.back().back()[name];
 }
 
@@ -100,7 +100,8 @@ ValPtr Interpreter::runOp(Op* op) {
         std::visit(overloaded{[&fmt](auto&& v) {
           using T = std::decay_t<decltype(v)>;
           if constexpr (std::is_same_v<uintptr_t, T>) fmt = fmt % reinterpret_cast<char*>(v);
-          else if constexpr (std::is_integral_v<T>) fmt = fmt % v;
+          else if constexpr (std::is_integral_v<T>)
+            fmt = fmt % v;
           else
             unimplemented();
         }},
@@ -334,8 +335,8 @@ ValPtr Val::deref(const ValPtr& l) {
   return std::make_shared<Val>(Val{new_storage, new_type});
 }
 
-ValPtr Val::fromAstType(memelang::Type* ast_type) {
-  auto type = Type::fromAstType(ast_type);
+ValPtr Interpreter::valFromAstType(memelang::Type* ast_type) {
+  auto type = typeFromAstType(ast_type);
   std::vector<Qualifier> partial_quals;
   ValPtr val;
   for (const auto& qual : type->quals) {
@@ -382,7 +383,7 @@ ValPtr Val::fromAstType(memelang::Type* ast_type) {
   return val;
 }
 
-TypePtr Type::fromAstType(memelang::Type* type) {
+TypePtr Interpreter::typeFromAstType(memelang::Type* type) {
   auto new_type = std::make_shared<Type>();
   new_type->name = type->name;
   new_type->quals.emplace_back();  // Put one qualifier to hold const for the main type.
@@ -391,12 +392,14 @@ TypePtr Type::fromAstType(memelang::Type* type) {
   // Look through qualifiers reversed.
   for (auto i = type->quals.rbegin(); i != type->quals.rend(); ++i) {
     new_type->quals.emplace_back();
-    new_type->quals.back().array = (*i)->array;
+    // TODO not only int32_t
+    new_type->quals.back().array = std::get<int32_t>(eval((*i)->array.get())->v);
     new_type->quals.back().ptr = (*i)->ptr;
     new_type->quals.back().cnst = (*i)->cnst;
   }
 
-  for (const auto& param : type->params) new_type->params.emplace_back(fromAstType(param.get()));
+  for (const auto& param : type->params)
+    new_type->params.emplace_back(typeFromAstType(param.get()));
   return new_type;
 }
 

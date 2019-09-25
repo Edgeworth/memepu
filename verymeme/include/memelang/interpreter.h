@@ -58,8 +58,6 @@ struct Type {
     rep += ")";
     return rep;
   }
-
-  static TypePtr fromAstType(memelang::Type* ast_type);
 };
 
 struct Val {
@@ -76,8 +74,6 @@ struct Val {
   static ValPtr addr(const ValPtr& l);
   static ValPtr copy(const ValPtr& l);
   static ValPtr deref(const ValPtr& l);
-
-  static ValPtr fromAstType(memelang::Type* type);
 };
 
 const inline static std::string BOOL = "bool";
@@ -117,6 +113,9 @@ private:
   Fn* getFn(Node* n, const std::string& name);
   ValPtr getVar(Node* n, const std::string& name) const;
   ValPtr maybeGetVar(const std::string& name) const;
+
+  ValPtr valFromAstType(memelang::Type* type);
+  TypePtr typeFromAstType(memelang::Type* ast_type);
 
   void error(Node* n, const std::string& msg) const;
 };

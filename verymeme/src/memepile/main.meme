@@ -1,8 +1,12 @@
 // fn readf(data: *u8, size: i32) i32 {}
 
+struct string {
+
+}
+
 fn main() i32 {
   var SIZE : const i32 = 128;
-  var data : [128]u8;
+  var data : [SIZE]u8;
   var nbytes : i32 = readf(&data[0], SIZE);
   printf("got %d bytes: '%s'\n", nbytes, &data[0]);
   return 0;
