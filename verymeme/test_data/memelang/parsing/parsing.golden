@@ -54,7 +54,8 @@ File
     VarDecl
      VarRef(d)
      Type(i8)
-      Qualifier(const: 0 ptr: 0, array: 40)
+      Qualifier(const: 0 ptr: 0, array: IntLit(40))
+       IntLit(40)
     CompoundLit
    Op(ASSIGNMENT)
     Op(ARRAY_ACCESS)
@@ -134,13 +135,14 @@ File
        Type(i8)
       Op(UNARY_ADDR)
        VarRef(e)
-    If
-     BoolLit(true)
-     StmtBlk
-     StmtBlk
-      Op(ADD)
-       VarRef(a)
-       VarRef(b)
+    StmtBlk
+     If
+      BoolLit(true)
+      StmtBlk
+      StmtBlk
+       Op(ADD)
+        VarRef(a)
+        VarRef(b)
    VarDefn
     VarDecl
      VarRef(b)

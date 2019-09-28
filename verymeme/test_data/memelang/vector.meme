@@ -39,7 +39,7 @@ struct vector_iter<T> {
   static fn new(vec: *vector<T>) vector_iter<T> {
     return {
       vec_: vec,
-      idx_: 0,
+      idx_: 0
     };
   }
 }
@@ -77,7 +77,7 @@ struct vector<T> {
     return {
       data_: nullptr,
       size_: 0,
-      cap_: 0,
+      cap_: 0
     };  // RVO
   }
 }

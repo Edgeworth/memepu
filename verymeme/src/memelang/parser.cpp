@@ -51,6 +51,7 @@ Parser::Ctx::Ctx(const FileContents* cts, const std::vector<Tok>& tokens)
     if (tok.type != Tok::COMMENT)
       toks_.push_back(tok);
   }
+  type_idents.insert({"bool", "i8", "i16", "i32", "i64", "u8", "u16", "u32", "u64", "f32", "f64"});
 }
 
 const Tok* Parser::Ctx::curTok(const std::vector<Tok::Type>& ts) const {

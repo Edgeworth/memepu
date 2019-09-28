@@ -1,12 +1,12 @@
 enum Unit {}
 enum TestEnum {
-  Test1, Test2, Test3(A),
+  Test1, Test2, Test3: A,
 }
 enum Result<R, E> {
-  Ok(R), Err(E),
+  Ok: R, Err: E,
 }
 fn test<T>(a: const *T) Unit {}
-struct A { v: i8; y: bit: 5; z: bool; static fn new() Unit {} }
+struct A { v: i8; z: bool; static fn new() Unit {} }
 intf Intf {}
 intf IntfT<T> {}
 impl Intf for A {}
@@ -17,24 +17,24 @@ fn main() i8 {
     lhu r30, 3
   }
   var decl: A;
-  var st: A = A {};
+  var st: A = {};
   var test_enum: TestEnum = Test3(st);
   st.v = 0x3;
   var e: i8 = 0;
   var a: i8 = 02;
-  var d: [40]i8 = [];
+  var d: [40]i8 = {};
   d[--st.v] = 1;
   d[st.v++] = 1;
   d[40 - 1] = true && (true || !false) ? ~0 & 1 : 1 ^ 2 | 3;
-  if e == st.v || d[23 - 2] != a || a <= e || a > e || e >= st.v || e < d[3] {
+  if (e == st.v || d[23 - 2] != a || a <= e || a > e || e >= st.v || e < d[3]) {
     test<i8>(&e);
-  } else if true {} else {
-    match a {
+  } else if (true) {} else {
+    match (a) {
       1 {}
       2 {}
       3 {print(5);}
     }
-    match test_enum {
+    match (test_enum) {
       Test1 {}
       Test2 {}
       Test3(x) {print(x);}
@@ -49,7 +49,7 @@ fn main() i8 {
   '\"';
   "b\"";
   5.5;
-  for var f: i8 = 0; f < 10; f++ {
+  for (var f: i8 = 0; f < 10; f++) {
     return 4;
   }
   // Big comment "\" ''

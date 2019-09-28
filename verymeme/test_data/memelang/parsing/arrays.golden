@@ -5,7 +5,8 @@ File
    VarDecl
     VarRef(arr)
     Type(i8)
-     Qualifier(const: 0 ptr: 0, array: 42)
+     Qualifier(const: 0 ptr: 0, array: IntLit(42))
+      IntLit(42)
    Type(i8)
   StmtBlk
    Return
@@ -19,7 +20,8 @@ File
     VarRef(arr)
     Type(i8)
      Qualifier(const: 0 ptr: 1, array: 0)
-     Qualifier(const: 0 ptr: 0, array: 42)
+     Qualifier(const: 0 ptr: 0, array: IntLit(42))
+      IntLit(42)
    Type(i8)
   StmtBlk
    Return
@@ -48,7 +50,8 @@ File
     VarDecl
      VarRef(arr)
      Type(i8)
-      Qualifier(const: 0 ptr: 0, array: 42)
+      Qualifier(const: 0 ptr: 0, array: IntLit(42))
+       IntLit(42)
     CompoundLit
    Op(FN_CALL)
     VarRef(takesbyvalue)
