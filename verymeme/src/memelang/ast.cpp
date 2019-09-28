@@ -85,7 +85,7 @@ std::vector<Node*> VarRef::children() { return {}; }
 Typelist::Typelist(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LANGLE);
   while (true) {
-    if (!c.hasTok(Tok::IDENT) && !c.hasTok(BUILTIN_TYPES))
+    if (!c.hasTok(Tok::IDENT))
       c.compileError("typelist must contain type");
     names.push_back(c.consumeTok()->str_val);
     if (c.hasTok(Tok::COMMA)) c.consumeTok();
@@ -138,8 +138,9 @@ Type::Type(Parser::Ctx& c) : Node(c) {
       }
       c.consumeTok(Tok::RANGLE);
     }
-  } else {
-    name = c.consumeTok(BUILTIN_TYPES)->str_val;
+  } else if (c.hasTok(Tok::AUTO)) {
+    c.consumeTok();
+    name = "auto";
   }
 }
 std::string Type::toString() const {

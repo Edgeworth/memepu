@@ -48,7 +48,8 @@ File
     VarDecl
      VarRef(array_cptr_ci8)
      Type(const i8)
-      Qualifier(const: 0 ptr: 0, array: 42)
+      Qualifier(const: 0 ptr: 0, array: IntLit(42))
+       IntLit(42)
       Qualifier(const: 1 ptr: 1, array: 0)
     CompoundLit
    VarDefn
@@ -56,19 +57,24 @@ File
      VarRef(cptr_array_ci8)
      Type(const i8)
       Qualifier(const: 1 ptr: 1, array: 0)
-      Qualifier(const: 0 ptr: 0, array: 42)
+      Qualifier(const: 0 ptr: 0, array: IntLit(42))
+       IntLit(42)
     IntLit(0)
    VarDefn
     VarDecl
      VarRef(multidim_array)
      Type(i8)
-      Qualifier(const: 0 ptr: 0, array: 40)
-      Qualifier(const: 0 ptr: 0, array: 30)
+      Qualifier(const: 0 ptr: 0, array: IntLit(40))
+       IntLit(40)
+      Qualifier(const: 0 ptr: 0, array: IntLit(30))
+       IntLit(30)
     CompoundLit
    VarDefn
     VarDecl
      VarRef(cmultidim_array)
      Type(const i8)
-      Qualifier(const: 0 ptr: 0, array: 40)
-      Qualifier(const: 0 ptr: 0, array: 30)
+      Qualifier(const: 0 ptr: 0, array: IntLit(40))
+       IntLit(40)
+      Qualifier(const: 0 ptr: 0, array: IntLit(30))
+       IntLit(30)
     CompoundLit

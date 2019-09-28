@@ -8,5 +8,6 @@ File
     VarDecl
      VarRef(array)
      Type(i8)
-      Qualifier(const: 0 ptr: 0, array: 5)
+      Qualifier(const: 0 ptr: 0, array: IntLit(5))
+       IntLit(5)
     CompoundLit

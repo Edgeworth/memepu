@@ -10,9 +10,6 @@
 
 namespace memelang {
 
-const inline std::vector<Tok::Type> BUILTIN_TYPES = {
-    Tok::AUTO, Tok::I8, Tok::I16, Tok::I32, Tok::U8, Tok::U16, Tok::U32, Tok::BOOL};
-
 struct File;
 
 class Parser {

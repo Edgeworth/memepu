@@ -4,6 +4,16 @@ intf Indexable<T> {
   fn index(idx: u32) *T;
 }
 
+intf Comparable<T> {
+  fn neq(o: *T) bool;
+}
+
+impl Comparable<i32> for u8 {
+  fn neq(o: *i32) bool {
+    return *this != *o;
+  }
+}
+
 fn strlen(s: *u8) u32 {
   var len: u32 = 0;
   while (s[len++] != 0) {}
