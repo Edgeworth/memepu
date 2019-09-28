@@ -34,7 +34,7 @@ stmt_var_defn : stmt_var_decl '=' expr ';' ;
 
 // Expression related:
 literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | compound_lit;
-compound_lit : LBRACE ((IDENT ':' expr ',')*  | (expr ',')*) RBRACE ;
+compound_lit : LBRACE RBRACE | LBRACE ((IDENT ':' expr ',')* (IDENT ':' expr)  | (expr ',')* expr) RBRACE ;
 expr : expr '[' expr ']'  // Array subscript
     | fn_call  // Function call
     | expr '.' (fn_call | IDENT)  // Member access
@@ -53,7 +53,7 @@ typelist : '<' typebound (',' typebound)* '>' ;
 typename : IDENT typelist? ;
 // Identifiers either a concrete type or a set of types that should be deduced to a single type.
 qualifier : 'const'? '*' | '[' int_lit ']';
-type : qualifier* 'const'? (IDENT ('<' type (',' type)* '>')? | builtin_type);
+type : qualifier* 'const'? (IDENT ('<' type (',' type)* '>')?);
 
 // Function related:
 fn_decl : fn_signature ';' ; // Only allowed in interfaces.
@@ -62,7 +62,6 @@ fn_signature : 'fn' typename
 fn_call : type ('()' | '(' expr (',' expr)* ')') ;
 
 // Terminals:
-builtin_type : 'i8' | 'i16' | 'i32' | 'u8' | 'u16' | 'u32' | 'bool' ;
 // Parse << and >> as two separate tokens to allow stuff like vector<vector<T>>.
 binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' '>' | '>' '>' | '<' '<' | '<=' | '>=' | '<' | '>'
     | '==' | '!=' |  '&' | '^' | '|' | '&&' | '||';

@@ -69,8 +69,10 @@ struct Val {
   static ValPtr sub(ValPtr l, ValPtr r);
   static ValPtr lt(ValPtr l, ValPtr r);
   static ValPtr eq(ValPtr l, ValPtr r);
+  static ValPtr neq(ValPtr l, ValPtr r);
   static ValPtr array_access(ValPtr l, ValPtr r);
   static ValPtr preinc(ValPtr l);
+  static ValPtr postinc(ValPtr l);
   static ValPtr addr(const ValPtr& l);
   static ValPtr copy(const ValPtr& l);
   static ValPtr deref(const ValPtr& l);

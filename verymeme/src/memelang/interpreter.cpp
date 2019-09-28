@@ -146,8 +146,10 @@ ValPtr Interpreter::runOp(Op* op) {
   case Expr::SUB: return Val::sub(eval(op->left.get()), eval(op->right.get()));
   case Expr::LT: return Val::lt(eval(op->left.get()), eval(op->right.get()));
   case Expr::EQ: return Val::eq(eval(op->left.get()), eval(op->right.get()));
+  case Expr::NEQ: return Val::neq(eval(op->left.get()), eval(op->right.get()));
   case Expr::ARRAY_ACCESS: return Val::array_access(eval(op->left.get()), eval(op->right.get()));
   case Expr::PREFIX_INC: return Val::preinc(eval(op->left.get()));
+  case Expr::POSTFIX_INC: return Val::preinc(eval(op->left.get()));
   case Expr::UNARY_ADDR: return Val::addr(eval(op->left.get()));
   default: error(op, "unhandled op");
   }
@@ -164,8 +166,7 @@ ValPtr Interpreter::runFor(For* fr) {
 }
 
 ValPtr Interpreter::runWhile(While* wh) {
-  while (std::get<bool>(eval(wh->cond.get())->v))
-    CHECK(runStmtBlk(wh->blk.get()));
+  while (std::get<bool>(eval(wh->cond.get())->v)) CHECK(runStmtBlk(wh->blk.get()));
   return nullptr;
 }
 
@@ -288,6 +289,16 @@ ValPtr Val::eq(ValPtr l, ValPtr r) {
   return std::make_shared<Val>(Val{res, std::make_shared<Type>(Type{.name = BOOL})});
 }
 
+ValPtr Val::neq(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  bool res = std::visit(overloaded{[&r](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    return v != std::get<T>(r->v);  // TODO: assumes same type
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, std::make_shared<Type>(Type{.name = BOOL})});
+}
+
 ValPtr Val::array_access(ValPtr l, ValPtr r) {
   auto& array_val = std::get<ArrayVal>(l->v);
   const int64_t idx = std::get<int32_t>(r->v);  // TODO not only int32 ?
@@ -296,7 +307,6 @@ ValPtr Val::array_access(ValPtr l, ValPtr r) {
 
 ValPtr Val::preinc(ValPtr l) {
   // TODO: Implement for non-integral.
-
   std::visit(overloaded{[](auto&& v) {
     using T = std::decay_t<decltype(v)>;
     if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
@@ -305,6 +315,19 @@ ValPtr Val::preinc(ValPtr l) {
   }},
       l->v);
   return l;
+}
+
+ValPtr Val::postinc(ValPtr l) {
+  auto copy = Val::copy(l);
+  // TODO: Implement for non-integral.
+  std::visit(overloaded{[](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
+    else
+      unimplemented();
+  }},
+      l->v);
+  return copy;
 }
 
 ValPtr Val::addr(const ValPtr& l) {
@@ -363,7 +386,7 @@ ValPtr Interpreter::valFromAstType(memelang::Type* ast_type) {
       new_storage = std::move(arr);
     } else if (qual.ptr) {
       bug_unless(!qual.array && val);
-      unimplemented();
+      new_storage = uintptr_t(0);
     } else {
       // Handle base type.
       bug_unless(!val);
@@ -401,11 +424,10 @@ TypePtr Interpreter::typeFromAstType(memelang::Type* type) {
   for (auto i = type->quals.rbegin(); i != type->quals.rend(); ++i) {
     new_type->quals.emplace_back();
     // TODO not only int32_t
-    new_type->quals.back().array = std::get<int32_t>(eval((*i)->array.get())->v);
+    new_type->quals.back().array = (*i)->array ? std::get<int32_t>(eval((*i)->array.get())->v) : 0;
     new_type->quals.back().ptr = (*i)->ptr;
     new_type->quals.back().cnst = (*i)->cnst;
   }
-
   for (const auto& param : type->params)
     new_type->params.emplace_back(typeFromAstType(param.get()));
   return new_type;

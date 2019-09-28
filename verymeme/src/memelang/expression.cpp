@@ -46,10 +46,6 @@ std::unique_ptr<Node> ExprParser::parse() {
   ExprCtx ec(c_);
   while (!c_.hasTok({Tok::SEMICOLON, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
     const auto* tok = c_.curTok();
-    if (c_.hasTok(BUILTIN_TYPES)) {
-      ec.addExpr(std::make_unique<Type>(c_));
-      continue;
-    }
 
     switch (tok->type) {
     // TODO(progress): handle bitshift, ternary, and types starting with * or lparen.

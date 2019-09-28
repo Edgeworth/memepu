@@ -63,13 +63,6 @@ struct Tok {
     STATIC,
     CONST,
     AUTO,
-    I8,
-    I16,
-    I32,
-    U8,
-    U16,
-    U32,
-    BOOL,
     // Complex tokens
     ASM,
     STR_LIT,
