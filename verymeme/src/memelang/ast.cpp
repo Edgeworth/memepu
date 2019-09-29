@@ -327,15 +327,15 @@ std::vector<Node*> Struct::children() { return flattenChildren(tname, var_decls,
 Impl::Impl(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::IMPL);
   if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
-  tintf = std::make_unique<Typename>(c);
+  tintf = std::make_unique<Type>(c);
   c.consumeTok(Tok::FOR);
-  tname = std::make_unique<Typename>(c);
+  type = std::make_unique<Type>(c);
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) fns.emplace_back(std::make_unique<Fn>(c));
   c.consumeTok(Tok::RBRACE);
 }
 std::string Impl::toString() const { return "Impl"; }
-std::vector<Node*> Impl::children() { return flattenChildren(tlist, tintf, tname, fns); }
+std::vector<Node*> Impl::children() { return flattenChildren(tlist, tintf, type, fns); }
 
 File::File(Parser::Ctx& c) : Node(c) {
   while (c.hasTok()) {
