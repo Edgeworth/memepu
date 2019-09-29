@@ -2,6 +2,7 @@
 #define MEMELANG_INTERPRETER_H
 
 #include <map>
+#include <set>
 #include <variant>
 
 #include "memelang/ast.h"
@@ -11,7 +12,6 @@ namespace memelang::interpreter {
 struct Type;
 struct Val;
 
-using TypePtr = std::shared_ptr<Type>;
 using ValPtr = std::shared_ptr<Val>;
 using PtrVal = uintptr_t;
 using ArrayVal = std::vector<ValPtr>;
@@ -24,8 +24,9 @@ struct Qualifier {
   bool ptr = false;
   bool cnst = false;
 
-  bool operator==(const Qualifier& o) const {
-    return array == o.array && ptr == o.ptr && cnst == o.cnst;
+  bool operator==(const Qualifier& o) const { return !(*this < o) && !(o < *this); }
+  bool operator<(const Qualifier& o) const {
+    return std::tie(array, ptr, cnst) < std::tie(o.array, o.ptr, o.cnst);
   }
 
   std::string toString() const {
@@ -40,17 +41,15 @@ struct Qualifier {
 struct Type {
   std::string name{};
   std::vector<Qualifier> quals{};  // Holds qualifiers from left to right.
-  std::vector<TypePtr> params{};
+  std::vector<const Type*> params{};
 
-  bool operator==(const Type& o) const {
-    if (name != o.name) return false;
-    if (quals != o.quals) return false;
-    if (params.size() != o.params.size()) return false;
-    for (int i = 0; i < int(params.size()); ++i)
-      if (*params[i] != *o.params[i]) return false;
-    return true;
+  bool operator==(const Type& o) const { return !(*this < o) && !(o < *this); }
+  bool operator!=(const Type& o) const { return (*this < o) || (o < *this); }
+  bool operator<(const Type& o) const {
+    if (name != o.name) return name < o.name;
+    if (quals != o.quals) return quals < o.quals;
+    return params < o.params;
   }
-  bool operator!=(const Type& o) const { return !(*this == o); }
 
   std::string toString() const {
     std::string rep = "Type(" + name + "; ";
@@ -60,27 +59,18 @@ struct Type {
   }
 };
 
-// TODO:
 struct Typename {
   std::string name{};
+  std::vector<std::string> tlist{};
+
+  bool operator<(const Typename& o) const {
+    return std::tie(name, tlist) < std::tie(o.name, o.tlist);
+  }
 };
 
 struct Val {
   ValStorage v{};
-  TypePtr type{};
-
-  static ValPtr assign(ValPtr l, ValPtr r);
-  static ValPtr add(ValPtr l, ValPtr r);
-  static ValPtr sub(ValPtr l, ValPtr r);
-  static ValPtr lt(ValPtr l, ValPtr r);
-  static ValPtr eq(ValPtr l, ValPtr r);
-  static ValPtr neq(ValPtr l, ValPtr r);
-  static ValPtr array_access(ValPtr l, ValPtr r);
-  static ValPtr preinc(ValPtr l);
-  static ValPtr postinc(ValPtr l);
-  static ValPtr addr(const ValPtr& l);
-  static ValPtr copy(const ValPtr& l);
-  static ValPtr deref(const ValPtr& l);
+  const Type* type{};
 };
 
 const inline static std::string BOOL = "bool";
@@ -102,11 +92,14 @@ private:
   const FileContents* cts_;
 
   std::vector<std::vector<std::map<std::string, ValPtr>>> vars_;
-  std::map<std::string, ast::Fn*> fns_;
-  std::map<std::string, ast::Enum*> enums_;
-  std::map<std::string, ast::Intf*> intfs_;
-  std::map<std::string, ast::Struct*> structs_;
-  std::map<std::string, ast::Impl*> impls_;
+  std::map<const ast::Type*, const Type*> ast_type_map_;
+  std::set<Type> types_;
+  std::map<Typename, ast::Fn*> fns_;
+  std::map<Typename, ast::Enum*> enums_;
+  std::map<Typename, ast::Intf*> intfs_;
+  std::map<Typename, ast::Struct*> structs_;
+  // Map from a type (may be set) to mapping from interface to the impl.
+  std::map<const Type*, std::map<const Type*, ast::Impl*>> impls_;
 
   ValPtr runFn(ast::Fn* fn);
   ValPtr runStmtBlk(ast::StmtBlk* blk);
@@ -119,18 +112,34 @@ private:
   ValPtr runOp(ast::Op* op);
 
   ValPtr eval(ast::Node* n);
+  ast::Fn* getFn(const Typename& tname, ast::Node* n);
+  ValPtr getVar(const std::string& name, ast::Node* n) const;
+  ValPtr maybeGetVar(const std::string& name) const;
+
   void pushScope();  // Creates new scope-space
   void popScope();
   void nestScope();  // Nests scope inside current scope-space.
   void unnestScope();
-  ast::Fn* getFn(const std::string& name, ast::Node* n);
-  ValPtr getVar(const std::string& name, ast::Node* n) const;
-  ValPtr maybeGetVar(const std::string& name) const;
+  const Type* addType(Type&& t);
+  void error(const std::string& msg, ast::Node* n) const;
 
   ValPtr valFromAstType(ast::Type* type);
-  TypePtr typeFromAstType(ast::Type* ast_type);
+  const Type* typeFromAst(ast::Type* ast_type);
+  Typename typenameFromAst(ast::Typename* ast_typename);
 
-  void error(const std::string& msg, ast::Node* n) const;
+  // Value operations:
+  ValPtr assign(ValPtr l, ValPtr r);
+  ValPtr add(ValPtr l, ValPtr r);
+  ValPtr sub(ValPtr l, ValPtr r);
+  ValPtr lt(ValPtr l, ValPtr r);
+  ValPtr eq(ValPtr l, ValPtr r);
+  ValPtr neq(ValPtr l, ValPtr r);
+  ValPtr array_access(ValPtr l, ValPtr r);
+  ValPtr preinc(ValPtr l);
+  ValPtr postinc(ValPtr l);
+  ValPtr addr(const ValPtr& l);
+  ValPtr copy(const ValPtr& l);
+  ValPtr deref(const ValPtr& l);
 };
 
 }  // namespace memelang::interpreter

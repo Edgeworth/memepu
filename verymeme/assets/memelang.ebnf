@@ -6,7 +6,7 @@ intf_defn : 'intf' typename intf_blk ;
 struct_defn : 'struct' typename struct_blk ;
 fn_defn : fn_signature stmt_blk ;
 enum_defn : 'enum' typename enum_blk ;
-impl_defn : 'impl' typelist? typename 'for' typename impl_blk ;
+impl_defn : 'impl' typelist? type 'for' type impl_blk ;
 
 // Block related:
 stmt_blk : LBRACE stmt* RBRACE ;
