@@ -7,7 +7,7 @@
 #include "memelang/tokeniser.h"
 #include "verymeme/string_util.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 using fmt = boost::format;
 
@@ -85,8 +85,7 @@ std::vector<Node*> VarRef::children() { return {}; }
 Typelist::Typelist(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LANGLE);
   while (true) {
-    if (!c.hasTok(Tok::IDENT))
-      c.compileError("typelist must contain type");
+    if (!c.hasTok(Tok::IDENT)) c.compileError("typelist must contain type");
     names.push_back(c.consumeTok()->str_val);
     if (c.hasTok(Tok::COMMA)) c.consumeTok();
     else
@@ -330,13 +329,13 @@ Impl::Impl(Parser::Ctx& c) : Node(c) {
   if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
   tintf = std::make_unique<Typename>(c);
   c.consumeTok(Tok::FOR);
-  tstruct = std::make_unique<Typename>(c);
+  tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) fns.emplace_back(std::make_unique<Fn>(c));
   c.consumeTok(Tok::RBRACE);
 }
 std::string Impl::toString() const { return "Impl"; }
-std::vector<Node*> Impl::children() { return flattenChildren(tlist, tintf, tstruct, fns); }
+std::vector<Node*> Impl::children() { return flattenChildren(tlist, tintf, tname, fns); }
 
 File::File(Parser::Ctx& c) : Node(c) {
   while (c.hasTok()) {
@@ -353,4 +352,4 @@ File::File(Parser::Ctx& c) : Node(c) {
 std::string File::toString() const { return "File"; }
 std::vector<Node*> File::children() { return flattenChildren(fns, enums, intfs, structs); }
 
-}  // namespace memelang
+}  // namespace memelang::ast

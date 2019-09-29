@@ -10,7 +10,7 @@ intf Comparable<T> {
 
 impl Comparable<i32> for u8 {
   fn neq(o: *i32) bool {
-    return *this != *o;
+    return i32(*this) != *o;
   }
 }
 
