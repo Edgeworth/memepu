@@ -7,7 +7,7 @@
 #include "verymeme/string_util.h"
 #include "verymeme/util.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 using fmt = boost::format;
 
@@ -45,11 +45,9 @@ void Parser::collectTypeIdents() {
   c_->reset();
 }
 
-Parser::Ctx::Ctx(const FileContents* cts, const std::vector<Tok>& tokens)
-    : cts(cts), toks_() {
+Parser::Ctx::Ctx(const FileContents* cts, const std::vector<Tok>& tokens) : cts(cts) {
   for (const auto& tok : tokens) {
-    if (tok.type != Tok::COMMENT)
-      toks_.push_back(tok);
+    if (tok.type != Tok::COMMENT) toks_.push_back(tok);
   }
   type_idents.insert({"bool", "i8", "i16", "i32", "i64", "u8", "u16", "u32", "u64", "f32", "f64"});
 }
@@ -98,4 +96,4 @@ bool Parser::Ctx::maybeConsumeTok(Tok::Type type) {
   return false;
 }
 
-}  // namespace memelang
+}  // namespace memelang::ast

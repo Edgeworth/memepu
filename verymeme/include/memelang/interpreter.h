@@ -60,6 +60,11 @@ struct Type {
   }
 };
 
+// TODO:
+struct Typename {
+  std::string name{};
+};
+
 struct Val {
   ValStorage v{};
   TypePtr type{};
@@ -88,39 +93,44 @@ const inline static std::string U32 = "u32";
 
 class Interpreter {
 public:
-  Interpreter(File* file, const FileContents* cts);
+  Interpreter(ast::File* file, const FileContents* cts);
 
   void run();
 
 private:
-  File* f_;
+  ast::File* f_;
   const FileContents* cts_;
-  std::unordered_map<std::string, Fn*> fns_;
+
   std::vector<std::vector<std::map<std::string, ValPtr>>> vars_;
+  std::map<std::string, ast::Fn*> fns_;
+  std::map<std::string, ast::Enum*> enums_;
+  std::map<std::string, ast::Intf*> intfs_;
+  std::map<std::string, ast::Struct*> structs_;
+  std::map<std::string, ast::Impl*> impls_;
 
-  ValPtr runFn(Fn* fn);
-  ValPtr runStmtBlk(StmtBlk* blk);
-  ValPtr runStmt(Node* stmt);
-  void runVarDefn(VarDefn* defn);
-  ValPtr runVarDecl(VarDecl* decl);
-  ValPtr runFor(For* fr);
-  ValPtr runWhile(While* wh);
-  ValPtr runIf(If* ifst);
-  ValPtr runOp(Op* op);
+  ValPtr runFn(ast::Fn* fn);
+  ValPtr runStmtBlk(ast::StmtBlk* blk);
+  ValPtr runStmt(ast::Node* stmt);
+  void runVarDefn(ast::VarDefn* defn);
+  ValPtr runVarDecl(ast::VarDecl* decl);
+  ValPtr runFor(ast::For* fr);
+  ValPtr runWhile(ast::While* wh);
+  ValPtr runIf(ast::If* ifst);
+  ValPtr runOp(ast::Op* op);
 
-  ValPtr eval(Node* n);
+  ValPtr eval(ast::Node* n);
   void pushScope();  // Creates new scope-space
   void popScope();
   void nestScope();  // Nests scope inside current scope-space.
   void unnestScope();
-  Fn* getFn(Node* n, const std::string& name);
-  ValPtr getVar(Node* n, const std::string& name) const;
+  ast::Fn* getFn(const std::string& name, ast::Node* n);
+  ValPtr getVar(const std::string& name, ast::Node* n) const;
   ValPtr maybeGetVar(const std::string& name) const;
 
-  ValPtr valFromAstType(memelang::Type* type);
-  TypePtr typeFromAstType(memelang::Type* ast_type);
+  ValPtr valFromAstType(ast::Type* type);
+  TypePtr typeFromAstType(ast::Type* ast_type);
 
-  void error(Node* n, const std::string& msg) const;
+  void error(const std::string& msg, ast::Node* n) const;
 };
 
 }  // namespace memelang::interpreter

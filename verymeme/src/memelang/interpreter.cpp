@@ -22,6 +22,7 @@ T* g(std::unique_ptr<R>& n) {
 
 }  // namespace
 
+// See if the expression contains a return statement, and return it if it returns.
 #define CHECK(expr) \
   do { \
     auto val = (expr); \
@@ -31,8 +32,7 @@ T* g(std::unique_ptr<R>& n) {
     } \
   } while (0)
 
-Interpreter::Interpreter(memelang::File* file, const memelang::FileContents* cts)
-    : f_(file), cts_(cts) {}
+Interpreter::Interpreter(ast::File* file, const FileContents* cts) : f_(file), cts_(cts) {}
 
 void Interpreter::run() {
   printf("===BEGIN PROGRAM===\n");
@@ -40,63 +40,70 @@ void Interpreter::run() {
     // TODO: typelist / fn selection
     fns_[fn->sig->tname->name] = fn.get();
   }
+  // TODO:
+  for (auto& enm : f_->enums) {}
+  for (auto& intf : f_->intfs) {}
+  for (auto& strct : f_->structs) {}
+  for (auto& impl : f_->impls) {}
+
   pushScope();
-  runFn(getFn(nullptr, "main"));
+  runFn(getFn("main", nullptr));
   popScope();
+  printf("===END PROGRAM===\n");
 }
 
-ValPtr Interpreter::runFn(Fn* fn) { return runStmtBlk(fn->blk.get()); }
+ValPtr Interpreter::runFn(ast::Fn* fn) { return runStmtBlk(fn->blk.get()); }
 
-ValPtr Interpreter::runStmtBlk(StmtBlk* blk) {
+ValPtr Interpreter::runStmtBlk(ast::StmtBlk* blk) {
   nestScope();
   for (auto& stmt : blk->stmts) CHECK(runStmt(stmt.get()));
   unnestScope();
   return nullptr;
 }
 
-ValPtr Interpreter::runStmt(Node* stmt) {
-  if (typeid(*stmt) == typeid(VarDefn)) {
-    runVarDefn(g<VarDefn>(stmt));
-  } else if (typeid(*stmt) == typeid(VarDecl)) {
-    return runVarDecl(g<VarDecl>(stmt));
-  } else if (typeid(*stmt) == typeid(Op)) {
-    return runOp(g<Op>(stmt));
-  } else if (typeid(*stmt) == typeid(For)) {
-    return runFor(g<For>(stmt));
-  } else if (typeid(*stmt) == typeid(While)) {
-    return runWhile(g<While>(stmt));
-  } else if (typeid(*stmt) == typeid(Return)) {
-    return eval(g<Return>(stmt)->ret.get());
-  } else if (typeid(*stmt) == typeid(If)) {
-    return runIf(g<If>(stmt));
+ValPtr Interpreter::runStmt(ast::Node* stmt) {
+  if (typeid(*stmt) == typeid(ast::VarDefn)) {
+    runVarDefn(g<ast::VarDefn>(stmt));
+  } else if (typeid(*stmt) == typeid(ast::VarDecl)) {
+    return runVarDecl(g<ast::VarDecl>(stmt));
+  } else if (typeid(*stmt) == typeid(ast::Op)) {
+    return runOp(g<ast::Op>(stmt));
+  } else if (typeid(*stmt) == typeid(ast::For)) {
+    return runFor(g<ast::For>(stmt));
+  } else if (typeid(*stmt) == typeid(ast::While)) {
+    return runWhile(g<ast::While>(stmt));
+  } else if (typeid(*stmt) == typeid(ast::Return)) {
+    return eval(g<ast::Return>(stmt)->ret.get());
+  } else if (typeid(*stmt) == typeid(ast::If)) {
+    return runIf(g<ast::If>(stmt));
   } else {
-    error(stmt, "unimplemented statement " + stmt->toString());
+    error("unimplemented statement " + stmt->toString(), stmt);
   }
   return nullptr;
 }
 
-void Interpreter::runVarDefn(VarDefn* defn) {
+void Interpreter::runVarDefn(ast::VarDefn* defn) {
   auto var = runVarDecl(defn->decl.get());
   if (defn->defn) Val::assign(var, eval(defn->defn.get()));
 }
 
-ValPtr Interpreter::runVarDecl(VarDecl* decl) {
+ValPtr Interpreter::runVarDecl(ast::VarDecl* decl) {
   const auto& name = decl->ref->name;
-  if (maybeGetVar(name)) error(decl, "redeclaration of var " + name);
+  if (maybeGetVar(name)) error("redeclaration of var " + name, decl);
   vars_.back().back()[name] = valFromAstType(decl->type.get());
   return vars_.back().back()[name];
 }
 
-ValPtr Interpreter::runOp(Op* op) {
+ValPtr Interpreter::runOp(ast::Op* op) {
   switch (op->type) {
-  case Expr::FN_CALL: {
-    if (typeid(*(op->left.get())) != typeid(VarRef))
+  case ast::Expr::FN_CALL: {
+    if (typeid(*(op->left.get())) != typeid(ast::VarRef))
       return std::make_shared<Val>();  // TODO don't skip types
-    auto* call = g<VarRef>(op->left);  // TODO can be type.
-    auto* args = g<FnCallArgs>(op->right);
+    auto* call = g<ast::VarRef>(op->left);  // TODO can be type.
+    auto* args = g<ast::FnCallArgs>(op->right);
     if (call->name == "printf") {
-      if (args->args.empty()) error(op, "printf requires at least 1 argument");
-      boost::format fmt = boost::format(g<StrLit>(args->args[0])->val);
+      if (args->args.empty()) error("printf requires at least 1 argument", op);
+      boost::format fmt = boost::format(g<ast::StrLit>(args->args[0])->val);
       // TODO(progress): Support other than int vars.
       for (int i = 1; i < int(args->args.size()); ++i)
         std::visit(overloaded{[&fmt](auto&& v) {
@@ -113,13 +120,13 @@ ValPtr Interpreter::runOp(Op* op) {
       // TODO: Return proper value.
       return nullptr;
     } else if (call->name == "readf") {
-      if (args->args.size() != 2) error(op, "readf requires 2 arguments");
+      if (args->args.size() != 2) error("readf requires 2 arguments", op);
       auto read_ptr = eval(args->args[0].get());
       auto read_sz = eval(args->args[1].get());
       if (*read_ptr->type != Type{.name = U8, .quals = {{}, {.ptr = true}}})
-        error(op, "wrong type: " + read_ptr->type->toString());
+        error("wrong type: " + read_ptr->type->toString(), op);
       if (*read_sz->type != Type{.name = I32})  // TODO: require U32.
-        error(op, "wrong type: " + read_sz->type->toString());
+        error("wrong type: " + read_sz->type->toString(), op);
       std::cin.getline(
           reinterpret_cast<char*>(std::get<uintptr_t>(read_ptr->v)), std::get<int32_t>(read_sz->v));
 
@@ -130,33 +137,34 @@ ValPtr Interpreter::runOp(Op* op) {
     std::vector<std::shared_ptr<Val>> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
     pushScope();
-    auto* fn = getFn(call, call->name);
-    if (fn->sig->params.size() != params.size()) error(op, "wrong number of arguments");
+    auto* fn = getFn(call->name, call);
+    if (fn->sig->params.size() != params.size()) error("wrong number of arguments", op);
     for (int i = 0; i < int(fn->sig->params.size()); ++i) {
       auto& decl = fn->sig->params[i];
       runStmt(decl.get());
-      Val::assign(getVar(decl->ref.get(), decl->ref->name), params[i]);
+      Val::assign(getVar(decl->ref->name, decl->ref.get()), params[i]);
     }
     auto val = runFn(fn);
     popScope();
     return val;
   }
-  case Expr::ASSIGNMENT: return Val::assign(eval(op->left.get()), eval(op->right.get()));
-  case Expr::ADD: return Val::add(eval(op->left.get()), eval(op->right.get()));
-  case Expr::SUB: return Val::sub(eval(op->left.get()), eval(op->right.get()));
-  case Expr::LT: return Val::lt(eval(op->left.get()), eval(op->right.get()));
-  case Expr::EQ: return Val::eq(eval(op->left.get()), eval(op->right.get()));
-  case Expr::NEQ: return Val::neq(eval(op->left.get()), eval(op->right.get()));
-  case Expr::ARRAY_ACCESS: return Val::array_access(eval(op->left.get()), eval(op->right.get()));
-  case Expr::PREFIX_INC: return Val::preinc(eval(op->left.get()));
-  case Expr::POSTFIX_INC: return Val::preinc(eval(op->left.get()));
-  case Expr::UNARY_ADDR: return Val::addr(eval(op->left.get()));
-  default: error(op, "unhandled op");
+  case ast::Expr::ASSIGNMENT: return Val::assign(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::ADD: return Val::add(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::SUB: return Val::sub(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::LT: return Val::lt(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::EQ: return Val::eq(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::NEQ: return Val::neq(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::ARRAY_ACCESS:
+    return Val::array_access(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::PREFIX_INC: return Val::preinc(eval(op->left.get()));
+  case ast::Expr::POSTFIX_INC: return Val::preinc(eval(op->left.get()));
+  case ast::Expr::UNARY_ADDR: return Val::addr(eval(op->left.get()));
+  default: error("unhandled op", op);
   }
   return nullptr;
 }
 
-ValPtr Interpreter::runFor(For* fr) {
+ValPtr Interpreter::runFor(ast::For* fr) {
   runVarDefn(fr->var_defn.get());
   while (std::get<bool>(eval(fr->cond.get())->v)) {
     CHECK(runStmtBlk(fr->blk.get()));
@@ -165,30 +173,30 @@ ValPtr Interpreter::runFor(For* fr) {
   return nullptr;
 }
 
-ValPtr Interpreter::runWhile(While* wh) {
+ValPtr Interpreter::runWhile(ast::While* wh) {
   while (std::get<bool>(eval(wh->cond.get())->v)) CHECK(runStmtBlk(wh->blk.get()));
   return nullptr;
 }
 
-ValPtr Interpreter::runIf(If* ifst) {
+ValPtr Interpreter::runIf(ast::If* ifst) {
   if (std::get<bool>(eval(ifst->cond.get())->v)) CHECK(runStmtBlk(ifst->then.get()));
   else if (ifst->els)
     CHECK(runStmtBlk(ifst->els.get()));
   return nullptr;
 }
 
-ValPtr Interpreter::eval(Node* n) {
-  if (typeid(*n) == typeid(Op)) return runOp(g<Op>(n));
-  if (typeid(*n) == typeid(VarRef)) return getVar(n, g<VarRef>(n)->name);
-  if (typeid(*n) == typeid(IntLit))
-    return std::make_shared<Val>(
-        Val{.v = int32_t(g<IntLit>(n)->val), .type = std::make_shared<Type>(Type{.name = I32})});
-  if (typeid(*n) == typeid(CompoundLit)) {
-    auto* lit = g<CompoundLit>(n);
+ValPtr Interpreter::eval(ast::Node* n) {
+  if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
+  if (typeid(*n) == typeid(ast::VarRef)) return getVar(g<ast::VarRef>(n)->name, n);
+  if (typeid(*n) == typeid(ast::IntLit))
+    return std::make_shared<Val>(Val{
+        .v = int32_t(g<ast::IntLit>(n)->val), .type = std::make_shared<Type>(Type{.name = I32})});
+  if (typeid(*n) == typeid(ast::CompoundLit)) {
+    auto* lit = g<ast::CompoundLit>(n);
     // TODO set value
     return std::make_shared<Val>(Val{.type = nullptr});  // nullptr for deduced type
   }
-  error(n, "unimplemented eval node " + n->toString());
+  error("unimplemented eval node " + n->toString(), n);
   return nullptr;
 }
 
@@ -209,14 +217,14 @@ void Interpreter::unnestScope() {
   vars_.back().pop_back();
 }
 
-Fn* Interpreter::getFn(Node* n, const std::string& name) {
-  if (!fns_.count(name)) error(n, "no function " + name);
+ast::Fn* Interpreter::getFn(const std::string& name, ast::Node* n) {
+  if (!fns_.count(name)) error("no function " + name, n);
   return fns_[name];
 }
 
-ValPtr Interpreter::getVar(Node* n, const std::string& name) const {
+ValPtr Interpreter::getVar(const std::string& name, ast::Node* n) const {
   auto val = maybeGetVar(name);
-  if (!val) error(n, "undeclared variable " + name);
+  if (!val) error("undeclared variable " + name, n);
   return val;
 }
 
@@ -229,7 +237,7 @@ ValPtr Interpreter::maybeGetVar(const std::string& name) const {
   return nullptr;
 }
 
-void Interpreter::error(Node* n, const std::string& msg) const {
+void Interpreter::error(const std::string& msg, ast::Node* n) const {
   if (n)
     verify_expr(false, "error at '%s' (%d:%d): %s", cts_->getSpan(n->tok.loc, n->tok.size).c_str(),
         cts_->getLineNumber(n->tok.loc), cts_->getColNumber(n->tok.loc), msg.c_str());
@@ -366,7 +374,7 @@ ValPtr Val::deref(const ValPtr& l) {
   return std::make_shared<Val>(Val{new_storage, new_type});
 }
 
-ValPtr Interpreter::valFromAstType(memelang::Type* ast_type) {
+ValPtr Interpreter::valFromAstType(ast::Type* ast_type) {
   auto type = typeFromAstType(ast_type);
   std::vector<Qualifier> partial_quals;
   ValPtr val;
@@ -414,7 +422,7 @@ ValPtr Interpreter::valFromAstType(memelang::Type* ast_type) {
   return val;
 }
 
-TypePtr Interpreter::typeFromAstType(memelang::Type* type) {
+TypePtr Interpreter::typeFromAstType(ast::Type* type) {
   auto new_type = std::make_shared<Type>();
   new_type->name = type->name;
   new_type->quals.emplace_back();  // Put one qualifier to hold const for the main type.

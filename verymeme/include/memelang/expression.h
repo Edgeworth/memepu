@@ -4,7 +4,7 @@
 #include "memelang/ast.h"
 #include "memelang/parser.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 class ExprParser {
 public:
@@ -37,6 +37,6 @@ private:
   };
 };
 
-}  // namespace memelang
+}  // namespace memelang::ast
 
 #endif  // MEMELANG_EXPRESSION_H

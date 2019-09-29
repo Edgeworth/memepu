@@ -2,7 +2,7 @@
 
 #include "verymeme/util.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 namespace {
 
@@ -166,4 +166,4 @@ void ExprParser::ExprCtx::collapseOps(
   if (expr.size() != 1 && !ops.empty()) c_.compileError("error in expression");
 }
 
-}  // namespace memelang
+}  // namespace memelang::ast
