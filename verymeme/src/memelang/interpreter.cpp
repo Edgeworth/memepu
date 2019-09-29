@@ -38,16 +38,28 @@ void Interpreter::run() {
   printf("===BEGIN PROGRAM===\n");
   for (auto& fn : f_->fns) {
     // TODO: typelist / fn selection
-    fns_[fn->sig->tname->name] = fn.get();
+    fns_[typenameFromAst(fn->sig->tname.get())] = fn.get();
   }
-  // TODO:
-  for (auto& enm : f_->enums) {}
-  for (auto& intf : f_->intfs) {}
-  for (auto& strct : f_->structs) {}
-  for (auto& impl : f_->impls) {}
+  for (auto& enm : f_->enums) {
+    if (!enums_.emplace(typenameFromAst(enm->tname.get()), enm.get()).second)
+      error("duplicate enum definition", enm.get());
+  }
+  for (auto& intf : f_->intfs) {
+    if (!intfs_.emplace(typenameFromAst(intf->tname.get()), intf.get()).second)
+      error("duplicate interface definition", intf.get());
+  }
+  for (auto& strct : f_->structs) {
+    if (!structs_.emplace(typenameFromAst(strct->tname.get()), strct.get()).second)
+      error("duplicate struct definition", strct.get());
+  }
+  for (auto& impl : f_->impls) {
+    auto impl_type = typeFromAst(impl->type.get());
+    if (!impls_[impl_type].emplace(typeFromAst(impl->tintf.get()), impl.get()).second)
+      error("duplicate implementation for (type, interface specialisation) pair", impl.get());
+  }
 
   pushScope();
-  runFn(getFn("main", nullptr));
+  runFn(getFn(Typename{.name = "main"}, nullptr));
   popScope();
   printf("===END PROGRAM===\n");
 }
@@ -84,7 +96,7 @@ ValPtr Interpreter::runStmt(ast::Node* stmt) {
 
 void Interpreter::runVarDefn(ast::VarDefn* defn) {
   auto var = runVarDecl(defn->decl.get());
-  if (defn->defn) Val::assign(var, eval(defn->defn.get()));
+  if (defn->defn) assign(var, eval(defn->defn.get()));
 }
 
 ValPtr Interpreter::runVarDecl(ast::VarDecl* decl) {
@@ -131,34 +143,33 @@ ValPtr Interpreter::runOp(ast::Op* op) {
           reinterpret_cast<char*>(std::get<uintptr_t>(read_ptr->v)), std::get<int32_t>(read_sz->v));
 
       return std::make_shared<Val>(
-          Val{.v = int32_t(std::cin.gcount()), .type = std::make_shared<Type>(Type{.name = I32})});
+          Val{.v = int32_t(std::cin.gcount()), .type = addType({.name = I32})});
     }
 
     std::vector<std::shared_ptr<Val>> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
     pushScope();
-    auto* fn = getFn(call->name, call);
+    auto* fn = getFn(Typename{.name = call->name}, call);
     if (fn->sig->params.size() != params.size()) error("wrong number of arguments", op);
     for (int i = 0; i < int(fn->sig->params.size()); ++i) {
       auto& decl = fn->sig->params[i];
       runStmt(decl.get());
-      Val::assign(getVar(decl->ref->name, decl->ref.get()), params[i]);
+      assign(getVar(decl->ref->name, decl->ref.get()), params[i]);
     }
     auto val = runFn(fn);
     popScope();
     return val;
   }
-  case ast::Expr::ASSIGNMENT: return Val::assign(eval(op->left.get()), eval(op->right.get()));
-  case ast::Expr::ADD: return Val::add(eval(op->left.get()), eval(op->right.get()));
-  case ast::Expr::SUB: return Val::sub(eval(op->left.get()), eval(op->right.get()));
-  case ast::Expr::LT: return Val::lt(eval(op->left.get()), eval(op->right.get()));
-  case ast::Expr::EQ: return Val::eq(eval(op->left.get()), eval(op->right.get()));
-  case ast::Expr::NEQ: return Val::neq(eval(op->left.get()), eval(op->right.get()));
-  case ast::Expr::ARRAY_ACCESS:
-    return Val::array_access(eval(op->left.get()), eval(op->right.get()));
-  case ast::Expr::PREFIX_INC: return Val::preinc(eval(op->left.get()));
-  case ast::Expr::POSTFIX_INC: return Val::preinc(eval(op->left.get()));
-  case ast::Expr::UNARY_ADDR: return Val::addr(eval(op->left.get()));
+  case ast::Expr::ASSIGNMENT: return assign(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::ADD: return add(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::SUB: return sub(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::LT: return lt(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::EQ: return eq(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::NEQ: return neq(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::ARRAY_ACCESS: return array_access(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::PREFIX_INC: return preinc(eval(op->left.get()));
+  case ast::Expr::POSTFIX_INC: return preinc(eval(op->left.get()));
+  case ast::Expr::UNARY_ADDR: return addr(eval(op->left.get()));
   default: error("unhandled op", op);
   }
   return nullptr;
@@ -189,14 +200,34 @@ ValPtr Interpreter::eval(ast::Node* n) {
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
   if (typeid(*n) == typeid(ast::VarRef)) return getVar(g<ast::VarRef>(n)->name, n);
   if (typeid(*n) == typeid(ast::IntLit))
-    return std::make_shared<Val>(Val{
-        .v = int32_t(g<ast::IntLit>(n)->val), .type = std::make_shared<Type>(Type{.name = I32})});
+    return std::make_shared<Val>(
+        Val{.v = int32_t(g<ast::IntLit>(n)->val), .type = addType({.name = I32})});
   if (typeid(*n) == typeid(ast::CompoundLit)) {
     auto* lit = g<ast::CompoundLit>(n);
     // TODO set value
     return std::make_shared<Val>(Val{.type = nullptr});  // nullptr for deduced type
   }
   error("unimplemented eval node " + n->toString(), n);
+  return nullptr;
+}
+
+ast::Fn* Interpreter::getFn(const Typename& tname, ast::Node* n) {
+  if (!fns_.count(tname)) error("no function " + tname.name, n);
+  return fns_[tname];
+}
+
+ValPtr Interpreter::getVar(const std::string& name, ast::Node* n) const {
+  auto val = maybeGetVar(name);
+  if (!val) error("undeclared variable " + name, n);
+  return val;
+}
+
+ValPtr Interpreter::maybeGetVar(const std::string& name) const {
+  bug_unless(!vars_.empty());
+  for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
+    auto iter = scope_iter->find(name);
+    if (iter != scope_iter->end()) return iter->second;
+  }
   return nullptr;
 }
 
@@ -217,179 +248,24 @@ void Interpreter::unnestScope() {
   vars_.back().pop_back();
 }
 
-ast::Fn* Interpreter::getFn(const std::string& name, ast::Node* n) {
-  if (!fns_.count(name)) error("no function " + name, n);
-  return fns_[name];
-}
-
-ValPtr Interpreter::getVar(const std::string& name, ast::Node* n) const {
-  auto val = maybeGetVar(name);
-  if (!val) error("undeclared variable " + name, n);
-  return val;
-}
-
-ValPtr Interpreter::maybeGetVar(const std::string& name) const {
-  bug_unless(!vars_.empty());
-  for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
-    auto iter = scope_iter->find(name);
-    if (iter != scope_iter->end()) return iter->second;
-  }
-  return nullptr;
-}
-
-void Interpreter::error(const std::string& msg, ast::Node* n) const {
-  if (n)
-    verify_expr(false, "error at '%s' (%d:%d): %s", cts_->getSpan(n->tok.loc, n->tok.size).c_str(),
-        cts_->getLineNumber(n->tok.loc), cts_->getColNumber(n->tok.loc), msg.c_str());
-  else
-    verify_expr(false, "error: %s", msg.c_str());
-}
-
-ValPtr Val::assign(ValPtr l, ValPtr r) {
-  auto cpy = Val::copy(r);  // Deep copy.
-  l->v = cpy->v;
-  l->type = cpy->type;
-  return l;
-}
-
-ValPtr Val::add(ValPtr l, ValPtr r) {
-  // TODO: Need to look at type, not variant.
-  // TODO: Implement for non-integral.
-  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value) return v + std::get<T>(r->v);
-    unimplemented();
-    return 0;
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, std::make_shared<Type>(*l->type)});
-}
-
-ValPtr Val::sub(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value) return v - std::get<T>(r->v);
-    unimplemented();
-    return 0;
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, std::make_shared<Type>(*l->type)});
-}
-
-ValPtr Val::lt(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  bool res = std::visit(overloaded{[&r](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    return v < std::get<T>(r->v);
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, std::make_shared<Type>(Type{.name = BOOL})});
-}
-
-ValPtr Val::eq(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  bool res = std::visit(overloaded{[&r](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    return v == std::get<T>(r->v);
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, std::make_shared<Type>(Type{.name = BOOL})});
-}
-
-ValPtr Val::neq(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  bool res = std::visit(overloaded{[&r](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    return v != std::get<T>(r->v);  // TODO: assumes same type
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, std::make_shared<Type>(Type{.name = BOOL})});
-}
-
-ValPtr Val::array_access(ValPtr l, ValPtr r) {
-  auto& array_val = std::get<ArrayVal>(l->v);
-  const int64_t idx = std::get<int32_t>(r->v);  // TODO not only int32 ?
-  return array_val[idx];
-}
-
-ValPtr Val::preinc(ValPtr l) {
-  // TODO: Implement for non-integral.
-  std::visit(overloaded{[](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
-    else
-      unimplemented();
-  }},
-      l->v);
-  return l;
-}
-
-ValPtr Val::postinc(ValPtr l) {
-  auto copy = Val::copy(l);
-  // TODO: Implement for non-integral.
-  std::visit(overloaded{[](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
-    else
-      unimplemented();
-  }},
-      l->v);
-  return copy;
-}
-
-ValPtr Val::addr(const ValPtr& l) {
-  auto new_type = std::make_shared<Type>(*l->type);
-  new_type->quals.emplace_back();
-  new_type->quals.back().ptr = true;
-  auto new_value = std::make_shared<Val>();
-  new_value->v = reinterpret_cast<uintptr_t>(l.get());
-  new_value->type = new_type;
-  return new_value;
-}
-
-ValPtr Val::copy(const ValPtr& l) {
-  auto new_storage = std::visit(overloaded{[](auto&& v) -> ValStorage {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value) return v;
-    else if constexpr (std::is_same_v<T, ArrayVal>) {
-      ArrayVal arr;
-      for (auto& item : v) arr.emplace_back(Val::copy(item));
-      return arr;
-    } else {
-      StructVal strct;
-      for (auto& kv : v) strct[kv.first] = Val::copy(kv.second);
-      return strct;
-    }
-  }},
-      l->v);
-
-  auto new_type = std::make_shared<Type>(*l->type);
-  return std::make_shared<Val>(Val{new_storage, new_type});
-}
-
-ValPtr Val::deref(const ValPtr& l) {
-  auto new_storage = ValStorage{};
-  auto new_type = std::make_shared<Type>(*l->type);
-  return std::make_shared<Val>(Val{new_storage, new_type});
-}
+const Type* Interpreter::addType(Type&& t) { return &*types_.insert(std::move(t)).first; }
 
 ValPtr Interpreter::valFromAstType(ast::Type* ast_type) {
-  auto type = typeFromAstType(ast_type);
+  auto type = typeFromAst(ast_type);
   std::vector<Qualifier> partial_quals;
   ValPtr val;
   for (const auto& qual : type->quals) {
     partial_quals.emplace_back(qual);
     ValStorage new_storage;
-    auto new_type = std::make_shared<Type>(
-        Type{.name = type->name, .quals = partial_quals, .params = type->params});
+    const auto* new_type =
+        addType({.name = type->name, .quals = partial_quals, .params = type->params});
 
     // Qualifiers only hold one bit of info.
     bug_unless(!(qual.array && qual.ptr));
     if (qual.array) {
       bug_unless(!qual.ptr && val);
       ArrayVal arr;
-      for (int idx = 0; idx < qual.array - 1; ++idx) arr.emplace_back(Val::copy(val));
+      for (int idx = 0; idx < qual.array - 1; ++idx) arr.emplace_back(copy(val));
       arr.emplace_back(std::move(val));
       new_storage = std::move(arr);
     } else if (qual.ptr) {
@@ -417,28 +293,169 @@ ValPtr Interpreter::valFromAstType(ast::Type* ast_type) {
       }
     }
 
-    val = std::make_shared<Val>(Val{std::move(new_storage), std::move(new_type)});
+    val = std::make_shared<Val>(Val{std::move(new_storage), new_type});
   }
   return val;
 }
 
-TypePtr Interpreter::typeFromAstType(ast::Type* type) {
-  auto new_type = std::make_shared<Type>();
-  new_type->name = type->name;
-  new_type->quals.emplace_back();  // Put one qualifier to hold const for the main type.
-  new_type->quals.back().cnst = type->cnst;
+const Type* Interpreter::typeFromAst(ast::Type* ast_type) {
+  if (ast_type_map_.count(ast_type)) return ast_type_map_[ast_type];
+
+  Type new_type;
+  new_type.name = ast_type->name;
+  new_type.quals.emplace_back();  // Put one qualifier to hold const for the main type.
+  new_type.quals.back().cnst = ast_type->cnst;
 
   // Look through qualifiers reversed.
-  for (auto i = type->quals.rbegin(); i != type->quals.rend(); ++i) {
-    new_type->quals.emplace_back();
+  for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
+    new_type.quals.emplace_back();
     // TODO not only int32_t
-    new_type->quals.back().array = (*i)->array ? std::get<int32_t>(eval((*i)->array.get())->v) : 0;
-    new_type->quals.back().ptr = (*i)->ptr;
-    new_type->quals.back().cnst = (*i)->cnst;
+    new_type.quals.back().array = (*i)->array ? std::get<int32_t>(eval((*i)->array.get())->v) : 0;
+    new_type.quals.back().ptr = (*i)->ptr;
+    new_type.quals.back().cnst = (*i)->cnst;
   }
-  for (const auto& param : type->params)
-    new_type->params.emplace_back(typeFromAstType(param.get()));
-  return new_type;
+  for (const auto& param : ast_type->params) new_type.params.emplace_back(typeFromAst(param.get()));
+
+  ast_type_map_[ast_type] = addType(std::move(new_type));
+  return ast_type_map_[ast_type];
 }
+
+Typename Interpreter::typenameFromAst(ast::Typename* ast_typename) {
+  auto tname = Typename{.name = ast_typename->name};
+  if (ast_typename->tlist) tname.tlist = ast_typename->tlist->names;
+  return tname;
+}
+
+void Interpreter::error(const std::string& msg, ast::Node* n) const {
+  if (n)
+    verify_expr(false, "error at '%s' (%d:%d): %s", cts_->getSpan(n->tok.loc, n->tok.size).c_str(),
+        cts_->getLineNumber(n->tok.loc), cts_->getColNumber(n->tok.loc), msg.c_str());
+  else
+    verify_expr(false, "error: %s", msg.c_str());
+}
+
+ValPtr Interpreter::assign(ValPtr l, ValPtr r) {
+  auto cpy = copy(r);  // Deep copy.
+  l->v = cpy->v;
+  l->type = cpy->type;
+  return l;
+}
+
+ValPtr Interpreter::add(ValPtr l, ValPtr r) {
+  // TODO: Need to look at type, not variant.
+  // TODO: Implement for non-integral.
+  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value) return v + std::get<T>(r->v);
+    unimplemented();
+    return 0;
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, l->type});
+}
+
+ValPtr Interpreter::sub(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value) return v - std::get<T>(r->v);
+    unimplemented();
+    return 0;
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, l->type});
+}
+
+ValPtr Interpreter::lt(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  bool res = std::visit(overloaded{[&r](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    return v < std::get<T>(r->v);
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, addType({.name = BOOL})});
+}
+
+ValPtr Interpreter::eq(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  bool res = std::visit(overloaded{[&r](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    return v == std::get<T>(r->v);
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, addType({.name = BOOL})});
+}
+
+ValPtr Interpreter::neq(ValPtr l, ValPtr r) {
+  // TODO: Implement for non-integral.
+  bool res = std::visit(overloaded{[&r](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    return v != std::get<T>(r->v);  // TODO: assumes same type
+  }},
+      l->v);
+  return std::make_shared<Val>(Val{res, addType({.name = BOOL})});
+}
+
+ValPtr Interpreter::array_access(ValPtr l, ValPtr r) {
+  auto& array_val = std::get<ArrayVal>(l->v);
+  const int64_t idx = std::get<int32_t>(r->v);  // TODO not only int32 ?
+  return array_val[idx];
+}
+
+ValPtr Interpreter::preinc(ValPtr l) {
+  // TODO: Implement for non-integral.
+  std::visit(overloaded{[](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
+    else
+      unimplemented();
+  }},
+      l->v);
+  return l;
+}
+
+ValPtr Interpreter::postinc(ValPtr l) {
+  auto cp = copy(l);
+  // TODO: Implement for non-integral.
+  std::visit(overloaded{[](auto&& v) {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
+    else
+      unimplemented();
+  }},
+      l->v);
+  return cp;
+}
+
+ValPtr Interpreter::addr(const ValPtr& l) {
+  auto new_type = *l->type;
+  new_type.quals.emplace_back();
+  new_type.quals.back().ptr = true;
+  auto new_value = std::make_shared<Val>();
+  new_value->v = reinterpret_cast<uintptr_t>(l.get());
+  new_value->type = addType(std::move(new_type));
+  return new_value;
+}
+
+ValPtr Interpreter::copy(const ValPtr& l) {
+  auto new_storage = std::visit(overloaded{[this](auto&& v) -> ValStorage {
+    using T = std::decay_t<decltype(v)>;
+    if constexpr (std::is_integral<T>::value) return v;
+    else if constexpr (std::is_same_v<T, ArrayVal>) {
+      ArrayVal arr;
+      for (auto& item : v) arr.emplace_back(copy(item));
+      return arr;
+    } else {
+      StructVal strct;
+      for (auto& kv : v) strct[kv.first] = copy(kv.second);
+      return strct;
+    }
+  }},
+      l->v);
+
+  return std::make_shared<Val>(Val{new_storage, l->type});
+}
+
+ValPtr Interpreter::deref(const ValPtr& l) { return std::make_shared<Val>(Val{{}, l->type}); }
 
 }  // namespace memelang::interpreter

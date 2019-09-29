@@ -260,11 +260,11 @@ struct Struct : public Node {
 
 struct Impl : public Node {
   std::unique_ptr<Typelist> tlist;
-  std::unique_ptr<Typename> tintf;
-  std::unique_ptr<Typename> tname;
+  std::unique_ptr<Type> tintf;
+  std::unique_ptr<Type> type;
   std::vector<std::unique_ptr<Fn>> fns;
 
-  DEFNLT(Impl, tlist, tintf, tname, fns);
+  DEFNLT(Impl, tlist, tintf, type, fns);
 };
 
 struct File : public Node {
