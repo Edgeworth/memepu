@@ -32,7 +32,7 @@ int64_t convertFromInteger(const std::string& s) {
   return val;
 }
 
-std::string join(const std::vector<std::string>& l, std::string j, bool terminate) {
+std::string join(const std::vector<std::string>& l, const std::string& j, bool terminate) {
   std::string ret;
   for (int i = 0; i < int(l.size()) - 1; ++i) ret += l[i] + j;
   ret += l.back();

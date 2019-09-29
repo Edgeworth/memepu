@@ -6,7 +6,7 @@
 #include "memelang/parser.h"
 #include "memelang/tokeniser.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 #define DEFNLT(type, ...) \
   auto getTie() const { return std::tie(__VA_ARGS__); } \
@@ -22,6 +22,7 @@ namespace memelang {
 
 struct Node {
   Tok tok = {};
+
   explicit Node(Parser::Ctx& c) : tok(*c.curTok()) {}
   virtual ~Node() = default;
 
@@ -142,7 +143,7 @@ struct VarRef : public Node {
 };
 
 struct Op : public Node {
-  Expr type;
+  Expr type{};
   bool is_binop = false;
   std::unique_ptr<Node> left;
   std::unique_ptr<Node> right;
@@ -176,7 +177,7 @@ struct FnSig : public Node {
 // Block related:
 struct If;
 struct StmtBlk : public Node {
-  StmtBlk(std::unique_ptr<If> ifst, Parser::Ctx& c );
+  StmtBlk(std::unique_ptr<If> ifst, Parser::Ctx& c);
   std::vector<std::unique_ptr<Node>> stmts;
 
   DEFNLT(StmtBlk, stmts);
@@ -217,7 +218,6 @@ struct While : public Node {
 
   DEFNLT(While, cond, blk);
 };
-
 
 struct If : public Node {
   std::unique_ptr<Node> cond;
@@ -261,10 +261,10 @@ struct Struct : public Node {
 struct Impl : public Node {
   std::unique_ptr<Typelist> tlist;
   std::unique_ptr<Typename> tintf;
-  std::unique_ptr<Typename> tstruct;
+  std::unique_ptr<Typename> tname;
   std::vector<std::unique_ptr<Fn>> fns;
 
-  DEFNLT(Impl, tlist, tintf, tstruct, fns);
+  DEFNLT(Impl, tlist, tintf, tname, fns);
 };
 
 struct File : public Node {
@@ -279,6 +279,6 @@ struct File : public Node {
 
 #undef DEFNLT
 
-}  // namespace memelang
+}  // namespace memelang::ast
 
 #endif  // MEMELANG_AST_H

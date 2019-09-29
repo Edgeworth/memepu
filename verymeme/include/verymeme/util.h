@@ -54,7 +54,11 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   return reversed;
 }
 
-template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+template <class... Ts>
+struct overloaded : Ts... {
+  using Ts::operator()...;
+};
+template <class... Ts>
+overloaded(Ts...)->overloaded<Ts...>;
 
 #endif  // VERYMEME_UTIL_H

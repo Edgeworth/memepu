@@ -1,7 +1,5 @@
 #include "memelang/file_contents.h"
 
-#include <algorithm>
-
 namespace memelang {
 
 FileContents::FileContents(std::string filename, std::string data)

@@ -8,7 +8,7 @@
 #include "memelang/file_contents.h"
 #include "memelang/tokeniser.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 struct File;
 
@@ -47,7 +47,7 @@ public:
   ~Parser();
 
   bool parse();
-  File* getFile() { return root_.get(); }
+  ast::File* getFile() { return root_.get(); }
   std::string astToString();
 
 private:
@@ -57,6 +57,6 @@ private:
   std::unique_ptr<File> root_;
 };
 
-}  // namespace memelang
+}  // namespace memelang::ast
 
 #endif  // MEMELANG_PARSER_H

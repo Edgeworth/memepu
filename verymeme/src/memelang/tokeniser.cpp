@@ -4,7 +4,7 @@
 
 #include "verymeme/string_util.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 namespace {
 
@@ -166,4 +166,4 @@ char Tokeniser::grabEscapedChar() {
   return -1;
 }
 
-}  // namespace memelang
+}  // namespace memelang::ast

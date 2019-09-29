@@ -89,11 +89,11 @@ void Simulator::run() {
       case Cmd::Type::GET_CPU_STATE: cmd->receiver->push(generateCpuState()); break;
       case Cmd::Type::GET_VGA_STATE: cmd->receiver->push(generateVgaState()); break;
       case Cmd::Type::SET_MOUSE:
-        // TODO: use constant for this memory mapped address.
+        // TODO(progress): use constant for this memory mapped address.
         kpu_.kpu->mmu->ram->mem[memeware::MMIO_MOUSE] =
             (cmd->args.i32_0 & 0xFFFF) | ((cmd->args.i32_1 << 16) & 0xFFFF0000);
         //        kpu_.kpu->mmu->ram->mem[memeware::MMIO_INTERRUPT_CLEAR] = 1;
-        // TODO set interrupt? - need some way to distinguish.
+        // TODO(progress) set interrupt? - need some way to distinguish.
         break;
       case Cmd::Type::SET_KBD:
         printf("Got kbd: %d\n", int(cmd->args.i32_0));

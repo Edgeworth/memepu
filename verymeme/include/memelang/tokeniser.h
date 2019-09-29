@@ -8,7 +8,7 @@
 
 #include "memelang/file_contents.h"
 
-namespace memelang {
+namespace memelang::ast {
 
 struct Tok {
   enum Type {
@@ -113,6 +113,6 @@ private:
 
 std::ostream& operator<<(std::ostream& str, const Tok::Type& o);
 
-}  // namespace memelang
+}  // namespace memelang::ast
 
 #endif  // MEMELANG_TOKENISER_H
