@@ -4,6 +4,9 @@ Pointer arithmetic
 Destructors
 Modules
 
+Operator overloading:
+return of binary operators add, sub, mul, div must be same type as left
+
 
 ## Built-in types
 i8, i16, i32, i64, u8, u16, u32, u64, bool, f32, f64
