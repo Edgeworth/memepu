@@ -6,6 +6,7 @@
 #include <variant>
 
 #include "memelang/ast.h"
+#include "verymeme/util.h"
 
 namespace memelang::interpreter {
 
@@ -73,14 +74,6 @@ struct Val {
   const Type* type{};
 };
 
-const inline static std::string BOOL = "bool";
-const inline static std::string I8 = "i8";
-const inline static std::string I16 = "i16";
-const inline static std::string I32 = "i32";
-const inline static std::string U8 = "u8";
-const inline static std::string U16 = "u16";
-const inline static std::string U32 = "u32";
-
 class Interpreter {
 public:
   Interpreter(ast::File* file, const FileContents* cts);
@@ -101,7 +94,20 @@ private:
   // Map from a type (may be set) to mapping from interface to the impl.
   std::map<const Type*, std::map<const Type*, ast::Impl*>> impls_;
 
-  ValPtr runFn(ast::Fn* fn);
+  // Built-in types
+  const Type* bool_;
+  const Type* i8_;
+  const Type* i16_;
+  const Type* i32_;
+  const Type* i64_;
+  const Type* u8_;
+  const Type* u16_;
+  const Type* u32_;
+  const Type* u64_;
+  const Type* f32_;
+  const Type* f64_;
+
+  ValPtr runFn(ast::Fn* fn, const std::vector<ValPtr>& args);
   ValPtr runStmtBlk(ast::StmtBlk* blk);
   ValPtr runStmt(ast::Node* stmt);
   void runVarDefn(ast::VarDefn* defn);
@@ -140,6 +146,33 @@ private:
   ValPtr addr(const ValPtr& l);
   ValPtr copy(const ValPtr& l);
   ValPtr deref(const ValPtr& l);
+
+  template <typename F>
+  ValPtr binop(ValPtr l, ValPtr r, const Type* type, const std::string& op_name, F default_op) {
+    // Look in impls for l's type
+    // TODO: Generalise look-up procedure, define rules for lookup.
+    auto impl_iter = impls_.find(l->type);
+    if (impl_iter != impls_.end()) {
+      for (const auto& [impl_type, impl] : impl_iter->second) {
+        if (impl_type->name != "Comparable") continue;
+        if (impl->tintf->params.size() != 1) continue;
+        if (typeFromAst(impl->tintf->params[0].get()) != r->type) continue;
+        for (const auto& fn : impl->fns) {
+          if (fn->sig->tname->name == op_name) {
+            return runFn(fn.get(), {r});
+          }
+        }
+      }
+    }
+    ValStorage res = std::visit(overloaded{[this, &r, &default_op](auto&& v) {
+      using T = std::decay_t<decltype(v)>;
+      if constexpr (std::is_integral_v<T>) return ValStorage{default_op(v, std::get<T>(r->v))};
+      error("no matching operator for values", nullptr);
+      return ValStorage{};
+    }},
+        l->v);
+    return std::make_shared<Val>(Val{res, type});
+  }
 };
 
 }  // namespace memelang::interpreter
