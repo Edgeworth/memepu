@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "verymeme/util.h"
+#include "memelang/constants.h"
 
 namespace memelang::interpreter {
 
@@ -32,7 +32,11 @@ T* g(std::unique_ptr<R>& n) {
     } \
   } while (0)
 
-Interpreter::Interpreter(ast::File* file, const FileContents* cts) : f_(file), cts_(cts) {}
+Interpreter::Interpreter(ast::File* file, const FileContents* cts)
+    : f_(file), cts_(cts), bool_(addType({.name = BOOL})), i8_(addType({.name = I8})),
+      i16_(addType({.name = I16})), i32_(addType({.name = I32})), i64_(addType({.name = I64})),
+      u8_(addType({.name = U8})), u16_(addType({.name = U16})), u32_(addType({.name = U32})),
+      u64_(addType({.name = U64})), f32_(addType({.name = F32})), f64_(addType({.name = F64})) {}
 
 void Interpreter::run() {
   printf("===BEGIN PROGRAM===\n");
@@ -40,6 +44,7 @@ void Interpreter::run() {
     // TODO: typelist / fn selection
     fns_[typenameFromAst(fn->sig->tname.get())] = fn.get();
   }
+  // TODO: Run all these intfs and structs.
   for (auto& enm : f_->enums) {
     if (!enums_.emplace(typenameFromAst(enm->tname.get()), enm.get()).second)
       error("duplicate enum definition", enm.get());
@@ -59,12 +64,23 @@ void Interpreter::run() {
   }
 
   pushScope();
-  runFn(getFn(Typename{.name = "main"}, nullptr));
+  runFn(getFn(Typename{.name = "main"}, nullptr), {});
   popScope();
   printf("===END PROGRAM===\n");
 }
 
-ValPtr Interpreter::runFn(ast::Fn* fn) { return runStmtBlk(fn->blk.get()); }
+ValPtr Interpreter::runFn(ast::Fn* fn, const std::vector<ValPtr>& params) {
+  pushScope();
+  if (fn->sig->params.size() != params.size()) error("wrong number of arguments", fn);
+  for (int i = 0; i < int(fn->sig->params.size()); ++i) {
+    auto& decl = fn->sig->params[i];
+    runStmt(decl.get());
+    assign(getVar(decl->ref->name, decl->ref.get()), params[i]);
+  }
+  auto val = runStmtBlk(fn->blk.get());
+  popScope();
+  return val;
+}
 
 ValPtr Interpreter::runStmtBlk(ast::StmtBlk* blk) {
   nestScope();
@@ -137,28 +153,18 @@ ValPtr Interpreter::runOp(ast::Op* op) {
       auto read_sz = eval(args->args[1].get());
       if (*read_ptr->type != Type{.name = U8, .quals = {{}, {.ptr = true}}})
         error("wrong type: " + read_ptr->type->toString(), op);
-      if (*read_sz->type != Type{.name = I32})  // TODO: require U32.
+      if (*read_sz->type != *i32_)  // TODO: require U32.
         error("wrong type: " + read_sz->type->toString(), op);
       std::cin.getline(
           reinterpret_cast<char*>(std::get<uintptr_t>(read_ptr->v)), std::get<int32_t>(read_sz->v));
 
-      return std::make_shared<Val>(
-          Val{.v = int32_t(std::cin.gcount()), .type = addType({.name = I32})});
+      return std::make_shared<Val>(Val{.v = int32_t(std::cin.gcount()), .type = i32_});
     }
 
-    std::vector<std::shared_ptr<Val>> params;
+    std::vector<ValPtr> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
-    pushScope();
     auto* fn = getFn(Typename{.name = call->name}, call);
-    if (fn->sig->params.size() != params.size()) error("wrong number of arguments", op);
-    for (int i = 0; i < int(fn->sig->params.size()); ++i) {
-      auto& decl = fn->sig->params[i];
-      runStmt(decl.get());
-      assign(getVar(decl->ref->name, decl->ref.get()), params[i]);
-    }
-    auto val = runFn(fn);
-    popScope();
-    return val;
+    return runFn(fn, params);
   }
   case ast::Expr::ASSIGNMENT: return assign(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::ADD: return add(eval(op->left.get()), eval(op->right.get()));
@@ -200,8 +206,7 @@ ValPtr Interpreter::eval(ast::Node* n) {
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
   if (typeid(*n) == typeid(ast::VarRef)) return getVar(g<ast::VarRef>(n)->name, n);
   if (typeid(*n) == typeid(ast::IntLit))
-    return std::make_shared<Val>(
-        Val{.v = int32_t(g<ast::IntLit>(n)->val), .type = addType({.name = I32})});
+    return std::make_shared<Val>(Val{.v = int32_t(g<ast::IntLit>(n)->val), .type = i32_});
   if (typeid(*n) == typeid(ast::CompoundLit)) {
     auto* lit = g<ast::CompoundLit>(n);
     // TODO set value
@@ -342,63 +347,32 @@ ValPtr Interpreter::assign(ValPtr l, ValPtr r) {
 }
 
 ValPtr Interpreter::add(ValPtr l, ValPtr r) {
-  // TODO: Need to look at type, not variant.
-  // TODO: Implement for non-integral.
-  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value) return v + std::get<T>(r->v);
-    unimplemented();
-    return 0;
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, l->type});
+  return binop(l, r, l->type, "add", [](auto a, auto b) { return a + b; });
 }
 
 ValPtr Interpreter::sub(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  auto res = std::visit(overloaded{[&r](auto&& v) -> ValStorage {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value) return v - std::get<T>(r->v);
-    unimplemented();
-    return 0;
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, l->type});
+  return binop(l, r, l->type, "sub", [](auto a, auto b) { return a - b; });
 }
 
 ValPtr Interpreter::lt(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  bool res = std::visit(overloaded{[&r](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    return v < std::get<T>(r->v);
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, addType({.name = BOOL})});
+  return binop(l, r, bool_, "lt", [](auto a, auto b) { return a < b; });
 }
 
 ValPtr Interpreter::eq(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  bool res = std::visit(overloaded{[&r](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    return v == std::get<T>(r->v);
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, addType({.name = BOOL})});
+  return binop(l, r, bool_, "eq", [](auto a, auto b) { return a == b; });
 }
 
 ValPtr Interpreter::neq(ValPtr l, ValPtr r) {
-  // TODO: Implement for non-integral.
-  bool res = std::visit(overloaded{[&r](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    return v != std::get<T>(r->v);  // TODO: assumes same type
-  }},
-      l->v);
-  return std::make_shared<Val>(Val{res, addType({.name = BOOL})});
+  return binop(l, r, bool_, "neq", [](auto a, auto b) { return a != b; });
 }
 
 ValPtr Interpreter::array_access(ValPtr l, ValPtr r) {
-  auto& array_val = std::get<ArrayVal>(l->v);
   const int64_t idx = std::get<int32_t>(r->v);  // TODO not only int32 ?
+  if (auto ptr_val = std::get_if<uintptr_t>(&l->v)) {
+    // todo: arrays need to be actually contiguous to do this now? what about valstorage sizes?
+  }
+
+  auto& array_val = std::get<ArrayVal>(l->v);
   return array_val[idx];
 }
 
