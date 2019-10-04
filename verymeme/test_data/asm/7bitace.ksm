@@ -1,4 +1,5 @@
 ; the first ever demo written for memepu: 7bit ace. 2019/06/29
+dw 0 ; no interrupts
 lh r5,f000 ; test sgn ext.
 lhu r0,ffff
 addu r0,r0,1 ; r0 is vram addr

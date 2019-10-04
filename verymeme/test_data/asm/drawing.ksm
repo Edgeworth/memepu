@@ -1,3 +1,4 @@
+dw 0 ; no interrupts
 ; drawing application 2019/08/25
 ; r0 = vga base
 ; r1 = colour

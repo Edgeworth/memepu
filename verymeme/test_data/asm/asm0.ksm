@@ -1,3 +1,4 @@
+dw 0 ; no interrupts
 lhu r0,0 ;load 0
 lhu r1,1 ;load 1
 lhu r3,22 ;load 0x22

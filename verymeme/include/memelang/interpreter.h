@@ -138,6 +138,7 @@ private:
   ValPtr add(ValPtr l, ValPtr r);
   ValPtr sub(ValPtr l, ValPtr r);
   ValPtr lt(ValPtr l, ValPtr r);
+  ValPtr lor(ValPtr l, ValPtr r);
   ValPtr eq(ValPtr l, ValPtr r);
   ValPtr neq(ValPtr l, ValPtr r);
   ValPtr array_access(ValPtr l, ValPtr r);
@@ -158,9 +159,7 @@ private:
         if (impl->tintf->params.size() != 1) continue;
         if (typeFromAst(impl->tintf->params[0].get()) != r->type) continue;
         for (const auto& fn : impl->fns) {
-          if (fn->sig->tname->name == op_name) {
-            return runFn(fn.get(), {r});
-          }
+          if (fn->sig->tname->name == op_name) { return runFn(fn.get(), {r}); }
         }
       }
     }
