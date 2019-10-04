@@ -117,13 +117,15 @@ set(MEMECAD_SOURCES
     src/memecad/util.cpp include/memecad/util.h
     src/memecad/schematic.cpp include/memecad/schematic.h)
 set(MEMELANG_SOURCES
+    include/memelang/constants.h
     src/memelang/tokeniser.cpp include/memelang/tokeniser.h
     src/memelang/parser.cpp include/memelang/parser.h
     src/memelang/file_contents.cpp include/memelang/file_contents.h
     src/memelang/ast.cpp include/memelang/ast.h
     src/memelang/expression.cpp include/memelang/expression.h
     src/memelang/interpreter.cpp include/memelang/interpreter.h
-    include/memelang/constants.h)
+    src/memelang/memory.cpp include/memelang/memory.h
+    src/memelang/scopes.cpp include/memelang/scopes.h)
 set(MEMEROUTE_SOURCES
     src/memeroute/parser.cpp include/memeroute/parser.h
     src/memeroute/types.cpp include/memeroute/types.h
