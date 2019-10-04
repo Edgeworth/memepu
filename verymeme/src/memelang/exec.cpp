@@ -1,11 +1,10 @@
-#include "memelang/interpreter.h"
+#include "memelang/exec.h"
 
 #include <iostream>
-#include <memory>
 
 #include "memelang/constants.h"
 
-namespace memelang::interpreter {
+namespace memelang::exec {
 
 namespace {
 
@@ -26,19 +25,22 @@ T* g(std::unique_ptr<R>& n) {
 #define CHECK(expr) \
   do { \
     auto val = (expr); \
-    if (val) { \
+    if (val.hnd != INVALID_HND) { \
       scope_.unnestScope(); \
       return val; \
     } \
   } while (0)
 
-Interpreter::Interpreter(ast::File* file, const FileContents* cts)
-    : f_(file), cts_(cts), scope_(this), bool_(addType({.name = BOOL})), i8_(addType({.name = I8})),
-      i16_(addType({.name = I16})), i32_(addType({.name = I32})), i64_(addType({.name = I64})),
-      u8_(addType({.name = U8})), u16_(addType({.name = U16})), u32_(addType({.name = U32})),
-      u64_(addType({.name = U64})), f32_(addType({.name = F32})), f64_(addType({.name = F64})) {}
+// TODO: Handle const stuff?
+Exec::Exec(ast::File* file, const FileContents* cts)
+    : f_(file), cts_(cts), scope_(this), vm_(this), bool_(addType({.name = BOOL, .quals = {{}}})),
+      i8_(addType({.name = I8, .quals = {{}}})), i16_(addType({.name = I16, .quals = {{}}})),
+      i32_(addType({.name = I32, .quals = {{}}})), i64_(addType({.name = I64, .quals = {{}}})),
+      u8_(addType({.name = U8, .quals = {{}}})), u16_(addType({.name = U16, .quals = {{}}})),
+      u32_(addType({.name = U32, .quals = {{}}})), u64_(addType({.name = U64, .quals = {{}}})),
+      f32_(addType({.name = F32, .quals = {{}}})), f64_(addType({.name = F64, .quals = {{}}})) {}
 
-void Interpreter::run() {
+void Exec::run() {
   printf("===BEGIN PROGRAM===\n");
   for (auto& fn : f_->fns) {
     setContext(fn.get());
@@ -74,7 +76,7 @@ void Interpreter::run() {
   printf("===END PROGRAM===\n");
 }
 
-ValPtr Interpreter::runFn(ast::Fn* fn, const std::vector<ValPtr>& params) {
+Val Exec::runFn(ast::Fn* fn, const std::vector<Val>& params) {
   setContext(fn);
 
   scope_.pushScope();
@@ -89,14 +91,14 @@ ValPtr Interpreter::runFn(ast::Fn* fn, const std::vector<ValPtr>& params) {
   return val;
 }
 
-ValPtr Interpreter::runStmtBlk(ast::StmtBlk* blk) {
+Val Exec::runStmtBlk(ast::StmtBlk* blk) {
   scope_.nestScope();
   for (auto& stmt : blk->stmts) CHECK(runStmt(stmt.get()));
   scope_.unnestScope();
-  return nullptr;
+  return {};
 }
 
-ValPtr Interpreter::runStmt(ast::Node* stmt) {
+Val Exec::runStmt(ast::Node* stmt) {
   setContext(stmt);
 
   if (typeid(*stmt) == typeid(ast::VarDefn)) {
@@ -117,25 +119,24 @@ ValPtr Interpreter::runStmt(ast::Node* stmt) {
   } else {
     error("unimplemented statement " + stmt->toString());
   }
-  return nullptr;
+  return {};
 }
 
-void Interpreter::runVarDefn(ast::VarDefn* defn) {
+void Exec::runVarDefn(ast::VarDefn* defn) {
   auto var = runVarDecl(defn->decl.get());
   if (defn->defn) assign(var, eval(defn->defn.get()));
 }
 
-ValPtr Interpreter::runVarDecl(ast::VarDecl* decl) {
+Val Exec::runVarDecl(ast::VarDecl* decl) {
   return scope_.declareVar(decl->ref->name, valFromAstType(decl->type.get()));
 }
 
-ValPtr Interpreter::runOp(ast::Op* op) {
+Val Exec::runOp(ast::Op* op) {
   setContext(op);
 
   switch (op->type) {
   case ast::Expr::FN_CALL: {
-    if (typeid(*(op->left.get())) != typeid(ast::VarRef))
-      return std::make_shared<Val>();  // TODO don't skip types
+    if (typeid(*(op->left.get())) != typeid(ast::VarRef)) return {};  // TODO don't skip types
     auto* call = g<ast::VarRef>(op->left);  // TODO can be type.
     auto* args = g<ast::FnCallArgs>(op->right);
     if (call->name == "printf") {
@@ -143,34 +144,27 @@ ValPtr Interpreter::runOp(ast::Op* op) {
       boost::format fmt = boost::format(g<ast::StrLit>(args->args[0])->val);
       // TODO(progress): Support other than int vars.
       for (int i = 1; i < int(args->args.size()); ++i)
-        std::visit(overloaded{[&fmt](auto&& v) {
-          using T = std::decay_t<decltype(v)>;
-          if constexpr (std::is_same_v<uintptr_t, T>) fmt = fmt % reinterpret_cast<char*>(v);
-          else if constexpr (std::is_integral_v<T>)
-            fmt = fmt % v;
-          else
-            unimplemented();
-        }},
-            eval(args->args[i].get())->v);
+        invokeBuiltin(eval(args->args[i].get()), [&fmt](auto& a) { fmt = fmt % a; });
       printf("%s", fmt.str().c_str());
 
       // TODO: Return proper value.
-      return nullptr;
+      return {};
     } else if (call->name == "readf") {
       if (args->args.size() != 2) error("readf requires 2 arguments");
       auto read_ptr = eval(args->args[0].get());
       auto read_sz = eval(args->args[1].get());
-      if (*read_ptr->type != Type{.name = U8, .quals = {{}, {.ptr = true}}})
-        error("wrong type: " + read_ptr->type->toString());
-      if (*read_sz->type != *i32_)  // TODO: require U32.
-        error("wrong type: " + read_sz->type->toString());
-      std::cin.getline(
-          reinterpret_cast<char*>(std::get<uintptr_t>(read_ptr->v)), std::get<int32_t>(read_sz->v));
+      if (*read_ptr.type != Type{.name = U8, .quals = {{}, {.ptr = true}}})
+        error("wrong type: " + read_ptr.type->toString());
+      if (read_sz.type != i32_)  // TODO: require U32.
+        error("wrong type: " + read_sz.type->toString());
+      std::cin.getline(&vm_.ref<char>(deref(read_ptr)), vm_.ref<int32_t>(read_sz));
 
-      return std::make_shared<Val>(Val{.v = int32_t(std::cin.gcount()), .type = i32_});
+      auto ret = Val{.hnd = vm_.allocStack(i32_->size()), .type = i32_};
+      vm_.write(ret, int32_t(std::cin.gcount()));
+      return ret;
     }
 
-    std::vector<ValPtr> params;
+    std::vector<Val> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
     auto* fn = getFn(Typename{.name = call->name}, call);
     return runFn(fn, params);
@@ -188,103 +182,75 @@ ValPtr Interpreter::runOp(ast::Op* op) {
   case ast::Expr::UNARY_ADDR: return addr(eval(op->left.get()));
   default: error("unhandled op");
   }
-  return nullptr;
+  return {};
 }
 
-ValPtr Interpreter::runFor(ast::For* fr) {
+Val Exec::runFor(ast::For* fr) {
   runVarDefn(fr->var_defn.get());
-  while (std::get<bool>(eval(fr->cond.get())->v)) {
+  while (true) {
+    auto cond_val = eval(fr->cond.get());
+    if (cond_val.type != bool_) error("for condition not boolean");
+    if (!vm_.ref<bool>(cond_val)) break;
     CHECK(runStmtBlk(fr->blk.get()));
     eval(fr->update.get());
   }
-  return nullptr;
+  return {};
 }
 
-ValPtr Interpreter::runWhile(ast::While* wh) {
-  while (std::get<bool>(eval(wh->cond.get())->v)) CHECK(runStmtBlk(wh->blk.get()));
-  return nullptr;
+Val Exec::runWhile(ast::While* wh) {
+  while (true) {
+    auto cond_val = eval(wh->cond.get());
+    if (cond_val.type != bool_) error("while condition not boolean");
+    if (!vm_.ref<bool>(cond_val)) break;
+    CHECK(runStmtBlk(wh->blk.get()));
+  }
+  return {};
 }
 
-ValPtr Interpreter::runIf(ast::If* ifst) {
-  if (std::get<bool>(eval(ifst->cond.get())->v)) CHECK(runStmtBlk(ifst->then.get()));
+Val Exec::runIf(ast::If* ifst) {
+  auto cond_val = eval(ifst->cond.get());
+  if (cond_val.type != bool_) error("if condition not boolean");
+  if (vm_.ref<bool>(cond_val)) CHECK(runStmtBlk(ifst->then.get()));
   else if (ifst->els)
     CHECK(runStmtBlk(ifst->els.get()));
-  return nullptr;
+  return {};
 }
 
-ValPtr Interpreter::eval(ast::Node* n) {
+Val Exec::eval(ast::Node* n) {
   setContext(n);
 
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
   if (typeid(*n) == typeid(ast::VarRef)) return scope_.getVar(g<ast::VarRef>(n)->name);
-  if (typeid(*n) == typeid(ast::IntLit))
-    return std::make_shared<Val>(Val{.v = int32_t(g<ast::IntLit>(n)->val), .type = i32_});
+  if (typeid(*n) == typeid(ast::IntLit)) {
+    auto val = Val{.hnd = vm_.allocTmp(i32_->size()), .type = i32_};
+    vm_.write(val, int32_t(g<ast::IntLit>(n)->val));
+    return val;
+  }
   if (typeid(*n) == typeid(ast::CompoundLit)) {
     auto* lit = g<ast::CompoundLit>(n);
     // TODO set value
-    return std::make_shared<Val>(Val{.type = nullptr});  // nullptr for deduced type
+    return {};  // nullptr for deduced type
   }
   error("unimplemented eval node " + n->toString());
-  return nullptr;
+  return {};
 }
 
-ast::Fn* Interpreter::getFn(const Typename& tname, ast::Node* n) {
+ast::Fn* Exec::getFn(const Typename& tname, ast::Node* n) {
   setContext(n);
   if (!fns_.count(tname)) error("no function " + tname.name);
   return fns_[tname];
 }
 
-const Type* Interpreter::addType(Type&& t) { return &*types_.insert(std::move(t)).first; }
+const Type* Exec::addType(Type&& t) { return &*types_.insert(std::move(t)).first; }
 
-ValPtr Interpreter::valFromAstType(ast::Type* ast_type) {
+Val Exec::valFromAstType(ast::Type* ast_type) {
   auto type = typeFromAst(ast_type);
-  std::vector<Qualifier> partial_quals;
-  ValPtr val;
-  for (const auto& qual : type->quals) {
-    partial_quals.emplace_back(qual);
-    ValStorage new_storage;
-    const auto* new_type =
-        addType({.name = type->name, .quals = partial_quals, .params = type->params});
-
-    // Qualifiers only hold one bit of info.
-    bug_unless(!(qual.array && qual.ptr));
-    if (qual.array) {
-      bug_unless(!qual.ptr && val);
-      ArrayVal arr;
-      for (int idx = 0; idx < qual.array - 1; ++idx) arr.emplace_back(copy(val));
-      arr.emplace_back(std::move(val));
-      new_storage = std::move(arr);
-    } else if (qual.ptr) {
-      bug_unless(!qual.array && val);
-      new_storage = uintptr_t(0);
-    } else {
-      // Handle base type.
-      bug_unless(!val);
-      if (type->name == BOOL) {
-        new_storage = false;
-      } else if (type->name == I8) {
-        new_storage = int8_t(0);
-      } else if (type->name == I16) {
-        new_storage = int16_t(0);
-      } else if (type->name == I32) {
-        new_storage = int32_t(0);
-      } else if (type->name == U8) {
-        new_storage = uint8_t(0);
-      } else if (type->name == U16) {
-        new_storage = uint16_t(0);
-      } else if (type->name == U32) {
-        new_storage = uint32_t(0);
-      } else {
-        bug_unless(false);
-      }
-    }
-
-    val = std::make_shared<Val>(Val{std::move(new_storage), new_type});
-  }
+  Val val = Val{.hnd = vm_.allocStack(type->size()), .type = type};
+  vm_.memset(val, 0, type->size());
   return val;
 }
 
-const Type* Interpreter::typeFromAst(ast::Type* ast_type) {
+const Type* Exec::typeFromAst(ast::Type* ast_type) {
   if (ast_type_map_.count(ast_type)) return ast_type_map_[ast_type];
 
   Type new_type;
@@ -296,7 +262,11 @@ const Type* Interpreter::typeFromAst(ast::Type* ast_type) {
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
     new_type.quals.emplace_back();
     // TODO not only int32_t
-    new_type.quals.back().array = (*i)->array ? std::get<int32_t>(eval((*i)->array.get())->v) : 0;
+    if ((*i)->array) {
+      auto array_val = eval((*i)->array.get());
+      if (array_val.type != i32_) error("array size must be i32");
+      new_type.quals.back().array = vm_.ref<int32_t>(array_val);
+    }
     new_type.quals.back().ptr = (*i)->ptr;
     new_type.quals.back().cnst = (*i)->cnst;
   }
@@ -306,15 +276,15 @@ const Type* Interpreter::typeFromAst(ast::Type* ast_type) {
   return ast_type_map_[ast_type];
 }
 
-Typename Interpreter::typenameFromAst(ast::Typename* ast_typename) {
+Typename Exec::typenameFromAst(ast::Typename* ast_typename) {
   auto tname = Typename{.name = ast_typename->name};
   if (ast_typename->tlist) tname.tlist = ast_typename->tlist->names;
   return tname;
 }
 
-void Interpreter::setContext(ast::Node* node) { node_ctx_ = node; }
+void Exec::setContext(ast::Node* node) { node_ctx_ = node; }
 
-void Interpreter::error(const std::string& msg) const {
+void Exec::error(const std::string& msg) const {
   if (node_ctx_)
     verify_expr(false, "error at '%s' (%d:%d): %s",
         cts_->getSpan(node_ctx_->tok.loc, node_ctx_->tok.size).c_str(),
@@ -324,101 +294,78 @@ void Interpreter::error(const std::string& msg) const {
     verify_expr(false, "error: %s", msg.c_str());
 }
 
-ValPtr Interpreter::assign(ValPtr l, ValPtr r) {
-  auto cpy = copy(r);  // Deep copy.
-  l->v = cpy->v;
-  l->type = cpy->type;
-  return l;
+Val Exec::assign(Val l, Val r) {
+  return copy(l, r);  // Deep copy.
 }
 
-ValPtr Interpreter::add(ValPtr l, ValPtr r) {
-  return binop(l, r, l->type, "add", [](auto a, auto b) { return a + b; });
+Val Exec::add(Val l, Val r) {
+  return binop(l, r, l.type, "add", [](auto a, auto b) { return a + b; });
 }
 
-ValPtr Interpreter::sub(ValPtr l, ValPtr r) {
-  return binop(l, r, l->type, "sub", [](auto a, auto b) { return a - b; });
+Val Exec::sub(Val l, Val r) {
+  return binop(l, r, l.type, "sub", [](auto a, auto b) { return a - b; });
 }
 
-ValPtr Interpreter::lt(ValPtr l, ValPtr r) {
+Val Exec::lt(Val l, Val r) {
   return binop(l, r, bool_, "lt", [](auto a, auto b) { return a < b; });
 }
 
-ValPtr Interpreter::lor(ValPtr l, ValPtr r) {
+Val Exec::lor(Val l, Val r) {
   return binop(l, r, bool_, "lor", [](auto a, auto b) { return a || b; });
 }
 
-ValPtr Interpreter::eq(ValPtr l, ValPtr r) {
+Val Exec::eq(Val l, Val r) {
   return binop(l, r, bool_, "eq", [](auto a, auto b) { return a == b; });
 }
 
-ValPtr Interpreter::neq(ValPtr l, ValPtr r) {
+Val Exec::neq(Val l, Val r) {
   return binop(l, r, bool_, "neq", [](auto a, auto b) { return a != b; });
 }
 
-ValPtr Interpreter::array_access(ValPtr l, ValPtr r) {
-  const int64_t idx = std::get<int32_t>(r->v);  // TODO not only int32 ?
-  if (auto ptr_val = std::get_if<uintptr_t>(&l->v)) {
-    // todo: arrays need to be actually contiguous to do this now? what about valstorage sizes?
-  }
-
-  auto& array_val = std::get<ArrayVal>(l->v);
-  return array_val[idx];
+Val Exec::array_access(Val l, Val r) {
+  // TODO not only int32 ?
+  if (r.type != i32_) error("array access index must be i32");
+  if (!l.type->quals.back().array) error("array access on non-array type");
+  Type new_type = *l.type;
+  new_type.quals.erase(new_type.quals.begin());  // Remove array qualifier.
+  const int32_t idx = vm_.ref<int32_t>(r);
+  return Val{l.hnd + idx * l.type->size(), addType(std::move(new_type))};
 }
 
-ValPtr Interpreter::preinc(ValPtr l) {
-  // TODO: Implement for non-integral.
-  std::visit(overloaded{[](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
-    else
-      unimplemented();
-  }},
-      l->v);
-  return l;
+Val Exec::preinc(Val l) {
+  return unop(l, l.type, [this, &l](auto v) {
+    vm_.write(l, v + 1);
+    return l;
+  });
 }
 
-ValPtr Interpreter::postinc(ValPtr l) {
-  auto cp = copy(l);
-  // TODO: Implement for non-integral.
-  std::visit(overloaded{[](auto&& v) {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value && !std::is_same_v<T, bool>) ++v;
-    else
-      unimplemented();
-  }},
-      l->v);
-  return cp;
+Val Exec::postinc(Val l) {
+  return unop(l, l.type, [this, &l](auto v) {
+    Val tmp = {.hnd = vm_.allocTmp(l.type->size()), .type = l.type};
+    copy(tmp, l);
+    vm_.write(l, v + 1);
+    return tmp;
+  });
 }
 
-ValPtr Interpreter::addr(const ValPtr& l) {
-  auto new_type = *l->type;
+Val Exec::addr(const Val& l) {
+  auto new_type = *l.type;
   new_type.quals.emplace_back();
   new_type.quals.back().ptr = true;
-  auto new_value = std::make_shared<Val>();
-  new_value->v = reinterpret_cast<uintptr_t>(l.get());
-  new_value->type = addType(std::move(new_type));
+  auto new_value = Val{.hnd = vm_.allocTmp(sizeof(Hnd)), .type = addType(std::move(new_type))};
+  vm_.write(new_value, l.hnd);
   return new_value;
 }
 
-ValPtr Interpreter::copy(const ValPtr& l) {
-  auto new_storage = std::visit(overloaded{[this](auto&& v) -> ValStorage {
-    using T = std::decay_t<decltype(v)>;
-    if constexpr (std::is_integral<T>::value) return v;
-    else if constexpr (std::is_same_v<T, ArrayVal>) {
-      ArrayVal arr;
-      for (auto& item : v) arr.emplace_back(copy(item));
-      return arr;
-    } else {
-      StructVal strct;
-      for (auto& kv : v) strct[kv.first] = copy(kv.second);
-      return strct;
-    }
-  }},
-      l->v);
-
-  return std::make_shared<Val>(Val{new_storage, l->type});
+Val Exec::copy(Val dst, Val src) {
+  vm_.memcpy(dst, src, src.type->size());
+  return dst;
 }
 
-ValPtr Interpreter::deref(const ValPtr& l) { return std::make_shared<Val>(Val{{}, l->type}); }
+Val Exec::deref(const Val& l) {
+  Val res;
+  res.hnd = vm_.ref<Hnd>(l);
+  return res;
+}
 
-}  // namespace memelang::interpreter
+}  // namespace memelang::exec
