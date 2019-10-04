@@ -27,13 +27,13 @@ T* g(std::unique_ptr<R>& n) {
   do { \
     auto val = (expr); \
     if (val) { \
-      unnestScope(); \
+      scope_.unnestScope(); \
       return val; \
     } \
   } while (0)
 
 Interpreter::Interpreter(ast::File* file, const FileContents* cts)
-    : f_(file), cts_(cts), bool_(addType({.name = BOOL})), i8_(addType({.name = I8})),
+    : f_(file), cts_(cts), scope_(this), bool_(addType({.name = BOOL})), i8_(addType({.name = I8})),
       i16_(addType({.name = I16})), i32_(addType({.name = I32})), i64_(addType({.name = I64})),
       u8_(addType({.name = U8})), u16_(addType({.name = U16})), u32_(addType({.name = U32})),
       u64_(addType({.name = U64})), f32_(addType({.name = F32})), f64_(addType({.name = F64})) {}
@@ -41,55 +41,64 @@ Interpreter::Interpreter(ast::File* file, const FileContents* cts)
 void Interpreter::run() {
   printf("===BEGIN PROGRAM===\n");
   for (auto& fn : f_->fns) {
+    setContext(fn.get());
     // TODO: typelist / fn selection
     fns_[typenameFromAst(fn->sig->tname.get())] = fn.get();
   }
   // TODO: Run all these intfs and structs.
   for (auto& enm : f_->enums) {
+    setContext(enm.get());
     if (!enums_.emplace(typenameFromAst(enm->tname.get()), enm.get()).second)
-      error("duplicate enum definition", enm.get());
+      error("duplicate enum definition");
   }
   for (auto& intf : f_->intfs) {
+    setContext(intf.get());
     if (!intfs_.emplace(typenameFromAst(intf->tname.get()), intf.get()).second)
-      error("duplicate interface definition", intf.get());
+      error("duplicate interface definition");
   }
   for (auto& strct : f_->structs) {
+    setContext(strct.get());
     if (!structs_.emplace(typenameFromAst(strct->tname.get()), strct.get()).second)
-      error("duplicate struct definition", strct.get());
+      error("duplicate struct definition");
   }
   for (auto& impl : f_->impls) {
+    setContext(impl.get());
     auto impl_type = typeFromAst(impl->type.get());
     if (!impls_[impl_type].emplace(typeFromAst(impl->tintf.get()), impl.get()).second)
-      error("duplicate implementation for (type, interface specialisation) pair", impl.get());
+      error("duplicate implementation for (type, interface specialisation) pair");
   }
 
-  pushScope();
+  scope_.pushScope();
   runFn(getFn(Typename{.name = "main"}, nullptr), {});
-  popScope();
+  scope_.popScope();
   printf("===END PROGRAM===\n");
 }
 
 ValPtr Interpreter::runFn(ast::Fn* fn, const std::vector<ValPtr>& params) {
-  pushScope();
-  if (fn->sig->params.size() != params.size()) error("wrong number of arguments", fn);
+  setContext(fn);
+
+  scope_.pushScope();
+  if (fn->sig->params.size() != params.size()) error("wrong number of arguments");
   for (int i = 0; i < int(fn->sig->params.size()); ++i) {
     auto& decl = fn->sig->params[i];
     runStmt(decl.get());
-    assign(getVar(decl->ref->name, decl->ref.get()), params[i]);
+    assign(scope_.getVar(decl->ref->name), params[i]);
   }
   auto val = runStmtBlk(fn->blk.get());
-  popScope();
+  scope_.popScope();
   return val;
 }
 
 ValPtr Interpreter::runStmtBlk(ast::StmtBlk* blk) {
-  nestScope();
+  scope_.nestScope();
   for (auto& stmt : blk->stmts) CHECK(runStmt(stmt.get()));
-  unnestScope();
+  scope_.unnestScope();
   return nullptr;
 }
 
 ValPtr Interpreter::runStmt(ast::Node* stmt) {
+  setContext(stmt);
+
   if (typeid(*stmt) == typeid(ast::VarDefn)) {
     runVarDefn(g<ast::VarDefn>(stmt));
   } else if (typeid(*stmt) == typeid(ast::VarDecl)) {
@@ -106,7 +115,7 @@ ValPtr Interpreter::runStmt(ast::Node* stmt) {
   } else if (typeid(*stmt) == typeid(ast::If)) {
     return runIf(g<ast::If>(stmt));
   } else {
-    error("unimplemented statement " + stmt->toString(), stmt);
+    error("unimplemented statement " + stmt->toString());
   }
   return nullptr;
 }
@@ -117,13 +126,12 @@ void Interpreter::runVarDefn(ast::VarDefn* defn) {
 }
 
 ValPtr Interpreter::runVarDecl(ast::VarDecl* decl) {
-  const auto& name = decl->ref->name;
-  if (maybeGetVar(name)) error("redeclaration of var " + name, decl);
-  vars_.back().back()[name] = valFromAstType(decl->type.get());
-  return vars_.back().back()[name];
+  return scope_.declareVar(decl->ref->name, valFromAstType(decl->type.get()));
 }
 
 ValPtr Interpreter::runOp(ast::Op* op) {
+  setContext(op);
+
   switch (op->type) {
   case ast::Expr::FN_CALL: {
     if (typeid(*(op->left.get())) != typeid(ast::VarRef))
@@ -131,7 +139,7 @@ ValPtr Interpreter::runOp(ast::Op* op) {
     auto* call = g<ast::VarRef>(op->left);  // TODO can be type.
     auto* args = g<ast::FnCallArgs>(op->right);
     if (call->name == "printf") {
-      if (args->args.empty()) error("printf requires at least 1 argument", op);
+      if (args->args.empty()) error("printf requires at least 1 argument");
       boost::format fmt = boost::format(g<ast::StrLit>(args->args[0])->val);
       // TODO(progress): Support other than int vars.
       for (int i = 1; i < int(args->args.size()); ++i)
@@ -149,13 +157,13 @@ ValPtr Interpreter::runOp(ast::Op* op) {
       // TODO: Return proper value.
       return nullptr;
     } else if (call->name == "readf") {
-      if (args->args.size() != 2) error("readf requires 2 arguments", op);
+      if (args->args.size() != 2) error("readf requires 2 arguments");
       auto read_ptr = eval(args->args[0].get());
       auto read_sz = eval(args->args[1].get());
       if (*read_ptr->type != Type{.name = U8, .quals = {{}, {.ptr = true}}})
-        error("wrong type: " + read_ptr->type->toString(), op);
+        error("wrong type: " + read_ptr->type->toString());
       if (*read_sz->type != *i32_)  // TODO: require U32.
-        error("wrong type: " + read_sz->type->toString(), op);
+        error("wrong type: " + read_sz->type->toString());
       std::cin.getline(
           reinterpret_cast<char*>(std::get<uintptr_t>(read_ptr->v)), std::get<int32_t>(read_sz->v));
 
@@ -178,7 +186,7 @@ ValPtr Interpreter::runOp(ast::Op* op) {
   case ast::Expr::PREFIX_INC: return preinc(eval(op->left.get()));
   case ast::Expr::POSTFIX_INC: return preinc(eval(op->left.get()));
   case ast::Expr::UNARY_ADDR: return addr(eval(op->left.get()));
-  default: error("unhandled op", op);
+  default: error("unhandled op");
   }
   return nullptr;
 }
@@ -205,8 +213,10 @@ ValPtr Interpreter::runIf(ast::If* ifst) {
 }
 
 ValPtr Interpreter::eval(ast::Node* n) {
+  setContext(n);
+
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
-  if (typeid(*n) == typeid(ast::VarRef)) return getVar(g<ast::VarRef>(n)->name, n);
+  if (typeid(*n) == typeid(ast::VarRef)) return scope_.getVar(g<ast::VarRef>(n)->name);
   if (typeid(*n) == typeid(ast::IntLit))
     return std::make_shared<Val>(Val{.v = int32_t(g<ast::IntLit>(n)->val), .type = i32_});
   if (typeid(*n) == typeid(ast::CompoundLit)) {
@@ -214,45 +224,14 @@ ValPtr Interpreter::eval(ast::Node* n) {
     // TODO set value
     return std::make_shared<Val>(Val{.type = nullptr});  // nullptr for deduced type
   }
-  error("unimplemented eval node " + n->toString(), n);
+  error("unimplemented eval node " + n->toString());
   return nullptr;
 }
 
 ast::Fn* Interpreter::getFn(const Typename& tname, ast::Node* n) {
-  if (!fns_.count(tname)) error("no function " + tname.name, n);
+  setContext(n);
+  if (!fns_.count(tname)) error("no function " + tname.name);
   return fns_[tname];
-}
-
-ValPtr Interpreter::getVar(const std::string& name, ast::Node* n) const {
-  auto val = maybeGetVar(name);
-  if (!val) error("undeclared variable " + name, n);
-  return val;
-}
-
-ValPtr Interpreter::maybeGetVar(const std::string& name) const {
-  bug_unless(!vars_.empty());
-  for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
-    auto iter = scope_iter->find(name);
-    if (iter != scope_iter->end()) return iter->second;
-  }
-  return nullptr;
-}
-
-void Interpreter::pushScope() {
-  vars_.emplace_back();
-  nestScope();
-}
-
-void Interpreter::popScope() {
-  bug_unless(!vars_.empty());
-  vars_.pop_back();
-}
-
-void Interpreter::nestScope() { vars_.back().emplace_back(); }
-
-void Interpreter::unnestScope() {
-  bug_unless(!vars_.back().empty());
-  vars_.back().pop_back();
 }
 
 const Type* Interpreter::addType(Type&& t) { return &*types_.insert(std::move(t)).first; }
@@ -333,10 +312,14 @@ Typename Interpreter::typenameFromAst(ast::Typename* ast_typename) {
   return tname;
 }
 
-void Interpreter::error(const std::string& msg, ast::Node* n) const {
-  if (n)
-    verify_expr(false, "error at '%s' (%d:%d): %s", cts_->getSpan(n->tok.loc, n->tok.size).c_str(),
-        cts_->getLineNumber(n->tok.loc), cts_->getColNumber(n->tok.loc), msg.c_str());
+void Interpreter::setContext(ast::Node* node) { node_ctx_ = node; }
+
+void Interpreter::error(const std::string& msg) const {
+  if (node_ctx_)
+    verify_expr(false, "error at '%s' (%d:%d): %s",
+        cts_->getSpan(node_ctx_->tok.loc, node_ctx_->tok.size).c_str(),
+        cts_->getLineNumber(node_ctx_->tok.loc), cts_->getColNumber(node_ctx_->tok.loc),
+        msg.c_str());
   else
     verify_expr(false, "error: %s", msg.c_str());
 }
