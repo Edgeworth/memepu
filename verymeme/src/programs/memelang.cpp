@@ -1,4 +1,4 @@
-#include "memelang/interpreter.h"
+#include "memelang/exec.h"
 #include "memelang/parser.h"
 #include "verymeme/file.h"
 #include "verymeme/util.h"
@@ -11,6 +11,6 @@ int main(int argc, char* argv[]) {
   memelang::ast::Parser parser(&cts, tokens);
   parser.parse();
   printf("AST:\n%s\n", parser.astToString().c_str());
-  memelang::interpreter::Interpreter interp(parser.getFile(), &cts);
+  memelang::exec::Exec interp(parser.getFile(), &cts);
   interp.run();
 }
