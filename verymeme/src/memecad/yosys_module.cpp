@@ -49,6 +49,7 @@ std::vector<Schematic::SchematicFile> convertVerilogToKicadSchematics(
   // constant to a single bit port.
   Yosys::run_pass("hierarchy -check");
   Yosys::run_pass("check");  // Check for misc problems.
+  Yosys::run_pass("chparam");  // Create modules properly.
   test_pass.setup(memecad_map_filename, kicad_library_filenames);
   Yosys::run_pass(PASS_NAME);
 
@@ -72,11 +73,15 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
     const auto& [module_id, module] = module_iter;
     if (!design->selected_module(module)) continue;
 
+    printModuleInfo(module);
+
     // Generate kicad sheet for this module.
     if (!mapper_.isMappedModule(*module)) {
       printf("Processing module: %s\n", log_id(module_id));
       for (auto& cell_iter : module->cells_) {
         const auto& [cell_id, cell] = cell_iter;
+        printf("  Checking child '%s'\n", cell_id.c_str());
+
         // Add edge from child to parent, for reverse top-sort.
         auto* child_module = design->module(cell->type);
         verify_expr(child_module != nullptr, "expected module '%s' to exist", cell->type.c_str());

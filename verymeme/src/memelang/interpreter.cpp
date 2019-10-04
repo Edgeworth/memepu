@@ -93,9 +93,10 @@ ValPtr Interpreter::runStmt(ast::Node* stmt) {
   if (typeid(*stmt) == typeid(ast::VarDefn)) {
     runVarDefn(g<ast::VarDefn>(stmt));
   } else if (typeid(*stmt) == typeid(ast::VarDecl)) {
-    return runVarDecl(g<ast::VarDecl>(stmt));
+    runVarDecl(g<ast::VarDecl>(stmt));
   } else if (typeid(*stmt) == typeid(ast::Op)) {
-    return runOp(g<ast::Op>(stmt));
+    // Ignore return value as there won't ever be a return statement in an op.
+    runOp(g<ast::Op>(stmt));
   } else if (typeid(*stmt) == typeid(ast::For)) {
     return runFor(g<ast::For>(stmt));
   } else if (typeid(*stmt) == typeid(ast::While)) {
@@ -170,6 +171,7 @@ ValPtr Interpreter::runOp(ast::Op* op) {
   case ast::Expr::ADD: return add(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::SUB: return sub(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::LT: return lt(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::LOR: return lor(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::EQ: return eq(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::NEQ: return neq(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::ARRAY_ACCESS: return array_access(eval(op->left.get()), eval(op->right.get()));
@@ -356,6 +358,10 @@ ValPtr Interpreter::sub(ValPtr l, ValPtr r) {
 
 ValPtr Interpreter::lt(ValPtr l, ValPtr r) {
   return binop(l, r, bool_, "lt", [](auto a, auto b) { return a < b; });
+}
+
+ValPtr Interpreter::lor(ValPtr l, ValPtr r) {
+  return binop(l, r, bool_, "lor", [](auto a, auto b) { return a || b; });
 }
 
 ValPtr Interpreter::eq(ValPtr l, ValPtr r) {
