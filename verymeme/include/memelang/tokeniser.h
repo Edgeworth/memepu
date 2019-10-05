@@ -67,6 +67,7 @@ struct Tok {
     ASM,
     STR_LIT,
     INT_LIT,
+    UINT_LIT,
     CHAR_LIT,
     BOOL_LIT,
     IDENT,

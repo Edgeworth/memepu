@@ -51,7 +51,10 @@ std::string BoolLit::toString() const {
 }
 std::vector<Node*> BoolLit::children() { return {}; }
 
-IntLit::IntLit(Parser::Ctx& c) : Node(c) { val = c.consumeTok(Tok::INT_LIT)->int_val; }
+IntLit::IntLit(Parser::Ctx& c) : Node(c) {
+  if (c.hasTok(Tok::UINT_LIT)) unsign = true;
+  val = c.consumeTok({Tok::INT_LIT, Tok::UINT_LIT})->int_val;
+}
 std::string IntLit::toString() const { return (fmt("IntLit(%d)") % val).str(); }
 std::vector<Node*> IntLit::children() { return {}; }
 

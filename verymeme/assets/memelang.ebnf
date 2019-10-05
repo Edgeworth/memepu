@@ -68,7 +68,7 @@ binary_op : '*' | '/' | '%' | '+' | '-' | '>' '>' '>' | '>' '>' | '<' '<' | '<='
 prefix_op : '+' '+' | '-' '-' | '~' | '-' | '!' | '&' | '*' ;
 postfix_op : '+' '+' | '-' '-' ;
 NUMBERS : [0-9]+ ;
-int_lit : '0x'? NUMBERS;
+int_lit : '0x'? NUMBERS 'u'?;
 float_lit : NUMBERS '.' NUMBERS ;
 CHAR_LIT  : '\'' (~[\t\r\n] | ESCAPE) '\'' ;
 STR_LIT : ('"' ~[\t\r\n]* '"')+ ;  // Allow literal concat.
