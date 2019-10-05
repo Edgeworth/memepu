@@ -38,8 +38,8 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
       "RANGLE", "LSQUARE", "RSQUARE", "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE",
       "EXCLAMATION", "AMPERSAND", "DAMPERSAND", "CARET", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL",
       "LTEQUAL", "GTEQUAL", "INTF", "STRUCT", "ENUM", "IMPL", "FN", "IF", "ELSE", "MATCH", "FOR",
-      "WHILE", "RETURN", "VAR", "STATIC", "CONST", "AUTO", "ASM", "STR_LIT", "INT_LIT", "CHAR_LIT",
-      "BOOL_LIT", "IDENT", "COMMENT"};
+      "WHILE", "RETURN", "VAR", "STATIC", "CONST", "AUTO", "ASM", "STR_LIT", "INT_LIT", "UINT_LIT",
+      "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
   return outputEnum(str, o, TOKEN_TYPES);
 }
 
@@ -110,14 +110,17 @@ void Tokeniser::pushCurrentToken() {
     while (!isChar('}', "asm block has no closing brace")) str_val += data[idx_++];
     idx_++;  // Skip }.
     break;
-  case Tok::IDENT:
+  case Tok::IDENT: {
+    const bool unsign = curtok_.back() == 'u';
+    if (unsign) curtok_.pop_back();
     int_val = convertFromInteger(curtok_);
-    if (int_val != INT64_MIN) type = Tok::INT_LIT;
+    if (int_val != INT64_MIN) type = unsign ? Tok::UINT_LIT : Tok::INT_LIT;
     if (curtok_ == "false" || curtok_ == "true") {
       int_val = curtok_ == "true";
       type = Tok::BOOL_LIT;
     }
     break;
+  }
   case Tok::COMMENT:
     while (!isChar('\n', "file not newline terminated")) idx_++;
     break;

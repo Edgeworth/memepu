@@ -76,6 +76,7 @@ std::unique_ptr<Node> ExprParser::parse() {
       }
       break;
     case Tok::BOOL_LIT: ec.addExpr(std::make_unique<BoolLit>(c_)); break;
+    case Tok::UINT_LIT:  // fallthrough
     case Tok::INT_LIT: ec.addExpr(std::make_unique<IntLit>(c_)); break;
     case Tok::CHAR_LIT: ec.addExpr(std::make_unique<CharLit>(c_)); break;
     case Tok::STR_LIT: ec.addExpr(std::make_unique<StrLit>(c_)); break;
