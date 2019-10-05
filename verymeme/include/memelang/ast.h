@@ -114,6 +114,7 @@ struct BoolLit : public Node {
 
 struct IntLit : public Node {
   int64_t val;
+  bool unsign;
 
   DEFNLT(IntLit, val);
 };

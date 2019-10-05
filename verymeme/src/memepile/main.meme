@@ -36,7 +36,7 @@ impl Indexable<u8> for string {
 }
 
 fn main() i32 {
-  var SIZE: const u32 = 128;
+  var SIZE: const i32 = 128u;
   var data: [SIZE]u8;
   var nbytes: u32 = readf(&data[0], SIZE);
   printf("got %d bytes: '%s'\n", nbytes, &data[0]);

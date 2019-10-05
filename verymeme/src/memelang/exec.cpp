@@ -222,8 +222,9 @@ Val Exec::eval(ast::Node* n) {
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
   if (typeid(*n) == typeid(ast::VarRef)) return scope_.getVar(g<ast::VarRef>(n)->name);
   if (typeid(*n) == typeid(ast::IntLit)) {
-    auto val = Val{.hnd = vm_.allocTmp(i32_->size()), .type = i32_};
-    vm_.write(val, int32_t(g<ast::IntLit>(n)->val));
+    const auto* type = g<ast::IntLit>(n)->unsign ? u32_ : i32_;
+    auto val = Val{.hnd = vm_.allocTmp(type->size()), .type = type};
+    vm_.write(val, uint32_t(g<ast::IntLit>(n)->val));
     return val;
   }
   if (typeid(*n) == typeid(ast::CompoundLit)) {
