@@ -112,6 +112,8 @@ private:
 
   template <typename F>
   Val binop(Val l, Val r, const Type* type, const std::string& op_name, F default_op) {
+    bug_unless(type && l.type && r.type);
+
     // Look in impls for l's type
     // TODO: Generalise look-up procedure, define rules for lookup.
     auto impl_iter = impls_.find(l.type);
@@ -122,11 +124,13 @@ private:
         // TODO: better lookup rules
         if (typeFromAst(impl->tintf->params[0].get()) != r.type) continue;
         for (const auto& fn : impl->fns) {
-          if (fn->sig->tname->name == op_name) { return runFn(fn.get(), {r}); }
+          if (fn->sig->tname->name == op_name) { return runFn(fn.get(), {addr(r)}); }
         }
       }
     }
-    if (l.type != r.type) error("no Comparable defined and types don't match");
+    if (l.type != r.type)
+      error("no Comparable defined and types don't match: " + l.type->toString() + " " +
+          r.type->toString());
 
     return invokeBuiltin(l, [this, &default_op, &r, &type](auto lt) {
       auto res = default_op(lt, vm_.ref<decltype(lt)>(r));
@@ -138,6 +142,7 @@ private:
 
   template <typename F>
   Val unop(Val l, const Type* type, F default_op) {
+    bug_unless(type && l.type);
     // TODO: Impl operator overloading?
     auto res = invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
     Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type};

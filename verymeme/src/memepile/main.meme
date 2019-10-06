@@ -15,7 +15,7 @@ impl Comparable<i32> for u8 {
 }
 
 fn strlen(s: *u8) u32 {
-  var len: u32 = 0;
+  var len: u32 = 0u;
   while (s[len++] != 0) {}
   return len;
 }
@@ -35,11 +35,19 @@ impl Indexable<u8> for string {
   }
 }
 
+fn print_str(s: *u8) {
+  while (*s != 0) {
+    printf("%c", *(s++));
+  }
+}
+
 fn main() i32 {
-  var SIZE: const i32 = 128u;
+  var SIZE: u32 = 128u;
   var data: [SIZE]u8;
   var nbytes: u32 = readf(&data[0], SIZE);
-  printf("got %d bytes: '%s'\n", nbytes, &data[0]);
+  printf("got %d bytes: ", nbytes);
+  print_str(&data[0]);
+  printf("\n");
   printf("strlen result: %d\n", strlen(&data[0]));
   return 0;
 }
