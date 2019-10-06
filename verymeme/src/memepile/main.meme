@@ -1,7 +1,19 @@
 // fn readf(data: *u8, size: i32) i32 {}
 
-intf Indexable<T> {
-  fn index(idx: u32) *T;
+intf UnaryArith<T> {
+  fn postinc(v: *T) T;
+}
+
+impl<T> UnaryArith<*T> for *T {
+  fn postinc(v: **T) *T {
+    var tmp: *T = *v;
+    *v = *v + sizeof(**v);
+    return tmp;
+  }
+}
+
+intf Indexable<I, T> {
+  fn index(idx: *I) *T;
 }
 
 intf Comparable<T> {
@@ -29,13 +41,13 @@ struct string {
   }
 }
 
-impl Indexable<u8> for string {
-  fn index(idx: u32) *u8 {
+impl<T> Indexable<I, u8> for string {
+  fn index(idx: *I) *u8 {
     return &data[idx];
   }
 }
 
-fn print_str(s: *u8) {
+fn print_cstr(s: *u8) {
   while (*s != 0) {
     printf("%c", *(s++));
   }
@@ -46,7 +58,7 @@ fn main() i32 {
   var data: [SIZE]u8;
   var nbytes: u32 = readf(&data[0], SIZE);
   printf("got %d bytes: ", nbytes);
-  print_str(&data[0]);
+  print_cstr(&data[0]);
   printf("\n");
   printf("strlen result: %d\n", strlen(&data[0]));
   return 0;

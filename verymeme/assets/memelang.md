@@ -11,7 +11,12 @@ return of binary operators add, sub, mul, div must be same type as left
 ## Built-in types
 i8, i16, i32, i64, u8, u16, u32, u64, bool, f32, f64
 
+Can convert between built-in types explicitly using e.g. i16(var).
+
 ## Literals
+signed and unsigned literals: 128, 128u => i32, u32
+
+"string literal" => *u8
 
 ## Operators and precedence
 
