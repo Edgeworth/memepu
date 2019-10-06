@@ -19,6 +19,8 @@ i8, i16, i32, i64, u8, u16, u32, u64, bool, f32, f64
 
 ## Pointers and arrays
 
+Arrays can be indexed by either signed or unsigned ints.
+
 ## Const
 
 ## Tagged unions

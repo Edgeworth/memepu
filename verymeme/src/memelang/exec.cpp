@@ -136,9 +136,25 @@ Val Exec::runOp(ast::Op* op) {
 
   switch (op->type) {
   case ast::Expr::FN_CALL: {
-    if (typeid(*(op->left.get())) != typeid(ast::VarRef)) return {};  // TODO don't skip types
-    auto* call = g<ast::VarRef>(op->left);  // TODO can be type.
     auto* args = g<ast::FnCallArgs>(op->right);
+
+    // Type constructor / conversion
+    if (typeid(*op->left) == typeid(ast::Type)) {
+      auto* type = typeFromAst(g<ast::Type>(op->left));
+      if (args->args.size() != 1)
+        error("conversion must have 1 arg");  // TODO: arbitrary conversions?
+      Val val = eval(args->args[0].get());
+      Val res{.hnd = vm_.allocTmp(type->size()), .type = type};
+      invokeBuiltin(val, [this, &res](auto val_v) {
+        invokeBuiltin(
+            res, [this, &val_v, &res](auto res_v) { vm_.write(res, decltype(res_v)(val_v)); });
+      });
+      return res;
+    }
+
+    // Otherwise, it's a var ref.
+    auto* call = g<ast::VarRef>(op->left);
+
     if (call->name == "printf") {
       if (args->args.empty()) error("printf requires at least 1 argument");
       boost::format fmt = boost::format(g<ast::StrLit>(args->args[0])->val);
@@ -155,12 +171,11 @@ Val Exec::runOp(ast::Op* op) {
       auto read_sz = eval(args->args[1].get());
       if (*read_ptr.type != Type{.name = U8, .quals = {{}, {.ptr = true}}})
         error("wrong type: " + read_ptr.type->toString());
-      if (read_sz.type != i32_)  // TODO: require U32.
-        error("wrong type: " + read_sz.type->toString());
+      if (read_sz.type != u32_) error("wrong type: " + read_sz.type->toString());
       std::cin.getline(&vm_.ref<char>(deref(read_ptr)), vm_.ref<int32_t>(read_sz));
 
-      auto ret = Val{.hnd = vm_.allocStack(i32_->size()), .type = i32_};
-      vm_.write(ret, int32_t(std::cin.gcount()));
+      auto ret = Val{.hnd = vm_.allocStack(u32_->size()), .type = u32_};
+      vm_.write(ret, uint32_t(std::cin.gcount()));
       return ret;
     }
 
@@ -180,6 +195,7 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::PREFIX_INC: return preinc(eval(op->left.get()));
   case ast::Expr::POSTFIX_INC: return preinc(eval(op->left.get()));
   case ast::Expr::UNARY_ADDR: return addr(eval(op->left.get()));
+  case ast::Expr::UNARY_DEREF: return deref(eval(op->left.get()));
   default: error("unhandled op");
   }
   return {};
@@ -262,10 +278,10 @@ const Type* Exec::typeFromAst(ast::Type* ast_type) {
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
     new_type.quals.emplace_back();
-    // TODO not only int32_t
+    // TODO not only u32_t?
     if ((*i)->array) {
       auto array_val = eval((*i)->array.get());
-      if (array_val.type != i32_) error("array size must be i32");
+      if (array_val.type != u32_) error("array size must be u32");
       new_type.quals.back().array = vm_.ref<int32_t>(array_val);
     }
     new_type.quals.back().ptr = (*i)->ptr;
@@ -296,6 +312,7 @@ void Exec::error(const std::string& msg) const {
 }
 
 Val Exec::assign(Val l, Val r) {
+  if (l.type != r.type) error("assignment to value of different type");
   return copy(l, r);  // Deep copy.
 }
 
@@ -324,11 +341,11 @@ Val Exec::neq(Val l, Val r) {
 }
 
 Val Exec::array_access(Val l, Val r) {
-  // TODO not only int32 ?
-  if (r.type != i32_) error("array access index must be i32");
+  // TODO not only u32 ?
+  if (r.type != u32_ && r.type != i32_) error("array access index must be i32 or u32");
   if (!l.type->quals.back().array) error("array access on non-array type");
   Type new_type = *l.type;
-  new_type.quals.erase(new_type.quals.begin());  // Remove array qualifier.
+  new_type.quals.pop_back();  // Remove array qualifier.
   const int32_t idx = vm_.ref<int32_t>(r);
   return Val{l.hnd + idx * l.type->size(), addType(std::move(new_type))};
 }
@@ -364,8 +381,9 @@ Val Exec::copy(Val dst, Val src) {
 }
 
 Val Exec::deref(const Val& l) {
-  Val res;
-  res.hnd = vm_.ref<Hnd>(l);
+  Type new_type = *l.type;
+  new_type.quals.pop_back();  // Remove ptr.
+  Val res{.hnd = vm_.ref<Hnd>(l), .type = addType(std::move(new_type))};
   return res;
 }
 

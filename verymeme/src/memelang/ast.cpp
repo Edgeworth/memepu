@@ -55,7 +55,9 @@ IntLit::IntLit(Parser::Ctx& c) : Node(c) {
   if (c.hasTok(Tok::UINT_LIT)) unsign = true;
   val = c.consumeTok({Tok::INT_LIT, Tok::UINT_LIT})->int_val;
 }
-std::string IntLit::toString() const { return (fmt("IntLit(%d)") % val).str(); }
+std::string IntLit::toString() const {
+  return (fmt("IntLit(%d%s)") % val % (unsign ? ", unsigned" : "")).str();
+}
 std::vector<Node*> IntLit::children() { return {}; }
 
 CharLit::CharLit(Parser::Ctx& c) : Node(c) { val = int32_t(c.consumeTok(Tok::CHAR_LIT)->int_val); }
@@ -353,6 +355,6 @@ File::File(Parser::Ctx& c) : Node(c) {
   }
 }
 std::string File::toString() const { return "File"; }
-std::vector<Node*> File::children() { return flattenChildren(fns, enums, intfs, structs); }
+std::vector<Node*> File::children() { return flattenChildren(fns, enums, intfs, structs, impls); }
 
 }  // namespace memelang::ast
