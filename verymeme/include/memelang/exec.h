@@ -6,6 +6,7 @@
 
 #include "memelang/ast.h"
 #include "memelang/scopes.h"
+#include "memelang/type.h"
 #include "memelang/vm.h"
 #include "verymeme/util.h"
 
@@ -50,7 +51,7 @@ private:
 
   void setContext(ast::Node* node);
 
-  Val runFn(ast::Fn* fn, const std::vector<Val>& args);
+  Val runFn(ast::Fn* fn, const std::vector<Val>& args, Val ths);
   Val runStmtBlk(ast::StmtBlk* blk);
   Val runStmt(ast::Node* stmt);
   void runVarDefn(ast::VarDefn* defn);
@@ -61,7 +62,8 @@ private:
   Val runOp(ast::Op* op);
 
   Val eval(ast::Node* n);
-  ast::Fn* getFn(const Typename& tname, ast::Node* n);
+  ast::Fn* getFn(const Typename& tname);
+  ast::Fn* lookupImplFn(Val obj, const std::string& impl_name, const std::string& fn_name);
 
   const Type* addType(Type&& t);
   Val valFromAstType(ast::Type* type);
@@ -114,20 +116,8 @@ private:
   Val binop(Val l, Val r, const Type* type, const std::string& op_name, F default_op) {
     bug_unless(type && l.type && r.type);
 
-    // Look in impls for l's type
-    // TODO: Generalise look-up procedure, define rules for lookup.
-    auto impl_iter = impls_.find(l.type);
-    if (impl_iter != impls_.end()) {
-      for (const auto& [impl_type, impl] : impl_iter->second) {
-        if (impl_type->name != "Comparable") continue;
-        if (impl->tintf->params.size() != 1) continue;
-        // TODO: better lookup rules
-        if (typeFromAst(impl->tintf->params[0].get()) != r.type) continue;
-        for (const auto& fn : impl->fns) {
-          if (fn->sig->tname->name == op_name) { return runFn(fn.get(), {addr(r)}); }
-        }
-      }
-    }
+    if (auto* fn = lookupImplFn(l, "Comparable", op_name)) return runFn(fn, {addr(r)}, l);
+
     if (l.type != r.type)
       error("no Comparable defined and types don't match: " + l.type->toString() + " " +
           r.type->toString());
@@ -141,9 +131,9 @@ private:
   }
 
   template <typename F>
-  Val unop(Val l, const Type* type, F default_op) {
+  Val unop(Val l, const Type* type, const std::string& op_name, F default_op) {
     bug_unless(type && l.type);
-    // TODO: Impl operator overloading?
+    if (auto* fn = lookupImplFn(l, "UnaryArith", op_name)) return runFn(fn, {}, l);
     auto res = invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
     Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type};
     vm_.ref<decltype(res)>(v) = res;
