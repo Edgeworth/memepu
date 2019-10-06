@@ -1,81 +1,15 @@
 #ifndef MEMELANG_VM_H
 #define MEMELANG_VM_H
 
-#include <cctype>
+#include <cstdint>
 #include <cstring>
-#include <map>
-#include <memory>
-#include <vector>
 
-#include "memelang/constants.h"
-#include "verymeme/util.h"
+#include "memelang/type.h"
 
 namespace memelang::exec {
 
 using Hnd = int32_t;
 constexpr inline Hnd INVALID_HND = -1;
-
-struct Qualifier {
-  int array = 0;
-  bool ptr = false;
-  bool cnst = false;
-
-  bool operator==(const Qualifier& o) const { return !(*this < o) && !(o < *this); }
-  bool operator<(const Qualifier& o) const {
-    return std::tie(array, ptr, cnst) < std::tie(o.array, o.ptr, o.cnst);
-  }
-
-  std::string toString() const {
-    std::string q;
-    if (array) q += std::to_string(array);
-    if (ptr) q += "ptr";
-    if (cnst) q += "const";
-    return q;
-  }
-};
-
-struct Type {
-  std::string name{};
-  std::vector<Qualifier> quals{};  // Holds qualifiers from right to left.
-  std::vector<const Type*> params{};
-
-  bool operator==(const Type& o) const { return !(*this < o) && !(o < *this); }
-  bool operator!=(const Type& o) const { return (*this < o) || (o < *this); }
-  bool operator<(const Type& o) const {
-    if (name != o.name) return name < o.name;
-    if (quals != o.quals) return quals < o.quals;
-    return params < o.params;
-  }
-
-  int size() const {
-    // TODO: size of user defined types
-    auto iter = BUILTIN_SIZE.find(name);
-    if (iter == BUILTIN_SIZE.end()) unimplemented();
-    int size = iter->second;
-    for (const auto& qual : quals) {
-      if (qual.ptr) size = sizeof(Hnd);
-      else if (qual.array)
-        size *= qual.array;
-    }
-    return size;
-  }
-
-  std::string toString() const {
-    std::string rep = "Type(" + name + "; ";
-    for (auto i = quals.rbegin(); i != quals.rend(); ++i) rep += i->toString() + ", ";
-    rep += ")";
-    return rep;
-  }
-};
-
-struct Typename {
-  std::string name{};
-  std::vector<std::string> tlist{};
-
-  bool operator<(const Typename& o) const {
-    return std::tie(name, tlist) < std::tie(o.name, o.tlist);
-  }
-};
 
 struct Val {
   Hnd hnd{INVALID_HND};  // Handle into VM memory.

@@ -71,19 +71,22 @@ void Exec::run() {
   }
 
   scope_.pushScope();
-  runFn(getFn(Typename{.name = "main"}, nullptr), {});
+  runFn(getFn(Typename{.name = "main"}), {}, {});
   scope_.popScope();
   printf("===END PROGRAM===\n");
 }
 
-Val Exec::runFn(ast::Fn* fn, const std::vector<Val>& params) {
+Val Exec::runFn(ast::Fn* fn, const std::vector<Val>& params, Val ths) {
   setContext(fn);
 
   scope_.pushScope();
   if (fn->sig->params.size() != params.size()) error("wrong number of arguments");
+  if (ths.hnd != INVALID_HND) scope_.declareVar("this", addr(ths));
   for (int i = 0; i < int(fn->sig->params.size()); ++i) {
     auto& decl = fn->sig->params[i];
     runStmt(decl.get());
+    printf("first type: %s, second: %s\n", scope_.getVar(decl->ref->name).type->toString().c_str(),
+        params[i].type->toString().c_str());
     assign(scope_.getVar(decl->ref->name), params[i]);
   }
   auto val = runStmtBlk(fn->blk.get());
@@ -181,8 +184,8 @@ Val Exec::runOp(ast::Op* op) {
 
     std::vector<Val> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
-    auto* fn = getFn(Typename{.name = call->name}, call);
-    return runFn(fn, params);
+    auto* fn = getFn(Typename{.name = call->name});
+    return runFn(fn, params, {});
   }
   case ast::Expr::ASSIGNMENT: return assign(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::ADD: return add(eval(op->left.get()), eval(op->right.get()));
@@ -193,7 +196,7 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::NEQ: return neq(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::ARRAY_ACCESS: return array_access(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::PREFIX_INC: return preinc(eval(op->left.get()));
-  case ast::Expr::POSTFIX_INC: return preinc(eval(op->left.get()));
+  case ast::Expr::POSTFIX_INC: return postinc(eval(op->left.get()));
   case ast::Expr::UNARY_ADDR: return addr(eval(op->left.get()));
   case ast::Expr::UNARY_DEREF: return deref(eval(op->left.get()));
   default: error("unhandled op");
@@ -252,8 +255,7 @@ Val Exec::eval(ast::Node* n) {
   return {};
 }
 
-ast::Fn* Exec::getFn(const Typename& tname, ast::Node* n) {
-  setContext(n);
+ast::Fn* Exec::getFn(const Typename& tname) {
   if (!fns_.count(tname)) error("no function " + tname.name);
   return fns_[tname];
 }
@@ -351,14 +353,14 @@ Val Exec::array_access(Val l, Val r) {
 }
 
 Val Exec::preinc(Val l) {
-  return unop(l, l.type, [this, &l](auto v) {
+  return unop(l, l.type, "preinc", [this, &l](auto v) {
     vm_.write(l, v + 1);
     return l;
   });
 }
 
 Val Exec::postinc(Val l) {
-  return unop(l, l.type, [this, &l](auto v) {
+  return unop(l, l.type, "postinc", [this, &l](auto v) {
     Val tmp = {.hnd = vm_.allocTmp(l.type->size()), .type = l.type};
     copy(tmp, l);
     vm_.write(l, v + 1);
@@ -385,6 +387,23 @@ Val Exec::deref(const Val& l) {
   new_type.quals.pop_back();  // Remove ptr.
   Val res{.hnd = vm_.ref<Hnd>(l), .type = addType(std::move(new_type))};
   return res;
+}
+
+ast::Fn* Exec::lookupImplFn(Val obj, const std::string& impl_name, const std::string& fn_name) {
+  // TODO: Generalise look-up procedure, define rules for lookup -> need for unaryarith
+  // define subtype function?
+  auto impl_iter = impls_.find(obj.type);
+  printf("lookup: %s %s\n", impl_name.c_str(), fn_name.c_str());
+  if (impl_iter != impls_.end()) {
+    for (const auto& [impl_type, impl] : impl_iter->second) {
+      if (impl_type->name != impl_name) continue;
+      for (const auto& fn : impl->fns) {
+        printf("check fn name: %s\n", fn->sig->tname->name.c_str());
+        if (fn->sig->tname->name == fn_name) return fn.get();
+      }
+    }
+  }
+  return nullptr;
 }
 
 }  // namespace memelang::exec

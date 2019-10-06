@@ -52,7 +52,7 @@ std::string BoolLit::toString() const {
 std::vector<Node*> BoolLit::children() { return {}; }
 
 IntLit::IntLit(Parser::Ctx& c) : Node(c) {
-  if (c.hasTok(Tok::UINT_LIT)) unsign = true;
+  unsign = c.hasTok(Tok::UINT_LIT);
   val = c.consumeTok({Tok::INT_LIT, Tok::UINT_LIT})->int_val;
 }
 std::string IntLit::toString() const {
