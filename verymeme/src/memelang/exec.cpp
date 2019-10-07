@@ -269,6 +269,7 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
   return val;
 }
 
+// TODO: need to consider type wildcards
 const Type* Exec::typeFromAst(ast::Type* ast_type) {
   if (ast_type_map_.count(ast_type)) return ast_type_map_[ast_type];
 
@@ -390,20 +391,30 @@ Val Exec::deref(const Val& l) {
 }
 
 ast::Fn* Exec::lookupImplFn(Val obj, const std::string& impl_name, const std::string& fn_name) {
-  // TODO: Generalise look-up procedure, define rules for lookup -> need for unaryarith
-  // define subtype function?
-  auto impl_iter = impls_.find(obj.type);
   printf("lookup: %s %s\n", impl_name.c_str(), fn_name.c_str());
-  if (impl_iter != impls_.end()) {
-    for (const auto& [impl_type, impl] : impl_iter->second) {
-      if (impl_type->name != impl_name) continue;
-      for (const auto& fn : impl->fns) {
-        printf("check fn name: %s\n", fn->sig->tname->name.c_str());
-        if (fn->sig->tname->name == fn_name) return fn.get();
+  std::pair<int, int> best_dist{-1, -1};
+  ast::Fn* best_fn = nullptr;
+  for (const auto& [obj_type, impl_map] : impls_) {
+    const int object_dist = obj.type->dist(*obj_type);
+    if (object_dist == Type::NOT_SUBTYPE ||
+        (best_dist.first != -1 && best_dist.first < object_dist))
+      continue;
+
+    for (const auto& [intf_type, impl] : impl_map) {
+      // TODO: Need to decide which interface to use based on function arguments or something.
+      if (intf_type->name == impl_name) {
+        for (const auto& fn : impl->fns) {
+          printf("check fn name: %s\n", fn->sig->tname->name.c_str());
+          if (fn->sig->tname->name == fn_name) {
+            best_fn = fn.get();
+            best_dist.first = object_dist;
+          }
+        }
       }
     }
   }
-  return nullptr;
+
+  return best_fn;
 }
 
 }  // namespace memelang::exec
