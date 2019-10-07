@@ -18,7 +18,7 @@ enum_blk : LBRACE ((IDENT | member_var_decl) ',')* RBRACE ;  // No type means no
 match_blk : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_blk)* RBRACE ;
 
 // Statement related:
-stmt : expr ';' | stmt_var_defn | stmt_var_decl ';' | stmt_ret | stmt_for | stmt_if | stmt_while | stmt_match | ASM ;
+stmt : expr ';' | stmt_var_defn | stmt_ret | stmt_for | stmt_if | stmt_while | stmt_match | ASM ;
 stmt_ret : 'return' expr ';' ;
 // TODO: Remove parens from for, match, if
 stmt_for : 'for' '(' stmt_var_defn expr ';' expr ')' stmt_blk ;
@@ -28,9 +28,8 @@ stmt_match : 'match' '(' expr ')' match_blk ;
 
 // Variable related:
 member_var_decl : IDENT ':' type;
-stmt_var_decl : 'var' IDENT ':' ('const'? 'auto' | type);
 fn_var_decl : IDENT ':' type;
-stmt_var_defn : stmt_var_decl '=' expr ';' ;
+stmt_var_defn : IDENT ':=' expr ';' | IDENT ':' ('const' | type) '=' expr ';' ;
 
 // Expression related:
 literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | compound_lit;
