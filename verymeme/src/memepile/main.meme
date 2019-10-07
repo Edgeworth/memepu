@@ -1,13 +1,13 @@
 // fn readf(data: *u8, size: i32) i32 {}
 
 intf UnaryArith<T> {
-  fn postinc(v: *T) T;
+  fn postinc() T;
 }
 
 impl<T> UnaryArith<*T> for *T {
-  fn postinc(v: **T) *T {
-    var tmp: *T = *v;
-    *v = *v + sizeof(**v);
+  fn postinc() *T {
+    var tmp: *T = *this;
+    *this = *this + sizeof(**this);
     return tmp;
   }
 }
@@ -22,6 +22,7 @@ intf Comparable<T> {
 
 impl Comparable<i32> for u8 {
   fn neq(o: *i32) bool {
+    printf("neq: %d %d != %d\n", *this, i32(*this), *o);
     return i32(*this) != *o;
   }
 }

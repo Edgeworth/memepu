@@ -1,6 +1,7 @@
 #ifndef MEMELANG_TYPE_H
 #define MEMELANG_TYPE_H
 
+#include <climits>
 #include <map>
 #include <vector>
 
@@ -20,6 +21,8 @@ struct Qualifier {
 };
 
 struct Type {
+  constexpr static int NOT_SUBTYPE = INT_MAX / 2;
+
   std::string name{};
   std::vector<Qualifier> quals{};  // Holds qualifiers from right to left.
   std::vector<const Type*> params{};
@@ -33,6 +36,7 @@ struct Type {
   }
 
   int size() const;
+  int dist(const Type& o) const;  // distance to other type, if subtype.
 
   std::string toString() const;
 };
