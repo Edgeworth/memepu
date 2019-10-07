@@ -1,4 +1,4 @@
 struct Empty {}
 fn main() i8 {
-  var e: auto = Empty({});
+  e := Empty({});
 }

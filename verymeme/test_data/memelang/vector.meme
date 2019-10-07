@@ -52,8 +52,8 @@ struct vector<T> {
   fn push(val: *T) Unit {
     if (size_ == cap_) {
       cap_ = cap_ * 2;
-      var newdata: *T = malloc(cap_ * sizeof(T));
-      for (var i: i32 = 0; i < size_; i++) {
+      newdata := *T(malloc(cap_ * sizeof(T)));
+      for (i := 0; i < size_; i++) {
         newdata[i] = data_[i].move();
       }
       free(data_);
@@ -101,7 +101,7 @@ impl<T> Movable<T> for vector<T> {
 
 impl<T> Destructible<T> for vector<T> {
   fn destroy() Unit {
-    for (var i: i32 = 0; i < size; i++) {
+    for (i := 0; i < size; i++) {
       data_[i].destroy();
     }
     free(data_);
@@ -115,15 +115,15 @@ impl<T> Indexable for vector<T> {
 }
 
 fn swap<T>(a: *T, b: *T) Unit {
-  var c: T = {};
+  c : T = {};
   a.move_into(&c);
   b.move_into(a);
   c.move_into(b);
 }
 
 fn bubblesort<T>(v: *vector<T>) Unit {
-  for (var i: i32 = 0; i < v.size(); i++) {
-    for (var j: i32 = 0; j < v.size() - 1; j++) {
+  for (i := 0; i < v.size(); i++) {
+    for (j := 0; j < v.size() - 1; j++) {
       if (v[j] > v[j + 1]) {
         swap(v[j], v[j + 1]);
       }
@@ -132,11 +132,11 @@ fn bubblesort<T>(v: *vector<T>) Unit {
 }
 
 fn main() int8 {
-    var v: auto = vector<int8>.new();
-    v.push(4);
-    v.push(3);
-    v.push(1);
-    bubblesort(&v);
-    v[0] = v[0] << 2;
-    return 1;
+  v := vector<int8>.new();
+  v.push(4);
+  v.push(3);
+  v.push(1);
+  bubblesort(&v);
+  v[0] = v[0] << 2;
+  return 1;
 }

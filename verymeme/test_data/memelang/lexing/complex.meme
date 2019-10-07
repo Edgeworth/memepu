@@ -16,13 +16,12 @@ fn main() i8 {
   asm {
     lhu r30, 3
   }
-  var decl: A;
-  var st: A = {};
-  var test_enum: TestEnum = Test3(st);
+  st : A = {};
+  test_enum := Test3(st);
   st.v = 0x3;
-  var e: i8 = 0;
-  var a: i8 = 02;
-  var d: [40]i8 = {};
+  e := i8(0);
+  a := i8(02);
+  d : [40]i8 = {};
   d[--st.v] = 1;
   d[st.v++] = 1;
   d[40 - 1] = true && (true || !false) ? ~0 & 1 : 1 ^ 2 | 3;
@@ -40,7 +39,7 @@ fn main() i8 {
       Test3(x) {print(x);}
     }
   }
-  var b: const auto = -(34 + 32) * (55 / 3) - -4;
+  b : const = -(34 + 32) * (55 / 3) - -4;
   a-- 4 % 2;
   a--- b;
   'a';
@@ -49,7 +48,7 @@ fn main() i8 {
   '\"';
   "b\"";
   5.5;
-  for (var f: i8 = 0; f < 10; f++) {
+  for (f := i8(0); f < 10; f++) {
     return 4;
   }
   // Big comment "\" ''
