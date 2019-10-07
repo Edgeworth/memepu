@@ -28,10 +28,20 @@ int Type::size() const {
 }
 
 std::string Type::toString() const {
-  std::string rep = "Type(" + name + "; ";
+  std::string rep = "Type(name: " + name + "; quals: ";
   for (auto i = quals.rbegin(); i != quals.rend(); ++i) rep += i->toString() + ", ";
+  rep += "; params: ";
+  for (auto i = params.rbegin(); i != params.rend(); ++i) rep += (*i)->toString() + ", ";
   rep += ")";
   return rep;
+}
+
+int Type::dist(const Type& o) const {
+  printf("Compute dist from %s to %s\n", this->toString().c_str(), o.toString().c_str());
+  if (o.name == "T") return 0; // TODO don't do this, also need to handle sizes/etc for wildcards everywhere.
+  if (name != o.name) return NOT_SUBTYPE;
+
+  return 0;
 }
 
 }  // namespace memelang::exec
