@@ -126,8 +126,12 @@ Val Exec::runStmt(ast::Node* stmt) {
 }
 
 void Exec::runVarDefn(ast::VarDefn* defn) {
-  auto var = runVarDecl(defn->decl.get());
-  if (defn->defn) assign(var, eval(defn->defn.get()));
+  bug_unless(defn->defn);
+  if (defn->decl->type->name.empty()) {
+    scope_.declareVar(defn->decl->ref->name, eval(defn->defn.get()));
+  } else {
+    assign(runVarDecl(defn->decl.get()), eval(defn->defn.get()));
+  }
 }
 
 Val Exec::runVarDecl(ast::VarDecl* decl) {
