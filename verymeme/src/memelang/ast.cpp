@@ -143,8 +143,7 @@ Type::Type(Parser::Ctx& c) : Node(c) {
       c.consumeTok(Tok::RANGLE);
     }
   } else if (c.hasTok(Tok::AUTO)) {
-    c.consumeTok();
-    name = "auto";
+    c.consumeTok();  // TODO remove?
   }
 }
 std::string Type::toString() const {
