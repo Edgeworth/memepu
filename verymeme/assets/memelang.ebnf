@@ -20,11 +20,10 @@ match_blk : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_blk)* RBRACE ;
 // Statement related:
 stmt : expr ';' | stmt_var_defn | stmt_ret | stmt_for | stmt_if | stmt_while | stmt_match | ASM ;
 stmt_ret : 'return' expr ';' ;
-// TODO: Remove parens from for, match, if
-stmt_for : 'for' '(' stmt_var_defn expr ';' expr ')' stmt_blk ;
-stmt_while : 'while' '(' expr ')' stmt_blk ;
-stmt_if : 'if' '(' expr ')' stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
-stmt_match : 'match' '(' expr ')' match_blk ;
+stmt_for : 'for' stmt_var_defn expr ';' expr stmt_blk ;
+stmt_while : 'while' expr stmt_blk ;
+stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
+stmt_match : 'match' expr match_blk ;
 
 // Variable related:
 member_var_decl : IDENT ':' type;
