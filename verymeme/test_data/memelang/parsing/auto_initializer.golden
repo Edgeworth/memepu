@@ -7,7 +7,7 @@ File
    VarDefn
     VarDecl
      VarRef(e)
-     Type(auto)
+     Type()
     Op(FN_CALL)
      Type(Empty)
      FnCallArgs

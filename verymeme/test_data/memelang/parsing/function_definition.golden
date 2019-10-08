@@ -15,7 +15,7 @@ File
     VarDefn
      VarDecl
       VarRef(i)
-      Type(i32)
+      Type()
      IntLit(0)
     Op(LT)
      VarRef(i)
@@ -31,7 +31,7 @@ File
       VarDefn
        VarDecl
         VarRef(j)
-        Type(i32)
+        Type()
        IntLit(0)
       Op(LT)
        VarRef(j)
