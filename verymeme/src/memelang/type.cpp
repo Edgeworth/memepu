@@ -38,7 +38,8 @@ std::string Type::toString() const {
 
 int Type::dist(const Type& o) const {
   printf("Compute dist from %s to %s\n", this->toString().c_str(), o.toString().c_str());
-  if (o.name == "T") return 0; // TODO don't do this, also need to handle sizes/etc for wildcards everywhere.
+  if (o.name == "T")
+    return 0;  // TODO don't do this, also need to handle sizes/etc for wildcards everywhere.
   if (name != o.name) return NOT_SUBTYPE;
 
   return 0;

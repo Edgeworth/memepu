@@ -187,14 +187,15 @@ std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret
 StmtBlk::StmtBlk(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LBRACE);
   while (!c.hasTok(Tok::RBRACE)) {
+    if (c.hasTok(Tok::COLON, 1)) {  // Look one token ahead for colon
+      stmts.emplace_back(std::make_unique<VarDefn>(c));
+      c.consumeTok(Tok::SEMICOLON);
+      continue;
+    }
     // TODO(Progress): match
     switch (c.curTok()->type) {
     case Tok::RETURN:
       stmts.emplace_back(std::make_unique<Return>(c));
-      c.consumeTok(Tok::SEMICOLON);
-      break;
-    case Tok::VAR:
-      stmts.emplace_back(std::make_unique<VarDefn>(c));
       c.consumeTok(Tok::SEMICOLON);
       break;
     case Tok::FOR: stmts.emplace_back(std::make_unique<For>(c)); break;
@@ -227,25 +228,20 @@ std::string Return::toString() const { return "Return"; }
 std::vector<Node*> Return::children() { return flattenChildren(ret); }
 
 VarDefn::VarDefn(Parser::Ctx& c) : Node(c) {
-  c.consumeTok(Tok::VAR);
   decl = std::make_unique<VarDecl>(c);
-  if (c.hasTok(Tok::EQUAL)) {
-    c.consumeTok();
-    defn = ExprParser(c).parse();
-  }
+  c.consumeTok(Tok::EQUAL);
+  defn = ExprParser(c).parse();
 }
 std::string VarDefn::toString() const { return "VarDefn"; }
 std::vector<Node*> VarDefn::children() { return flattenChildren(decl, defn); }
 
 For::For(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::FOR);
-  c.consumeTok(Tok::LPAREN);
   var_defn = std::make_unique<VarDefn>(c);
   c.consumeTok(Tok::SEMICOLON);
   cond = ExprParser(c).parse();
   c.consumeTok(Tok::SEMICOLON);
   update = ExprParser(c).parse();
-  c.consumeTok(Tok::RPAREN);
   blk = std::make_unique<StmtBlk>(c);
 }
 std::string For::toString() const { return "For"; }
@@ -253,9 +249,7 @@ std::vector<Node*> For::children() { return flattenChildren(var_defn, cond, upda
 
 While::While(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::WHILE);
-  c.consumeTok(Tok::LPAREN);
   cond = ExprParser(c).parse();
-  c.consumeTok(Tok::RPAREN);
   blk = std::make_unique<StmtBlk>(c);
 }
 std::string While::toString() const { return "While"; }
@@ -263,9 +257,7 @@ std::vector<Node*> While::children() { return flattenChildren(cond, blk); }
 
 If::If(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::IF);
-  c.consumeTok(Tok::LPAREN);
   cond = ExprParser(c).parse();
-  c.consumeTok(Tok::RPAREN);
   then = std::make_unique<StmtBlk>(c);
   if (c.maybeConsumeTok(Tok::ELSE)) {
     if (c.hasTok(Tok::LBRACE)) els = std::make_unique<StmtBlk>(c);

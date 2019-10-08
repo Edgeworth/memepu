@@ -59,7 +59,6 @@ struct Tok {
     FOR,
     WHILE,
     RETURN,
-    VAR,
     STATIC,
     CONST,
     AUTO,
