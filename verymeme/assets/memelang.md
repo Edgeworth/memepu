@@ -20,6 +20,8 @@ signed and unsigned literals: 128, 128u => i32, u32
 
 ## Operators and precedence
 
+## Expressions
+
 ## Scoping
 
 ## Pointers and arrays

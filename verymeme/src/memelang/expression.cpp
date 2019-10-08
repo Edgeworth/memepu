@@ -67,7 +67,10 @@ std::unique_ptr<Node> ExprParser::parse() {
       ec.addExpr(parse());
       c_.consumeTok(Tok::RSQUARE);
       break;
-    case Tok::LBRACE: ec.addExpr(std::make_unique<CompoundLit>(c_)); break;
+    case Tok::LBRACE:
+      if (ec.canFinish()) return ec.finish();
+      ec.addExpr(std::make_unique<CompoundLit>(c_));
+      break;
     case Tok::IDENT:
       if (c_.type_idents.count(tok->str_val)) {  // If it's the name of a type, take type.
         ec.addExpr(std::make_unique<Type>(c_));

@@ -6,7 +6,7 @@ intf UnaryArith<T> {
 
 impl<T> UnaryArith<*T> for *T {
   fn postinc() *T {
-    var tmp: *T = *this;
+    tmp := *this;
     *this = *this + sizeof(**this);
     return tmp;
   }
@@ -28,7 +28,7 @@ impl Comparable<i32> for u8 {
 }
 
 fn strlen(s: *u8) u32 {
-  var len: u32 = 0u;
+  len := 0u;
   while (s[len++] != 0) {}
   return len;
 }
@@ -55,9 +55,9 @@ fn print_cstr(s: *u8) {
 }
 
 fn main() i32 {
-  var SIZE: u32 = 128u;
-  var data: [SIZE]u8;
-  var nbytes: u32 = readf(&data[0], SIZE);
+  SIZE := 128u;
+  data : [SIZE]u8 = {};
+  nbytes := readf(&data[0], SIZE);
   printf("got %d bytes: ", nbytes);
   print_cstr(&data[0]);
   printf("\n");

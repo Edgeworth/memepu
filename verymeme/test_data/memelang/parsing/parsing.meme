@@ -25,15 +25,15 @@ fn main() i8 {
   d[--st.v] = 1;
   d[st.v++] = 1;
   d[40 - 1] = true && (true || !false) ? ~0 & 1 : 1 ^ 2 | 3;
-  if (e == st.v || d[23 - 2] != a || a <= e || a > e || e >= st.v || e < d[3]) {
+  if e == st.v || d[23 - 2] != a || a <= e || a > e || e >= st.v || e < d[3] {
     test<i8>(&e);
   } else if (true) {} else {
-    match (a) {
+    match a {
       1 {}
       2 {}
       3 {print(5);}
     }
-    match (test_enum) {
+    match test_enum {
       Test1 {}
       Test2 {}
       Test3(x) {print(x);}
@@ -48,7 +48,7 @@ fn main() i8 {
   '\"';
   "b\"";
   5.5;
-  for (f := i8(0); f < 10; f++) {
+  for f := i8(0); f < 10; f++ {
     return 4;
   }
   // Big comment "\" ''
