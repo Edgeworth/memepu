@@ -49,7 +49,6 @@ std::unique_ptr<Node> ExprParser::parse() {
 
     switch (tok->type) {
     // TODO(progress): handle bitshift, ternary, and types starting with * or lparen.
-    // TODO(improvement): remove parens from if/match/for
     case Tok::LPAREN:
       // If we can do postfix, add function call operation. Otherwise, it's just a paren'd expr.
       c_.consumeTok();
