@@ -127,6 +127,7 @@ Val Exec::runStmt(ast::Node* stmt) {
 
 void Exec::runVarDefn(ast::VarDefn* defn) {
   bug_unless(defn->defn);
+  // If no type specifier, just use the definition directly.
   if (defn->decl->type->name.empty()) {
     scope_.declareVar(defn->decl->ref->name, eval(defn->defn.get()));
   } else {
