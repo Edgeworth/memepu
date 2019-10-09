@@ -87,6 +87,7 @@ private:
 
   template <typename F>
   auto invokeBuiltin(Val v, F op) {
+    printf("builtin on: %s\n", v.type->toString().c_str());
     if (v.type == bool_) return std::invoke(op, vm_.ref<bool>(v));
     else if (v.type == i8_)
       return std::invoke(op, vm_.ref<int8_t>(v));
@@ -117,6 +118,7 @@ private:
     bug_unless(type && l.type && r.type);
 
     if (auto* fn = lookupImplFn(l, "Comparable", op_name)) return runFn(fn, {addr(r)}, l);
+    if (auto* fn = lookupImplFn(l, "BinaryArith", op_name)) return runFn(fn, {addr(r)}, l);
 
     if (l.type != r.type)
       error("no Comparable defined and types don't match: " + l.type->toString() + " " +
