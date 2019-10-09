@@ -115,8 +115,8 @@ Val Exec::runStmt(ast::Node* stmt) {
     return runFor(g<ast::For>(stmt));
   } else if (typeid(*stmt) == typeid(ast::While)) {
     return runWhile(g<ast::While>(stmt));
-  } else if (typeid(*stmt) == typeid(ast::Return)) {
-    return eval(g<ast::Return>(stmt)->ret.get());
+  } else if (typeid(*stmt) == typeid(ast::Ret)) {
+    return eval(g<ast::Ret>(stmt)->ret.get());
   } else if (typeid(*stmt) == typeid(ast::If)) {
     return runIf(g<ast::If>(stmt));
   } else {

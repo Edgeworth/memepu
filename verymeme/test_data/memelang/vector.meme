@@ -30,14 +30,14 @@ struct vector_iter<T> {
 
   fn next() *T {
     if idx_ == vec_.size() {
-      return nullptr;
+      ret nullptr;
     }
     idx_ = idx_ + 1;
-    return vec_[idx_ - 1];
+    ret vec_[idx_ - 1];
   }
 
   static fn new(vec: *vector<T>) vector_iter<T> {
-    return {
+    ret {
       vec_: vec,
       idx_: 0
     };
@@ -66,15 +66,15 @@ struct vector<T> {
 
   fn pop() T {
     size_ = size_ - 1;
-    return data_[size_].move();
+    ret data_[size_].move();
   }
 
   fn size() i32 {
-    return size_;
+    ret size_;
   }
 
   static fn new() vector<T> {
-    return {
+    ret {
       data_: nullptr,
       size_: 0,
       cap_: 0
@@ -84,7 +84,7 @@ struct vector<T> {
 
 impl<T> Iterable<T> for vector<T> {
   fn iter() vector_iter<T> {
-    return vector_iter<T>.new(this);
+    ret vector_iter<T>.new(this);
   }
 }
 
@@ -110,7 +110,7 @@ impl<T> Destructible<T> for vector<T> {
 
 impl<T> Indexable for vector<T> {
   fn index(idx: i32) *T {
-    return &data_[idx];
+    ret &data_[idx];
   }
 }
 
@@ -138,5 +138,5 @@ fn main() int8 {
   v.push(1);
   bubblesort(&v);
   v[0] = v[0] << 2;
-  return 1;
+  ret 1;
 }

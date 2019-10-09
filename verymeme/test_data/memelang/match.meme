@@ -5,11 +5,11 @@ enum Result<T, E> {
 
 fn trysomething(succeed: i8) Result<i8, bool> {
   if (succeed > 3) {
-    return Ok(5);
+    ret Ok(5);
   } else {
-    return Err(false);
+    ret Err(false);
   }
-  return Ok(1);
+  ret Ok(1);
 }
 
 fn main() i8 {

@@ -9,5 +9,5 @@ fn main() i32 {
   bubblesort(&v);
   d := vector<i16>(v);
   a * *vector<i16>(v);
-  return 0;
+  ret 0;
 }

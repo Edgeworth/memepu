@@ -202,9 +202,9 @@ File
     Op(POSTFIX_INC)
      VarRef(f)
     StmtBlk
-     Return
+     Ret
       IntLit(4)
-   Return
+   Ret
     IntLit(0)
  Enum(0 untyped)
   Typename(Unit)

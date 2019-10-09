@@ -54,7 +54,7 @@ File
        Type(i16)
       FnCallArgs
        VarRef(v)
-   Return
+   Ret
     IntLit(0)
  Enum(0 untyped)
   Typename(Unit)
