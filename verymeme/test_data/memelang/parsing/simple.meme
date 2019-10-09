@@ -3,5 +3,5 @@ fn main() i32 {
     a- -4;
     a--- b;
     - --a+++b- --c;
-    return 42;
+    ret 42;
 }

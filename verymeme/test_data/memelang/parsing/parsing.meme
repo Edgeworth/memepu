@@ -49,8 +49,8 @@ fn main() i8 {
   "b\"";
   5.5;
   for f := i8(0); f < 10; f++ {
-    return 4;
+    ret 4;
   }
   // Big comment "\" ''
-  return 0;
+  ret 0;
 }

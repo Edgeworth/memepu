@@ -144,7 +144,7 @@ main : context {
   }
 
   : pattern {
-    regex \= (var|i8|i16|i32|u8|u16|u32|bool|impl|intf|struct|enum|fn|asm)
+    regex \= (var|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|bool|impl|intf|struct|enum|fn|asm)
     styles [] = .storage_type;
   }
 
@@ -154,7 +154,7 @@ main : context {
   }
 
   : pattern {
-    regex \= (return|for|while|if|else|match)
+    regex \= (ret|for|while|if|else|match)
     styles [] = .keyword;
   }
 
@@ -164,7 +164,7 @@ main : context {
   }
 
   : pattern {
-    regex \= (\b\d+)
+    regex \= (\b\d+u?)
     styles [] = .constant_numeric;
   }
 

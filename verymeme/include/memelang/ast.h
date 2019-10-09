@@ -191,10 +191,10 @@ struct Asm : public Node {
   DEFNLT(Asm, src);
 };
 
-struct Return : public Node {
+struct Ret : public Node {
   std::unique_ptr<Node> ret;
 
-  DEFNLT(Return, ret);
+  DEFNLT(Ret, ret);
 };
 
 struct VarDefn : public Node {

@@ -32,5 +32,5 @@ File
      VarRef(b)
     Op(PREFIX_DEC)
      VarRef(c)
-   Return
+   Ret
     IntLit(42)
