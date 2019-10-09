@@ -58,7 +58,7 @@ struct Tok {
     MATCH,
     FOR,
     WHILE,
-    RETURN,
+    RET,
     STATIC,
     CONST,
     AUTO,

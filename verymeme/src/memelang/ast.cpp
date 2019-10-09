@@ -193,8 +193,8 @@ StmtBlk::StmtBlk(Parser::Ctx& c) : Node(c) {
     }
     // TODO(Progress): match
     switch (c.curTok()->type) {
-    case Tok::RETURN:
-      stmts.emplace_back(std::make_unique<Return>(c));
+    case Tok::RET:
+      stmts.emplace_back(std::make_unique<Ret>(c));
       c.consumeTok(Tok::SEMICOLON);
       break;
     case Tok::FOR: stmts.emplace_back(std::make_unique<For>(c)); break;
@@ -219,12 +219,12 @@ Asm::Asm(Parser::Ctx& c) : Node(c) { src = c.consumeTok(Tok::ASM)->str_val; }
 std::string Asm::toString() const { return "Asm(" + src + ")"; }
 std::vector<Node*> Asm::children() { return {}; }
 
-Return::Return(Parser::Ctx& c) : Node(c) {
-  c.consumeTok(Tok::RETURN);
+Ret::Ret(Parser::Ctx& c) : Node(c) {
+  c.consumeTok(Tok::RET);
   ret = ExprParser(c).parse();
 }
-std::string Return::toString() const { return "Return"; }
-std::vector<Node*> Return::children() { return flattenChildren(ret); }
+std::string Ret::toString() const { return "Ret"; }
+std::vector<Node*> Ret::children() { return flattenChildren(ret); }
 
 VarDefn::VarDefn(Parser::Ctx& c) : Node(c) {
   decl = std::make_unique<VarDecl>(c);

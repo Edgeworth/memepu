@@ -9,7 +9,7 @@ File
       IntLit(42)
    Type(i8)
   StmtBlk
-   Return
+   Ret
     Op(ARRAY_ACCESS)
      VarRef(arr)
      IntLit(0)
@@ -24,7 +24,7 @@ File
       IntLit(42)
    Type(i8)
   StmtBlk
-   Return
+   Ret
     Op(ARRAY_ACCESS)
      VarRef(arr)
      IntLit(0)
@@ -37,7 +37,7 @@ File
      Qualifier(const: 0 ptr: 1, array: 0)
    Type(i8)
   StmtBlk
-   Return
+   Ret
     Op(ARRAY_ACCESS)
      VarRef(arr)
      IntLit(0)
@@ -67,7 +67,7 @@ File
     FnCallArgs
      Op(UNARY_ADDR)
       VarRef(arr)
-   Return
+   Ret
     IntLit(4)
  Enum(0 untyped)
   Typename(Unit)
