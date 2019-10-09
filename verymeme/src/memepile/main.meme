@@ -1,5 +1,15 @@
 // fn readf(data: *u8, size: i32) i32 {}
 
+intf BinaryArith<A, B> {
+  fn add(o: *A) T;  // TODO: Also variant in return type?
+}
+
+impl<T> BinaryArith<*T, u32> for *T {
+  fn add(o: *u32) *T {
+    return *this + *T(*o);  // TODO: Need to know wildcard types in parser.
+  }
+}
+
 intf UnaryArith<T> {
   fn postinc() T;
 }
@@ -29,7 +39,7 @@ impl Comparable<i32> for u8 {
 
 fn strlen(s: *u8) u32 {
   len := 0u;
-  while (s[len++] != 0) {}
+  while s[len++] != 0 {}
   return len;
 }
 
@@ -49,7 +59,7 @@ impl<T> Indexable<I, u8> for string {
 }
 
 fn print_cstr(s: *u8) {
-  while (*s != 0) {
+  while *s != 0 {
     printf("%c", *(s++));
   }
 }

@@ -23,6 +23,7 @@ void ScopeManager::nestScope() { vars_.back().emplace_back(); }
 void ScopeManager::unnestScope() {
   bug_unless(!vars_.back().empty());
   // TODO: Call destructors
+  // TODO: Pop from stack
   vars_.back().pop_back();
 }
 

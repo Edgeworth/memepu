@@ -182,8 +182,14 @@ Val Exec::runOp(ast::Op* op) {
       if (read_sz.type != u32_) error("wrong type: " + read_sz.type->toString());
       std::cin.getline(&vm_.ref<char>(deref(read_ptr)), vm_.ref<int32_t>(read_sz));
 
-      auto ret = Val{.hnd = vm_.allocStack(u32_->size()), .type = u32_};
+      auto ret = Val{.hnd = vm_.allocTmp(u32_->size()), .type = u32_};
       vm_.write(ret, uint32_t(std::cin.gcount()));
+      return ret;
+    } else if (call->name == "sizeof") {
+      if (args->args.size() != 1) error("sizeof requires 1 argument");
+      auto val = eval(args->args[0].get());
+      auto ret = Val{.hnd = vm_.allocTmp(u32_->size()), .type = u32_};
+      vm_.write(ret, uint32_t(val.type->size()));
       return ret;
     }
 
@@ -320,6 +326,11 @@ void Exec::error(const std::string& msg) const {
 }
 
 Val Exec::assign(Val l, Val r) {
+  if (!r.type) {
+    // TODO: For now, treat assignment from typeless value as memset to 0.
+    vm_.memset(l, 0, l.type->size());
+    return l;
+  }
   if (l.type != r.type) error("assignment to value of different type");
   return copy(l, r);  // Deep copy.
 }

@@ -11,7 +11,7 @@ std::string Qualifier::toString() const {
   if (array) q += std::to_string(array);
   if (ptr) q += "ptr";
   if (cnst) q += "const";
-  return q;
+  return q.empty() ? "no quals" : q;
 }
 
 int Type::size() const {
@@ -38,7 +38,7 @@ std::string Type::toString() const {
 
 int Type::dist(const Type& o) const {
   printf("Compute dist from %s to %s\n", this->toString().c_str(), o.toString().c_str());
-  if (o.name == "T")
+  if (o.name == "T" || o.name == "A" || o.name == "B" || o.name == "I")
     return 0;  // TODO don't do this, also need to handle sizes/etc for wildcards everywhere.
   if (name != o.name) return NOT_SUBTYPE;
 
