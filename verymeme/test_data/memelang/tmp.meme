@@ -1,11 +1,9 @@
-fn fib(n: i32) i32 {
-  if (n < 2) {
-    ret n;
-  }
-  ret fib(n - 1) + fib(n - 2);
+intf BinaryArith<A, B> {
+  fn add(o: *A) T;  // TODO: Also variant in ret type?
 }
 
-fn main() i32 {
-  e := 6;
-  printf("Fib(%d) = %d\n", e, fib(e));
+impl<T> BinaryArith<*T, u32> for *T {
+  fn add(o: *u32) *T {
+    ret *this + *T(*o);  // TODO: Need to know wildcard types in parser.
+  }
 }
