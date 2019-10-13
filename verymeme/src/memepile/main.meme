@@ -1,7 +1,7 @@
 // fn readf(data: *u8, size: i32) i32 {}
 
 intf BinaryArith<A, B> {
-  fn add(o: *A) T;  // TODO: Also variant in ret type?
+  fn add(o: *A) A;  // TODO: Also variant in ret type?
 }
 
 impl<T> BinaryArith<*T, u32> for *T {
@@ -52,7 +52,7 @@ struct string {
   }
 }
 
-impl<T> Indexable<I, u8> for string {
+impl<I> Indexable<I, u8> for string {
   fn index(idx: *I) *u8 {
     ret &data[idx];
   }

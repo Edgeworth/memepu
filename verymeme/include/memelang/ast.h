@@ -38,6 +38,9 @@ struct Node {
 struct Typelist : public Node {
   std::vector<std::string> names;
 
+  void pushTypes(Parser::Ctx& c);
+  void popTypes(Parser::Ctx& c);
+
   DEFNLT(Typelist, names);
 };
 
@@ -61,6 +64,8 @@ struct Type : public Node {
   std::vector<std::unique_ptr<Qualifier>> quals;
   std::vector<std::unique_ptr<Type>> params;
   bool cnst = false;
+
+  static std::unique_ptr<Type> tryParseType(Parser::Ctx& c);
 
   DEFNLT(Type, name, quals, params, cnst);
 };
