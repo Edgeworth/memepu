@@ -61,10 +61,14 @@ std::unique_ptr<Node> ExprParser::parse() {
       c_.consumeTok(Tok::RPAREN);
       break;
     case Tok::LSQUARE:
-      ec.addOp(tok->type);
-      c_.consumeTok();
-      ec.addExpr(parse());
-      c_.consumeTok(Tok::RSQUARE);
+      if (ec.canFinish()) {  // If we can finish it's an array access.
+        ec.addOp(tok->type);
+        c_.consumeTok();
+        ec.addExpr(parse());
+        c_.consumeTok(Tok::RSQUARE);
+      } else {  // Otherwise it's the start of a type.
+        ec.addExpr(std::make_unique<Type>(c_));
+      }
       break;
     case Tok::LBRACE:
       if (ec.canFinish()) return ec.finish();
@@ -82,6 +86,12 @@ std::unique_ptr<Node> ExprParser::parse() {
     case Tok::INT_LIT: ec.addExpr(std::make_unique<IntLit>(c_)); break;
     case Tok::CHAR_LIT: ec.addExpr(std::make_unique<CharLit>(c_)); break;
     case Tok::STR_LIT: ec.addExpr(std::make_unique<StrLit>(c_)); break;
+    case Tok::ASTERISK:
+       if (auto type = Type::tryParseType(c_)) {
+         ec.addExpr(std::move(type));
+         break;
+       }
+       // fallthrough
     default:
       ec.addOp(tok->type);
       c_.consumeTok();
@@ -93,7 +103,7 @@ std::unique_ptr<Node> ExprParser::parse() {
 
 std::unique_ptr<Node> ExprParser::ExprCtx::finish() {
   processStack(-1);
-  if (s_.size() != 1 || !ops_.empty()) c_.compileError("error in expression");
+  if (s_.size() != 1 || !ops_.empty()) c_.error("error in expression");
   return std::move(s_[0]);
 }
 
@@ -113,7 +123,7 @@ void ExprParser::ExprCtx::addOp(Tok::Type type) {
     ops_.emplace_back(std::make_unique<Op>(c_));
     ops_.back()->type = PREFIX_UNOP_MAP[type];
   } else {
-    c_.compileError("unexpected token");
+    c_.error("unexpected token");
   }
 }
 
@@ -133,7 +143,7 @@ void ExprParser::ExprCtx::processStack(int next_precedence) {
     while (!ops_.empty() && PRECEDENCE[ops_.back()->type] == cur_precedence) {
       if (ops_.back()->is_binop) {
         binop_count--;
-        if (s_.empty()) c_.compileError("error in expression");
+        if (s_.empty()) c_.error("error in expression");
         curexpr.emplace_back(std::move(s_.back()));
         s_.pop_back();
       }
@@ -166,7 +176,7 @@ void ExprParser::ExprCtx::collapseOps(
     if (op->is_binop && !RIGHT_ASSOC.count(op->type)) std::swap(op->left, op->right);
     expr.push_back(std::move(op));
   }
-  if (expr.size() != 1 && !ops.empty()) c_.compileError("error in expression");
+  if (expr.size() != 1 && !ops.empty()) c_.error("error in expression");
 }
 
 }  // namespace memelang::ast

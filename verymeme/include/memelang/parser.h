@@ -35,7 +35,7 @@ public:
     }
     bool hasTok(const std::vector<Tok::Type>& ts, int peek = 0) const;
 
-    void compileError(const std::string& msg) const;
+    void error(const std::string& msg) const;
     void reset() { idx_ = 0; }
 
   private:

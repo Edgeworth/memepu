@@ -54,10 +54,10 @@ Parser::Ctx::Ctx(const FileContents* cts, const std::vector<Tok>& tokens) : cts(
 }
 
 const Tok* Parser::Ctx::curTok(const std::vector<Tok::Type>& ts) const {
-  if (!hasTok()) compileError("unexpected end of file");
+  if (!hasTok()) error("unexpected end of file");
   const auto* token = &toks_[idx_];
   if (!hasTok(ts))
-    compileError("unexpected token, must be one of " +
+    error("unexpected token, must be one of " +
         std::accumulate(ts.begin(), ts.end(), std::string(),
             [](const auto& a, const auto& b) { return tos(a) + tos(b) + ", "; }));
   return token;
@@ -69,7 +69,7 @@ const Tok* Parser::Ctx::consumeTok(const std::vector<Tok::Type>& ts) {
   return token;
 }
 
-void Parser::Ctx::compileError(const std::string& msg) const {
+void Parser::Ctx::error(const std::string& msg) const {
   std::string loc = "eof";
   if (hasTok()) {
     const auto* token = curTok();

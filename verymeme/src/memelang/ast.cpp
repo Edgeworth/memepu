@@ -90,7 +90,7 @@ std::vector<Node*> VarRef::children() { return {}; }
 Typelist::Typelist(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LANGLE);
   while (true) {
-    if (!c.hasTok(Tok::IDENT)) c.compileError("typelist must contain type");
+    if (!c.hasTok(Tok::IDENT)) c.error("typelist must contain type");
     names.push_back(c.consumeTok()->str_val);
     if (c.hasTok(Tok::COMMA)) c.consumeTok();
     else
@@ -101,6 +101,18 @@ Typelist::Typelist(Parser::Ctx& c) : Node(c) {
 
 std::string Typelist::toString() const { return "Typelist(" + join(names, ", ") + ")"; }
 std::vector<Node*> Typelist::children() { return {}; }
+void Typelist::pushTypes(Parser::Ctx& c) {
+  for (const auto& name : names) {
+    if (c.type_idents.contains(name)) c.error("type " + name + " already defined");
+    c.type_idents.insert(name);
+  }
+}
+void Typelist::popTypes(Parser::Ctx& c) {
+  for (const auto& name : names) {
+    bug_unless(c.type_idents.contains(name));
+    c.type_idents.erase(name);
+  }
+}
 
 Typename::Typename(Parser::Ctx& c) : Node(c) {
   name = c.consumeTok(Tok::IDENT)->str_val;
@@ -134,6 +146,7 @@ Type::Type(Parser::Ctx& c) : Node(c) {
   cnst = c.maybeConsumeTok(Tok::CONST);
   if (c.hasTok(Tok::IDENT)) {
     name = c.consumeTok(Tok::IDENT)->str_val;
+    if (!c.type_idents.contains(name)) c.error("not typename: " + name);
     if (c.hasTok(Tok::LANGLE)) {
       c.consumeTok(Tok::LANGLE);
       while (c.curTok()->type != Tok::RANGLE) {
@@ -150,6 +163,16 @@ std::string Type::toString() const {
   return (fmt("Type(%s%s)") % (cnst ? "const " : "") % name).str();
 }
 std::vector<Node*> Type::children() { return flattenChildren(quals, params); }
+std::unique_ptr<Type> Type::tryParseType(Parser::Ctx& c) {
+  Parser::Ctx c_cpy = c;
+  try {
+    return std::make_unique<Type>(c);
+  } catch (const std::exception& e) {
+    // TODO: Don't use exceptions as control flow.
+    c = c_cpy;
+    return nullptr;
+  }
+}
 
 VarDecl::VarDecl(Parser::Ctx& c) : Node(c) {
   ref = std::make_unique<VarRef>(c);
@@ -269,7 +292,10 @@ std::vector<Node*> If::children() { return flattenChildren(cond, then, els); }
 
 Fn::Fn(Parser::Ctx& c) : Node(c) {
   sig = std::make_unique<FnSig>(c);
+
+  if (sig->tname->tlist) sig->tname->tlist->pushTypes(c);
   blk = std::make_unique<StmtBlk>(c);
+  if (sig->tname->tlist) sig->tname->tlist->popTypes(c);
 }
 std::string Fn::toString() const { return "Fn"; }
 std::vector<Node*> Fn::children() { return flattenChildren(sig, blk); }
@@ -278,10 +304,14 @@ Intf::Intf(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::INTF);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
+
+  if (tname->tlist) tname->tlist->pushTypes(c);
   while (c.hasTok(Tok::FN)) {
     sigs.emplace_back(std::make_unique<FnSig>(c));
     c.consumeTok(Tok::SEMICOLON);
   }
+  if (tname->tlist) tname->tlist->popTypes(c);
+
   c.consumeTok(Tok::RBRACE);
 }
 std::string Intf::toString() const { return "Intf"; }
@@ -291,12 +321,16 @@ Enum::Enum(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::ENUM);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
+
+  if (tname->tlist) tname->tlist->pushTypes(c);
   while (!c.hasTok(Tok::RBRACE)) {
     if (c.hasTok(Tok::COMMA, 1)) untyped_enums.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
     else
       typed_enums.emplace_back(std::make_unique<VarDecl>(c));
     c.consumeTok(Tok::COMMA);
   }
+  if (tname->tlist) tname->tlist->popTypes(c);
+
   c.consumeTok(Tok::RBRACE);
 }
 std::string Enum::toString() const {
@@ -308,6 +342,8 @@ Struct::Struct(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::STRUCT);
   tname = std::make_unique<Typename>(c);
   c.consumeTok(Tok::LBRACE);
+
+  if (tname->tlist) tname->tlist->pushTypes(c);
   while (!c.hasTok(Tok::RBRACE)) {
     if (c.hasTok({Tok::FN, Tok::STATIC})) fns.emplace_back(std::make_unique<Fn>(c));
     else {
@@ -315,6 +351,8 @@ Struct::Struct(Parser::Ctx& c) : Node(c) {
       c.consumeTok(Tok::SEMICOLON);
     }
   }
+  if (tname->tlist) tname->tlist->popTypes(c);
+
   c.consumeTok(Tok::RBRACE);
 }
 std::string Struct::toString() const { return "Struct"; }
@@ -323,11 +361,16 @@ std::vector<Node*> Struct::children() { return flattenChildren(tname, var_decls,
 Impl::Impl(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::IMPL);
   if (c.hasTok(Tok::LANGLE)) tlist = std::make_unique<Typelist>(c);
+  if (tlist) tlist->pushTypes(c);
+
   tintf = std::make_unique<Type>(c);
   c.consumeTok(Tok::FOR);
   type = std::make_unique<Type>(c);
   c.consumeTok(Tok::LBRACE);
+
   while (!c.hasTok(Tok::RBRACE)) fns.emplace_back(std::make_unique<Fn>(c));
+  if (tlist) tlist->popTypes(c);
+
   c.consumeTok(Tok::RBRACE);
 }
 std::string Impl::toString() const { return "Impl"; }
@@ -341,7 +384,7 @@ File::File(Parser::Ctx& c) : Node(c) {
     case Tok::INTF: intfs.emplace_back(std::make_unique<Intf>(c)); break;
     case Tok::STRUCT: structs.emplace_back(std::make_unique<Struct>(c)); break;
     case Tok::IMPL: impls.emplace_back(std::make_unique<Impl>(c)); break;
-    default: c.compileError("unexpected token"); break;
+    default: c.error("unexpected token"); break;
     }
   }
 }
