@@ -101,13 +101,14 @@ add_subdirectory(verilog)
 
 # Add libraries.
 set(VERYMEME_SOURCES
-    src/verymeme/util.cpp include/verymeme/util.h
+    include/verymeme/util.h
     src/verymeme/file.cpp include/verymeme/file.h
     src/verymeme/geom.cpp include/verymeme/geom.h
     src/verymeme/tokenizer.cpp include/verymeme/tokenizer.h
     src/verymeme/term.cpp include/verymeme/term.h
     include/verymeme/concurrent_queue.h
-    src/verymeme/string_util.cpp include/verymeme/string_util.h)
+    src/verymeme/string_util.cpp include/verymeme/string_util.h
+    src/verymeme/macros.cpp include/verymeme/macros.h)
 set(MEMEASM_SOURCES src/memeasm/assembler.cpp include/memeasm/assembler.h)
 set(MEMECAD_SOURCES
     src/memecad/parser.cpp include/memecad/parser.h
@@ -125,7 +126,8 @@ set(MEMELANG_SOURCES
     src/memelang/expression.cpp include/memelang/expression.h
     src/memelang/exec.cpp include/memelang/exec.h
     src/memelang/vm.cpp include/memelang/vm.h
-    src/memelang/scopes.cpp include/memelang/scopes.h src/memelang/type.cpp include/memelang/type.h)
+    src/memelang/scopes.cpp include/memelang/scopes.h
+    src/memelang/type.cpp include/memelang/type.h)
 set(MEMEROUTE_SOURCES
     src/memeroute/parser.cpp include/memeroute/parser.h
     src/memeroute/types.cpp include/memeroute/types.h

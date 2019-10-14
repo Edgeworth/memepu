@@ -3,7 +3,6 @@
 #include "memecad/parser.h"
 #include "verymeme/geom.h"
 #include "verymeme/string_util.h"
-#include "verymeme/util.h"
 
 namespace memecad {
 

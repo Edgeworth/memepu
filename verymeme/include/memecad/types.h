@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "verymeme/geom.h"
+#include "verymeme/macros.h"
 
 namespace memecad {
 
@@ -74,7 +75,7 @@ struct Sheet {
   struct Wire {
     Point start = {};
     Point end = {};
-    bool operator<(const Wire& o) const;
+    COMPARISON(Wire, start, end);
   };
 
   struct RefField {
@@ -86,7 +87,7 @@ struct Sheet {
     Direction side;
     Point p = {};
     int dimension = DEFAULT_DIMENSION;
-    bool operator<(const RefField& o) const;
+    COMPARISON(RefField, text, num, type, side, p, dimension);
   };
 
   struct Ref {
@@ -99,7 +100,7 @@ struct Sheet {
     std::vector<RefField> fields;
 
     void offset(const Point& offset);
-    bool operator<(const Ref& o) const;
+    COMPARISON(Ref, name, timestamp, filename, p, width, height, fields);
   };
 
   struct Label {
@@ -131,7 +132,7 @@ struct Sheet {
     std::string justification = "C";
     std::string style = "CNN";
 
-    bool operator<(const Field& o) const;
+    COMPARISON(Field, text, num, orientation, p, size, flags, justification, style);
   };
 
   struct Component {
@@ -145,7 +146,7 @@ struct Sheet {
 
     void offset(Point offset);
     void addLibField(const Lib::Field& lib_field, const std::string& text);
-    bool operator<(const Component& o) const;
+    COMPARISON(Component, name, ref, subcomponent, timestamp, p, fields, footer);
   };
 
   std::string header1 = DEFAULT_HEADER1;

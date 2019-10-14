@@ -3,8 +3,8 @@
 #include <boost/lexical_cast.hpp>
 
 #include "verymeme/geom.h"
+#include "verymeme/macros.h"
 #include "verymeme/string_util.h"
-#include "verymeme/util.h"
 
 namespace memecad {
 
@@ -83,23 +83,9 @@ Lib::Component* Lib::findComponent(const std::string& name_to_find) {
   return nullptr;
 }
 
-bool Sheet::Wire::operator<(const Sheet::Wire& o) const {
-  return std::tie(start, end) < std::tie(o.start, o.end);
-}
-
-bool Sheet::RefField::operator<(const Sheet::RefField& o) const {
-  return std::tie(text, num, type, side, p, dimension) <
-      std::tie(o.text, o.num, o.type, o.side, o.p, o.dimension);
-}
-
 void Sheet::Ref::offset(const Point& offset) {
   p += offset;
   for (auto& field : fields) field.p += offset;
-}
-
-bool Sheet::Ref::operator<(const Sheet::Ref& o) const {
-  return std::tie(name, timestamp, filename, p, width, height, fields) <
-      std::tie(o.name, o.timestamp, o.filename, o.p, o.width, o.height, o.fields);
 }
 
 void Sheet::Label::connectToPin(const Lib::Pin& pin) {
@@ -130,11 +116,6 @@ Rect Sheet::Label::getBoundingBox() const {
   }
 }
 
-bool Sheet::Field::operator<(const Sheet::Field& o) const {
-  return std::tie(text, num, orientation, p, size, flags, justification, style) <
-      std::tie(o.text, o.num, o.orientation, o.p, o.size, o.flags, o.justification, o.style);
-}
-
 void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::string& text) {
   auto& f = fields.emplace_back();
   f.num = lib_field.num;
@@ -148,11 +129,6 @@ void Sheet::Component::addLibField(const Lib::Field& lib_field, const std::strin
 void Sheet::Component::offset(Point offset) {
   p += offset;
   for (auto& field : fields) field.p += offset;
-}
-
-bool Sheet::Component::operator<(const Sheet::Component& o) const {
-  return std::tie(name, ref, subcomponent, timestamp, p, fields, footer) <
-      std::tie(o.name, o.ref, o.subcomponent, o.timestamp, o.p, o.fields, o.footer);
 }
 
 const std::string ORIENTATION_MAPPING[] = {"H", "V"};

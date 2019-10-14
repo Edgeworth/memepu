@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 
+#include "verymeme/macros.h"
+
 template <typename T>
 T clamp(T low, T high, T val) {
   return std::max(low, std::min(val, high));
@@ -18,12 +20,10 @@ struct Point {
   Point operator+(const Point& p) const;
   Point operator-(const Point& p) const;
   Point operator-() const;
-  bool operator<(const Point& p) const;
-  bool operator!=(const Point& p) const;
 
   int64_t cross(const Point& p) const;
-
   std::string toString() const { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
+  COMPARISON(Point, x, y);
 };
 
 struct Rect {

@@ -2,13 +2,12 @@
 #define MEMELANG_EXEC_H
 
 #include <map>
-#include <set>
 
 #include "memelang/ast.h"
 #include "memelang/scopes.h"
 #include "memelang/type.h"
 #include "memelang/vm.h"
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 namespace memelang::exec {
 
@@ -17,41 +16,20 @@ public:
   Exec(ast::File* file, const FileContents* cts);
 
   void run();
-
   void error(const std::string& msg) const;
+  Val eval(ast::Node* n);
+  VM& vm() { return vm_; }
+  ast::File* file() { return f_; }
+  void setContext(ast::Node* node) { node_ctx_ = node; }
 
 private:
   ast::File* f_;
   const FileContents* cts_;
   ast::Node* node_ctx_{};
-
-  ScopeManager scope_;
+  Scope s_;
   VM vm_;
-  std::map<const ast::Type*, const Type*> ast_type_map_;
-  std::set<Type> types_;
-  std::map<Typename, ast::Fn*> fns_;
-  std::map<Typename, ast::Enum*> enums_;
-  std::map<Typename, ast::Intf*> intfs_;
-  std::map<Typename, ast::Struct*> structs_;
-  // Map from a type (may be set) to mapping from interface to the impl.
-  std::map<const Type*, std::map<const Type*, ast::Impl*>> impls_;
 
-  // Built-in types
-  const Type* bool_{};
-  const Type* i8_{};
-  const Type* i16_{};
-  const Type* i32_{};
-  const Type* i64_{};
-  const Type* u8_{};
-  const Type* u16_{};
-  const Type* u32_{};
-  const Type* u64_{};
-  const Type* f32_{};
-  const Type* f64_{};
-
-  void setContext(ast::Node* node);
-
-  Val runFn(ast::Fn* fn, const std::vector<Val>& args, Val ths);
+  Val runFn(ast::Fn* fn, const Mapping& mapping, const std::vector<Val>& args, Val ths);
   Val runStmtBlk(ast::StmtBlk* blk);
   Val runStmt(ast::Node* stmt);
   void runVarDefn(ast::VarDefn* defn);
@@ -61,14 +39,7 @@ private:
   Val runIf(ast::If* ifst);
   Val runOp(ast::Op* op);
 
-  Val eval(ast::Node* n);
-  ast::Fn* getFn(const Typename& tname);
-  ast::Fn* lookupImplFn(Val obj, const std::string& impl_name, const std::string& fn_name);
-
-  const Type* addType(Type&& t);
   Val valFromAstType(ast::Type* type);
-  const Type* typeFromAst(ast::Type* ast_type);
-  Typename typenameFromAst(ast::Typename* ast_typename);
 
   // Value operations:
   Val assign(Val l, Val r);
@@ -88,26 +59,26 @@ private:
   template <typename F>
   auto invokeBuiltin(Val v, F op) {
     printf("builtin on: %s\n", v.type->toString().c_str());
-    if (v.type == bool_) return std::invoke(op, vm_.ref<bool>(v));
-    else if (v.type == i8_)
+    if (v.type == s_.bool_t) return std::invoke(op, vm_.ref<bool>(v));
+    else if (v.type == s_.i8_t)
       return std::invoke(op, vm_.ref<int8_t>(v));
-    else if (v.type == i16_)
+    else if (v.type == s_.i16_t)
       return std::invoke(op, vm_.ref<int16_t>(v));
-    else if (v.type == i32_)
+    else if (v.type == s_.i32_t)
       return std::invoke(op, vm_.ref<int32_t>(v));
-    else if (v.type == i64_)
+    else if (v.type == s_.i64_t)
       return std::invoke(op, vm_.ref<int64_t>(v));
-    else if (v.type == u8_)
+    else if (v.type == s_.u8_t)
       return std::invoke(op, vm_.ref<uint8_t>(v));
-    else if (v.type == u16_)
+    else if (v.type == s_.u16_t)
       return std::invoke(op, vm_.ref<uint16_t>(v));
-    else if (v.type == u32_)
+    else if (v.type == s_.u32_t)
       return std::invoke(op, vm_.ref<uint32_t>(v));
-    else if (v.type == u64_)
+    else if (v.type == s_.u64_t)
       return std::invoke(op, vm_.ref<uint64_t>(v));
-    else if (v.type == f32_)
+    else if (v.type == s_.f32_t)
       return std::invoke(op, vm_.ref<float>(v));
-    else if (v.type == f64_)
+    else if (v.type == s_.f64_t)
       return std::invoke(op, vm_.ref<double>(v));
     error("not builtin");
     return std::invoke(op, vm_.ref<int8_t>(v));
@@ -117,8 +88,10 @@ private:
   Val binop(Val l, Val r, const Type* type, const std::string& op_name, F default_op) {
     bug_unless(type && l.type && r.type);
 
-    if (auto* fn = lookupImplFn(l, "Comparable", op_name)) return runFn(fn, {addr(r)}, l);
-    if (auto* fn = lookupImplFn(l, "BinaryArith", op_name)) return runFn(fn, {addr(r)}, l);
+    auto pair = s_.lookupImplFn(l, "Comparable", op_name);
+    if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
+    pair = s_.lookupImplFn(l, "Comparable", op_name);
+    if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
 
     if (l.type != r.type)
       error("no Comparable defined and types don't match: " + l.type->toString() + " " +
@@ -135,7 +108,8 @@ private:
   template <typename F>
   Val unop(Val l, const Type* type, const std::string& op_name, F default_op) {
     bug_unless(type && l.type);
-    if (auto* fn = lookupImplFn(l, "UnaryArith", op_name)) return runFn(fn, {}, l);
+    auto pair = s_.lookupImplFn(l, "UnaryArith", op_name);
+    if (pair.first) return runFn(pair.first, pair.second, {}, l);
     auto res = invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
     Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type};
     vm_.ref<decltype(res)>(v) = res;

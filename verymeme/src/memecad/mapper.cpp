@@ -6,6 +6,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <utility>
 
+#include "verymeme/macros.h"
 #include "verymeme/util.h"
 
 namespace memecad {
