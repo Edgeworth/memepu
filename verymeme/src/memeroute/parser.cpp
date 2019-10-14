@@ -1,8 +1,10 @@
 #include "memeroute/parser.h"
 
 #include "verymeme/geom.h"
+#include "verymeme/macros.h"
 #include "verymeme/string_util.h"
 #include "verymeme/tokenizer.h"
+#include "verymeme/util.h"
 
 namespace memeroute {
 

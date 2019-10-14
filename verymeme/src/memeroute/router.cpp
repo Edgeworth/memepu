@@ -7,7 +7,7 @@
 
 #include "memeroute/router_worker.h"
 #include "verymeme/concurrent_queue.h"
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 namespace memeroute {
 

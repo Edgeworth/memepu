@@ -4,7 +4,7 @@
 
 #include "memecad/parser.h"
 #include "verymeme/file.h"
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 namespace memecad {
 USING_YOSYS_NAMESPACE

@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 namespace {
 

@@ -1,7 +1,7 @@
 #include "memelang/exec.h"
 #include "memelang/parser.h"
 #include "verymeme/file.h"
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 int main(int argc, char* argv[]) {
   verify_expr(argc == 2, "need filename");

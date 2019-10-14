@@ -87,11 +87,11 @@ std::unique_ptr<Node> ExprParser::parse() {
     case Tok::CHAR_LIT: ec.addExpr(std::make_unique<CharLit>(c_)); break;
     case Tok::STR_LIT: ec.addExpr(std::make_unique<StrLit>(c_)); break;
     case Tok::ASTERISK:
-       if (auto type = Type::tryParseType(c_)) {
-         ec.addExpr(std::move(type));
-         break;
-       }
-       // fallthrough
+      if (auto type = Type::tryParseType(c_)) {
+        ec.addExpr(std::move(type));
+        break;
+      }
+      // fallthrough
     default:
       ec.addOp(tok->type);
       c_.consumeTok();

@@ -5,8 +5,8 @@
 
 #include "memelang/ast.h"
 #include "memelang/constants.h"
+#include "verymeme/macros.h"
 #include "verymeme/string_util.h"
-#include "verymeme/util.h"
 
 namespace memelang::ast {
 

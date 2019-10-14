@@ -1,6 +1,6 @@
 #include "memecad/util.h"
 
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 namespace memecad {
 

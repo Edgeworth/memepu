@@ -6,7 +6,7 @@ intf BinaryArith<A, B> {
 
 impl<T> BinaryArith<*T, u32> for *T {
   fn add(o: *u32) *T {
-    ret *this + *T(*o);  // TODO: Need to know wildcard types in parser.
+    ret *this + T(*o);  // TODO: need to map T to a concrete type.
   }
 }
 
