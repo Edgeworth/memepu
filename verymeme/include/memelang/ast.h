@@ -5,12 +5,12 @@
 
 #include "memelang/parser.h"
 #include "memelang/tokeniser.h"
+#include "verymeme/macros.h"
 
 namespace memelang::ast {
 
 #define DEFNLT(type, ...) \
-  auto getTie() const { return std::tie(__VA_ARGS__); } \
-  bool operator<(const type& o) const { return getTie() < o.getTie(); } \
+  COMPARISON(type, __VA_ARGS__) \
   explicit type(Parser::Ctx& c); \
   type(type&&) = default; \
   type& operator=(type&&) = default; \

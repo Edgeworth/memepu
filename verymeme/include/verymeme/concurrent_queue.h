@@ -6,7 +6,7 @@
 #include <optional>
 #include <queue>
 
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 template <typename T>
 class ConcurrentQueue {

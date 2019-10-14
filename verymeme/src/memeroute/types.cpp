@@ -3,8 +3,8 @@
 #include <set>
 
 #include "verymeme/geom.h"
+#include "verymeme/macros.h"
 #include "verymeme/string_util.h"
-#include "verymeme/util.h"
 
 namespace memeroute {
 
@@ -50,10 +50,6 @@ std::ostream& operator<<(std::ostream& str, const Side& o) {
 }
 
 std::istream& operator>>(std::istream& str, Side& o) { return inputEnum(str, o, SIDE_MAPPING); }
-
-bool Net::PinId::operator<(const Net::PinId& o) const {
-  return std::tie(component_id, pin_id) < std::tie(o.component_id, o.pin_id);
-}
 
 std::string Net::PinId::toString() const { return component_id + "-" + pin_id; }
 

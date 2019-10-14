@@ -3,7 +3,11 @@
 
 #include <climits>
 #include <map>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
+
+#include "verymeme/macros.h"
 
 namespace memelang::exec {
 
@@ -12,43 +16,40 @@ struct Qualifier {
   bool ptr = false;
   bool cnst = false;
 
-  bool operator==(const Qualifier& o) const { return !(*this < o) && !(o < *this); }
-  bool operator<(const Qualifier& o) const {
-    return std::tie(array, ptr, cnst) < std::tie(o.array, o.ptr, o.cnst);
-  }
-
   std::string toString() const;
+
+  COMPARISON(Qualifier, array, ptr, cnst);
 };
 
 struct Type {
-  constexpr static int NOT_SUBTYPE = INT_MAX / 2;
-
   std::string name{};
-  std::vector<Qualifier> quals{};  // Holds qualifiers from right to left.
+  // Holds qualifiers from right to left (outermost first). By default must hold at least one item.
+  std::vector<Qualifier> quals{{}};
   std::vector<const Type*> params{};
 
-  bool operator==(const Type& o) const { return !(*this < o) && !(o < *this); }
-  bool operator!=(const Type& o) const { return (*this < o) || (o < *this); }
-  bool operator<(const Type& o) const {
-    if (name != o.name) return name < o.name;
-    if (quals != o.quals) return quals < o.quals;
-    return params < o.params;
-  }
-
   int size() const;
-  int dist(const Type& o) const;  // distance to other type, if subtype.
-
   std::string toString() const;
+
+  COMPARISON(Type, name, quals, params);
 };
+
+struct Mapping {
+  int dist{INT_MAX / 2};
+  std::map<std::string, Type> wildcard_map{};
+
+  COMPARISON(Mapping, dist, wildcard_map);
+};
+
+const static Mapping NOT_SUBTYPE = {};
 
 struct Typename {
   std::string name{};
   std::vector<std::string> tlist{};
 
-  bool operator<(const Typename& o) const {
-    return std::tie(name, tlist) < std::tie(o.name, o.tlist);
-  }
+  COMPARISON(Typename, name, tlist);
 };
+
+Mapping dist(const Type& a, const Type& b, const std::unordered_set<std::string>& wildcards);
 
 }  // namespace memelang::exec
 

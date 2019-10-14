@@ -15,11 +15,7 @@ Point Point::operator+(const Point& p) const { return {x + p.x, y + p.y}; }
 
 Point Point::operator-(const Point& p) const { return {x - p.x, y - p.y}; }
 
-bool Point::operator<(const Point& p) const { return std::tie(x, y) < std::tie(p.x, p.y); }
-
 Point Point::operator-() const { return {-x, -y}; }
-
-bool Point::operator!=(const Point& p) const { return x != p.x || y != p.y; }
 
 int64_t Point::cross(const Point& p) const { return x * p.y - y * p.x; }
 

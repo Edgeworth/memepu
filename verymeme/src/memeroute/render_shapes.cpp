@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "verymeme/geom.h"
+#include "verymeme/macros.h"
 #include "verymeme/util.h"
 
 namespace memeroute {

@@ -1,4 +1,4 @@
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 #include <boost/stacktrace.hpp>
 #include <sstream>

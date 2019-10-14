@@ -3,13 +3,12 @@
 
 #include <bitset>
 #include <iomanip>
+#include <vector>
 
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 std::string trim(const std::string& data, const std::string& c);
-
 int64_t convertFromHex(const std::string& s);
-
 int64_t convertFromDec(const std::string& s);
 
 // Converts from formatted number: 123, 0xff, 0701.

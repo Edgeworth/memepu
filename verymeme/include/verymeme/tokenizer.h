@@ -4,7 +4,7 @@
 #include <boost/lexical_cast.hpp>
 #include <regex>
 
-#include "verymeme/util.h"
+#include "verymeme/macros.h"
 
 class Tokenizer {
 public:

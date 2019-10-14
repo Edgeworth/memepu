@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "verymeme/geom.h"
+#include "verymeme/macros.h"
 
 namespace memeroute {
 
@@ -68,8 +69,8 @@ struct Net {
     std::string component_id;
     std::string pin_id;
 
-    bool operator<(const PinId& o) const;
     std::string toString() const;
+    COMPARISON(PinId, component_id, pin_id);
   };
 
   std::string name;
