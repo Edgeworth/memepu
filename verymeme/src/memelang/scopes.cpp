@@ -100,26 +100,27 @@ const Type* Scope::addType(Type&& t) { return &*types_.insert(std::move(t)).firs
 const Type* Scope::typeFromAst(ast::Type* ast_type) {
   if (ast_type_map_.count(ast_type)) return ast_type_map_[ast_type];
 
-  Type new_type;
-  new_type.name = ast_type->name;
-  new_type.quals.emplace_back();  // Put one qualifier to hold const for the main type.
-  new_type.quals.back().cnst = ast_type->cnst;
+  // Put one qualifier to hold const for the main type.
+  Type new_type = {.name = ast_type->name, .quals = {{.cnst = ast_type->cnst}}};
 
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
-    new_type.quals.emplace_back();
+    auto& q = new_type.quals.emplace_back();
     // TODO not only u32_t?
     if ((*i)->array) {
       auto array_val = e_->eval((*i)->array.get());
       if (array_val.type != u32_t) e_->error("array size must be u32");
-      new_type.quals.back().array = e_->vm().ref<int32_t>(array_val);
+      q.array = e_->vm().ref<int32_t>(array_val);
     }
-    new_type.quals.back().ptr = (*i)->ptr;
-    new_type.quals.back().cnst = (*i)->cnst;
+    q.ptr = (*i)->ptr;
+    q.cnst = (*i)->cnst;
+
+    bug_unless(q.array || q.ptr);  // Qualifier must either be array or pointer.
   }
   for (const auto& param : ast_type->params) new_type.params.emplace_back(typeFromAst(param.get()));
 
   ast_type_map_[ast_type] = addType(std::move(new_type));
+  printf("Added new type: %s\n", ast_type_map_[ast_type]->toString().c_str());
   return ast_type_map_[ast_type];
 }
 

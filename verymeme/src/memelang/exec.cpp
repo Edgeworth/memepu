@@ -145,8 +145,10 @@ Val Exec::runOp(ast::Op* op) {
       if (args->args.size() != 2) error("readf requires 2 arguments");
       auto read_ptr = eval(args->args[0].get());
       auto read_sz = eval(args->args[1].get());
-      if (*read_ptr.type != Type{.name = U8, .quals = {{.ptr = true}}})
-        error("wrong type: " + read_ptr.type->toString());
+
+      auto u8_ptr_t = Type{.name = U8, .quals = {{}, {.ptr = true}}};  // TODO: move ptr type get to Type?
+      if (*read_ptr.type != u8_ptr_t)
+        error("wrong type: " + read_ptr.type->toString() + " need: " + u8_ptr_t.toString());
       if (read_sz.type != s_.u32_t) error("wrong type: " + read_sz.type->toString());
       std::cin.getline(&vm_.ref<char>(deref(read_ptr)), vm_.ref<int32_t>(read_sz));
 

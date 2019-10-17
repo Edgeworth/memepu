@@ -23,7 +23,7 @@ struct Qualifier {
 
 struct Type {
   std::string name{};
-  // Holds qualifiers from right to left (outermost first). By default must hold at least one item.
+  // Holds qualifiers from right to left (innermost first). By default must hold at least one item.
   std::vector<Qualifier> quals{{}};
   std::vector<const Type*> params{};
 
