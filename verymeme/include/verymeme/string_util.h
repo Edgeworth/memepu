@@ -96,4 +96,11 @@ std::string convertToBinary(int val) {
 
 std::string join(const std::vector<std::string>& l, const std::string& j, bool terminate = false);
 
+template<typename Iter, typename F>
+std::string join(Iter st, Iter en, F conv, const std::string& j, bool terminate = false) {
+  std::vector<std::string> converted;
+  std::transform(st, en, std::back_inserter(converted), conv);
+  return join(converted, j, terminate);
+}
+
 #endif  // VERYMEME_STRING_UTIL_H

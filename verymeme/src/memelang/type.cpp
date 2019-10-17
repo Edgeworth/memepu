@@ -3,6 +3,7 @@
 #include "memelang/constants.h"
 #include "memelang/vm.h"
 #include "verymeme/macros.h"
+#include "verymeme/string_util.h"
 
 namespace memelang::exec {
 
@@ -31,9 +32,9 @@ int Type::size() const {
 
 std::string Type::toString() const {
   std::string rep = "Type(name: " + name + "; quals: ";
-  for (auto i = quals.rbegin(); i != quals.rend(); ++i) rep += i->toString() + ", ";
+  rep += join(quals.rbegin(), quals.rend(), [] (auto& i) { return i.toString(); }, ", ");
   rep += "; params: ";
-  for (auto i = params.rbegin(); i != params.rend(); ++i) rep += (*i)->toString() + ", ";
+  rep += join(params.begin(), params.end(), [] (auto& i) { return i->toString(); }, ", ");
   rep += ")";
   return rep;
 }
