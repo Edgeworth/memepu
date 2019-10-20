@@ -92,7 +92,7 @@ private:
 
     auto pair = s_.lookupImplFn(l, "Comparable", op_name);
     if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
-    pair = s_.lookupImplFn(l, "Comparable", op_name);
+    pair = s_.lookupImplFn(l, "BinaryArith", op_name);
     if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
 
     if (l.type != r.type)
