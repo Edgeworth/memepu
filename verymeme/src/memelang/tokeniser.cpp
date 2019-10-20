@@ -32,6 +32,15 @@ const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
 
 }  // namespace
 
+std::string Tok::desc(const FileContents* cts) const {
+  std::string d =
+      (boost::format("Token(%s, %s, '%s'") % type % cts->fpos(loc) % cts->span(loc, size)).str();
+  if (int_val != INT64_MIN) d += (boost::format(", %d") % int_val).str();
+  if (!str_val.empty()) d += (boost::format(", '%s'") % str_val).str();
+  d += ")";
+  return d;
+}
+
 std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
   const static std::string TOKEN_TYPES[] = {"PLUS", "DPLUS", "MINUS", "DMINUS", "ASTERISK",
       "PERCENT", "FSLASH", "QUOTE", "DQUOTE", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LANGLE",
@@ -45,10 +54,10 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
 
 std::vector<Tok> Tokeniser::tokenise() {
   toks_.clear();
-  const auto& data = contents_->data();
+  const auto& data = cts_->data();
   for (int i = 0; i < int(data.size()); ++i)
-    verify_expr(isprint(data[i]) || data[i] == '\n', "unprintable character '%c' at %d:%d", data[i],
-        contents_->getLineNumber(i), contents_->getColNumber(i));
+    verify_expr(isprint(data[i]) || data[i] == '\n', "unprintable character '%c' at %s", data[i],
+        cts_->fpos(i).c_str());
 
   while (idx_ < int(data.size())) {
     if (startsNewToken(data[idx_]) || atCompleteToken()) pushCurrentToken();
@@ -78,7 +87,7 @@ void Tokeniser::pushCurrentToken() {
   // Try to merge tokens together.
   if (!toks_.empty() && can_merge_) {
     auto prevtok = toks_.back();
-    std::string mergetok = contents_->getSpan(prevtok.loc, prevtok.size) + curtok_;
+    std::string mergetok = cts_->span(prevtok.loc, prevtok.size) + curtok_;
     auto merge_iter = SIMPLE_TOKENS.find(mergetok);
     if (merge_iter != SIMPLE_TOKENS.end()) {
       type = merge_iter->second;
@@ -88,7 +97,7 @@ void Tokeniser::pushCurrentToken() {
     }
   }
 
-  const auto& data = contents_->data();
+  const auto& data = cts_->data();
   int64_t int_val = INT64_MIN;
   switch (type) {
   case Tok::QUOTE:
@@ -147,13 +156,13 @@ bool Tokeniser::atCompleteToken() {
 }
 
 bool Tokeniser::isChar(char c, const char* msg) {
-  const auto& data = contents_->data();
+  const auto& data = cts_->data();
   verify_expr(idx_ < int(data.size()), msg);
   return data[idx_] == c;
 }
 
 char Tokeniser::grabEscapedChar() {
-  const auto& data = contents_->data();
+  const auto& data = cts_->data();
   if (data[idx_] != '\\') return data[idx_++];
   verify_expr(++idx_ < int(data.size()), "unexpected EOF in escape sequence");
   idx_++;

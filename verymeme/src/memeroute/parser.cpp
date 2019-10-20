@@ -3,7 +3,7 @@
 #include "verymeme/geom.h"
 #include "verymeme/macros.h"
 #include "verymeme/string_util.h"
-#include "verymeme/tokenizer.h"
+#include "verymeme/tokeniser.h"
 #include "verymeme/util.h"
 
 namespace memeroute {
@@ -24,7 +24,7 @@ public:
   }
 
 private:
-  Tokenizer t_;
+  Tokeniser t_;
   Pcb pcb_;
   int resolution_ = 2540000;  // Default value.
 

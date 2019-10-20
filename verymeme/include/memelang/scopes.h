@@ -16,7 +16,7 @@ class Scope {
 public:
   explicit Scope(Exec* exec);
 
-  void pushScope();  // Creates new scope-space
+  void pushScope(ast::Fn* fn);  // Creates new scope-space
   void popScope();
   void nestScope();  // Nests scope inside current scope-space.
   void unnestScope();
@@ -24,20 +24,23 @@ public:
   void pushTypeMapping(const Mapping& m);
   void popTypeMapping(const Mapping& m);
 
-  Val maybeGetVar(const std::string& name) const;
-  Val getVar(const std::string& name) const;
+  Val maybeFindVar(const std::string& name) const;
+  Val findVar(const std::string& name) const;
   Val declareVar(const std::string& name, Val v);
 
   const Type* addType(Type&& t);
   const Type* typeFromAst(ast::Type* ast_type);
 
-  ast::Fn* getFn(const std::string& name);
+  ast::Fn* findFn(const std::string& name);
   std::pair<ast::Fn*, Mapping> lookupImplFn(
       Val obj, const std::string& impl_name, const std::string& fn_name);
+
+  std::string stacktrace() const;
 
 private:
   Exec* e_;
   std::vector<std::vector<std::map<std::string, Val>>> vars_;
+  std::vector<std::string> stack_;
   std::set<Type> types_;
   std::map<std::string, const Type*> mappings_;
   std::map<const ast::Type*, const Type*> ast_type_map_;

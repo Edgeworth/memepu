@@ -12,9 +12,10 @@ public:
 
   const std::string& data() const { return data_; }
 
-  int getLineNumber(int loc) const;
-  int getColNumber(int loc) const;
-  std::string getSpan(int loc, int size) const;
+  int lnum(int loc) const;
+  int cnum(int loc) const;
+  std::string fpos(int loc) const;
+  std::string span(int loc, int size) const;
 
 private:
   std::string filename_;

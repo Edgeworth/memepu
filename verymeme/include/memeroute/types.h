@@ -28,7 +28,7 @@ struct Shape {
   Circle circle = {};
   Rect rect = {};
 
-  Rect getBoundingBox() const;
+  Rect bbox() const;
 };
 
 struct Padstack {
@@ -89,10 +89,10 @@ struct Pcb {
   std::unordered_map<std::string, Net> nets;
 
   void verifyAndSetup();
-  const Net& getNet(const std::string& net_name) const;
-  const Net* getNetForPinId(const Net::PinId& pin_id) const;
-  const Component& getComponentForPinId(const Net::PinId& pin_id) const;
-  const Pin& getPinForPinId(const Net::PinId& pin_id) const;
+  const Net& findNet(const std::string& net_name) const;
+  const Net* findNetForPinId(const Net::PinId& pin_id) const;
+  const Component& findComponentForPinId(const Net::PinId& pin_id) const;
+  const Pin& findPinForPinId(const Net::PinId& pin_id) const;
 
   int getLayer(Side side) const;
 

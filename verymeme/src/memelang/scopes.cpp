@@ -37,8 +37,14 @@ Scope::Scope(Exec* exec)
   }
 }
 
-void Scope::pushScope() {
+void Scope::pushScope(ast::Fn* fn) {
   vars_.emplace_back();
+  auto* ctx = e_->context();
+  const auto* cts = e_->fileContents();
+  std::string stack_line = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name + ": ";
+  stack_line +=
+      ctx ? cts->fpos(ctx->tok.loc) + ":" + cts->span(ctx->tok.loc, ctx->tok.size) : "no ctx";
+  stack_.emplace_back(std::move(stack_line));
   nestScope();
 }
 
@@ -46,6 +52,7 @@ void Scope::popScope() {
   bug_unless(!vars_.empty());
   // TODO: Call destructors
   vars_.pop_back();
+  stack_.pop_back();
 }
 
 void Scope::nestScope() { vars_.back().emplace_back(); }
@@ -71,7 +78,7 @@ void Scope::popTypeMapping(const Mapping& m) {
   }
 }
 
-Val Scope::maybeGetVar(const std::string& name) const {
+Val Scope::maybeFindVar(const std::string& name) const {
   bug_unless(!vars_.empty());
   for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
     auto iter = scope_iter->find(name);
@@ -80,14 +87,14 @@ Val Scope::maybeGetVar(const std::string& name) const {
   return {};
 }
 
-Val Scope::getVar(const std::string& name) const {
-  auto val = maybeGetVar(name);
+Val Scope::findVar(const std::string& name) const {
+  auto val = maybeFindVar(name);
   if (val.hnd == INVALID_HND) e_->error("undeclared variable " + name);
   return val;
 }
 
 Val Scope::declareVar(const std::string& name, Val v) {
-  if (maybeGetVar(name).hnd != INVALID_HND) e_->error("redeclaration of var " + name);
+  if (maybeFindVar(name).hnd != INVALID_HND) e_->error("redeclaration of var " + name);
   vars_.back().back()[name] = v;
   return v;
 }
@@ -124,7 +131,7 @@ const Type* Scope::typeFromAst(ast::Type* ast_type) {
   return ast_type_map_[ast_type];
 }
 
-ast::Fn* Scope::getFn(const std::string& name) {
+ast::Fn* Scope::findFn(const std::string& name) {
   if (!fns_.contains(name)) e_->error("no function " + name);
   return fns_[name];
 }
@@ -155,6 +162,12 @@ std::pair<ast::Fn*, Mapping> Scope::lookupImplFn(
   }
 
   return {best_fn, std::move(best_mapping)};
+}
+
+std::string Scope::stacktrace() const {
+  std::string stack;
+  for (const auto& s : stack_) stack += s + "\n";
+  return stack;
 }
 
 }  // namespace memelang::exec

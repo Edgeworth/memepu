@@ -60,7 +60,7 @@ struct Lib {
     std::vector<Pin> pins;
     std::vector<Field> fields;
 
-    Rect getBoundingBox(int subcomponent) const;
+    Rect bbox(int subcomponent) const;
     const Lib::Pin* findPinByName(const std::string& pin_name) const;
     const Lib::Pin* findPinById(const std::string& pin_id) const;
   };
@@ -118,7 +118,7 @@ struct Sheet {
 
     void connectToPin(const Lib::Pin& pin);
     void connectToRefField(const RefField& ref_field);
-    Rect getBoundingBox() const;
+    Rect bbox() const;
     bool operator<(const Label& o) const;
   };
 

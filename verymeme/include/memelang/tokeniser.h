@@ -78,25 +78,17 @@ struct Tok {
   int64_t int_val = INT64_MIN;
   std::string str_val = "";
 
-  std::string desc(const FileContents* contents) const {
-    std::string d = (boost::format("Token(%s, %d:%d, '%s'") % type % contents->getLineNumber(loc) %
-        contents->getColNumber(loc) % contents->getSpan(loc, size))
-                        .str();
-    if (int_val != INT64_MIN) d += (boost::format(", %d") % int_val).str();
-    if (!str_val.empty()) d += (boost::format(", '%s'") % str_val).str();
-    d += ")";
-    return d;
-  }
+  std::string desc(const FileContents* cts) const;
 };
 
 class Tokeniser {
 public:
-  explicit Tokeniser(const FileContents* contents) : contents_(contents) {}
+  explicit Tokeniser(const FileContents* contents) : cts_(contents) {}
 
   std::vector<Tok> tokenise();
 
 private:
-  const FileContents* contents_;
+  const FileContents* cts_;
   std::string curtok_;
   std::vector<Tok> toks_;
   int idx_ = 0;

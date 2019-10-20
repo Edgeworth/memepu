@@ -4,7 +4,7 @@
 #include <regex>
 
 #include "verymeme/string_util.h"
-#include "verymeme/tokenizer.h"
+#include "verymeme/tokeniser.h"
 
 namespace memecad {
 
@@ -38,13 +38,13 @@ public:
 
   Sheet parseSheet() {
     Sheet sheet = {};
-    sheet.header1 = t_.getLines(6);
+    sheet.header1 = t_.lines(6);
     t_.expect({"Sheet", "1"});
     sheet.id = t_.next<int>();
     t_.expect({"\n", "Title"});
     sheet.title = trim(t_.next(), "\"");
     t_.expect({"\n"});
-    sheet.header2 = t_.getLines(8);
+    sheet.header2 = t_.lines(8);
     while (true) {
       std::string tok = t_.next();
       if (tok == "$EndSCHEMATC") break;
@@ -62,7 +62,7 @@ public:
         label.italic = t_.next() == "Italic";
         label.bold = t_.next() != "0";
         t_.expect({"\n"});
-        label.text = trim(t_.getLines(1), "\\n");
+        label.text = trim(t_.lines(1), "\\n");
       } else if (tok == "NoConn") {
         auto& label = sheet.labels.emplace_back();
         label.type = Sheet::Label::Type::NOCONNECT;
@@ -92,14 +92,14 @@ public:
       if (tok == "DEF") {
         lib.components.push_back(parseLibraryComponent());
       } else {
-        t_.getLines(1);  // Skip
+        t_.lines(1);  // Skip
       }
     }
     return lib;
   }
 
 private:
-  Tokenizer t_;
+  Tokeniser t_;
 
   Sheet::Component parseComponent() {
     Sheet::Component comp;
@@ -128,7 +128,7 @@ private:
         field.style = t_.next();
         t_.expect({"\n"});
       } else if (tok == "\t") {
-        comp.footer = t_.getLines(2);
+        comp.footer = t_.lines(2);
         t_.expect({"$EndComp", "\n"});
         break;
       } else {
@@ -181,7 +181,7 @@ private:
     t_.next();  // Text offset, draw pin number, draw pin name.
     component.unit_count = t_.next<int>();
     component.unit_swappable = t_.next<Lib::Component::UnitSwappable>();
-    t_.getLines(1);  // Ignore rest.
+    t_.lines(1);  // Ignore rest.
     while (true) {
       std::string tok = t_.next();
       if (tok == "ENDDEF") break;
@@ -216,7 +216,7 @@ private:
         if (pin.subcomponent == -1) pin.subcomponent = 0;
         t_.next();  // convert
         pin.type = t_.next<PinType>();
-        t_.getLines(1);  // Ignore rest.
+        t_.lines(1);  // Ignore rest.
       }
     }
     t_.expect({"\n"});

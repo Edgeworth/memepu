@@ -21,6 +21,8 @@ public:
   VM& vm() { return vm_; }
   ast::File* file() { return f_; }
   void setContext(ast::Node* node) { node_ctx_ = node; }
+  ast::Node* context() { return node_ctx_; }
+  const FileContents* fileContents() const { return cts_; }
 
 private:
   ast::File* f_;
