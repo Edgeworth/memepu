@@ -46,7 +46,10 @@ Mapping dist(const Type& a, const Type& b, const std::unordered_set<std::string>
   if (wildcards.contains(a.name))
     unimplemented();  // TODO: Our type must be fully specified for now.
   // TODO: Match child template parameters too.
-  if (!wildcards.contains(b.name)) return a.name == b.name ? Mapping{.dist = 0} : NOT_SUBTYPE;
+  if (!wildcards.contains(b.name)) {
+    printf("comparing concrete types\n");
+    return a.name == b.name ? Mapping{.dist = 0} : NOT_SUBTYPE;
+  }
 
   int qual_idx = 0;
   Type wildcard_type = a;
@@ -56,6 +59,7 @@ Mapping dist(const Type& a, const Type& b, const std::unordered_set<std::string>
     if (a.quals[qual_idx] != b.quals[qual_idx]) return NOT_SUBTYPE;  // Qualifiers don't match.
     wildcard_type.quals.erase(wildcard_type.quals.begin());  // Pop front.
   }
+  printf("returning dist as: %d\n", int(wildcard_type.quals.size()));
   // For now, distance is how many qualifiers that were pushed into the wildcard (didn't match).
   return {.dist = int(wildcard_type.quals.size()),
       .wildcard_map = {{b.name, std::move(wildcard_type)}}};

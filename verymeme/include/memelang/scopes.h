@@ -38,11 +38,15 @@ public:
   std::string stacktrace() const;
 
 private:
+  struct ScopeData {
+    std::vector<std::map<std::string, Val>> vars;
+    std::map<std::string, const Type*> wildcards;
+    std::string ctx;
+  };
+
   Exec* e_;
-  std::vector<std::vector<std::map<std::string, Val>>> vars_;
-  std::vector<std::string> stack_;
+  std::vector<ScopeData> scopes_;
   std::set<Type> types_;
-  std::map<std::string, const Type*> mappings_;
   std::map<const ast::Type*, const Type*> ast_type_map_;
 
   std::map<std::string, ast::Fn*> fns_;
