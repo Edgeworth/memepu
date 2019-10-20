@@ -38,49 +38,52 @@ Scope::Scope(Exec* exec)
 }
 
 void Scope::pushScope(ast::Fn* fn) {
-  vars_.emplace_back();
+  scopes_.emplace_back();
   auto* ctx = e_->context();
   const auto* cts = e_->fileContents();
-  std::string stack_line = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name + ": ";
-  stack_line +=
+  scopes_.back().ctx = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name + ": ";
+  scopes_.back().ctx +=
       ctx ? cts->fpos(ctx->tok.loc) + ":" + cts->span(ctx->tok.loc, ctx->tok.size) : "no ctx";
-  stack_.emplace_back(std::move(stack_line));
   nestScope();
 }
 
 void Scope::popScope() {
-  bug_unless(!vars_.empty());
+  bug_unless(!scopes_.empty());
   // TODO: Call destructors
-  vars_.pop_back();
-  stack_.pop_back();
+  scopes_.pop_back();
 }
 
-void Scope::nestScope() { vars_.back().emplace_back(); }
+void Scope::nestScope() { scopes_.back().vars.emplace_back(); }
 
 void Scope::unnestScope() {
-  bug_unless(!vars_.back().empty());
+  bug_unless(!scopes_.back().vars.empty());
   // TODO: Call destructors
   // TODO: Pop from stack
-  vars_.back().pop_back();
+  scopes_.back().vars.pop_back();
 }
 
 void Scope::pushTypeMapping(const Mapping& m) {
+  bug_unless(!scopes_.empty());
+  auto& wildcards = scopes_.back().wildcards;
   for (const auto& [wildcard, type] : m.wildcard_map) {
-    if (mappings_.contains(wildcard)) e_->error("reusing template paramter " + wildcard);
-    mappings_[wildcard] = addType(Type{type});
+    if (wildcards.contains(wildcard)) e_->error("reusing template parameter " + wildcard);
+    wildcards[wildcard] = addType(Type{type});
   }
 }
 
 void Scope::popTypeMapping(const Mapping& m) {
+  bug_unless(!scopes_.empty());
+  auto& wildcards = scopes_.back().wildcards;
   for (const auto& [wildcard, _] : m.wildcard_map) {
-    bug_unless(mappings_.contains(wildcard));
-    mappings_.erase(wildcard);
+    bug_unless(wildcards.contains(wildcard));
+    wildcards.erase(wildcard);
   }
 }
 
 Val Scope::maybeFindVar(const std::string& name) const {
-  bug_unless(!vars_.empty());
-  for (auto scope_iter = vars_.back().rbegin(); scope_iter != vars_.back().rend(); ++scope_iter) {
+  bug_unless(!scopes_.empty() && !scopes_.back().vars.empty());
+  const auto& vars = scopes_.back().vars;
+  for (auto scope_iter = vars.rbegin(); scope_iter != vars.rend(); ++scope_iter) {
     auto iter = scope_iter->find(name);
     if (iter != scope_iter->end()) return iter->second;
   }
@@ -95,7 +98,7 @@ Val Scope::findVar(const std::string& name) const {
 
 Val Scope::declareVar(const std::string& name, Val v) {
   if (maybeFindVar(name).hnd != INVALID_HND) e_->error("redeclaration of var " + name);
-  vars_.back().back()[name] = v;
+  scopes_.back().vars.back()[name] = v;
   return v;
 }
 
@@ -166,7 +169,7 @@ std::pair<ast::Fn*, Mapping> Scope::lookupImplFn(
 
 std::string Scope::stacktrace() const {
   std::string stack;
-  for (const auto& s : stack_) stack += s + "\n";
+  for (auto iter = scopes_.rbegin(); iter != scopes_.rend(); ++iter) stack += iter->ctx + "\n";
   return stack;
 }
 
