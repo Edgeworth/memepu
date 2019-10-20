@@ -10,14 +10,18 @@ FileContents::FileContents(std::string filename, std::string data)
   }
 }
 
-int FileContents::getLineNumber(int loc) const {
+int FileContents::lnum(int loc) const {
   return int(std::upper_bound(newlines_.begin(), newlines_.end(), loc) - newlines_.begin());
 }
 
-int FileContents::getColNumber(int loc) const { return loc - newlines_[getLineNumber(loc) - 1]; }
+int FileContents::cnum(int loc) const { return loc - newlines_[lnum(loc) - 1]; }
 
-std::string FileContents::getSpan(int loc, int size) const {
+std::string FileContents::span(int loc, int size) const {
   return data_.substr(uint64_t(loc), uint64_t(size));
+}
+
+std::string FileContents::fpos(int loc) const {
+  return std::to_string(lnum(loc)) + ":" + std::to_string(cnum(loc));
 }
 
 }  // namespace memelang

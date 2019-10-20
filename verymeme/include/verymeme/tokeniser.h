@@ -6,9 +6,9 @@
 
 #include "verymeme/macros.h"
 
-class Tokenizer {
+class Tokeniser {
 public:
-  Tokenizer(const std::string& data, const std::regex& token);
+  Tokeniser(const std::string& data, const std::regex& token);
 
   template <typename T = std::string>
   T peek(int ahead = 0) {
@@ -25,8 +25,8 @@ public:
 
   bool hasTokens() { return idx_ < int(toks_.size()); }
 
-  std::string getLines(int num_lines = 1);
-  std::string getSubstr(int st, int en);
+  std::string lines(int num_lines = 1);
+  std::string substr(int st, int en);
   void expect(const std::vector<std::string>& toks);
 
 private:

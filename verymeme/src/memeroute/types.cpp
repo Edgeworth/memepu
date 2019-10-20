@@ -53,7 +53,7 @@ std::istream& operator>>(std::istream& str, Side& o) { return inputEnum(str, o, 
 
 std::string Net::PinId::toString() const { return component_id + "-" + pin_id; }
 
-Rect Shape::getBoundingBox() const {
+Rect Shape::bbox() const {
   switch (type) {
   case Type::PATH: {
     Rect bounds = {};
@@ -108,7 +108,7 @@ void Pcb::verifyAndSetup() {
   std::set<Net::PinId> pin_ids;
   for (const auto& kv : nets) {
     for (const auto& pin_id : kv.second.pin_ids) {
-      getPinForPinId(pin_id);  // Make sure the component and pin exists.
+      findPinForPinId(pin_id);  // Make sure the component and pin exists.
 
       verify_expr(
           pin_ids.count(pin_id) == 0, "pin '%s' in multiple nets", pin_id.toString().c_str());
@@ -127,27 +127,27 @@ void Pcb::verifyAndSetup() {
     for (const auto& pin_id : kv.second.pin_ids) pin_id_to_net_[pin_id] = kv.second;
 }
 
-const Net& Pcb::getNet(const std::string& net_name) const {
+const Net& Pcb::findNet(const std::string& net_name) const {
   auto iter = nets.find(net_name);
   verify_expr(iter != nets.end(), "unknown net '%s'", net_name.c_str());
   return iter->second;
 }
 
-const Net* Pcb::getNetForPinId(const Net::PinId& pin_id) const {
+const Net* Pcb::findNetForPinId(const Net::PinId& pin_id) const {
   auto iter = pin_id_to_net_.find(pin_id);
   if (iter == pin_id_to_net_.end()) return nullptr;
   return &iter->second;
 }
 
-const Component& Pcb::getComponentForPinId(const Net::PinId& pin_id) const {
+const Component& Pcb::findComponentForPinId(const Net::PinId& pin_id) const {
   auto iter = components.find(pin_id.component_id);
   verify_expr(
       iter != components.end(), "net to unknown component '%s", pin_id.component_id.c_str());
   return iter->second;
 }
 
-const Pin& Pcb::getPinForPinId(const Net::PinId& pin_id) const {
-  const auto& component = getComponentForPinId(pin_id);
+const Pin& Pcb::findPinForPinId(const Net::PinId& pin_id) const {
+  const auto& component = findComponentForPinId(pin_id);
   auto image_iter = images.find(component.image_id);
   verify_expr(image_iter != images.end(), "unknown image '%s'", component.image_id.c_str());
   auto pin_iter = image_iter->second.pins.find(pin_id.pin_id);

@@ -101,7 +101,7 @@ sf::FloatRect Renderer::addShapeToDisplayList(
     const Shape& shape, const sf::Transform& tf, const sf::Color& color, bool filled) {
   const auto& arrays = createVertexArraysFromShape(shape, tf, color, filled);
   for (const auto& array : arrays) dl_.add(array);
-  return getVertexArraysBoundingBox(arrays);
+  return computeVertexArraysBbox(arrays);
 }
 
 sf::FloatRect Renderer::addPadstackToDisplayList(
@@ -135,7 +135,7 @@ sf::FloatRect Renderer::addComponentToDisplayList(const Component& component, sf
     sf::Transform pin_tf = tf;
     pin_tf.translate(pointToVector(pin.p));
 
-    const auto* net = pcb_.getNetForPinId(Net::PinId{component.name, pin.pin_id});
+    const auto* net = pcb_.findNetForPinId(Net::PinId{component.name, pin.pin_id});
     if (net) {
       auto& net_text = labels_.emplace_back(createText(net->name));
       net_text.move(pin_tf * sf::Vector2f(0, 0));

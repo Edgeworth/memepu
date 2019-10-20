@@ -104,7 +104,7 @@ set(VERYMEME_SOURCES
     include/verymeme/util.h
     src/verymeme/file.cpp include/verymeme/file.h
     src/verymeme/geom.cpp include/verymeme/geom.h
-    src/verymeme/tokenizer.cpp include/verymeme/tokenizer.h
+    src/verymeme/tokeniser.cpp include/verymeme/tokeniser.h
     src/verymeme/term.cpp include/verymeme/term.h
     include/verymeme/concurrent_queue.h
     src/verymeme/string_util.cpp include/verymeme/string_util.h

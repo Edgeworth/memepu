@@ -53,7 +53,7 @@ std::vector<Schematic::SchematicFile> convertVerilogToKicadSchematics(
   test_pass.setup(memecad_map_filename, kicad_library_filenames);
   Yosys::run_pass(PASS_NAME);
 
-  return test_pass.getMapper().getSchematic().writeHierarchy();
+  return test_pass.mapper().schematic().writeHierarchy();
 }
 
 TestPass::TestPass() : Pass(PASS_NAME) {}

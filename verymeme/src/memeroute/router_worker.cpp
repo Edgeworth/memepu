@@ -66,7 +66,7 @@ void RouterWorker::markPadstackInGrid(const Point& p, const std::string& padstac
   const auto& padstack = pcb_.padstacks[padstack_id];
   for (const auto& shape : padstack.shapes) {
     // TODO(improvement): For now just do bounding box.
-    const Rect bbox = shape.getBoundingBox().offset(convertGridToWorld(p));
+    const Rect bbox = shape.bbox().offset(convertGridToWorld(p));
     // Move to current state location (put via there).
     const Rect grid_bbox =
         Rect::enclosing(convertWorldToGrid(bbox.origin()), convertWorldToGrid(bbox.bottom_right()));
@@ -76,7 +76,7 @@ void RouterWorker::markPadstackInGrid(const Point& p, const std::string& padstac
 }
 
 void RouterWorker::markFilledShapeInGrid(const Shape& shape, int layer, int val) {
-  const Rect bbox = shape.getBoundingBox();  // TODO(improvement): For now just do bounding box.
+  const Rect bbox = shape.bbox();  // TODO(improvement): For now just do bounding box.
   const Rect grid_bbox =
       Rect::enclosing(convertWorldToGrid(bbox.origin()), convertWorldToGrid(bbox.bottom_right()));
 
@@ -91,7 +91,7 @@ bool RouterWorker::isBlocked(const State& prev_s, const State& s) {
   const auto& padstack = pcb_.padstacks[pcb_.via_padstack_id];
   for (const auto& shape : padstack.shapes) {
     // TODO(improvement): For now just do bounding box.
-    const Rect bbox = shape.getBoundingBox().offset(convertGridToWorld(s.p));
+    const Rect bbox = shape.bbox().offset(convertGridToWorld(s.p));
     if (!boundary_.contains(bbox)) return true;  // Goes outside boundary.
     // Move to current state location (put via there).
     const Rect grid_bbox =
@@ -112,7 +112,7 @@ void RouterWorker::initializeGrid() {
   memset(back_, 0, sizeof(back_));
 
   // Set-up boundary. Round up so it evenly divides the grid.
-  boundary_ = pcb_.boundary.getBoundingBox();
+  boundary_ = pcb_.boundary.bbox();
   verify_expr(!boundary_.empty(), "boundary empty");
   boundary_.set_width(ceil_div(boundary_.width() + 1, GRID_COLS) * GRID_COLS);
   boundary_.set_height(ceil_div(boundary_.height() + 1, GRID_ROWS) * GRID_ROWS);
@@ -132,11 +132,11 @@ RouterWorker::RoutingResult RouterWorker::route(const RouterWorker::InvocationPa
   RoutingResult result = {};
   int idx = 0;
   for (const auto& net_name : params.net_names) {
-    const auto& net = pcb_.getNet(net_name);
+    const auto& net = pcb_.findNet(net_name);
     std::vector<State> states;
     for (const auto& pin_id : net.pin_ids) {
-      const auto& component = pcb_.getComponentForPinId(pin_id);
-      const auto& pin = pcb_.getPinForPinId(pin_id);
+      const auto& component = pcb_.findComponentForPinId(pin_id);
+      const auto& pin = pcb_.findPinForPinId(pin_id);
       // TODO(improvement): Through hole components can start from any layer. Needs to check
       // padstack.
       states.push_back(
@@ -147,7 +147,7 @@ RouterWorker::RoutingResult RouterWorker::route(const RouterWorker::InvocationPa
 
     // Put them back.
     for (const auto& pin_id : net.pin_ids)
-      markPinInGrid(pcb_.getComponentForPinId(pin_id), pcb_.getPinForPinId(pin_id), 1);
+      markPinInGrid(pcb_.findComponentForPinId(pin_id), pcb_.findPinForPinId(pin_id), 1);
     idx++;
   }
 

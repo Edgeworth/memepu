@@ -10,7 +10,7 @@ namespace memeroute {
 
 // Helper routines:
 sf::FloatRect floatRectUnion(const sf::FloatRect& a, const sf::FloatRect& b);
-sf::FloatRect getVertexArraysBoundingBox(const std::vector<sf::VertexArray>& arrays);
+sf::FloatRect computeVertexArraysBbox(const std::vector<sf::VertexArray>& arrays);
 
 // Drawing routines:
 sf::VertexArray createCircle(float radius, sf::Transform tf, const sf::Color& color, bool filled);
