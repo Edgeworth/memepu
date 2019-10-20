@@ -1,4 +1,4 @@
-#include "verymeme/tokenizer.h"
+#include "verymeme/tokeniser.h"
 
 namespace {
 
@@ -14,17 +14,17 @@ std::vector<std::string> tokenize(const std::string& data, const std::regex& tok
 
 }  // namespace
 
-Tokenizer::Tokenizer(const std::string& data, const std::regex& token)
+Tokeniser::Tokeniser(const std::string& data, const std::regex& token)
     : toks_(tokenize(data, token)) {}
 
-std::string Tokenizer::getLines(int num_lines) {
+std::string Tokeniser::lines(int num_lines) {
   const int start_idx = idx_;
   while (num_lines > 0)
     if (next() == "\n") num_lines--;
-  return getSubstr(start_idx, idx_);
+  return substr(start_idx, idx_);
 }
 
-std::string Tokenizer::getSubstr(int st, int en) {
+std::string Tokeniser::substr(int st, int en) {
   std::string substr;
   for (int i = st; i < en; ++i) {
     // Only separate by a space if there's at least one character accumulated, and it's:
@@ -38,7 +38,7 @@ std::string Tokenizer::getSubstr(int st, int en) {
   }
   return substr;
 }
-void Tokenizer::expect(const std::vector<std::string>& toks) {
+void Tokeniser::expect(const std::vector<std::string>& toks) {
   for (const std::string& tok : toks) {
     const std::string next_tok = next();
     verify_expr(tok == next_tok, "expected '%s', got '%s'", tok.c_str(), next_tok.c_str());

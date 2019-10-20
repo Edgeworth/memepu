@@ -47,7 +47,7 @@ PinType netTypeToPinType(Sheet::Label::NetType net_type) {
   }
 }
 
-Rect Lib::Component::getBoundingBox(int subcomponent) const {
+Rect Lib::Component::bbox(int subcomponent) const {
   Rect bounds;
   for (const auto& pin : pins) {
     if (pin.subcomponent != subcomponent) continue;
@@ -105,7 +105,7 @@ bool Sheet::Label::operator<(const Sheet::Label& o) const {
   return toStringIntPair(text) < toStringIntPair(o.text);
 }
 
-Rect Sheet::Label::getBoundingBox() const {
+Rect Sheet::Label::bbox() const {
   const int text_length = int(text.size()) * dimension;
   switch (direction) {
   case Direction::LEFT: return {p.x - text_length, p.y - dimension, p.x, p.y};

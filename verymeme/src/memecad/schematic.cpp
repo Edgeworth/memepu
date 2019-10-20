@@ -109,7 +109,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
     bug_unless(conn_iter != mapping.end());
     Sheet::Label& parent_label = labels.emplace_back(createParentLabel(conn_iter->second.bit));
     parent_label.connectToRefField(ref.fields[i]);
-    aabbs.push_back(parent_label.getBoundingBox());
+    aabbs.push_back(parent_label.bbox());
   }
 
   // Pack child sheet and offset accordingly.
@@ -146,7 +146,7 @@ void Schematic::addComponentToSheet(const std::string& lib_name,
   int y = 0;
   for (auto& component : subcomponents) {
     // Get relative positions correct.
-    Rect aabb = lib_component.getBoundingBox(component.subcomponent);
+    Rect aabb = lib_component.bbox(component.subcomponent);
     Point offset = {0, y - aabb.top};
     aabb.offset(offset);
     component.offset(offset);
@@ -166,7 +166,7 @@ void Schematic::addComponentToSheet(const std::string& lib_name,
         "subcomponent %d is out of range, only have %d subcomponents", kicad_pin->subcomponent,
         int(subcomponents.size()));
     label.p += subcomponents[kicad_pin->subcomponent].p;
-    aabbs.push_back(label.getBoundingBox());
+    aabbs.push_back(label.bbox());
   }
 
   // Place component based on packing:

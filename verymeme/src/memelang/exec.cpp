@@ -36,25 +36,26 @@ Exec::Exec(ast::File* file, const FileContents* cts) : f_(file), cts_(cts), s_(t
 
 void Exec::run() {
   printf("===BEGIN PROGRAM===\n");
-  s_.pushScope();
-  runFn(s_.getFn("main"), {}, {}, {});
+  auto fn = s_.findFn("main");
+  s_.pushScope(fn);
+  runFn(fn, {}, {}, {});
   s_.popScope();
   printf("===END PROGRAM===\n");
 }
 
 Val Exec::runFn(ast::Fn* fn, const Mapping& mapping, const std::vector<Val>& params, Val ths) {
-  setContext(fn);
-
-  s_.pushScope();
+  s_.pushScope(fn);
   s_.pushTypeMapping(mapping);
+
+  setContext(fn);  // Set context after pushing scope to save caller location.
   if (fn->sig->params.size() != params.size()) error("wrong number of arguments");
   if (ths.hnd != INVALID_HND) s_.declareVar("this", addr(ths));
   for (int i = 0; i < int(fn->sig->params.size()); ++i) {
     auto& decl = fn->sig->params[i];
     runStmt(decl.get());
-    printf("first type: %s, second: %s\n", s_.getVar(decl->ref->name).type->toString().c_str(),
+    printf("first type: %s, second: %s\n", s_.findVar(decl->ref->name).type->toString().c_str(),
         params[i].type->toString().c_str());
-    assign(s_.getVar(decl->ref->name), params[i]);
+    assign(s_.findVar(decl->ref->name), params[i]);
   }
   auto val = runStmtBlk(fn->blk.get());
   s_.popTypeMapping(mapping);
@@ -146,7 +147,8 @@ Val Exec::runOp(ast::Op* op) {
       auto read_ptr = eval(args->args[0].get());
       auto read_sz = eval(args->args[1].get());
 
-      auto u8_ptr_t = Type{.name = U8, .quals = {{}, {.ptr = true}}};  // TODO: move ptr type get to Type?
+      auto u8_ptr_t =
+          Type{.name = U8, .quals = {{}, {.ptr = true}}};  // TODO: move ptr type get to Type?
       if (*read_ptr.type != u8_ptr_t)
         error("wrong type: " + read_ptr.type->toString() + " need: " + u8_ptr_t.toString());
       if (read_sz.type != s_.u32_t) error("wrong type: " + read_sz.type->toString());
@@ -165,7 +167,7 @@ Val Exec::runOp(ast::Op* op) {
 
     std::vector<Val> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
-    auto* fn = s_.getFn(call->name);
+    auto* fn = s_.findFn(call->name);
     return runFn(fn, {} /* mapping */, params, {} /* this */);
   }
   case ast::Expr::ASSIGNMENT: return assign(eval(op->left.get()), eval(op->right.get()));
@@ -220,7 +222,7 @@ Val Exec::eval(ast::Node* n) {
   setContext(n);
 
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
-  if (typeid(*n) == typeid(ast::VarRef)) return s_.getVar(g<ast::VarRef>(n)->name);
+  if (typeid(*n) == typeid(ast::VarRef)) return s_.findVar(g<ast::VarRef>(n)->name);
   if (typeid(*n) == typeid(ast::IntLit)) {
     const auto* type = g<ast::IntLit>(n)->unsign ? s_.u32_t : s_.i32_t;
     auto val = Val{.hnd = vm_.allocTmp(type->size()), .type = type};
@@ -245,12 +247,11 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
 
 void Exec::error(const std::string& msg) const {
   if (node_ctx_)
-    verify_expr(false, "error at '%s' (%d:%d): %s",
-        cts_->getSpan(node_ctx_->tok.loc, node_ctx_->tok.size).c_str(),
-        cts_->getLineNumber(node_ctx_->tok.loc), cts_->getColNumber(node_ctx_->tok.loc),
-        msg.c_str());
+    verify_expr(false, "error at '%s' (%s): %s\n%s\n",
+        cts_->span(node_ctx_->tok.loc, node_ctx_->tok.size).c_str(),
+        cts_->fpos(node_ctx_->tok.loc).c_str(), msg.c_str(), s_.stacktrace().c_str());
   else
-    verify_expr(false, "error: %s", msg.c_str());
+    verify_expr(false, "error: %s\n%s\n", msg.c_str(), s_.stacktrace().c_str());
 }
 
 Val Exec::assign(Val l, Val r) {

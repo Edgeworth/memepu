@@ -73,9 +73,7 @@ void Parser::Ctx::error(const std::string& msg) const {
   std::string loc = "eof";
   if (hasTok()) {
     const auto* token = curTok();
-    loc = (fmt("%d:%d - \"%s\"") % cts->getLineNumber(token->loc) % cts->getColNumber(token->loc) %
-        token->desc(cts))
-              .str();
+    loc = (fmt("%s - \"%s\"") % cts->fpos(token->loc) % token->desc(cts)).str();
   }
   throw std::runtime_error(
       (fmt("compile error at %s: %s\n%s") % loc % msg % getStacktrace()).str());

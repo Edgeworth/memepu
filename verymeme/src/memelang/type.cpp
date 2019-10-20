@@ -32,9 +32,11 @@ int Type::size() const {
 
 std::string Type::toString() const {
   std::string rep = "Type(name: " + name + "; quals: ";
-  rep += join(quals.rbegin(), quals.rend(), [] (auto& i) { return i.toString(); }, ", ");
+  rep += join(
+      quals.rbegin(), quals.rend(), [](auto& i) { return i.toString(); }, ", ");
   rep += "; params: ";
-  rep += join(params.begin(), params.end(), [] (auto& i) { return i->toString(); }, ", ");
+  rep += join(
+      params.begin(), params.end(), [](auto& i) { return i->toString(); }, ", ");
   rep += ")";
   return rep;
 }

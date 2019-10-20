@@ -19,7 +19,7 @@ public:
 
   void addCell(const Yosys::RTLIL::Cell& cell);
   void addModule(const Yosys::Module& module);
-  Schematic& getSchematic() { return schematic_; }
+  Schematic& schematic() { return schematic_; }
   bool isMappedModule(const Yosys::RTLIL::Module& module) const;
 
 private:

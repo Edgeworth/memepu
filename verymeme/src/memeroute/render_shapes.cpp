@@ -68,7 +68,7 @@ sf::FloatRect floatRectUnion(const sf::FloatRect& a, const sf::FloatRect& b) {
   return merged;
 }
 
-sf::FloatRect getVertexArraysBoundingBox(const std::vector<sf::VertexArray>& arrays) {
+sf::FloatRect computeVertexArraysBbox(const std::vector<sf::VertexArray>& arrays) {
   sf::FloatRect bounds{};
   for (const auto& array : arrays) bounds = floatRectUnion(array.getBounds(), bounds);
   return bounds;

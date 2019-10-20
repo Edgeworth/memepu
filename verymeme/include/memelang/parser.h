@@ -47,7 +47,7 @@ public:
   ~Parser();
 
   bool parse();
-  ast::File* getFile() { return root_.get(); }
+  ast::File* file() { return root_.get(); }
   std::string astToString();
 
 private:
