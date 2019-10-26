@@ -16,7 +16,6 @@ std::string Qualifier::toString() const {
 }
 
 int Type::size() const {
-  printf("Computing size of type: %s\n", toString().c_str());
   auto iter = BUILTIN_SIZE.find(name);
   int size = 0;
   if (iter != BUILTIN_SIZE.end()) size = iter->second;
@@ -41,13 +40,21 @@ std::string Type::toString() const {
   return rep;
 }
 
+void Type::addInnerType(const Type& t) {
+  name = t.name;
+  params = t.params;  // TODO: need to do mapping of params?
+  auto new_quals = t.quals;
+  // Inner type should not have initial qualifier.
+  new_quals.insert(new_quals.end(), quals.begin(), quals.end());
+  quals = std::move(new_quals);
+}
+
 Mapping dist(const Type& a, const Type& b, const std::unordered_set<std::string>& wildcards) {
-  printf("Compute dist from %s to %s\n", a.toString().c_str(), b.toString().c_str());
+  // TODO: Our type must be fully specified for now.
   if (wildcards.contains(a.name))
-    unimplemented();  // TODO: Our type must be fully specified for now.
+    unimplemented();
   // TODO: Match child template parameters too.
   if (!wildcards.contains(b.name)) {
-    printf("comparing concrete types\n");
     return a.name == b.name ? Mapping{.dist = 0} : NOT_SUBTYPE;
   }
 
@@ -59,7 +66,6 @@ Mapping dist(const Type& a, const Type& b, const std::unordered_set<std::string>
     if (a.quals[qual_idx] != b.quals[qual_idx]) return NOT_SUBTYPE;  // Qualifiers don't match.
     wildcard_type.quals.erase(wildcard_type.quals.begin());  // Pop front.
   }
-  printf("returning dist as: %d\n", int(wildcard_type.quals.size()));
   // For now, distance is how many qualifiers that were pushed into the wildcard (didn't match).
   return {.dist = int(wildcard_type.quals.size()),
       .wildcard_map = {{b.name, std::move(wildcard_type)}}};

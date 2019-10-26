@@ -35,12 +35,12 @@ T* g(std::unique_ptr<R>& n) {
 Exec::Exec(ast::File* file, const FileContents* cts) : f_(file), cts_(cts), s_(this), vm_(this) {}
 
 void Exec::run() {
-  printf("===BEGIN PROGRAM===\n");
+  fprintf(stderr, "===BEGIN PROGRAM===\n");
   auto fn = s_.findFn("main");
   s_.pushScope(fn);
   runFn(fn, {}, {}, {});
   s_.popScope();
-  printf("===END PROGRAM===\n");
+  fprintf(stderr, "===END PROGRAM===\n");
 }
 
 Val Exec::runFn(ast::Fn* fn, const Mapping& mapping, const std::vector<Val>& params, Val ths) {
@@ -53,8 +53,8 @@ Val Exec::runFn(ast::Fn* fn, const Mapping& mapping, const std::vector<Val>& par
   for (int i = 0; i < int(fn->sig->params.size()); ++i) {
     auto& decl = fn->sig->params[i];
     runStmt(decl.get());
-    printf("first type: %s, second: %s\n", s_.findVar(decl->ref->name).type->toString().c_str(),
-        params[i].type->toString().c_str());
+    fprintf(stderr, "first type: %s, second: %s\n",
+        s_.findVar(decl->ref->name).type->toString().c_str(), params[i].type->toString().c_str());
     assign(s_.findVar(decl->ref->name), params[i]);
   }
   auto val = runStmtBlk(fn->blk.get());
@@ -291,7 +291,7 @@ Val Exec::neq(Val l, Val r) {
 Val Exec::array_access(Val l, Val r) {
   // TODO not only u32 ?
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
-  if (!l.type->quals.back().array) error("array access on non-array type");
+  if (!l.type->isArray()) error("array access on non-array type");
   Type new_type = *l.type;
   new_type.quals.pop_back();  // Remove array qualifier.
   const int32_t idx = vm_.ref<int32_t>(r);

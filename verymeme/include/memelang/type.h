@@ -28,7 +28,11 @@ struct Type {
   std::vector<const Type*> params{};
 
   int size() const;
+  bool isPtr() const { return quals.back().ptr; }
+  bool isArray() const { return quals.back().array != 0; }
   std::string toString() const;
+  // E.g. *T => **u8. if parameter is *u8.
+  void addInnerType(const Type& t);
 
   COMPARISON(Type, name, quals, params);
 };
