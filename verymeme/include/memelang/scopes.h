@@ -32,8 +32,8 @@ public:
   const Type* typeFromAst(ast::Type* ast_type);
 
   ast::Fn* findFn(const std::string& name);
-  std::pair<ast::Fn*, Mapping> lookupImplFn(
-      Val obj, const std::string& impl_name, const std::string& fn_name);
+  std::pair<ast::Fn*, Mapping> lookupImplFn(Val ths, const std::vector<Val>& args,
+      const std::string& impl_name, const std::string& fn_name);
 
   std::string stacktrace() const;
 
