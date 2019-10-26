@@ -26,7 +26,6 @@ const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
     {"intf", Tok::INTF}, {"struct", Tok::STRUCT}, {"enum", Tok::ENUM}, {"impl", Tok::IMPL},
     {"fn", Tok::FN}, {"if", Tok::IF}, {"else", Tok::ELSE}, {"match", Tok::MATCH}, {"for", Tok::FOR},
     {"while", Tok::WHILE}, {"ret", Tok::RET}, {"static", Tok::STATIC}, {"const", Tok::CONST},
-    {"auto", Tok::AUTO},
     // Specially handled tokens:
     {"asm", Tok::ASM}, {"//", Tok::COMMENT}, {"\"", Tok::DQUOTE}, {"'", Tok::QUOTE}};
 
@@ -47,7 +46,7 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
       "RANGLE", "LSQUARE", "RSQUARE", "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE",
       "EXCLAMATION", "AMPERSAND", "DAMPERSAND", "CARET", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL",
       "LTEQUAL", "GTEQUAL", "INTF", "STRUCT", "ENUM", "IMPL", "FN", "IF", "ELSE", "MATCH", "FOR",
-      "WHILE", "RET", "STATIC", "CONST", "AUTO", "ASM", "STR_LIT", "INT_LIT", "UINT_LIT",
+      "WHILE", "RET", "STATIC", "CONST", "ASM", "STR_LIT", "INT_LIT", "UINT_LIT",
       "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
   return outputEnum(str, o, TOKEN_TYPES);
 }

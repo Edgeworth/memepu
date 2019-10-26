@@ -32,7 +32,6 @@ intf Comparable<T> {
 
 impl Comparable<i32> for u8 {
   fn neq(o: *i32) bool {
-    printf("neq: %d %d != %d\n", *this, i32(*this), *o);
     ret i32(*this) != *o;
   }
 }
@@ -71,6 +70,6 @@ fn main() i32 {
   printf("got %d bytes: ", nbytes);
   print_cstr(&data[0]);
   printf("\n");
-  printf("strlen result: %d\n", strlen(&data[0]));
+  // printf("strlen result: %d\n", strlen(&data[0]));
   ret 0;
 }
