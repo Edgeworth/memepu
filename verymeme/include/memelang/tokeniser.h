@@ -61,7 +61,6 @@ struct Tok {
     RET,
     STATIC,
     CONST,
-    AUTO,
     // Complex tokens
     ASM,
     STR_LIT,

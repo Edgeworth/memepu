@@ -1,0 +1,5 @@
+fn print_cstr(s: *u8) {
+  while *s != 0 {
+    printf("%c", *(s++));
+  }
+}

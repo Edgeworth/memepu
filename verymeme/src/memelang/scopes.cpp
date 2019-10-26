@@ -45,9 +45,10 @@ void Scope::pushScope(ast::Fn* fn) {
   const auto* cts = e_->fileContents();
 
   if (fn) {
-    scopes_.back().ctx = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name + ": ";
-    scopes_.back().ctx +=
-        ctx ? cts->fpos(ctx->tok.loc) + ":" + cts->span(ctx->tok.loc, ctx->tok.size) : "no ctx";
+    scopes_.back().ctx = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name;
+    scopes_.back().ctx += ctx
+        ? " called from " + cts->fpos(ctx->tok.loc) + ":" + cts->span(ctx->tok.loc, ctx->tok.size)
+        : " (no ctx)";
   } else {
     scopes_.back().ctx = "global ctx";
   }
