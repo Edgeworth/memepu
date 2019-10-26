@@ -60,7 +60,7 @@ private:
 
   template <typename F>
   auto invokeBuiltin(Val v, F op) {
-    printf("builtin on: %s\n", v.type->toString().c_str());
+    fprintf(stderr, "builtin on: %s\n", v.type->toString().c_str());
     if (v.type == s_.bool_t) return std::invoke(op, vm_.ref<bool>(v));
     else if (v.type == s_.i8_t)
       return std::invoke(op, vm_.ref<int8_t>(v));
@@ -82,7 +82,9 @@ private:
       return std::invoke(op, vm_.ref<float>(v));
     else if (v.type == s_.f64_t)
       return std::invoke(op, vm_.ref<double>(v));
-    error("not builtin");
+    else if (v.type->isPtr())
+      return std::invoke(op, vm_.ref<Hnd>(v));
+    error("not builtin: " + v.type->toString());
     return std::invoke(op, vm_.ref<int8_t>(v));
   }
 
@@ -90,9 +92,9 @@ private:
   Val binop(Val l, Val r, const Type* type, const std::string& op_name, F default_op) {
     bug_unless(type && l.type && r.type);
 
-    auto pair = s_.lookupImplFn(l, "Comparable", op_name);
+    auto pair = s_.lookupImplFn(l, {addr(r)}, "Comparable", op_name);
     if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
-    pair = s_.lookupImplFn(l, "BinaryArith", op_name);
+    pair = s_.lookupImplFn(l, {addr(r)}, "BinaryArith", op_name);
     if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
 
     if (l.type != r.type)
@@ -110,7 +112,7 @@ private:
   template <typename F>
   Val unop(Val l, const Type* type, const std::string& op_name, F default_op) {
     bug_unless(type && l.type);
-    auto pair = s_.lookupImplFn(l, "UnaryArith", op_name);
+    auto pair = s_.lookupImplFn(l, {}, "UnaryArith", op_name);
     if (pair.first) return runFn(pair.first, pair.second, {}, l);
     auto res = invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
     Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type};

@@ -11,6 +11,8 @@ Scope::Scope(Exec* exec)
       i16_t(addType({.name = I16})), i32_t(addType({.name = I32})), i64_t(addType({.name = I64})),
       u8_t(addType({.name = U8})), u16_t(addType({.name = U16})), u32_t(addType({.name = U32})),
       u64_t(addType({.name = U64})), f32_t(addType({.name = F32})), f64_t(addType({.name = F64})) {
+  pushScope(nullptr);
+
   for (auto& fn : e_->file()->fns) {
     e_->setContext(fn.get());
     fns_[fn->sig->tname->name] = fn.get();
@@ -41,9 +43,14 @@ void Scope::pushScope(ast::Fn* fn) {
   scopes_.emplace_back();
   auto* ctx = e_->context();
   const auto* cts = e_->fileContents();
-  scopes_.back().ctx = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name + ": ";
-  scopes_.back().ctx +=
-      ctx ? cts->fpos(ctx->tok.loc) + ":" + cts->span(ctx->tok.loc, ctx->tok.size) : "no ctx";
+
+  if (fn) {
+    scopes_.back().ctx = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name + ": ";
+    scopes_.back().ctx +=
+        ctx ? cts->fpos(ctx->tok.loc) + ":" + cts->span(ctx->tok.loc, ctx->tok.size) : "no ctx";
+  } else {
+    scopes_.back().ctx = "global ctx";
+  }
   nestScope();
 }
 
@@ -129,9 +136,16 @@ const Type* Scope::typeFromAst(ast::Type* ast_type) {
   }
   for (const auto& param : ast_type->params) new_type.params.emplace_back(typeFromAst(param.get()));
 
-  ast_type_map_[ast_type] = addType(std::move(new_type));
-  printf("Added new type: %s\n", ast_type_map_[ast_type]->toString().c_str());
-  return ast_type_map_[ast_type];
+  // TODO: Handle child parameters.
+  const bool is_parametised = scopes_.back().wildcards.contains(new_type.name);
+  if (is_parametised) { new_type.addInnerType(*scopes_.back().wildcards[new_type.name]); }
+
+  const auto* type_ptr = addType(std::move(new_type));
+
+  if (!is_parametised) ast_type_map_[ast_type] = type_ptr;
+
+  fprintf(stderr, "Added new type: %s\n", type_ptr->toString().c_str());
+  return type_ptr;
 }
 
 ast::Fn* Scope::findFn(const std::string& name) {
@@ -139,29 +153,44 @@ ast::Fn* Scope::findFn(const std::string& name) {
   return fns_[name];
 }
 
-std::pair<ast::Fn*, Mapping> Scope::lookupImplFn(
-    Val obj, const std::string& impl_name, const std::string& fn_name) {
-  printf("lookup: %s %s\n", impl_name.c_str(), fn_name.c_str());
+std::pair<ast::Fn*, Mapping> Scope::lookupImplFn(Val ths, const std::vector<Val>& args,
+    const std::string& impl_name, const std::string& fn_name) {
+  fprintf(stderr, "lookup: %s %s\n", impl_name.c_str(), fn_name.c_str());
   Mapping best_mapping{};
   ast::Fn* best_fn = nullptr;
   // For each implementation, check the distance between types.
   // Select the implementation which has the closest distance that has a function that matches.
   for (const auto& [impl_obj_type, impl_map] : impls_) {
     // TODO: Don't hardcode these.
-    const auto& mapping = dist(*obj.type, *impl_obj_type, {"T", "I", "A", "B"});
+    const auto& mapping = dist(*ths.type, *impl_obj_type, {"T", "I", "A", "B"});
     if (mapping == NOT_SUBTYPE || best_mapping < mapping) continue;
 
+    pushScope(nullptr);  // Temporarily add mapping to resolve wildcards.
+    pushTypeMapping(mapping);
     for (const auto& [intf_type, impl] : impl_map) {
       if (intf_type->name == impl_name) {
         for (const auto& fn : impl->fns) {
-          printf("check fn name: %s\n", fn->sig->tname->name.c_str());
-          if (fn->sig->tname->name == fn_name) {
-            best_fn = fn.get();
-            best_mapping = mapping;
+          fprintf(stderr, "check fn name: %s\n", fn->sig->tname->name.c_str());
+          if (fn->sig->tname->name != fn_name) continue;  // wrong name
+          if (fn->sig->params.size() != args.size()) continue;  // wrong number of params
+
+          bool can_do = true;
+          for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
+            const auto* param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
+            if (param_type != args[param_idx].type) {
+              can_do = false;
+              break;  // wrong parameter type.
+            }
           }
+          if (!can_do) continue;
+          fprintf(stderr, "selecting %s\n", fn->sig->tname->name.c_str());
+          best_fn = fn.get();
+          best_mapping = mapping;
         }
       }
     }
+    popTypeMapping(mapping);
+    popScope();
   }
 
   return {best_fn, std::move(best_mapping)};
