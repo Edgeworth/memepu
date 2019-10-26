@@ -144,19 +144,16 @@ Type::Type(Parser::Ctx& c) : Node(c) {
       (c.hasTok(Tok::CONST) && c.hasTok(Tok::ASTERISK, 1)))
     quals.emplace_back(std::make_unique<Qualifier>(c));
   cnst = c.maybeConsumeTok(Tok::CONST);
-  if (c.hasTok(Tok::IDENT)) {
-    name = c.consumeTok(Tok::IDENT)->str_val;
-    if (!c.type_idents.contains(name)) c.error("not typename: " + name);
-    if (c.hasTok(Tok::LANGLE)) {
-      c.consumeTok(Tok::LANGLE);
-      while (c.curTok()->type != Tok::RANGLE) {
-        params.emplace_back(std::make_unique<Type>(c));
-        if (!c.maybeConsumeTok(Tok::COMMA)) break;
-      }
-      c.consumeTok(Tok::RANGLE);
+
+  name = c.consumeTok(Tok::IDENT)->str_val;
+  if (!c.type_idents.contains(name)) c.error("not typename: " + name);
+  if (c.hasTok(Tok::LANGLE)) {
+    c.consumeTok(Tok::LANGLE);
+    while (c.curTok()->type != Tok::RANGLE) {
+      params.emplace_back(std::make_unique<Type>(c));
+      if (!c.maybeConsumeTok(Tok::COMMA)) break;
     }
-  } else if (c.hasTok(Tok::AUTO)) {
-    c.consumeTok();  // TODO remove?
+    c.consumeTok(Tok::RANGLE);
   }
 }
 std::string Type::toString() const {
@@ -201,7 +198,9 @@ FnSig::FnSig(Parser::Ctx& c) : Node(c) {
     if (!c.maybeConsumeTok(Tok::COMMA)) break;
   }
   c.consumeTok(Tok::RPAREN);
-  ret_type = std::make_unique<Type>(c);
+  // Optional return type.
+  if (!c.hasTok({Tok::SEMICOLON, Tok::LBRACE}))
+    ret_type = std::make_unique<Type>(c);
 }
 std::string FnSig::toString() const { return "FnSig"; }
 std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret_type); }

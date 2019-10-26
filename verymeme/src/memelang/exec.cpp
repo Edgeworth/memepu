@@ -136,8 +136,10 @@ Val Exec::runOp(ast::Op* op) {
       if (args->args.empty()) error("printf requires at least 1 argument");
       boost::format fmt = boost::format(g<ast::StrLit>(args->args[0])->val);
       // TODO(progress): Support other than int vars.
-      for (int i = 1; i < int(args->args.size()); ++i)
+      for (int i = 1; i < int(args->args.size()); ++i) {
+        printf("ARG: %s\n", eval(args->args[i].get()).type->toString().c_str());
         invokeBuiltin(eval(args->args[i].get()), [&fmt](auto& a) { fmt = fmt % a; });
+      }
       printf("%s", fmt.str().c_str());
 
       // TODO: Return proper value.
@@ -181,7 +183,11 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::PREFIX_INC: return preinc(eval(op->left.get()));
   case ast::Expr::POSTFIX_INC: return postinc(eval(op->left.get()));
   case ast::Expr::UNARY_ADDR: return addr(eval(op->left.get()));
-  case ast::Expr::UNARY_DEREF: return deref(eval(op->left.get()));
+  case ast::Expr::UNARY_DEREF: {
+    Val v = deref(eval(op->left.get()));
+    printf("DEREF RESULT: %s\n", v.type->toString().c_str());
+    return v;
+  }
   default: error("unhandled op");
   }
   return {};
@@ -306,12 +312,14 @@ Val Exec::preinc(Val l) {
 }
 
 Val Exec::postinc(Val l) {
-  return unop(l, l.type, "postinc", [this, &l](auto v) {
+  auto v = unop(l, l.type, "postinc", [this, &l](auto v) {
     Val tmp = {.hnd = vm_.allocTmp(l.type->size()), .type = l.type};
     copy(tmp, l);
     vm_.write(l, v + 1);
     return tmp;
   });
+  printf("POSTINC: %s\n", v.type->toString().c_str());
+  return v;
 }
 
 Val Exec::addr(const Val& l) {
@@ -331,8 +339,9 @@ Val Exec::copy(Val dst, Val src) {
 Val Exec::deref(const Val& l) {
   Type new_type = *l.type;
   new_type.quals.pop_back();  // Remove ptr.
-  Val res{.hnd = vm_.ref<Hnd>(l), .type = s_.addType(std::move(new_type))};
-  return res;
+  Val v = {.hnd = vm_.ref<Hnd>(l), .type = s_.addType(std::move(new_type))};
+  printf("DEREF TYPE: %s\n%s\n", v.type->toString().c_str(), s_.stacktrace().c_str());
+  return v;
 }
 
 }  // namespace memelang::exec
