@@ -1,9 +1,4 @@
-intf BinaryArith<A, B> {
-  fn add(o: *A) T;  // TODO: Also variant in ret type?
-}
-
-impl<T> BinaryArith<*T, u32> for *T {
-  fn add(o: *u32) *T {
-    ret *this + *T(*o);  // TODO: Need to know wildcard types in parser.
-  }
+fn main() i32 {
+  a := 1234;
+  printf("%d\n", a);
 }

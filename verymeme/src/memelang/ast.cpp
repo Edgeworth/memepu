@@ -174,7 +174,8 @@ std::unique_ptr<Type> Type::tryParseType(Parser::Ctx& c) {
 VarDecl::VarDecl(Parser::Ctx& c) : Node(c) {
   ref = std::make_unique<VarRef>(c);
   c.consumeTok(Tok::COLON);
-  type = std::make_unique<Type>(c);
+  // Requires type if it's not part of a definition.
+  if (!c.hasTok(Tok::EQUAL)) type = std::make_unique<Type>(c);
 }
 std::string VarDecl::toString() const { return "VarDecl"; }
 std::vector<Node*> VarDecl::children() { return flattenChildren(ref, type); }
@@ -192,6 +193,8 @@ FnSig::FnSig(Parser::Ctx& c) : Node(c) {
   is_static = c.maybeConsumeTok(Tok::STATIC);
   c.consumeTok(Tok::FN);
   tname = std::make_unique<Typename>(c);
+
+  if (tname->tlist) tname->tlist->pushTypes(c);
   c.consumeTok(Tok::LPAREN);
   while (c.curTok()->type != Tok::RPAREN) {
     params.emplace_back(std::make_unique<VarDecl>(c));
@@ -199,8 +202,8 @@ FnSig::FnSig(Parser::Ctx& c) : Node(c) {
   }
   c.consumeTok(Tok::RPAREN);
   // Optional return type.
-  if (!c.hasTok({Tok::SEMICOLON, Tok::LBRACE}))
-    ret_type = std::make_unique<Type>(c);
+  if (!c.hasTok({Tok::SEMICOLON, Tok::LBRACE})) ret_type = std::make_unique<Type>(c);
+  if (tname->tlist) tname->tlist->popTypes(c);
 }
 std::string FnSig::toString() const { return "FnSig"; }
 std::vector<Node*> FnSig::children() { return flattenChildren(tname, params, ret_type); }

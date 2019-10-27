@@ -88,13 +88,11 @@ std::unique_ptr<Node> ExprParser::parse() {
     case Tok::STR_LIT: ec.addExpr(std::make_unique<StrLit>(c_)); break;
     case Tok::ASTERISK:
       if (auto type = Type::tryParseType(c_)) {
-        printf("adding type: %s\n", type->toString().c_str());
         ec.addExpr(std::move(type));
         break;
       }
       // fallthrough
     default:
-      printf("ADD OP: %s\n", tok->desc(c_.cts).c_str());
       ec.addOp(tok->type);
       c_.consumeTok();
       break;

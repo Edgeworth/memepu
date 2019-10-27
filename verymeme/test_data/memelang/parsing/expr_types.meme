@@ -8,6 +8,6 @@ fn main() i32 {
   v.push(1);
   bubblesort(&v);
   d := vector<i16>(v);
-  a * *vector<i16>(v);
+  a * *&vector<i16>(v);
   ret 0;
 }

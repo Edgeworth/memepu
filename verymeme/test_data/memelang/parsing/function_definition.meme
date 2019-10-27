@@ -1,4 +1,5 @@
 enum Unit {}
+struct vector<T> {}
 
 fn bubblesort<T>(v: const* vector<*T>) Unit {
   for i := 0; i < v.size(); i++ {

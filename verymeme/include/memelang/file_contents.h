@@ -11,6 +11,7 @@ public:
   FileContents(std::string filename, std::string data);
 
   const std::string& data() const { return data_; }
+  const std::string& filename() const { return filename_; }
 
   int lnum(int loc) const;
   int cnum(int loc) const;

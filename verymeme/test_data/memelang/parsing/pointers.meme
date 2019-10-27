@@ -3,7 +3,7 @@ fn main() i8 {
   ptr : *i8 = &val;
   pptr : **i8 = &ptr;
 
-  cval : const = i8(2);
+  cval := i8(2);
   cptr_ci8 : const* const i8 = &cval;
   cptr_cptr_ci8 : const* const* const i8 = &cptr_ci8;
 
