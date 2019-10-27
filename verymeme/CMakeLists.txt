@@ -12,10 +12,15 @@ if ("${USE_AFL}" STREQUAL "clang")
   message(STATUS "Using american fuzzy lop with clang")
   set(CMAKE_C_COMPILER "afl-clang-fast")
   set(CMAKE_CXX_COMPILER "afl-clang-fast++")
-elseif (${USE_AFL})
+elseif (USE_AFL)
   message(STATUS "Using american fuzzy lop with gcc")
   set(CMAKE_C_COMPILER "afl-gcc")
   set(CMAKE_CXX_COMPILER "afl-g++")
+endif ()
+
+if (USE_AFL)
+  message(STATUS "Using AFL hardening")
+  set(ENV{AFL_HARDEN} 1)  # Set AFL_HARDEN variable
 endif ()
 
 # Use shared libraries for faster linking in Debug mode (except when using AFL).
@@ -38,7 +43,8 @@ else ()
 endif ()
 
 # Backtrace is slow so skip for AFL.
-if (${USE_AFL})
+if (USE_AFL)
+  message(STATUS "Skipping backtrace for AFL")
   add_definitions(-DBOOST_STACKTRACE_USE_NOOP)
 else ()
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -63,7 +69,7 @@ include(CheckCCompilerFlag)
 check_c_compiler_flag("-fuse-ld=gold" HAVE_GOLD)
 check_c_compiler_flag("-fuse-ld=lld" HAVE_LLD)
 
-if (HAVE_LLD AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if (HAVE_LLD AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND NOT USE_AFL)
   message(STATUS "Using lld linker")
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld")
