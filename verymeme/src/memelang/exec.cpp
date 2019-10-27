@@ -129,6 +129,8 @@ Val Exec::runOp(ast::Op* op) {
       return res;
     }
 
+    if (typeid(*op->left) != typeid(ast::VarRef)) error("invalid attempt at function call");
+
     // Otherwise, it's a var ref.
     auto* call = g<ast::VarRef>(op->left);
 
@@ -289,6 +291,9 @@ Val Exec::neq(Val l, Val r) {
 }
 
 Val Exec::array_access(Val l, Val r) {
+  if (!l.type || l.hnd == INVALID_HND || !r.type || r.hnd == INVALID_HND)
+    error("attempt operate on value with undeducible type");
+
   // TODO not only u32 ?
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
   if (!l.type->isArray()) error("array access on non-array type");
@@ -299,6 +304,8 @@ Val Exec::array_access(Val l, Val r) {
 }
 
 Val Exec::preinc(Val l) {
+  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+
   return unop(l, l.type, "preinc", [this, &l](auto v) {
     vm_.write(l, v + 1);
     return l;
@@ -306,6 +313,8 @@ Val Exec::preinc(Val l) {
 }
 
 Val Exec::postinc(Val l) {
+  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+
   return unop(l, l.type, "postinc", [this, &l](auto v) {
     Val tmp = {.hnd = vm_.allocTmp(l.type->size()), .type = l.type};
     copy(tmp, l);
@@ -315,6 +324,8 @@ Val Exec::postinc(Val l) {
 }
 
 Val Exec::addr(const Val& l) {
+  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+
   auto new_type = *l.type;
   new_type.quals.emplace_back();
   new_type.quals.back().ptr = true;
@@ -324,11 +335,16 @@ Val Exec::addr(const Val& l) {
 }
 
 Val Exec::copy(Val dst, Val src) {
+  if (!dst.type || dst.hnd == INVALID_HND || !src.type || src.hnd == INVALID_HND)
+    error("attempt operate on value with undeducible type");
+
   vm_.memcpy(dst, src, src.type->size());
   return dst;
 }
 
 Val Exec::deref(const Val& l) {
+  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+
   Type new_type = *l.type;
   new_type.quals.pop_back();  // Remove ptr.
   return {.hnd = vm_.ref<Hnd>(l), .type = s_.addType(std::move(new_type))};

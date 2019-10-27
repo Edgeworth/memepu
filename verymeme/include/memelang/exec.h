@@ -90,7 +90,8 @@ private:
 
   template <typename F>
   Val binop(Val l, Val r, const Type* type, const std::string& op_name, F default_op) {
-    bug_unless(type && l.type && r.type);
+    if (!l.type || l.hnd == INVALID_HND || !r.type || r.hnd == INVALID_HND)
+      error("attempt operate on value with undeducible type");
 
     auto pair = s_.lookupImplFn(l, {addr(r)}, "Comparable", op_name);
     if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
@@ -111,7 +112,8 @@ private:
 
   template <typename F>
   Val unop(Val l, const Type* type, const std::string& op_name, F default_op) {
-    bug_unless(type && l.type);
+    if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+
     auto pair = s_.lookupImplFn(l, {}, "UnaryArith", op_name);
     if (pair.first) return runFn(pair.first, pair.second, {}, l);
     auto res = invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
