@@ -344,6 +344,7 @@ Val Exec::copy(Val dst, Val src) {
 
 Val Exec::deref(const Val& l) {
   if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+  if (!l.type->quals.back().ptr) error("attempt to dereference non-pointer type");
 
   Type new_type = *l.type;
   new_type.quals.pop_back();  // Remove ptr.

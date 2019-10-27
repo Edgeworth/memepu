@@ -60,7 +60,8 @@ private:
 
   template <typename F>
   auto invokeBuiltin(Val v, F op) {
-    fprintf(stderr, "builtin on: %s\n", v.type->toString().c_str());
+    if (!v.type || v.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+
     if (v.type == s_.bool_t) return std::invoke(op, vm_.ref<bool>(v));
     else if (v.type == s_.i8_t)
       return std::invoke(op, vm_.ref<int8_t>(v));
