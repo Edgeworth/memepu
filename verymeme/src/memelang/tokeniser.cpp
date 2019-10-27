@@ -46,8 +46,8 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
       "RANGLE", "LSQUARE", "RSQUARE", "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE",
       "EXCLAMATION", "AMPERSAND", "DAMPERSAND", "CARET", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL",
       "LTEQUAL", "GTEQUAL", "INTF", "STRUCT", "ENUM", "IMPL", "FN", "IF", "ELSE", "MATCH", "FOR",
-      "WHILE", "RET", "STATIC", "CONST", "ASM", "STR_LIT", "INT_LIT", "UINT_LIT",
-      "CHAR_LIT", "BOOL_LIT", "IDENT", "COMMENT"};
+      "WHILE", "RET", "STATIC", "CONST", "ASM", "STR_LIT", "INT_LIT", "UINT_LIT", "CHAR_LIT",
+      "BOOL_LIT", "IDENT", "COMMENT"};
   return outputEnum(str, o, TOKEN_TYPES);
 }
 

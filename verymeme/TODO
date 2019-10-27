@@ -12,6 +12,8 @@
 
 switch to multiple data busses for optimisation?
 
+remove const from memelang, add mut; make default const.
+
 #### memecad
 - Check TODOs in codebase
 - Can somehow use cell libraries instead of memecad?

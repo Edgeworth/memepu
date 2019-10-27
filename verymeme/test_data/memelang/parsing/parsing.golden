@@ -20,17 +20,12 @@ File
   )
    VarDefn
     VarDecl
-     VarRef(decl)
-     Type(A)
-   VarDefn
-    VarDecl
      VarRef(st)
      Type(A)
     CompoundLit
    VarDefn
     VarDecl
      VarRef(test_enum)
-     Type(TestEnum)
     Op(FN_CALL)
      VarRef(Test3)
      FnCallArgs
@@ -43,13 +38,17 @@ File
    VarDefn
     VarDecl
      VarRef(e)
+    Op(FN_CALL)
      Type(i8)
-    IntLit(0)
+     FnCallArgs
+      IntLit(0)
    VarDefn
     VarDecl
      VarRef(a)
+    Op(FN_CALL)
      Type(i8)
-    IntLit(2)
+     FnCallArgs
+      IntLit(2)
    VarDefn
     VarDecl
      VarRef(d)
@@ -140,13 +139,9 @@ File
       BoolLit(true)
       StmtBlk
       StmtBlk
-       Op(ADD)
-        VarRef(a)
-        VarRef(b)
    VarDefn
     VarDecl
      VarRef(b)
-     Type(const auto)
     Op(SUB)
      Op(MUL)
       Op(UNARY_NEGATE)
@@ -176,26 +171,14 @@ File
    Op(MEMBER_ACCESS)
     IntLit(5)
     IntLit(5)
-   Op(ASSIGNMENT)
-    VarRef(a)
-    Op(ASSIGNMENT)
-     VarRef(b)
-     Op(ASSIGNMENT)
-      VarRef(c)
-      VarRef(d)
-   Op(ADD)
-    Op(ADD)
-     Op(ADD)
-      VarRef(a)
-      VarRef(b)
-     VarRef(c)
-    VarRef(d)
    For
     VarDefn
      VarDecl
       VarRef(f)
+     Op(FN_CALL)
       Type(i8)
-     IntLit(0)
+      FnCallArgs
+       IntLit(0)
     Op(LT)
      VarRef(f)
      IntLit(10)
@@ -230,9 +213,6 @@ File
    VarRef(v)
    Type(i8)
   VarDecl
-   VarRef(y)
-   Type(i32)
-  VarDecl
    VarRef(z)
    Type(bool)
   Fn
@@ -240,3 +220,11 @@ File
     Typename(new)
     Type(Unit)
    StmtBlk
+ Impl
+  Type(Intf)
+  Type(A)
+ Impl
+  Typelist(T)
+  Type(IntfT)
+   Type(T)
+  Type(A)

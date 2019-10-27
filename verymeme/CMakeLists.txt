@@ -18,8 +18,8 @@ elseif (${USE_AFL})
   set(CMAKE_CXX_COMPILER "afl-g++")
 endif ()
 
-# Use shared libraries for faster linking in Debug mode.
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+# Use shared libraries for faster linking in Debug mode (except when using AFL).
+if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT USE_AFL)
   message(STATUS "Building using shared libraries")
   set(BUILD_SHARED_LIBS ON)
 endif ()

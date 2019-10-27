@@ -51,12 +51,9 @@ void Type::addInnerType(const Type& t) {
 
 Mapping dist(const Type& a, const Type& b, const std::unordered_set<std::string>& wildcards) {
   // TODO: Our type must be fully specified for now.
-  if (wildcards.contains(a.name))
-    unimplemented();
+  if (wildcards.contains(a.name)) unimplemented();
   // TODO: Match child template parameters too.
-  if (!wildcards.contains(b.name)) {
-    return a.name == b.name ? Mapping{.dist = 0} : NOT_SUBTYPE;
-  }
+  if (!wildcards.contains(b.name)) { return a.name == b.name ? Mapping{.dist = 0} : NOT_SUBTYPE; }
 
   int qual_idx = 0;
   Type wildcard_type = a;
