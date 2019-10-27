@@ -43,9 +43,9 @@ public:
   void memset(Val dst, uint8_t val, int size) { ::memset(&mem_[dst.hnd], val, size); }
 
 private:
-  constexpr static int STACK_SIZE = 1024 * 1024 * 8;  // 8 MB
-  constexpr static int HEAP_SIZE = 1024 * 1024 * 32;  // 32 MB
-  constexpr static int TMP_SIZE = 1024 * 1024 * 8;  // 8 MB
+  constexpr static int STACK_SIZE = 1024 * 1024 * 1;  // 1 MB
+  constexpr static int HEAP_SIZE = 1024 * 1024 * 1;  // 1 MB
+  constexpr static int TMP_SIZE = 1024 * 1024 * 1;  // 1 MB
   constexpr static int STACK_OFFSET = 0;
   constexpr static int HEAP_OFFSET = STACK_OFFSET + STACK_SIZE;
   constexpr static int TMP_OFFSET = HEAP_OFFSET + HEAP_SIZE;
