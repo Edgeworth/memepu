@@ -15,7 +15,6 @@ File
     VarDefn
      VarDecl
       VarRef(i)
-      Type()
      IntLit(0)
     Op(LT)
      VarRef(i)
@@ -31,7 +30,6 @@ File
       VarDefn
        VarDecl
         VarRef(j)
-        Type()
        IntLit(0)
       Op(LT)
        VarRef(j)
@@ -69,3 +67,6 @@ File
              IntLit(1)
  Enum(0 untyped)
   Typename(Unit)
+ Struct
+  Typename(vector)
+   Typelist(T)

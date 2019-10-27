@@ -76,7 +76,8 @@ void Parser::Ctx::error(const std::string& msg) const {
     loc = (fmt("%s - \"%s\"") % cts->fpos(token->loc) % token->desc(cts)).str();
   }
   throw std::runtime_error(
-      (fmt("compile error at %s: %s\n%s") % loc % msg % getStacktrace()).str());
+      (fmt("compile error at %s:%s: %s\n%s") % cts->filename() % loc % msg % getStacktrace())
+          .str());
 }
 
 bool Parser::Ctx::hasTok(const std::vector<Tok::Type>& ts, int peek) const {

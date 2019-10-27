@@ -19,7 +19,6 @@ File
    VarDefn
     VarDecl
      VarRef(v)
-     Type()
     Op(FN_CALL)
      Op(MEMBER_ACCESS)
       Type(vector)
@@ -40,7 +39,6 @@ File
    VarDefn
     VarDecl
      VarRef(d)
-     Type()
     Op(FN_CALL)
      Type(vector)
       Type(i16)
@@ -49,11 +47,12 @@ File
    Op(MUL)
     VarRef(a)
     Op(UNARY_DEREF)
-     Op(FN_CALL)
-      Type(vector)
-       Type(i16)
-      FnCallArgs
-       VarRef(v)
+     Op(UNARY_ADDR)
+      Op(FN_CALL)
+       Type(vector)
+        Type(i16)
+       FnCallArgs
+        VarRef(v)
    Ret
     IntLit(0)
  Enum(0 untyped)

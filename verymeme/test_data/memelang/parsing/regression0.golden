@@ -1,0 +1,22 @@
+File
+ Fn
+  FnSig
+   Typename(print_cstr)
+   VarDecl
+    VarRef(s)
+    Type(u8)
+     Qualifier(const: 0 ptr: 1, array: 0)
+  StmtBlk
+   While
+    Op(NEQ)
+     Op(UNARY_DEREF)
+      VarRef(s)
+     IntLit(0)
+    StmtBlk
+     Op(FN_CALL)
+      VarRef(printf)
+      FnCallArgs
+       StrLit(%c)
+       Op(UNARY_DEREF)
+        Op(POSTFIX_INC)
+         VarRef(s)

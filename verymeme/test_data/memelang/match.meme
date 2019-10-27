@@ -30,4 +30,14 @@ fn main() i8 {
     Test2 {}
     Test3(x) {print(x);}
   }
+  match a {
+    1 {}
+    2 {}
+    3 {print(5);}
+  }
+  match test_enum {
+    Test1 {}
+    Test2 {}
+    Test3(x) {print(x);}
+  }
 }
