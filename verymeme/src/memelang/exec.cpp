@@ -43,9 +43,10 @@ void Exec::run() {
   fprintf(stderr, "===END PROGRAM===\n");
 }
 
-Val Exec::runFn(ast::Fn* fn, const Mapping& mapping, const std::vector<Val>& params, Val ths) {
+Val Exec::runFn(
+    ast::Fn* fn, const std::vector<Mapping>& mappings, const std::vector<Val>& params, Val ths) {
   s_.pushScope(fn);
-  s_.pushTypeMapping(mapping);
+  for (const auto& mapping : mappings) s_.pushTypeMapping(mapping);
 
   setContext(fn);  // Set context after pushing scope to save caller location.
   if (fn->sig->params.size() != params.size()) error("wrong number of arguments");
@@ -53,12 +54,10 @@ Val Exec::runFn(ast::Fn* fn, const Mapping& mapping, const std::vector<Val>& par
   for (int i = 0; i < int(fn->sig->params.size()); ++i) {
     auto& decl = fn->sig->params[i];
     runStmt(decl.get());
-    fprintf(stderr, "first type: %s, second: %s\n",
-        s_.findVar(decl->ref->name).type->toString().c_str(), params[i].type->toString().c_str());
     assign(s_.findVar(decl->ref->name), params[i]);
   }
   auto val = runStmtBlk(fn->blk.get());
-  s_.popTypeMapping(mapping);
+  for (const auto& mapping : mappings) s_.popTypeMapping(mapping);
   s_.popScope();
   return val;
 }
@@ -100,7 +99,12 @@ void Exec::runVarDefn(ast::VarDefn* defn) {
     assign(runVarDecl(defn->decl.get()), eval(defn->defn.get()));
   } else {
     // If no type specifier, just use the definition directly.
-    s_.declareVar(defn->decl->ref->name, eval(defn->defn.get()));
+    auto init = eval(defn->defn.get());
+    if (!init.type || init.hnd == INVALID_HND)
+      error("attempt operate on value with undeducible type");
+    auto val = Val{.hnd = vm_.allocStack(init.type->size()), .type = init.type};
+    copy(val, init);
+    s_.declareVar(defn->decl->ref->name, val);
   }
 }
 
@@ -136,6 +140,8 @@ Val Exec::runOp(ast::Op* op) {
 
     if (call->name == "printf") {
       if (args->args.empty()) error("printf requires at least 1 argument");
+      if (typeid(*args->args[0]) != typeid(ast::StrLit))
+        error("printf must take string literal for now");
       boost::format fmt = boost::format(g<ast::StrLit>(args->args[0])->val);
       // TODO(progress): Support other than int vars.
       for (int i = 1; i < int(args->args.size()); ++i)
@@ -162,6 +168,7 @@ Val Exec::runOp(ast::Op* op) {
     } else if (call->name == "sizeof") {
       if (args->args.size() != 1) error("sizeof requires 1 argument");
       auto val = eval(args->args[0].get());
+      if (!val.type) error("attempt operate on value with undeducible type");
       auto ret = Val{.hnd = vm_.allocTmp(s_.u32_t->size()), .type = s_.u32_t};
       vm_.write(ret, uint32_t(val.type->size()));
       return ret;
@@ -294,7 +301,9 @@ Val Exec::array_access(Val l, Val r) {
   if (!l.type || l.hnd == INVALID_HND || !r.type || r.hnd == INVALID_HND)
     error("attempt operate on value with undeducible type");
 
-  // TODO not only u32 ?
+  if (auto res = s_.lookupImplFn(l, {addr(r)}, "Indexable", "index"); res.fn)
+    return runFn(res.fn, res.type_mappings, {addr(r)}, l);
+
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
   if (!l.type->isArray()) error("array access on non-array type");
   Type new_type = *l.type;

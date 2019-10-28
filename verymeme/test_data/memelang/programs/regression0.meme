@@ -1,0 +1,6 @@
+// status: compile_fail
+
+struct Empty {}
+fn main() i8 {
+  e :=*Empty({});
+}
