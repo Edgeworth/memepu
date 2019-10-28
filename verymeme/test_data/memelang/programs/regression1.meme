@@ -1,0 +1,7 @@
+// status: ok
+// output: ''
+
+struct Empty {}
+fn main() i8 {
+  e :=printf({});
+}

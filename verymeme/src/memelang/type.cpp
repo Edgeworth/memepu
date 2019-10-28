@@ -53,6 +53,7 @@ Mapping dist(const Type& a, const Type& b, const std::unordered_set<std::string>
   // TODO: Our type must be fully specified for now.
   if (wildcards.contains(a.name)) unimplemented();
   // TODO: Match child template parameters too.
+  // TODO: matching a wildcard should incur a distance cost?
   if (!wildcards.contains(b.name)) { return a.name == b.name ? Mapping{.dist = 0} : NOT_SUBTYPE; }
 
   int qual_idx = 0;

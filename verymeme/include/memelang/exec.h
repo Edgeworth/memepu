@@ -11,6 +11,9 @@
 
 namespace memelang::exec {
 
+// TODO: Don't hardcode these.
+const inline std::unordered_set<std::string> WILDCARD_HACK = {"T", "I", "A", "B"};
+
 class Exec {
 public:
   Exec(ast::File* file, const FileContents* cts);
@@ -31,7 +34,8 @@ private:
   Scope s_;
   VM vm_;
 
-  Val runFn(ast::Fn* fn, const Mapping& mapping, const std::vector<Val>& args, Val ths);
+  Val runFn(
+      ast::Fn* fn, const std::vector<Mapping>& mappings, const std::vector<Val>& params, Val ths);
   Val runStmtBlk(ast::StmtBlk* blk);
   Val runStmt(ast::Node* stmt);
   void runVarDefn(ast::VarDefn* defn);
@@ -90,22 +94,22 @@ private:
   }
 
   template <typename F>
-  Val binop(Val l, Val r, const Type* type, const std::string& op_name, F default_op) {
+  Val binop(Val l, Val r, const Type* type_if_builtin, const std::string& op_name, F default_op) {
     if (!l.type || l.hnd == INVALID_HND || !r.type || r.hnd == INVALID_HND)
       error("attempt operate on value with undeducible type");
 
-    auto pair = s_.lookupImplFn(l, {addr(r)}, "Comparable", op_name);
-    if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
-    pair = s_.lookupImplFn(l, {addr(r)}, "BinaryArith", op_name);
-    if (pair.first) return runFn(pair.first, pair.second, {addr(r)}, l);
+    if (auto res = s_.lookupImplFn(l, {addr(r)}, "Comparable", op_name); res.fn)
+      return runFn(res.fn, res.type_mappings, {addr(r)}, l);
+    if (auto res = s_.lookupImplFn(l, {addr(r)}, "BinaryArith", op_name); res.fn)
+      return runFn(res.fn, res.type_mappings, {addr(r)}, l);
 
     if (l.type != r.type)
       error("no Comparable defined and types don't match: " + l.type->toString() + " " +
           r.type->toString());
 
-    return invokeBuiltin(l, [this, &default_op, &r, &type](auto lt) {
+    return invokeBuiltin(l, [this, &default_op, &r, &type_if_builtin](auto lt) {
       auto res = default_op(lt, vm_.ref<decltype(lt)>(r));
-      Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type};
+      Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type_if_builtin};
       vm_.ref<decltype(res)>(v) = res;
       return v;
     });
@@ -115,8 +119,8 @@ private:
   Val unop(Val l, const Type* type, const std::string& op_name, F default_op) {
     if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
 
-    auto pair = s_.lookupImplFn(l, {}, "UnaryArith", op_name);
-    if (pair.first) return runFn(pair.first, pair.second, {}, l);
+    if (auto res = s_.lookupImplFn(l, {}, "UnaryArith", op_name); res.fn)
+      return runFn(res.fn, res.type_mappings, {}, l);
     auto res = invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
     Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type};
     vm_.ref<decltype(res)>(v) = res;

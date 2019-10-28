@@ -14,6 +14,11 @@ class Exec;
 
 class Scope {
 public:
+  struct LookupImplResult {
+    ast::Fn* fn;
+    std::vector<Mapping> type_mappings;
+  };
+
   explicit Scope(Exec* exec);
 
   void pushScope(ast::Fn* fn);  // Creates new scope-space
@@ -32,8 +37,8 @@ public:
   const Type* typeFromAst(ast::Type* ast_type);
 
   ast::Fn* findFn(const std::string& name);
-  std::pair<ast::Fn*, Mapping> lookupImplFn(Val ths, const std::vector<Val>& args,
-      const std::string& impl_name, const std::string& fn_name);
+  LookupImplResult lookupImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
+      const std::string& fn_name);
 
   std::string stacktrace() const;
 
@@ -44,17 +49,22 @@ private:
     std::string ctx;
   };
 
+  struct ImplKey {
+    const Type* impler;
+    const Type* intf;
+
+    COMPARISON(ImplKey, impler, intf);
+  };
+
   Exec* e_;
   std::vector<ScopeData> scopes_;
   std::set<Type> types_;
-  std::map<const ast::Type*, const Type*> ast_type_map_;
 
   std::map<std::string, ast::Fn*> fns_;
   std::map<std::string, ast::Enum*> enums_;
   std::map<std::string, ast::Intf*> intfs_;
   std::map<std::string, ast::Struct*> structs_;
-  // Map from a type (may be set) to mapping from interface to the impl.
-  std::map<const Type*, std::map<const Type*, ast::Impl*>> impls_;
+  std::map<ImplKey, ast::Impl*> impls_;
 
 public:
   // Built-in types (initialize after).
