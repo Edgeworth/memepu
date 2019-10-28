@@ -7,6 +7,10 @@ Modules
 Operator overloading:
 return of binary operators add, sub, mul, div must be same type as left
 
+function resolution:
+first search for matching impl by implementing type. match using lowest distance. 
+then tries to perform deduction for the function call
+todo: how to select intf when it depends on what the deduction for the fn call should be
 
 ## Built-in types
 i8, i16, i32, i64, u8, u16, u32, u64, bool, f32, f64

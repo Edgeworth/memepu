@@ -33,8 +33,8 @@ Scope::Scope(Exec* exec)
   }
   for (auto& impl : e_->file()->impls) {
     e_->setContext(impl.get());
-    auto impl_type = typeFromAst(impl->type.get());
-    if (!impls_[impl_type].emplace(typeFromAst(impl->tintf.get()), impl.get()).second)
+    ImplKey key{.impler = typeFromAst(impl->type.get()), .intf = typeFromAst(impl->tintf.get())};
+    if (!impls_.emplace(key, impl.get()).second)
       e_->error("duplicate implementation for (type, interface specialisation) pair");
   }
 }
@@ -116,8 +116,6 @@ const Type* Scope::addType(Type&& t) { return &*types_.insert(std::move(t)).firs
 // 1. save wildcards in current scope
 // 2. match wildcards to type (type inference basically)
 const Type* Scope::typeFromAst(ast::Type* ast_type) {
-  if (ast_type_map_.count(ast_type)) return ast_type_map_[ast_type];
-
   // Put one qualifier to hold const for the main type.
   Type new_type = {.name = ast_type->name, .quals = {{.cnst = ast_type->cnst}}};
 
@@ -138,15 +136,10 @@ const Type* Scope::typeFromAst(ast::Type* ast_type) {
   for (const auto& param : ast_type->params) new_type.params.emplace_back(typeFromAst(param.get()));
 
   // TODO: Handle child parameters.
-  const bool is_parametised = scopes_.back().wildcards.contains(new_type.name);
-  if (is_parametised) { new_type.addInnerType(*scopes_.back().wildcards[new_type.name]); }
+  if (scopes_.back().wildcards.contains(new_type.name))
+    new_type.addInnerType(*scopes_.back().wildcards[new_type.name]);
 
-  const auto* type_ptr = addType(std::move(new_type));
-
-  if (!is_parametised) ast_type_map_[ast_type] = type_ptr;
-
-  fprintf(stderr, "Added new type: %s\n", type_ptr->toString().c_str());
-  return type_ptr;
+  return addType(std::move(new_type));
 }
 
 ast::Fn* Scope::findFn(const std::string& name) {
@@ -154,48 +147,55 @@ ast::Fn* Scope::findFn(const std::string& name) {
   return fns_[name];
 }
 
-std::pair<ast::Fn*, Mapping> Scope::lookupImplFn(Val ths, const std::vector<Val>& args,
+Scope::LookupImplResult Scope::lookupImplFn(Val ths, const std::vector<Val>& args,
     const std::string& impl_name, const std::string& fn_name) {
-  fprintf(stderr, "lookup: %s %s\n", impl_name.c_str(), fn_name.c_str());
-  Mapping best_mapping{};
-  ast::Fn* best_fn = nullptr;
+  LookupImplResult best_result{.fn = nullptr};
+  Mapping best_impl_mapping = {};
   // For each implementation, check the distance between types.
   // Select the implementation which has the closest distance that has a function that matches.
-  for (const auto& [impl_obj_type, impl_map] : impls_) {
-    // TODO: Don't hardcode these.
-    const auto& mapping = dist(*ths.type, *impl_obj_type, {"T", "I", "A", "B"});
-    if (mapping == NOT_SUBTYPE || best_mapping < mapping) continue;
+  for (const auto& [impl_key, impl] : impls_) {
+    const auto& [impler, intf] = impl_key;
+    if (intf->name != impl_name) continue;  // wrong intf name
+
+    const auto& impler_mapping = dist(*ths.type, *impler, WILDCARD_HACK);
+    if (impler_mapping == NOT_SUBTYPE || best_impl_mapping < impler_mapping) continue;
 
     pushScope(nullptr);  // Temporarily add mapping to resolve wildcards.
-    pushTypeMapping(mapping);
-    for (const auto& [intf_type, impl] : impl_map) {
-      if (intf_type->name == impl_name) {
-        for (const auto& fn : impl->fns) {
-          fprintf(stderr, "check fn name: %s\n", fn->sig->tname->name.c_str());
-          if (fn->sig->tname->name != fn_name) continue;  // wrong name
-          if (fn->sig->params.size() != args.size()) continue;  // wrong number of params
+    pushTypeMapping(impler_mapping);
+    for (const auto& fn : impl->fns) {
+      if (fn->sig->tname->name != fn_name) continue;  // wrong name
+      if (fn->sig->params.size() != args.size()) continue;  // wrong number of params
 
-          bool can_do = true;
-          for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
-            const auto* param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
-            if (param_type != args[param_idx].type) {
-              can_do = false;
-              break;  // wrong parameter type.
-            }
+      bool can_do = true;
+      LookupImplResult result{.fn = fn.get(), .type_mappings = {}};
+      for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
+        const auto* param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
+        const auto* arg_type = args[param_idx].type;
+        if (WILDCARD_HACK.contains(param_type->name)) {
+          auto param_mapping = dist(*arg_type, *param_type, WILDCARD_HACK);
+          if (param_mapping == NOT_SUBTYPE) {
+            can_do = false;
+            break;
           }
-          if (!can_do) continue;
-          fprintf(stderr, "selecting %s\n", fn->sig->tname->name.c_str());
-          best_fn = fn.get();
-          best_mapping = mapping;
+          pushTypeMapping(param_mapping);
+          result.type_mappings.emplace_back(std::move(param_mapping));
+        } else if (param_type != arg_type) {
+          can_do = false;
+          break;  // wrong parameter type.
         }
       }
+      for (const auto& type_mapping : result.type_mappings) popTypeMapping(type_mapping);
+      if (!can_do) continue;
+      best_result = std::move(result);
+      best_impl_mapping = impler_mapping;
     }
-    popTypeMapping(mapping);
+    popTypeMapping(impler_mapping);
     popScope();
   }
 
-  return {best_fn, std::move(best_mapping)};
-}
+  best_result.type_mappings.emplace_back(std::move(best_impl_mapping));
+  return best_result;
+}  // namespace memelang::exec
 
 std::string Scope::stacktrace() const {
   std::string stack;
