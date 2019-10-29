@@ -180,6 +180,7 @@ Val Exec::runOp(ast::Op* op) {
     return runFn(fn, {} /* mapping */, params, {} /* this */);
   }
   case ast::Expr::ASSIGNMENT: return assign(eval(op->left.get()), eval(op->right.get()));
+  case ast::Expr::MUL: return mul(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::ADD: return add(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::SUB: return sub(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::LT: return lt(eval(op->left.get()), eval(op->right.get()));
@@ -273,6 +274,10 @@ Val Exec::assign(Val l, Val r) {
   return copy(l, r);  // Deep copy.
 }
 
+Val Exec::mul(Val l, Val r) {
+  return binop(l, r, l.type, "mul", [](auto a, auto b) { return a * b; });
+}
+
 Val Exec::add(Val l, Val r) {
   return binop(l, r, l.type, "add", [](auto a, auto b) { return a + b; });
 }
@@ -302,7 +307,7 @@ Val Exec::array_access(Val l, Val r) {
     error("attempt operate on value with undeducible type");
 
   if (auto res = s_.lookupImplFn(l, {addr(r)}, "Indexable", "index"); res.fn)
-    return runFn(res.fn, res.type_mappings, {addr(r)}, l);
+    return deref(runFn(res.fn, res.type_mappings, {addr(r)}, l));
 
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
   if (!l.type->isArray()) error("array access on non-array type");

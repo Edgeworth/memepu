@@ -57,7 +57,7 @@ impl<I> Indexable<I, u8> for string {
 
 impl<I, T> Indexable<I, *T> for *T {
   fn index(idx: *I) *T {
-    ret *this + idx * sizeof(**this);
+    ret *this + *T(*idx * sizeof(**this));
   }
 }
 

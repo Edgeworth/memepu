@@ -49,6 +49,7 @@ private:
 
   // Value operations:
   Val assign(Val l, Val r);
+  Val mul(Val l, Val r);
   Val add(Val l, Val r);
   Val sub(Val l, Val r);
   Val lt(Val l, Val r);
@@ -104,7 +105,7 @@ private:
       return runFn(res.fn, res.type_mappings, {addr(r)}, l);
 
     if (l.type != r.type)
-      error("no Comparable defined and types don't match: " + l.type->toString() + " " +
+      error("no binop intf defined and types don't match: " + l.type->toString() + " " +
           r.type->toString());
 
     return invokeBuiltin(l, [this, &default_op, &r, &type_if_builtin](auto lt) {
@@ -121,10 +122,7 @@ private:
 
     if (auto res = s_.lookupImplFn(l, {}, "UnaryArith", op_name); res.fn)
       return runFn(res.fn, res.type_mappings, {}, l);
-    auto res = invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
-    Val v{.hnd = vm_.allocTmp(sizeof(res)), .type = type};
-    vm_.ref<decltype(res)>(v) = res;
-    return v;
+    return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });;
   }
 };
 
