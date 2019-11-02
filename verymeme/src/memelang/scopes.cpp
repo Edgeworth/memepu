@@ -13,42 +13,43 @@ Scope::Scope(Exec* exec)
       u64_t(addType({.name = U64})), f32_t(addType({.name = F32})), f64_t(addType({.name = F64})) {
   pushScope(nullptr);
 
-  for (auto& fn : e_->file()->fns) {
-    e_->setContext(fn.get());
-    fns_[fn->sig->tname->name] = fn.get();
-  }
-  for (auto& enm : e_->file()->enums) {
-    e_->setContext(enm.get());
-    if (!enums_.emplace(enm->tname->name, enm.get()).second) e_->error("duplicate enum definition");
-  }
-  for (auto& intf : e_->file()->intfs) {
-    e_->setContext(intf.get());
-    if (!intfs_.emplace(intf->tname->name, intf.get()).second)
-      e_->error("duplicate interface definition");
-  }
-  for (auto& strct : e_->file()->structs) {
-    e_->setContext(strct.get());
-    if (!structs_.emplace(strct->tname->name, strct.get()).second)
-      e_->error("duplicate struct definition");
-  }
-  for (auto& impl : e_->file()->impls) {
-    e_->setContext(impl.get());
-    ImplKey key{.impler = typeFromAst(impl->type.get()), .intf = typeFromAst(impl->tintf.get())};
-    if (!impls_.emplace(key, impl.get()).second)
-      e_->error("duplicate implementation for (type, interface specialisation) pair");
+  for (const auto& file : e_->module()->files) {
+    for (auto& fn : file->fns) {
+      e_->setContext(fn.get());
+      fns_[fn->sig->tname->name] = fn.get();
+    }
+    for (auto& enm : file->enums) {
+      e_->setContext(enm.get());
+      if (!enums_.emplace(enm->tname->name, enm.get()).second)
+        e_->error("duplicate enum definition");
+    }
+    for (auto& intf : file->intfs) {
+      e_->setContext(intf.get());
+      if (!intfs_.emplace(intf->tname->name, intf.get()).second)
+        e_->error("duplicate interface definition");
+    }
+    for (auto& strct : file->structs) {
+      e_->setContext(strct.get());
+      if (!structs_.emplace(strct->tname->name, strct.get()).second)
+        e_->error("duplicate struct definition");
+    }
+    for (auto& impl : file->impls) {
+      e_->setContext(impl.get());
+      ImplKey key{.impler = typeFromAst(impl->type.get()), .intf = typeFromAst(impl->tintf.get())};
+      if (!impls_.emplace(key, impl.get()).second)
+        e_->error("duplicate implementation for (type, interface specialisation) pair");
+    }
   }
 }
 
 void Scope::pushScope(ast::Fn* fn) {
   scopes_.emplace_back();
   auto* ctx = e_->context();
-  const auto* cts = e_->fileContents();
 
   if (fn) {
-    scopes_.back().ctx = cts->fpos(fn->tok.loc) + ":" + fn->sig->tname->name;
-    scopes_.back().ctx += ctx
-        ? " called from " + cts->fpos(ctx->tok.loc) + ":" + cts->span(ctx->tok.loc, ctx->tok.size)
-        : " (no ctx)";
+    scopes_.back().ctx = fn->tok.fpos() + ":" + fn->sig->tname->name;
+    scopes_.back().ctx +=
+        ctx ? " called from " + ctx->tok.fpos() + ":" + ctx->tok.span() : " (no ctx)";
   } else {
     scopes_.back().ctx = "global ctx";
   }

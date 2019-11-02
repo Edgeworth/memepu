@@ -12,15 +12,16 @@ namespace memelang::ast {
 
 using fmt = boost::format;
 
-Parser::Parser(const FileContents* cts, const std::vector<Tok>& toks)
-    : c_(new Ctx(cts, toks)), root_() {}
+Parser::Parser(const std::vector<std::unique_ptr<FileContents>>& cts) : c_(), root_() {
+  for (const auto& c : cts) c_.emplace_back(std::make_unique<Ctx>(c.get()));
+}
 
 Parser::~Parser() = default;
 
 bool Parser::parse() {
   try {
     collectTypeIdents();
-    root_ = std::make_unique<File>(*c_);
+    root_ = std::make_unique<Module>(c_);
   } catch (const std::exception& e) { verify_expr(false, "%s", e.what()); }
   return true;
 }
@@ -34,23 +35,30 @@ std::string Parser::astToString() {
 }
 
 void Parser::collectTypeIdents() {
-  while (c_->hasTok()) {
-    if (c_->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM})) {
-      c_->consumeTok();
-      // Next token should be the ident.
-      c_->type_idents.insert(c_->consumeTok()->str_val);
-    } else {
-      c_->consumeTok();
+  std::unordered_set<std::string> type_idents;
+  type_idents.insert(std::begin(BUILTIN_TYPES), std::end(BUILTIN_TYPES));
+
+  // Collect type idents for everything in the module.
+  for (const auto& ctx : c_) {
+    while (ctx->hasTok()) {
+      if (ctx->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM})) {
+        ctx->consumeTok();
+        // Next token should be the ident.
+        type_idents.insert(ctx->consumeTok()->str_val);
+      } else {
+        ctx->consumeTok();
+      }
     }
+    ctx->reset();
   }
-  c_->reset();
+
+  for (const auto& ctx : c_) ctx->type_idents = type_idents;
 }
 
-Parser::Ctx::Ctx(const FileContents* cts, const std::vector<Tok>& tokens) : cts(cts) {
-  for (const auto& tok : tokens) {
+Parser::Ctx::Ctx(const FileContents* contents) : cts(contents) {
+  Tokeniser tokeniser(cts);
+  for (const auto& tok : tokeniser.tokenise())
     if (tok.type != Tok::COMMENT) toks_.push_back(tok);
-  }
-  type_idents.insert(std::begin(BUILTIN_TYPES), std::end(BUILTIN_TYPES));
 }
 
 const Tok* Parser::Ctx::curTok(const std::vector<Tok::Type>& ts) const {
@@ -73,7 +81,7 @@ void Parser::Ctx::error(const std::string& msg) const {
   std::string loc = "eof";
   if (hasTok()) {
     const auto* token = curTok();
-    loc = (fmt("%s - \"%s\"") % cts->fpos(token->loc) % token->desc(cts)).str();
+    loc = (fmt("%s - \"%s\"") % cts->fpos(token->loc) % token->desc()).str();
   }
   throw std::runtime_error(
       (fmt("compile error at %s:%s: %s\n%s") % cts->filename() % loc % msg % getStacktrace())

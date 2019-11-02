@@ -1,0 +1,26 @@
+fn strlen(s: *u8) u32 {
+  len := 0u;
+  while s[len++] != 0 {}
+  ret len;
+}
+
+fn print_cstr(s: *u8) {
+  while *s != 0 {
+    printf("%c", *(s++));
+  }
+}
+
+struct string {
+  data: *u8;
+  len: u32;
+
+  static fn new(s: *u8) string {
+    ret {data: s, len: strlen(s)};
+  }
+}
+
+impl<I> Indexable<I, u8> for string {
+  fn index(idx: *I) *u8 {
+    ret &data[idx];
+  }
+}

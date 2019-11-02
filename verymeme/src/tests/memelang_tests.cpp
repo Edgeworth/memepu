@@ -35,7 +35,7 @@ TEST_F(MemelangTokeniserTest, GoldenTest) {
     const auto cts = memelang::FileContents(orig_path.filename().string(), orig);
     memelang::ast::Tokeniser tokeniser(&cts);
     std::vector<std::string> tokstrs;
-    for (const auto& tok : tokeniser.tokenise()) tokstrs.push_back(tok.desc(&cts));
+    for (const auto& tok : tokeniser.tokenise()) tokstrs.push_back(tok.desc());
     EXPECT_EQ(golden, join(tokstrs, "\n", true)) << " on file " << orig_path.string();
   }
 }
@@ -46,8 +46,9 @@ TEST_F(MemelangParserTest, GoldenTest) {
   for (const auto& [orig_path, golden_path] : getFileGoldenPairs("test_data/memelang/parsing")) {
     const std::string& orig = readFile(orig_path.string());
     const std::string& golden = readFile(golden_path.string());
-    const auto cts = memelang::FileContents(orig_path.filename().string(), orig);
-    memelang::ast::Parser parser(&cts, memelang::ast::Tokeniser(&cts).tokenise());
+    std::vector<std::unique_ptr<memelang::FileContents>> cts;
+    cts.emplace_back(std::make_unique<memelang::FileContents>(orig_path.filename().string(), orig));
+    memelang::ast::Parser parser(cts);
     EXPECT_TRUE(parser.parse());
     EXPECT_EQ(golden, parser.astToString()) << " on file " << orig_path.string();
   }

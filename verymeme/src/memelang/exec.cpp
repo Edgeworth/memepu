@@ -32,7 +32,7 @@ T* g(std::unique_ptr<R>& n) {
   } while (0)
 
 // TODO: Handle const stuff?
-Exec::Exec(ast::File* file, const FileContents* cts) : f_(file), cts_(cts), s_(this), vm_(this) {}
+Exec::Exec(ast::Module* m) : m_(m), s_(this), vm_(this) {}
 
 void Exec::run() {
   fprintf(stderr, "===BEGIN PROGRAM===\n");
@@ -257,9 +257,8 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
 
 void Exec::error(const std::string& msg) const {
   if (node_ctx_)
-    verify_expr(false, "error at '%s' (%s): %s\n%s\n",
-        cts_->span(node_ctx_->tok.loc, node_ctx_->tok.size).c_str(),
-        cts_->fpos(node_ctx_->tok.loc).c_str(), msg.c_str(), s_.stacktrace().c_str());
+    verify_expr(false, "error at '%s' (%s): %s\n%s\n", node_ctx_->tok.span().c_str(),
+        node_ctx_->tok.fpos().c_str(), msg.c_str(), s_.stacktrace().c_str());
   else
     verify_expr(false, "error: %s\n%s\n", msg.c_str(), s_.stacktrace().c_str());
 }

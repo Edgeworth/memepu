@@ -9,18 +9,19 @@
 namespace po = boost::program_options;
 
 int main(int argc, char* argv[]) {
-  std::string input_filename;
+  std::vector<std::string> input_filenames;
   bool print_tokens = false;
   bool print_ast = false;
   bool no_exec = false;
   try {
     po::options_description desc{"Options"};
-    desc.add_options()("help,h", "Help screen")("input,i", po::value<std::string>())(
+    desc.add_options()("help,h", "Help screen")(
+        "input,i", po::value<std::vector<std::string>>()->multitoken())(
         "tokens,t", po::bool_switch(&print_tokens))("ast,a", po::bool_switch(&print_ast))(
         "no-exec,n", po::bool_switch(&no_exec));
 
     po::positional_options_description p;
-    p.add("input", 1);
+    p.add("input", -1);
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
@@ -32,12 +33,13 @@ int main(int argc, char* argv[]) {
 
     po::notify(vm);
 
-    if (vm.count("input")) input_filename = vm["input"].as<std::string>();
+    if (vm.count("input")) input_filenames = vm["input"].as<std::vector<std::string>>();
   } catch (const po::error& ex) {
     std::cerr << ex.what() << '\n';
     return 1;
   }
 
+  std::vector<std::unique_ptr<memelang::FileContents>> file_cts;
 #ifdef __AFL_HAVE_MANUAL_CONTROL
   __AFL_INIT();
   constexpr int AFL_BUF_SIZE = 1024 * 4;  // 4 KB
@@ -47,23 +49,26 @@ int main(int argc, char* argv[]) {
     auto bytes = read(0, afl_buf, AFL_BUF_SIZE);
     if (bytes < 0) continue;
     std::string data(afl_buf, bytes);
-    memelang::FileContents cts("stdin", data);
+    file_cts.clear();
+    file_cts.emplace_back(std::make_unique<memelang::FileContents>("stdin", data));
 #else
   // TODO: Read from stdin if no input filename.
-  memelang::FileContents cts(input_filename, readFile(input_filename));
+  for (const auto& filename : input_filenames)
+    file_cts.emplace_back(std::make_unique<memelang::FileContents>(filename, readFile(filename)));
 #endif
-    memelang::ast::Tokeniser tokeniser(&cts);
-    auto tokens = tokeniser.tokenise();
+    memelang::ast::Parser parser(file_cts);
+    parser.parse();
 
     if (print_tokens)
-      for (const auto& tok : tokens) printf("%s\n", tok.desc(&cts).c_str());
+      for (const auto& ctx : parser.ctxs()) {
+        printf("Tokens for %s\n", ctx->cts->filename().c_str());
+        for (const auto& tok : ctx->tokens()) printf("%s\n", tok.desc().c_str());
+      }
 
-    memelang::ast::Parser parser(&cts, tokens);
-    parser.parse();
     if (print_ast) printf("AST:\n%s\n", parser.astToString().c_str());
 
     if (!no_exec) {
-      memelang::exec::Exec interp(parser.file(), &cts);
+      memelang::exec::Exec interp(parser.module());
       interp.run();
     }
 #ifdef __AFL_HAVE_MANUAL_CONTROL

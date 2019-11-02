@@ -1,0 +1,5 @@
+impl Comparable<i32> for u8 {
+  fn neq(o: *i32) bool {
+    ret i32(*this) != *o;
+  }
+}
