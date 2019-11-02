@@ -393,4 +393,10 @@ File::File(Parser::Ctx& c) : Node(c) {
 std::string File::toString() const { return "File"; }
 std::vector<Node*> File::children() { return flattenChildren(fns, enums, intfs, structs, impls); }
 
+Module::Module(const std::vector<std::unique_ptr<Parser::Ctx>>& ctxs) {
+  for (const auto& ctx : ctxs) files.emplace_back(std::make_unique<File>(*ctx));
+}
+std::string Module::toString() const { return "Module"; }
+std::vector<Node*> Module::children() { return flattenChildren(files); }
+
 }  // namespace memelang::ast

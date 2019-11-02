@@ -1,0 +1,16 @@
+intf BinaryArith<A, B> {
+  fn add(o: *A) A;  // TODO: Also variant in ret type?
+}
+
+intf UnaryArith<T> {
+  fn postinc() T;
+}
+
+intf Comparable<T> {
+  fn neq(o: *T) bool;
+}
+
+intf Indexable<I, T> {
+  fn index(idx: *I) *T;
+}
+

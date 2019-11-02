@@ -23,6 +23,7 @@ namespace memelang::ast {
 struct Node {
   Tok tok = {};
 
+  Node() = default;
   explicit Node(Parser::Ctx& c) : tok(*c.curTok()) {}
   virtual ~Node() = default;
 
@@ -281,6 +282,13 @@ struct File : public Node {
   std::vector<std::unique_ptr<Impl>> impls;
 
   DEFNLT(File, fns, enums, intfs, structs, impls);
+};
+
+struct Module : public Node {
+  explicit Module(const std::vector<std::unique_ptr<Parser::Ctx>>& ctxs);
+  std::vector<std::unique_ptr<File>> files;
+
+  DEFNLT(Module, files);
 };
 
 #undef DEFNLT
