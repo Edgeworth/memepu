@@ -76,13 +76,16 @@ struct Tok {
   int size = -1;
   int64_t int_val = INT64_MIN;
   std::string str_val = "";
+  const FileContents* cts = nullptr;
 
-  std::string desc(const FileContents* cts) const;
+  std::string desc() const;
+  std::string span() const { return cts->span(loc, size); }
+  std::string fpos() const { return cts->fpos(loc); }
 };
 
 class Tokeniser {
 public:
-  explicit Tokeniser(const FileContents* contents) : cts_(contents) {}
+  explicit Tokeniser(const FileContents* contents);
 
   std::vector<Tok> tokenise();
 

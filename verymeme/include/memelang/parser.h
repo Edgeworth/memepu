@@ -10,7 +10,7 @@
 
 namespace memelang::ast {
 
-struct File;
+struct Module;
 
 class Parser {
 public:
@@ -19,7 +19,7 @@ public:
     const FileContents* cts;
     std::unordered_set<std::string> type_idents;
 
-    Ctx(const FileContents* cts, const std::vector<Tok>& tokens);
+    explicit Ctx(const FileContents* cts);
 
     const Tok* curTok() const { return curTok(std::vector<Tok::Type>{}); }
     const Tok* curTok(const std::vector<Tok::Type>& ts) const;
@@ -37,24 +37,26 @@ public:
 
     void error(const std::string& msg) const;
     void reset() { idx_ = 0; }
+    const std::vector<Tok>& tokens() const { return toks_; }
 
   private:
     std::vector<Tok> toks_;
     int idx_ = 0;
   };
 
-  Parser(const FileContents* cts, const std::vector<Tok>& toks);
+  explicit Parser(const std::vector<std::unique_ptr<FileContents>>& cts);
   ~Parser();
 
   bool parse();
-  ast::File* file() { return root_.get(); }
+  Module* module() { return root_.get(); }
+  const std::vector<std::unique_ptr<Ctx>>& ctxs() const { return c_; }
   std::string astToString();
 
 private:
   void collectTypeIdents();
 
-  std::unique_ptr<Ctx> c_;
-  std::unique_ptr<File> root_;
+  std::vector<std::unique_ptr<Ctx>> c_;
+  std::unique_ptr<Module> root_;
 };
 
 }  // namespace memelang::ast

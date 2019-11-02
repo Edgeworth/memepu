@@ -16,20 +16,18 @@ const inline std::unordered_set<std::string> WILDCARD_HACK = {"T", "I", "A", "B"
 
 class Exec {
 public:
-  Exec(ast::File* file, const FileContents* cts);
+  explicit Exec(ast::Module* m);
 
   void run();
   void error(const std::string& msg) const;
   Val eval(ast::Node* n);
   VM& vm() { return vm_; }
-  ast::File* file() { return f_; }
+  ast::Module* module() { return m_; }
   void setContext(ast::Node* node) { node_ctx_ = node; }
   ast::Node* context() { return node_ctx_; }
-  const FileContents* fileContents() const { return cts_; }
 
 private:
-  ast::File* f_;
-  const FileContents* cts_;
+  ast::Module* m_;
   ast::Node* node_ctx_{};
   Scope s_;
   VM vm_;
@@ -122,7 +120,8 @@ private:
 
     if (auto res = s_.lookupImplFn(l, {}, "UnaryArith", op_name); res.fn)
       return runFn(res.fn, res.type_mappings, {}, l);
-    return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });;
+    return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
+    ;
   }
 };
 

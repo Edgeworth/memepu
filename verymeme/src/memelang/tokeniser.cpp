@@ -31,9 +31,8 @@ const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
 
 }  // namespace
 
-std::string Tok::desc(const FileContents* cts) const {
-  std::string d =
-      (boost::format("Token(%s, %s, '%s'") % type % cts->fpos(loc) % cts->span(loc, size)).str();
+std::string Tok::desc() const {
+  std::string d = (boost::format("Token(%s, %s, '%s'") % type % fpos() % span()).str();
   if (int_val != INT64_MIN) d += (boost::format(", %d") % int_val).str();
   if (!str_val.empty()) d += (boost::format(", '%s'") % str_val).str();
   d += ")";
@@ -50,6 +49,8 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
       "BOOL_LIT", "IDENT", "COMMENT"};
   return outputEnum(str, o, TOKEN_TYPES);
 }
+
+Tokeniser::Tokeniser(const FileContents* cts) : cts_(cts) { bug_unless(cts_); }
 
 std::vector<Tok> Tokeniser::tokenise() {
   toks_.clear();
@@ -86,7 +87,7 @@ void Tokeniser::pushCurrentToken() {
   // Try to merge tokens together.
   if (!toks_.empty() && can_merge_) {
     auto prevtok = toks_.back();
-    std::string mergetok = cts_->span(prevtok.loc, prevtok.size) + curtok_;
+    std::string mergetok = prevtok.span() + curtok_;
     auto merge_iter = SIMPLE_TOKENS.find(mergetok);
     if (merge_iter != SIMPLE_TOKENS.end()) {
       type = merge_iter->second;
@@ -136,7 +137,7 @@ void Tokeniser::pushCurrentToken() {
   }
 
   while (isspace(data[prev_idx_])) prev_idx_++;  // Skip initial whitespace.
-  toks_.push_back({type, prev_idx_, idx_ - prev_idx_, int_val, str_val});
+  toks_.push_back({type, prev_idx_, idx_ - prev_idx_, int_val, str_val, cts_});
   curtok_ = "";
   // Added a new token, we can potentially merge it next.
   can_merge_ = true;
