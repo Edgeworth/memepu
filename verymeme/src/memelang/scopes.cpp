@@ -143,14 +143,14 @@ const Type* Scope::typeFromAst(ast::Type* ast_type) {
   return addType(std::move(new_type));
 }
 
-ast::Fn* Scope::findFn(const std::string& name) {
+FnRef Scope::findFn(const std::string& name) {
   if (!fns_.contains(name)) e_->error("no function " + name);
-  return fns_[name];
+  return {.fn = fns_[name], .ths = {}};
 }
 
-Scope::LookupImplResult Scope::lookupImplFn(Val ths, const std::vector<Val>& args,
-    const std::string& impl_name, const std::string& fn_name) {
-  LookupImplResult best_result{.fn = nullptr};
+FnRef Scope::findImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
+    const std::string& fn_name) {
+  FnRef best_result{.fn = nullptr, .ths = ths};
   Mapping best_impl_mapping = {};
   // For each implementation, check the distance between types.
   // Select the implementation which has the closest distance that has a function that matches.
@@ -168,7 +168,7 @@ Scope::LookupImplResult Scope::lookupImplFn(Val ths, const std::vector<Val>& arg
       if (fn->sig->params.size() != args.size()) continue;  // wrong number of params
 
       bool can_do = true;
-      LookupImplResult result{.fn = fn.get(), .type_mappings = {}};
+      FnRef result{.fn = fn.get(), .type_mappings = {}};
       for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
         const auto* param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
         const auto* arg_type = args[param_idx].type;

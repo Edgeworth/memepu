@@ -7,5 +7,8 @@ fn main() i32 {
   print_cstr(&data[0]);
   printf("\n");
   printf("strlen result: %d\n", strlen(&data[0]));
+
+  str := string.new(&data[0]);
+  print_str(&str);
   ret 0;
 }

@@ -8,14 +8,6 @@
 
 namespace memelang::exec {
 
-using Hnd = int32_t;
-constexpr inline Hnd INVALID_HND = -1;
-
-struct Val {
-  Hnd hnd{INVALID_HND};  // Handle into VM memory.
-  const Type* type{nullptr};
-};
-
 class Exec;
 
 class VM {

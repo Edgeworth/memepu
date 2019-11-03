@@ -31,35 +31,71 @@ T* g(std::unique_ptr<R>& n) {
     } \
   } while (0)
 
-// TODO: Handle const stuff?
 Exec::Exec(ast::Module* m) : m_(m), s_(this), vm_(this) {}
 
 void Exec::run() {
   fprintf(stderr, "===BEGIN PROGRAM===\n");
-  auto fn = s_.findFn("main");
-  s_.pushScope(fn);
-  runFn(fn, {}, {}, {});
+  const auto& fnref = s_.findFn("main");
+  s_.pushScope(nullptr);
+  runFn(fnref, {});
   s_.popScope();
   fprintf(stderr, "===END PROGRAM===\n");
 }
 
-Val Exec::runFn(
-    ast::Fn* fn, const std::vector<Mapping>& mappings, const std::vector<Val>& params, Val ths) {
-  s_.pushScope(fn);
-  for (const auto& mapping : mappings) s_.pushTypeMapping(mapping);
+Val Exec::runFn(const FnRef& fnref, const std::vector<Val>& params) {
+  s_.pushScope(fnref.fn);
+  for (const auto& mapping : fnref.type_mappings) s_.pushTypeMapping(mapping);
 
-  setContext(fn);  // Set context after pushing scope to save caller location.
-  if (fn->sig->params.size() != params.size()) error("wrong number of arguments");
-  if (ths.hnd != INVALID_HND) s_.declareVar("this", addr(ths));
-  for (int i = 0; i < int(fn->sig->params.size()); ++i) {
-    auto& decl = fn->sig->params[i];
+  setContext(fnref.fn);  // Set context after pushing scope to save caller location.
+  if (fnref.fn->sig->params.size() != params.size()) error("wrong number of arguments");
+  if (fnref.ths.hnd != INVALID_HND) s_.declareVar("this", addr(fnref.ths));
+  for (int i = 0; i < int(fnref.fn->sig->params.size()); ++i) {
+    auto& decl = fnref.fn->sig->params[i];
     runStmt(decl.get());
     assign(s_.findVar(decl->ref->name), params[i]);
   }
-  auto val = runStmtBlk(fn->blk.get());
-  for (const auto& mapping : mappings) s_.popTypeMapping(mapping);
+  auto val = runStmtBlk(fnref.fn->blk.get());
+  for (const auto& mapping : fnref.type_mappings) s_.popTypeMapping(mapping);
   s_.popScope();
   return val;
+}
+
+Val Exec::runBuiltinFn(ast::Op* n) {
+  const std::string& name = g<ast::VarRef>(n->left)->name;
+  auto& args = g<ast::FnCallArgs>(n->right)->args;
+  if (name == "printf") {
+    if (args.empty()) error("printf requires at least 1 argument");
+    if (typeid(*args[0]) != typeid(ast::StrLit)) error("printf must take string literal for now");
+    boost::format fmt = boost::format(g<ast::StrLit>(args[0])->val);
+    for (int i = 1; i < int(args.size()); ++i)
+      invokeBuiltin(eval(args[i].get()), [&fmt](auto& a) { fmt = fmt % a; });
+    printf("%s", fmt.str().c_str());
+    return {};
+  } else if (name == "readf") {
+    if (args.size() != 2) error("readf requires 2 arguments");
+    auto read_ptr = eval(args[0].get());
+    auto read_sz = eval(args[1].get());
+
+    auto u8_ptr_t =
+        Type{.name = U8, .quals = {{}, {.ptr = true}}};  // TODO: move ptr type get to Type?
+    if (*read_ptr.type != u8_ptr_t)
+      error("wrong type: " + read_ptr.type->toString() + " need: " + u8_ptr_t.toString());
+    if (read_sz.type != s_.u32_t) error("wrong type: " + read_sz.type->toString());
+    std::cin.getline(&vm_.ref<char>(deref(read_ptr)), vm_.ref<int32_t>(read_sz));
+
+    auto ret = Val{.hnd = vm_.allocTmp(s_.u32_t->size()), .type = s_.u32_t};
+    vm_.write(ret, uint32_t(std::cin.gcount()));
+    return ret;
+  } else if (name == "sizeof") {
+    if (args.size() != 1) error("sizeof requires 1 argument");
+    auto val = eval(args[0].get());
+    if (!val.type) error("attempt operate on value with undeducible type");
+    auto ret = Val{.hnd = vm_.allocTmp(s_.u32_t->size()), .type = s_.u32_t};
+    vm_.write(ret, uint32_t(val.type->size()));
+    return ret;
+  } else
+    error("unknown builtin function " + name);
+  return {};
 }
 
 Val Exec::runStmtBlk(ast::StmtBlk* blk) {
@@ -133,51 +169,13 @@ Val Exec::runOp(ast::Op* op) {
       return res;
     }
 
-    if (typeid(*op->left) != typeid(ast::VarRef)) error("invalid attempt at function call");
+    const auto& fnref = getFnRefFromNode(op->left.get());
 
-    // Otherwise, it's a var ref.
-    auto* call = g<ast::VarRef>(op->left);
-
-    if (call->name == "printf") {
-      if (args->args.empty()) error("printf requires at least 1 argument");
-      if (typeid(*args->args[0]) != typeid(ast::StrLit))
-        error("printf must take string literal for now");
-      boost::format fmt = boost::format(g<ast::StrLit>(args->args[0])->val);
-      // TODO(progress): Support other than int vars.
-      for (int i = 1; i < int(args->args.size()); ++i)
-        invokeBuiltin(eval(args->args[i].get()), [&fmt](auto& a) { fmt = fmt % a; });
-      printf("%s", fmt.str().c_str());
-
-      // TODO: Return proper value.
-      return {};
-    } else if (call->name == "readf") {
-      if (args->args.size() != 2) error("readf requires 2 arguments");
-      auto read_ptr = eval(args->args[0].get());
-      auto read_sz = eval(args->args[1].get());
-
-      auto u8_ptr_t =
-          Type{.name = U8, .quals = {{}, {.ptr = true}}};  // TODO: move ptr type get to Type?
-      if (*read_ptr.type != u8_ptr_t)
-        error("wrong type: " + read_ptr.type->toString() + " need: " + u8_ptr_t.toString());
-      if (read_sz.type != s_.u32_t) error("wrong type: " + read_sz.type->toString());
-      std::cin.getline(&vm_.ref<char>(deref(read_ptr)), vm_.ref<int32_t>(read_sz));
-
-      auto ret = Val{.hnd = vm_.allocTmp(s_.u32_t->size()), .type = s_.u32_t};
-      vm_.write(ret, uint32_t(std::cin.gcount()));
-      return ret;
-    } else if (call->name == "sizeof") {
-      if (args->args.size() != 1) error("sizeof requires 1 argument");
-      auto val = eval(args->args[0].get());
-      if (!val.type) error("attempt operate on value with undeducible type");
-      auto ret = Val{.hnd = vm_.allocTmp(s_.u32_t->size()), .type = s_.u32_t};
-      vm_.write(ret, uint32_t(val.type->size()));
-      return ret;
-    }
+    if (!fnref.fn) return runBuiltinFn(op);
 
     std::vector<Val> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
-    auto* fn = s_.findFn(call->name);
-    return runFn(fn, {} /* mapping */, params, {} /* this */);
+    return runFn(fnref, params);
   }
   case ast::Expr::ASSIGNMENT: return assign(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::MUL: return mul(eval(op->left.get()), eval(op->right.get()));
@@ -240,7 +238,6 @@ Val Exec::eval(ast::Node* n) {
     return val;
   }
   if (typeid(*n) == typeid(ast::CompoundLit)) {
-    auto* lit = g<ast::CompoundLit>(n);
     // TODO set value
     return {};  // nullptr for deduced type
   }
@@ -253,6 +250,11 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
   Val val = Val{.hnd = vm_.allocStack(type->size()), .type = type};
   vm_.memset(val, 0, type->size());
   return val;
+}
+
+FnRef Exec::getFnRefFromNode(ast::Node* n) {
+  // TODO: how to do member accesses?
+  return {};
 }
 
 void Exec::error(const std::string& msg) const {
@@ -305,8 +307,8 @@ Val Exec::array_access(Val l, Val r) {
   if (!l.type || l.hnd == INVALID_HND || !r.type || r.hnd == INVALID_HND)
     error("attempt operate on value with undeducible type");
 
-  if (auto res = s_.lookupImplFn(l, {addr(r)}, "Indexable", "index"); res.fn)
-    return deref(runFn(res.fn, res.type_mappings, {addr(r)}, l));
+  if (auto fnref = s_.findImplFn(l, {addr(r)}, "Indexable", "index"); fnref.fn)
+    return deref(runFn(fnref, {addr(r)}));
 
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
   if (!l.type->isArray()) error("array access on non-array type");
@@ -319,7 +321,7 @@ Val Exec::array_access(Val l, Val r) {
 Val Exec::preinc(Val l) {
   if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
 
-  return unop(l, l.type, "preinc", [this, &l](auto v) {
+  return unop(l, "preinc", [this, &l](auto v) {
     vm_.write(l, v + 1);
     return l;
   });
@@ -328,7 +330,7 @@ Val Exec::preinc(Val l) {
 Val Exec::postinc(Val l) {
   if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
 
-  return unop(l, l.type, "postinc", [this, &l](auto v) {
+  return unop(l, "postinc", [this, &l](auto v) {
     Val tmp = {.hnd = vm_.allocTmp(l.type->size()), .type = l.type};
     copy(tmp, l);
     vm_.write(l, v + 1);
