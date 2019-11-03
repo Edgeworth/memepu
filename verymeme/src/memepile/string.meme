@@ -10,12 +10,21 @@ fn print_cstr(s: *u8) {
   }
 }
 
+fn print_str(s: *string) {
+  for i := 0; i < s.len; ++i {
+    printf("%c", s[i]);
+  }
+}
+
 struct string {
   data: *u8;
   len: u32;
 
   static fn new(s: *u8) string {
-    ret {data: s, len: strlen(s)};
+    len := strlen(s);
+    data := malloc<u8>(len);
+    memcpy(data, s, len);
+    ret {data: data, len: len};
   }
 }
 

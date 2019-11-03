@@ -20,7 +20,7 @@ Hnd VM::allocTmp(int size) {
   return hnd;
 }
 
-void VM::expireTmp(Val tmp) {
+void VM::expireTmp(Val) {
   // TODO(improvement): Free up memory
 }
 

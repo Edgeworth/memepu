@@ -32,8 +32,8 @@ private:
   Scope s_;
   VM vm_;
 
-  Val runFn(
-      ast::Fn* fn, const std::vector<Mapping>& mappings, const std::vector<Val>& params, Val ths);
+  Val runFn(const FnRef& fnref, const std::vector<Val>& params);
+  Val runBuiltinFn(ast::Op* n);
   Val runStmtBlk(ast::StmtBlk* blk);
   Val runStmt(ast::Node* stmt);
   void runVarDefn(ast::VarDefn* defn);
@@ -44,6 +44,7 @@ private:
   Val runOp(ast::Op* op);
 
   Val valFromAstType(ast::Type* type);
+  FnRef getFnRefFromNode(ast::Node* n);
 
   // Value operations:
   Val assign(Val l, Val r);
@@ -97,10 +98,10 @@ private:
     if (!l.type || l.hnd == INVALID_HND || !r.type || r.hnd == INVALID_HND)
       error("attempt operate on value with undeducible type");
 
-    if (auto res = s_.lookupImplFn(l, {addr(r)}, "Comparable", op_name); res.fn)
-      return runFn(res.fn, res.type_mappings, {addr(r)}, l);
-    if (auto res = s_.lookupImplFn(l, {addr(r)}, "BinaryArith", op_name); res.fn)
-      return runFn(res.fn, res.type_mappings, {addr(r)}, l);
+    if (auto fnref = s_.findImplFn(l, {addr(r)}, "Comparable", op_name); fnref.fn)
+      return runFn(fnref, {addr(r)});
+    if (auto fnref = s_.findImplFn(l, {addr(r)}, "BinaryArith", op_name); fnref.fn)
+      return runFn(fnref, {addr(r)});
 
     if (l.type != r.type)
       error("no binop intf defined and types don't match: " + l.type->toString() + " " +
@@ -115,11 +116,10 @@ private:
   }
 
   template <typename F>
-  Val unop(Val l, const Type* type, const std::string& op_name, F default_op) {
+  Val unop(Val l, const std::string& op_name, F default_op) {
     if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
 
-    if (auto res = s_.lookupImplFn(l, {}, "UnaryArith", op_name); res.fn)
-      return runFn(res.fn, res.type_mappings, {}, l);
+    if (auto fnref = s_.findImplFn(l, {}, "UnaryArith", op_name); fnref.fn) return runFn(fnref, {});
     return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
     ;
   }

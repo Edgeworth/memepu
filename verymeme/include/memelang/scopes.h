@@ -14,11 +14,6 @@ class Exec;
 
 class Scope {
 public:
-  struct LookupImplResult {
-    ast::Fn* fn;
-    std::vector<Mapping> type_mappings;
-  };
-
   explicit Scope(Exec* exec);
 
   void pushScope(ast::Fn* fn);  // Creates new scope-space
@@ -36,8 +31,8 @@ public:
   const Type* addType(Type&& t);
   const Type* typeFromAst(ast::Type* ast_type);
 
-  ast::Fn* findFn(const std::string& name);
-  LookupImplResult lookupImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
+  FnRef findFn(const std::string& name);
+  FnRef findImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
       const std::string& fn_name);
 
   std::string stacktrace() const;
