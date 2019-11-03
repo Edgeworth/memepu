@@ -14,3 +14,11 @@ intf Indexable<I, T> {
   fn index(idx: *I) *T;
 }
 
+intf Convertible<A, B> {
+  fn from(v: *A) B;
+}
+
+// TODO: do this? e.g. for automatic decay to pointer?
+intf ImplicitConvertible<A, B> {
+  fn from_implicit(v: *A) B;
+}

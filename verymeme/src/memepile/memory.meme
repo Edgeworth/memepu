@@ -1,0 +1,9 @@
+fn malloc<T>(count: u32) *T {
+  // TODO
+}
+
+fn memcpy<T>(dst: *T, src: *T, count: u32) {
+  for i := 0; i < count; ++i {
+    dst[i] = src[i];
+  }
+}

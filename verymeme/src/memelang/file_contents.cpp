@@ -21,7 +21,7 @@ std::string FileContents::span(int loc, int size) const {
 }
 
 std::string FileContents::fpos(int loc) const {
-  return std::to_string(lnum(loc)) + ":" + std::to_string(cnum(loc));
+  return filename_ + ":" + std::to_string(lnum(loc)) + ":" + std::to_string(cnum(loc));
 }
 
 }  // namespace memelang

@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "memelang/ast.h"
 #include "verymeme/macros.h"
 
 namespace memelang::exec {
@@ -37,6 +38,14 @@ struct Type {
   COMPARISON(Type, name, quals, params);
 };
 
+using Hnd = int32_t;
+constexpr inline Hnd INVALID_HND = -1;
+
+struct Val {
+  Hnd hnd{INVALID_HND};  // Handle into VM memory.
+  const Type* type{nullptr};
+};
+
 struct Mapping {
   int dist{INT_MAX / 2};
   std::map<std::string, Type> wildcard_map{};
@@ -45,6 +54,12 @@ struct Mapping {
 };
 
 const static Mapping NOT_SUBTYPE = {};
+
+struct FnRef {
+  ast::Fn* fn{};
+  Val ths{};
+  std::vector<Mapping> type_mappings{};
+};
 
 struct Typename {
   std::string name{};
