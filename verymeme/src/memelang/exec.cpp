@@ -253,7 +253,13 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
 }
 
 FnRef Exec::getFnRefFromNode(ast::Node* n) {
-  // TODO: how to do member accesses?
+  auto res = eval(n);
+  if (std::get_if<ast::VarRef)
+  if (typeid(*n) == typeid(ast::Op)) {
+
+  }
+  if (typeid(*n) == typeid(ast::VarRef)) return s_.findFn(g<ast::VarRef>(n)->name);
+  error("invalid attempt at function call");
   return {};
 }
 

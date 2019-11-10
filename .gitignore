@@ -1,4 +1,6 @@
 .idea/
+*egg-info/
+dist/
 cmake-build-*/
 build/
 out/

@@ -1,5 +1,5 @@
 intf BinaryArith<A, B> {
-  fn add(o: *A) A;  // TODO: Also variant in ret type?
+  fn add(o: *A) A;
 }
 
 intf UnaryArith<T> {
