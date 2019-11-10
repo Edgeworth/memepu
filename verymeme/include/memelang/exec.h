@@ -2,6 +2,7 @@
 #define MEMELANG_EXEC_H
 
 #include <map>
+#include <variant>
 
 #include "memelang/ast.h"
 #include "memelang/scopes.h"
@@ -14,13 +15,16 @@ namespace memelang::exec {
 // TODO: Don't hardcode these.
 const inline std::unordered_set<std::string> WILDCARD_HACK = {"T", "I", "A", "B"};
 
+using EvalResult = std::variant<Val, ast::VarRef*>;
+
 class Exec {
 public:
   explicit Exec(ast::Module* m);
 
   void run();
   void error(const std::string& msg) const;
-  Val eval(ast::Node* n);
+  EvalResult eval(ast::Node* n);
+  Val evalForVal(ast::Node* n);
   VM& vm() { return vm_; }
   ast::Module* module() { return m_; }
   void setContext(ast::Node* node) { node_ctx_ = node; }

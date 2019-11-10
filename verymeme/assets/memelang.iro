@@ -15,95 +15,118 @@ styles [] {
 .comment : style {
   color = #75715E
   textmate_scope = comment.line
+  pygments_scope = Comment.Single
 }
 .keyword : style {
   color = #F92672
   textmate_scope = keyword
+  pygments_scope = Keyword.Reserved
 }
 .keyword_operator : style {
   color = white
   textmate_scope = keyword.operator
+  pygments_scope = Operator
 }
 .constant_numeric : style {
   color = #AE81FF
   textmate_scope = constant.numeric
+  pygments_scope = Number
 }
 .constant : style {
   color = #F92672
   textmate_scope = constant.language
+  pygments_scope = Keyword.Constant
 }
 .storage_type : style {
   color = #66D9EF
   textmate_scope = storage.type
+  pygments_scope = Keyword.Type
 }
 .storage_modifier : style {
   color = #F92672
   textmate_scope = storage.modifier
+  pygments_scope = Keyword.Declaration
 }
 .entity_function : style {
   color = #A6E22E
   textmate_scope = entity.name.function
+  pygments_scope = Name.Function
 }
 .entity_struct : style {
   color = #A6E22E
   textmate_scope = entity.name.struct
+  pygments_scope = Name.Class
 }
 .entity_enum : style {
   color = #A6E22E
   textmate_scope = entity.name.enum
+  pygments_scope = Name.Class
 }
 .entity_interface : style {
   color = #A6E22E
   textmate_scope = entity.name.interface
+  pygments_scope = Name.Class
 }
 .entity_impl : style {
   color = #A6E22E
   textmate_scope = entity.name.impl
+  pygments_scope = Name.Class
 }
 .variable_function : style {
   color = #66D9EF
   textmate_scope = variable.function
+  pygments_scope = Name.Variable
 }
 .punctuation : style {
   color = white
   textmate_scope = punctuation
+  pygments_scope = Punctuation
 }
 .punctuation_separator : style {
   color = white
   textmate_scope = punctuation.separator
+  pygments_scope = Punctuation
 }
 .punctuation_terminator : style {
   color = white
   textmate_scope = punctuation.terminator
+  pygments_scope = Punctuation
 }
 .string_begin : style {
   color = #E6DB74
   textmate_scope = punctuation.definition.string.begin
+  pygments_scope = String
 }
 .string_end : style {
   color = #E6DB74
   textmate_scope = punctuation.definition.string.end
+  pygments_scope = String
 }
 .string_quoted_single : style {
   color = #E6DB74
   textmate_scope = string.quoted.single
+  pygments_scope = String.Single
 }
 .string_quoted_double : style {
   color = #E6DB74
   textmate_scope = string.quoted.double
+  pygments_scope = String.Double
 }
 .escaped : style {
   color = #AE81FF
   textmate_scope = constant.character.escape
+  pygments_scope = String.Escape
 }
 .other : style {
   color = #F8F8F2
   textmate_scope = source
+  pygments_scope = Generic
 }
 .illegal : style {
   color = #F8F8F2
   background_color = red
   textmate_scope = invalid
+  pygments_scope = Generic.Error
 }
 }
 
