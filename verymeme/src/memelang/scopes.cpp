@@ -143,8 +143,8 @@ const Type* Scope::typeFromAst(ast::Type* ast_type) {
   return addType(std::move(new_type));
 }
 
-FnRef Scope::findFn(const std::string& name) {
-  if (!fns_.contains(name)) e_->error("no function " + name);
+FnRef Scope::maybeFindFn(const std::string& name) {
+  if (!fns_.contains(name)) return {};
   return {.fn = fns_[name], .ths = {}};
 }
 
@@ -168,7 +168,7 @@ FnRef Scope::findImplFn(Val ths, const std::vector<Val>& args, const std::string
       if (fn->sig->params.size() != args.size()) continue;  // wrong number of params
 
       bool can_do = true;
-      FnRef result{.fn = fn.get(), .type_mappings = {}};
+      FnRef result{.fn = fn.get(), .ths = ths, .type_mappings = {}};
       for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
         const auto* param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
         const auto* arg_type = args[param_idx].type;
@@ -196,7 +196,7 @@ FnRef Scope::findImplFn(Val ths, const std::vector<Val>& args, const std::string
 
   best_result.type_mappings.emplace_back(std::move(best_impl_mapping));
   return best_result;
-}  // namespace memelang::exec
+}
 
 std::string Scope::stacktrace() const {
   std::string stack;

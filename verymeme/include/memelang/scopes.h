@@ -31,7 +31,7 @@ public:
   const Type* addType(Type&& t);
   const Type* typeFromAst(ast::Type* ast_type);
 
-  FnRef findFn(const std::string& name);
+  FnRef maybeFindFn(const std::string& name);
   FnRef findImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
       const std::string& fn_name);
 

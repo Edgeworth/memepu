@@ -17,6 +17,8 @@ public:
   Hnd allocStack(int size);
   void popStack();
   Hnd allocTmp(int size);
+  Hnd mapFn(ast::Fn* fn);
+  ast::Fn* getFn(Hnd hnd);
   void expireTmp(Val tmp);
 
   // T should be packed.
@@ -44,6 +46,7 @@ private:
 
   Exec* exec_;
   std::vector<uint8_t> mem_;
+  std::unordered_map<ast::Fn*, Hnd> fn_map_;
   int stack_ptr_{STACK_OFFSET + STACK_SIZE - 1};  // Stack grows downward.
   int tmp_ptr_{TMP_OFFSET};
 };
