@@ -24,4 +24,14 @@ void VM::expireTmp(Val) {
   // TODO(improvement): Free up memory
 }
 
+Hnd VM::mapFn(ast::Fn* fn) {
+  // TODO: this
+  bug_unless(!fn_map_.contains(fn));
+  fn_map_[fn] = allocTmp(sizeof(fn));
+//  write()
+  return fn_map_[fn];
+}
+
+ast::Fn* VM::getFn(Hnd hnd) { return nullptr; }
+
 }  // namespace memelang::exec

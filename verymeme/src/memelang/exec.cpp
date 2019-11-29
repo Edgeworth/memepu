@@ -35,7 +35,7 @@ Exec::Exec(ast::Module* m) : m_(m), s_(this), vm_(this) {}
 
 void Exec::run() {
   fprintf(stderr, "===BEGIN PROGRAM===\n");
-  const auto& fnref = s_.findFn("main");
+  const auto& fnref = s_.maybeFindFn("main");
   s_.pushScope(nullptr);
   runFn(fnref, {});
   s_.popScope();
@@ -253,13 +253,9 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
 }
 
 FnRef Exec::getFnRefFromNode(ast::Node* n) {
-  auto res = eval(n);
-  if (std::get_if<ast::VarRef)
-  if (typeid(*n) == typeid(ast::Op)) {
-
-  }
-  if (typeid(*n) == typeid(ast::VarRef)) return s_.findFn(g<ast::VarRef>(n)->name);
-  error("invalid attempt at function call");
+  //  auto res = eval(n);
+  // TODO: Eval then grab fn.
+  if (typeid(*n) == typeid(ast::VarRef)) return s_.maybeFindFn(g<ast::VarRef>(n)->name);
   return {};
 }
 
