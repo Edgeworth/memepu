@@ -12,7 +12,7 @@ namespace memelang::ast {
 
 using fmt = boost::format;
 
-Parser::Parser(const std::vector<std::unique_ptr<FileContents>>& cts) : c_(), root_() {
+Parser::Parser(const std::vector<std::unique_ptr<FileContents>>& cts) {
   for (const auto& c : cts) c_.emplace_back(std::make_unique<Ctx>(c.get()));
 }
 

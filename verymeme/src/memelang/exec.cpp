@@ -44,7 +44,7 @@ void Exec::run() {
 
 Val Exec::runFn(const FnRef& fnref, const std::vector<Val>& params) {
   s_.pushScope(fnref.fn);
-  for (const auto& mapping : fnref.type_mappings) s_.pushTypeMapping(mapping);
+  s_.mergeMapping(fnref.mapping);
 
   setContext(fnref.fn);  // Set context after pushing scope to save caller location.
   if (fnref.fn->sig->params.size() != params.size()) error("wrong number of arguments");
@@ -55,7 +55,7 @@ Val Exec::runFn(const FnRef& fnref, const std::vector<Val>& params) {
     assign(s_.findVar(decl->ref->name), params[i]);
   }
   auto val = runStmtBlk(fnref.fn->blk.get());
-  for (const auto& mapping : fnref.type_mappings) s_.popTypeMapping(mapping);
+  s_.unmergeMapping(fnref.mapping);
   s_.popScope();
   return val;
 }
@@ -70,39 +70,39 @@ Val Exec::runBuiltinFn(ast::Op* n) {
     for (int i = 1; i < int(args.size()); ++i)
       invokeBuiltin(eval(args[i].get()), [&fmt](auto& a) { fmt = fmt % a; });
     printf("%s", fmt.str().c_str());
-    return {};
+    return INVALID_VAL;
   } else if (name == "readf") {
     if (args.size() != 2) error("readf requires 2 arguments");
     auto read_ptr = eval(args[0].get());
     auto read_sz = eval(args[1].get());
 
-    auto u8_ptr_t =
-        Type{.name = U8, .quals = {{}, {.ptr = true}}};  // TODO: move ptr type get to Type?
-    if (*read_ptr.type != u8_ptr_t)
-      error("wrong type: " + read_ptr.type->toString() + " need: " + u8_ptr_t.toString());
-    if (read_sz.type != s_.u32_t) error("wrong type: " + read_sz.type->toString());
-    std::cin.getline(&vm_.ref<char>(deref(read_ptr)), vm_.ref<int32_t>(read_sz));
+    TypeId u8_ptr_t = s_.addType(Type(U8, false, {{.ptr = true}}, this));
+    if (read_ptr.type != u8_ptr_t)
+      error("wrong type: " + s_.get(read_ptr.type).toString() +
+          " need: " + s_.get(u8_ptr_t).toString());
+    if (read_sz.type != s_.u32_t) error("wrong type: " + s_.get(read_sz.type).toString());
+    std::cin.getline(&vm_.ref<char>(deref(read_ptr).hnd), vm_.ref<int32_t>(read_sz.hnd));
 
-    auto ret = Val{.hnd = vm_.allocTmp(s_.u32_t->size()), .type = s_.u32_t};
-    vm_.write(ret, uint32_t(std::cin.gcount()));
+    auto ret = Val(vm_.allocTmp(s_.get(s_.u32_t).size()), s_.u32_t);
+    vm_.write(ret.hnd, uint32_t(std::cin.gcount()));
     return ret;
   } else if (name == "sizeof") {
     if (args.size() != 1) error("sizeof requires 1 argument");
     auto val = eval(args[0].get());
-    if (!val.type) error("attempt operate on value with undeducible type");
-    auto ret = Val{.hnd = vm_.allocTmp(s_.u32_t->size()), .type = s_.u32_t};
-    vm_.write(ret, uint32_t(val.type->size()));
+    if (val.type == INVALID_TYPEID) error("attempt operate on value with undeducible type");
+    auto ret = Val(vm_.allocTmp(s_.get(s_.u32_t).size()), s_.u32_t);
+    vm_.write(ret.hnd, uint32_t(s_.get(val.type).size()));
     return ret;
   } else
     error("unknown builtin function " + name);
-  return {};
+  return INVALID_VAL;
 }
 
 Val Exec::runStmtBlk(ast::StmtBlk* blk) {
   s_.nestScope();
   for (auto& stmt : blk->stmts) CHECK(runStmt(stmt.get()));
   s_.unnestScope();
-  return {};
+  return INVALID_VAL;
 }
 
 Val Exec::runStmt(ast::Node* stmt) {
@@ -126,7 +126,7 @@ Val Exec::runStmt(ast::Node* stmt) {
   } else {
     error("unimplemented statement " + stmt->toString());
   }
-  return {};
+  return INVALID_VAL;
 }
 
 void Exec::runVarDefn(ast::VarDefn* defn) {
@@ -136,9 +136,9 @@ void Exec::runVarDefn(ast::VarDefn* defn) {
   } else {
     // If no type specifier, just use the definition directly.
     auto init = eval(defn->defn.get());
-    if (!init.type || init.hnd == INVALID_HND)
+    if (init.type == INVALID_TYPEID || init.hnd == INVALID_HND)
       error("attempt operate on value with undeducible type");
-    auto val = Val{.hnd = vm_.allocStack(init.type->size()), .type = init.type};
+    auto val = Val(vm_.allocStack(s_.get(init.type).size()), init.type);
     copy(val, init);
     s_.declareVar(defn->decl->ref->name, val);
   }
@@ -157,14 +157,14 @@ Val Exec::runOp(ast::Op* op) {
 
     // Type constructor / conversion
     if (typeid(*op->left) == typeid(ast::Type)) {
-      auto* type = s_.typeFromAst(g<ast::Type>(op->left));
+      TypeId type = s_.typeFromAst(g<ast::Type>(op->left));
       if (args->args.size() != 1)
         error("conversion must have 1 arg");  // TODO: arbitrary conversions?
       Val val = eval(args->args[0].get());
-      Val res{.hnd = vm_.allocTmp(type->size()), .type = type};
+      Val res(vm_.allocTmp(s_.get(type).size()), type);
       invokeBuiltin(val, [this, &res](auto val_v) {
         invokeBuiltin(
-            res, [this, &val_v, &res](auto res_v) { vm_.write(res, decltype(res_v)(val_v)); });
+            res, [this, &val_v, &res](auto res_v) { vm_.write(res.hnd, decltype(res_v)(val_v)); });
       });
       return res;
     }
@@ -176,6 +176,12 @@ Val Exec::runOp(ast::Op* op) {
     std::vector<Val> params;
     for (auto& arg : args->args) params.emplace_back(eval(arg.get()));
     return runFn(fnref, params);
+  }
+  case ast::Expr::MEMBER_ACCESS: {
+    auto left = eval(op->left.get());
+    auto access = g<ast::VarRef>(op->right.get());  // Right side must be a varref.
+
+    break;
   }
   case ast::Expr::ASSIGNMENT: return assign(eval(op->left.get()), eval(op->right.get()));
   case ast::Expr::MUL: return mul(eval(op->left.get()), eval(op->right.get()));
@@ -192,7 +198,7 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::UNARY_DEREF: return deref(eval(op->left.get()));
   default: error("unhandled op");
   }
-  return {};
+  return INVALID_VAL;
 }
 
 Val Exec::runFor(ast::For* fr) {
@@ -200,30 +206,30 @@ Val Exec::runFor(ast::For* fr) {
   while (true) {
     auto cond_val = eval(fr->cond.get());
     if (cond_val.type != s_.bool_t) error("for condition not boolean");
-    if (!vm_.ref<bool>(cond_val)) break;
+    if (!vm_.ref<bool>(cond_val.hnd)) break;
     CHECK(runStmtBlk(fr->blk.get()));
     eval(fr->update.get());
   }
-  return {};
+  return INVALID_VAL;
 }
 
 Val Exec::runWhile(ast::While* wh) {
   while (true) {
     auto cond_val = eval(wh->cond.get());
     if (cond_val.type != s_.bool_t) error("while condition not boolean");
-    if (!vm_.ref<bool>(cond_val)) break;
+    if (!vm_.ref<bool>(cond_val.hnd)) break;
     CHECK(runStmtBlk(wh->blk.get()));
   }
-  return {};
+  return INVALID_VAL;
 }
 
 Val Exec::runIf(ast::If* ifst) {
   auto cond_val = eval(ifst->cond.get());
   if (cond_val.type != s_.bool_t) error("if condition not boolean");
-  if (vm_.ref<bool>(cond_val)) CHECK(runStmtBlk(ifst->then.get()));
+  if (vm_.ref<bool>(cond_val.hnd)) CHECK(runStmtBlk(ifst->then.get()));
   else if (ifst->els)
     CHECK(runStmtBlk(ifst->els.get()));
-  return {};
+  return INVALID_VAL;
 }
 
 Val Exec::eval(ast::Node* n) {
@@ -232,31 +238,31 @@ Val Exec::eval(ast::Node* n) {
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
   if (typeid(*n) == typeid(ast::VarRef)) return s_.findVar(g<ast::VarRef>(n)->name);
   if (typeid(*n) == typeid(ast::IntLit)) {
-    const auto* type = g<ast::IntLit>(n)->unsign ? s_.u32_t : s_.i32_t;
-    auto val = Val{.hnd = vm_.allocTmp(type->size()), .type = type};
-    vm_.write(val, uint32_t(g<ast::IntLit>(n)->val));
+    TypeId type = g<ast::IntLit>(n)->unsign ? s_.u32_t : s_.i32_t;
+    auto val = Val(vm_.allocTmp(s_.get(type).size()), type);
+    vm_.write(val.hnd, uint32_t(g<ast::IntLit>(n)->val));
     return val;
   }
   if (typeid(*n) == typeid(ast::CompoundLit)) {
-    // TODO set value
-    return {};  // nullptr for deduced type
+    // TODO: fix this.
+    return INVALID_VAL;
   }
+
   error("unimplemented eval node " + n->toString());
-  return {};
+  return INVALID_VAL;
 }
 
 Val Exec::valFromAstType(ast::Type* ast_type) {
   auto type = s_.typeFromAst(ast_type);
-  Val val = Val{.hnd = vm_.allocStack(type->size()), .type = type};
-  vm_.memset(val, 0, type->size());
+  Val val = Val(vm_.allocStack(s_.get(type).size()), type);
+  vm_.memset(val, 0, s_.get(type).size());
   return val;
 }
 
 FnRef Exec::getFnRefFromNode(ast::Node* n) {
-  //  auto res = eval(n);
-  // TODO: Eval then grab fn.
   if (typeid(*n) == typeid(ast::VarRef)) return s_.maybeFindFn(g<ast::VarRef>(n)->name);
-  return {};
+  auto res = eval(n);
+  return vm_.getFn(res.hnd);
 }
 
 void Exec::error(const std::string& msg) const {
@@ -268,9 +274,9 @@ void Exec::error(const std::string& msg) const {
 }
 
 Val Exec::assign(Val l, Val r) {
-  if (!r.type) {
+  if (r.type == INVALID_TYPEID) {
     // TODO: For now, treat assignment from typeless value as memset to 0.
-    vm_.memset(l, 0, l.type->size());
+    vm_.memset(l, 0, s_.get(l.type).size());
     return l;
   }
   if (l.type != r.type) error("assignment to value of different type");
@@ -306,66 +312,72 @@ Val Exec::neq(Val l, Val r) {
 }
 
 Val Exec::array_access(Val l, Val r) {
-  if (!l.type || l.hnd == INVALID_HND || !r.type || r.hnd == INVALID_HND)
+  if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND || r.type == INVALID_TYPEID ||
+      r.hnd == INVALID_HND)
     error("attempt operate on value with undeducible type");
 
   if (auto fnref = s_.findImplFn(l, {addr(r)}, "Indexable", "index"); fnref.fn)
     return deref(runFn(fnref, {addr(r)}));
 
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
-  if (!l.type->isArray()) error("array access on non-array type");
-  Type new_type = *l.type;
+  if (!s_.get(l.type).isArray()) error("array access on non-array type");
+  Type new_type = s_.get(l.type);
   new_type.quals.pop_back();  // Remove array qualifier.
-  const int32_t idx = vm_.ref<int32_t>(r);
-  return Val{l.hnd + idx * l.type->size(), s_.addType(std::move(new_type))};
+  const Hnd new_hnd = l.hnd + vm_.ref<int32_t>(r.hnd) * new_type.size();
+  return Val{new_hnd, s_.addType(new_type)};
 }
 
 Val Exec::preinc(Val l) {
-  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+  if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND)
+    error("attempt operate on value with undeducible type");
 
   return unop(l, "preinc", [this, &l](auto v) {
-    vm_.write(l, v + 1);
+    vm_.write(l.hnd, v + 1);
     return l;
   });
 }
 
 Val Exec::postinc(Val l) {
-  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+  if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND)
+    error("attempt operate on value with undeducible type");
 
   return unop(l, "postinc", [this, &l](auto v) {
-    Val tmp = {.hnd = vm_.allocTmp(l.type->size()), .type = l.type};
+    Val tmp(vm_.allocTmp(s_.get(l.type).size()), l.type);
     copy(tmp, l);
-    vm_.write(l, v + 1);
+    vm_.write(l.hnd, v + 1);
     return tmp;
   });
 }
 
-Val Exec::addr(const Val& l) {
-  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
+Val Exec::addr(Val l) {
+  if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND)
+    error("attempt operate on value with undeducible type");
 
-  auto new_type = *l.type;
+  auto new_type = s_.get(l.type);
   new_type.quals.emplace_back();
   new_type.quals.back().ptr = true;
-  auto new_value = Val{.hnd = vm_.allocTmp(sizeof(Hnd)), .type = s_.addType(std::move(new_type))};
-  vm_.write(new_value, l.hnd);
+  auto new_value = Val(vm_.allocTmp(sizeof(Hnd)), s_.addType(new_type));
+  vm_.write(new_value.hnd, l.hnd);
   return new_value;
 }
 
 Val Exec::copy(Val dst, Val src) {
-  if (!dst.type || dst.hnd == INVALID_HND || !src.type || src.hnd == INVALID_HND)
+  if (dst.type == INVALID_TYPEID || dst.hnd == INVALID_HND || src.type == INVALID_TYPEID ||
+      src.hnd == INVALID_HND)
     error("attempt operate on value with undeducible type");
 
-  vm_.memcpy(dst, src, src.type->size());
+  vm_.memcpy(dst, src, s_.get(src.type).size());
   return dst;
 }
 
-Val Exec::deref(const Val& l) {
-  if (!l.type || l.hnd == INVALID_HND) error("attempt operate on value with undeducible type");
-  if (!l.type->quals.back().ptr) error("attempt to dereference non-pointer type");
+Val Exec::deref(Val l) {
+  if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND)
+    error("attempt operate on value with undeducible type");
 
-  Type new_type = *l.type;
+  Type new_type = s_.get(l.type);
+  if (!new_type.isPtr()) error("attempt to dereference non-pointer type");
   new_type.quals.pop_back();  // Remove ptr.
-  return {.hnd = vm_.ref<Hnd>(l), .type = s_.addType(std::move(new_type))};
+  return Val(vm_.ref<Hnd>(l.hnd), s_.addType(new_type));
 }
 
 }  // namespace memelang::exec

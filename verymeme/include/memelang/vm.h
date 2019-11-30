@@ -17,23 +17,22 @@ public:
   Hnd allocStack(int size);
   void popStack();
   Hnd allocTmp(int size);
-  Hnd mapFn(ast::Fn* fn);
-  ast::Fn* getFn(Hnd hnd);
   void expireTmp(Val tmp);
+  Hnd mapFn(const FnRef& fn);
+  FnRef getFn(Hnd hnd);
 
   // T should be packed.
   template <typename T>
-  void write(Val v, const T& data) {
-    ::memcpy(&mem_[v.hnd], &data, sizeof(T));
+  void write(Hnd hnd, const T& data) {
+    ::memcpy(&mem_[hnd], &data, sizeof(T));
   }
 
   template <typename T>
-  T& ref(Val v) {
-    return *reinterpret_cast<T*>(&mem_[v.hnd]);
+  T& ref(Hnd hnd) {
+    return *reinterpret_cast<T*>(&mem_[hnd]);
   }
 
   void memcpy(Val dst, Val src, int size) { ::memcpy(&mem_[dst.hnd], &mem_[src.hnd], size); }
-
   void memset(Val dst, uint8_t val, int size) { ::memset(&mem_[dst.hnd], val, size); }
 
 private:
@@ -44,11 +43,12 @@ private:
   constexpr static int HEAP_OFFSET = STACK_OFFSET + STACK_SIZE;
   constexpr static int TMP_OFFSET = HEAP_OFFSET + HEAP_SIZE;
 
-  Exec* exec_;
-  std::vector<uint8_t> mem_;
-  std::unordered_map<ast::Fn*, Hnd> fn_map_;
   int stack_ptr_{STACK_OFFSET + STACK_SIZE - 1};  // Stack grows downward.
   int tmp_ptr_{TMP_OFFSET};
+  Exec* exec_;
+  std::vector<uint8_t> mem_;
+  std::map<FnRef, Hnd> fn_map_;
+  std::vector<FnRef> fns_;
 };
 
 }  // namespace memelang::exec

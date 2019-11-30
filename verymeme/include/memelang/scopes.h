@@ -7,6 +7,7 @@
 
 #include "memelang/ast.h"
 #include "memelang/vm.h"
+#include "verymeme/bimap.h"
 
 namespace memelang::exec {
 
@@ -21,15 +22,16 @@ public:
   void nestScope();  // Nests scope inside current scope-space.
   void unnestScope();
 
-  void pushTypeMapping(const Mapping& m);
-  void popTypeMapping(const Mapping& m);
+  void mergeMapping(const Mapping& m);
+  void unmergeMapping(const Mapping& m);
 
   Val maybeFindVar(const std::string& name) const;
   Val findVar(const std::string& name) const;
   Val declareVar(const std::string& name, Val v);
 
-  const Type* addType(Type&& t);
-  const Type* typeFromAst(ast::Type* ast_type);
+  TypeId addType(const Type& t);
+  const Type& get(TypeId id);
+  TypeId typeFromAst(ast::Type* ast_type);
 
   FnRef maybeFindFn(const std::string& name);
   FnRef findImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
@@ -40,21 +42,23 @@ public:
 private:
   struct ScopeData {
     std::vector<std::map<std::string, Val>> vars;
-    std::map<std::string, const Type*> wildcards;
+    Mapping mapping;
     std::string ctx;
+
+    explicit ScopeData(Exec* e) : mapping(e) {}
   };
 
   struct ImplKey {
-    const Type* impler;
-    const Type* intf;
-
+    TypeId impler;
+    TypeId intf;
     COMPARISON(ImplKey, impler, intf);
   };
 
   Exec* e_;
   std::vector<ScopeData> scopes_;
-  std::set<Type> types_;
+  Bimap<TypeId, Type> types_;
 
+  TypeId next_id_ = 1;
   std::map<std::string, ast::Fn*> fns_;
   std::map<std::string, ast::Enum*> enums_;
   std::map<std::string, ast::Intf*> intfs_;
@@ -63,17 +67,17 @@ private:
 
 public:
   // Built-in types (initialize after).
-  const Type* bool_t{};
-  const Type* i8_t{};
-  const Type* i16_t{};
-  const Type* i32_t{};
-  const Type* i64_t{};
-  const Type* u8_t{};
-  const Type* u16_t{};
-  const Type* u32_t{};
-  const Type* u64_t{};
-  const Type* f32_t{};
-  const Type* f64_t{};
+  TypeId bool_t;
+  TypeId i8_t;
+  TypeId i16_t;
+  TypeId i32_t;
+  TypeId i64_t;
+  TypeId u8_t;
+  TypeId u16_t;
+  TypeId u32_t;
+  TypeId u64_t;
+  TypeId f32_t;
+  TypeId f64_t;
 };
 
 }  // namespace memelang::exec

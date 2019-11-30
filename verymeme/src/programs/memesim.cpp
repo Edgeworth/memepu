@@ -2,7 +2,6 @@
 
 #include <boost/program_options.hpp>
 #include <iostream>
-#include <numeric>
 #include <thread>
 
 #include "memesim/cli.h"

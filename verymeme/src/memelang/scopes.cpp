@@ -7,10 +7,10 @@
 namespace memelang::exec {
 
 Scope::Scope(Exec* exec)
-    : e_(exec), bool_t(addType({.name = BOOL})), i8_t(addType({.name = I8})),
-      i16_t(addType({.name = I16})), i32_t(addType({.name = I32})), i64_t(addType({.name = I64})),
-      u8_t(addType({.name = U8})), u16_t(addType({.name = U16})), u32_t(addType({.name = U32})),
-      u64_t(addType({.name = U64})), f32_t(addType({.name = F32})), f64_t(addType({.name = F64})) {
+    : e_(exec), bool_t(addType(Type(BOOL, e_))), i8_t(addType(Type(I8, e_))),
+      i16_t(addType(Type(I16, e_))), i32_t(addType(Type(I32, e_))), i64_t(addType(Type(I64, e_))),
+      u8_t(addType(Type(U8, e_))), u16_t(addType(Type(U16, e_))), u32_t(addType(Type(U32, e_))),
+      u64_t(addType(Type(U64, e_))), f32_t(addType(Type(F32, e_))), f64_t(addType(Type(F64, e_))) {
   pushScope(nullptr);
 
   for (const auto& file : e_->module()->files) {
@@ -43,7 +43,7 @@ Scope::Scope(Exec* exec)
 }
 
 void Scope::pushScope(ast::Fn* fn) {
-  scopes_.emplace_back();
+  scopes_.emplace_back(ScopeData(e_));
   auto* ctx = e_->context();
 
   if (fn) {
@@ -71,22 +71,14 @@ void Scope::unnestScope() {
   scopes_.back().vars.pop_back();
 }
 
-void Scope::pushTypeMapping(const Mapping& m) {
+void Scope::mergeMapping(const Mapping& m) {
   bug_unless(!scopes_.empty());
-  auto& wildcards = scopes_.back().wildcards;
-  for (const auto& [wildcard, type] : m.wildcard_map) {
-    if (wildcards.contains(wildcard)) e_->error("reusing template parameter " + wildcard);
-    wildcards[wildcard] = addType(Type{type});
-  }
+  scopes_.back().mapping.merge(m);
 }
 
-void Scope::popTypeMapping(const Mapping& m) {
+void Scope::unmergeMapping(const Mapping& m) {
   bug_unless(!scopes_.empty());
-  auto& wildcards = scopes_.back().wildcards;
-  for (const auto& [wildcard, _] : m.wildcard_map) {
-    bug_unless(wildcards.contains(wildcard));
-    wildcards.erase(wildcard);
-  }
+  scopes_.back().mapping.unmerge(m);
 }
 
 Val Scope::maybeFindVar(const std::string& name) const {
@@ -96,7 +88,7 @@ Val Scope::maybeFindVar(const std::string& name) const {
     auto iter = scope_iter->find(name);
     if (iter != scope_iter->end()) return iter->second;
   }
-  return {};
+  return INVALID_VAL;
 }
 
 Val Scope::findVar(const std::string& name) const {
@@ -111,14 +103,22 @@ Val Scope::declareVar(const std::string& name, Val v) {
   return v;
 }
 
-const Type* Scope::addType(Type&& t) { return &*types_.insert(std::move(t)).first; }
+TypeId Scope::addType(const Type& t) {
+  if (!types_.insert(next_id_, t)) return types_.keyForValue(t);
+  return next_id_++;
+}
+
+const Type& Scope::get(TypeId id) {
+  if (!types_.containsKey(id)) e_->error("unknown type with id " + std::to_string(id));
+  return types_[id];
+}
 
 // TODO: need to consider type wildcards
 // 1. save wildcards in current scope
 // 2. match wildcards to type (type inference basically)
-const Type* Scope::typeFromAst(ast::Type* ast_type) {
+TypeId Scope::typeFromAst(ast::Type* ast_type) {
   // Put one qualifier to hold const for the main type.
-  Type new_type = {.name = ast_type->name, .quals = {{.cnst = ast_type->cnst}}};
+  Type new_type(ast_type->name, ast_type->cnst, {}, e_);
 
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
@@ -127,74 +127,79 @@ const Type* Scope::typeFromAst(ast::Type* ast_type) {
     if ((*i)->array) {
       auto array_val = e_->eval((*i)->array.get());
       if (array_val.type != u32_t) e_->error("array size must be u32");
-      q.array = e_->vm().ref<int32_t>(array_val);
+      q.array = e_->vm().ref<int32_t>(array_val.hnd);
     }
     q.ptr = (*i)->ptr;
     q.cnst = (*i)->cnst;
 
     bug_unless(q.array || q.ptr);  // Qualifier must either be array or pointer.
   }
-  for (const auto& param : ast_type->params) new_type.params.emplace_back(typeFromAst(param.get()));
+  // TODO: create mappings from wildcards to types specified in ast type.
+  //  for (const auto& param : ast_type->params)
+  //  new_type.params.emplace_back(typeFromAst(param.get()));
 
   // TODO: Handle child parameters.
-  if (scopes_.back().wildcards.contains(new_type.name))
-    new_type.addInnerType(*scopes_.back().wildcards[new_type.name]);
+  if (scopes_.back().mapping.wildcard_map.contains(new_type.name))
+    new_type.addInnerType(scopes_.back().mapping.wildcard_map[new_type.name]);
 
-  return addType(std::move(new_type));
+  return addType(new_type);
 }
 
 FnRef Scope::maybeFindFn(const std::string& name) {
-  if (!fns_.contains(name)) return {};
-  return {.fn = fns_[name], .ths = {}};
+  if (!fns_.contains(name)) return INVALID_FNREF;
+  return FnRef(fns_[name], INVALID_VAL, Mapping(e_));
 }
 
 FnRef Scope::findImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
     const std::string& fn_name) {
-  FnRef best_result{.fn = nullptr, .ths = ths};
-  Mapping best_impl_mapping = {};
+  FnRef best_result(nullptr, ths, Mapping(e_));
+  Mapping best_impler_mapping(e_);
+  int best_impler_dist = Mapping::NOT_SUBTYPE;
   // For each implementation, check the distance between types.
   // Select the implementation which has the closest distance that has a function that matches.
   for (const auto& [impl_key, impl] : impls_) {
     const auto& [impler, intf] = impl_key;
-    if (intf->name != impl_name) continue;  // wrong intf name
+    if (get(intf).name != impl_name) continue;  // wrong intf name
 
-    const auto& impler_mapping = dist(*ths.type, *impler, WILDCARD_HACK);
-    if (impler_mapping == NOT_SUBTYPE || best_impl_mapping < impler_mapping) continue;
+    auto [impler_dist, impler_mapping] = dist(get(ths.type), get(impler), WILDCARD_HACK, e_);
+    if (impler_dist >= best_impler_dist) continue;
 
     pushScope(nullptr);  // Temporarily add mapping to resolve wildcards.
-    pushTypeMapping(impler_mapping);
+    mergeMapping(impler_mapping);
     for (const auto& fn : impl->fns) {
       if (fn->sig->tname->name != fn_name) continue;  // wrong name
       if (fn->sig->params.size() != args.size()) continue;  // wrong number of params
 
       bool can_do = true;
-      FnRef result{.fn = fn.get(), .ths = ths, .type_mappings = {}};
+      FnRef result(fn.get(), ths, Mapping(e_));
       for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
-        const auto* param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
-        const auto* arg_type = args[param_idx].type;
-        if (WILDCARD_HACK.contains(param_type->name)) {
-          auto param_mapping = dist(*arg_type, *param_type, WILDCARD_HACK);
-          if (param_mapping == NOT_SUBTYPE) {
+        TypeId param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
+        TypeId arg_type = args[param_idx].type;
+        if (WILDCARD_HACK.contains(get(param_type).name)) {
+          auto [param_dist, param_mapping] =
+              dist(get(arg_type), get(param_type), WILDCARD_HACK, e_);
+          if (param_dist == Mapping::NOT_SUBTYPE) {
             can_do = false;
             break;
           }
-          pushTypeMapping(param_mapping);
-          result.type_mappings.emplace_back(std::move(param_mapping));
+          mergeMapping(param_mapping);
+          result.mapping.merge(param_mapping);
         } else if (param_type != arg_type) {
           can_do = false;
           break;  // wrong parameter type.
         }
       }
-      for (const auto& type_mapping : result.type_mappings) popTypeMapping(type_mapping);
+      unmergeMapping(result.mapping);
       if (!can_do) continue;
       best_result = std::move(result);
-      best_impl_mapping = impler_mapping;
+      best_impler_mapping = impler_mapping;
+      best_impler_dist = impler_dist;
     }
-    popTypeMapping(impler_mapping);
+    unmergeMapping(impler_mapping);
     popScope();
   }
 
-  best_result.type_mappings.emplace_back(std::move(best_impl_mapping));
+  best_result.mapping.merge(best_impler_mapping);
   return best_result;
 }
 
