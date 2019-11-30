@@ -112,7 +112,7 @@ set(VERYMEME_SOURCES
     src/verymeme/geom.cpp include/verymeme/geom.h
     src/verymeme/tokeniser.cpp include/verymeme/tokeniser.h
     src/verymeme/term.cpp include/verymeme/term.h
-    include/verymeme/concurrent_queue.h
+    include/verymeme/concurrent_queue.h include/verymeme/bimap.h
     src/verymeme/string_util.cpp include/verymeme/string_util.h
     src/verymeme/macros.cpp include/verymeme/macros.h)
 set(MEMEASM_SOURCES src/memeasm/assembler.cpp include/memeasm/assembler.h)
