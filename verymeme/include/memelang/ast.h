@@ -21,7 +21,7 @@ namespace memelang::ast {
   std::vector<Node*> children() override
 
 struct Node {
-  Tok tok = {};
+  Tok tok{};
 
   Node() = default;
   explicit Node(Parser::Ctx& c) : tok(*c.curTok()) {}

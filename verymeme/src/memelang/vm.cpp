@@ -13,6 +13,10 @@ Hnd VM::allocStack(int size) {
   return hnd;
 }
 
+void VM::popStack() {
+  // TODO
+}
+
 Hnd VM::allocTmp(int size) {
   Hnd hnd = tmp_ptr_;
   tmp_ptr_ += size;
@@ -24,14 +28,14 @@ void VM::expireTmp(Val) {
   // TODO(improvement): Free up memory
 }
 
-Hnd VM::mapFn(ast::Fn* fn) {
-  // TODO: this
-  bug_unless(!fn_map_.contains(fn));
-  fn_map_[fn] = allocTmp(sizeof(fn));
-//  write()
+Hnd VM::mapFn(const FnRef& fn) {
+  if (fn_map_.contains(fn)) return fn_map_[fn];
+  fn_map_[fn] = allocTmp(sizeof(Hnd));
+  write(fn_map_[fn], Hnd(fns_.size()));
+  fns_.push_back(fn);
   return fn_map_[fn];
 }
 
-ast::Fn* VM::getFn(Hnd hnd) { return nullptr; }
+FnRef VM::getFn(Hnd hnd) { return fns_[ref<Hnd>(hnd)]; }
 
 }  // namespace memelang::exec
