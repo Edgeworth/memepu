@@ -150,6 +150,13 @@ FnRef Scope::maybeFindFn(const std::string& name) {
   return FnRef(fns_[name], INVALID_VAL, Mapping(e_));
 }
 
+FnRef Scope::findStructFn(const std::string& structName, const std::string& fnName) {
+  if (!structs_.contains(structName)) return INVALID_FNREF;
+  for (const auto& fn : structs_[structName]->fns)
+    if (fn->sig->tname->name == fnName) return FnRef(fn.get(), INVALID_VAL, Mapping(e_));
+  return INVALID_FNREF;
+}
+
 FnRef Scope::findImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
     const std::string& fn_name) {
   FnRef best_result(nullptr, ths, Mapping(e_));
