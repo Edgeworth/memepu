@@ -8,7 +8,7 @@ Operator overloading:
 return of binary operators add, sub, mul, div must be same type as left
 
 function resolution:
-first search for matching impl by implementing type. match using lowest distance. 
+first search for matching impl by implementing type. match using lowest distance.
 then tries to perform deduction for the function call
 todo: how to select intf when it depends on what the deduction for the fn call should be
 
@@ -25,6 +25,8 @@ signed and unsigned literals: 128, 128u => i32, u32
 ## Operators and precedence
 
 ## Expressions
+### Member access
+Member access can either be value.value or type.function.
 
 ## Scoping
 

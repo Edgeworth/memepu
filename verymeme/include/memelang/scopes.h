@@ -34,6 +34,7 @@ public:
   TypeId typeFromAst(ast::Type* ast_type);
 
   FnRef maybeFindFn(const std::string& name);
+  FnRef findStructFn(const std::string& structName, const std::string& fnName);
   FnRef findImplFn(Val ths, const std::vector<Val>& args, const std::string& impl_name,
       const std::string& fn_name);
 
