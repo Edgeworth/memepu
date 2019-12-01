@@ -178,8 +178,14 @@ Val Exec::runOp(ast::Op* op) {
     return runFn(fnref, params);
   }
   case ast::Expr::MEMBER_ACCESS: {
-    auto left = eval(op->left.get());
     auto access = g<ast::VarRef>(op->right.get());  // Right side must be a varref.
+    // Left side must either be a type or an evaluated value.
+    if (typeid(*op->left.get()) == typeid(ast::Type)) {
+      // In this case we are calling a static member function.
+      return Val(
+          vm_.mapFn(s_.findStructFn(g<ast::Type>(op->left)->name, access->name)), INVALID_TYPEID);
+    }
+    auto left = eval(op->left.get());
 
     break;
   }
