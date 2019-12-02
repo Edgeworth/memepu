@@ -21,8 +21,8 @@ struct string {
   len: u32;
 
   static fn new(s: *u8) string {
-    len = strlen(s);
-    data = malloc<u8>(len);
+    len := strlen(s);
+    data := malloc<u8>(len);
     memcpy(data, s, len);
     ret {data: data, len: len};
   }

@@ -86,11 +86,18 @@ std::unique_ptr<Node> ExprParser::parse() {
     case Tok::INT_LIT: ec.addExpr(std::make_unique<IntLit>(c_)); break;
     case Tok::CHAR_LIT: ec.addExpr(std::make_unique<CharLit>(c_)); break;
     case Tok::STR_LIT: ec.addExpr(std::make_unique<StrLit>(c_)); break;
-    case Tok::ASTERISK:
-      if (auto type = Type::tryParseType(c_)) {
-        ec.addExpr(std::move(type));
-        break;
+    case Tok::ASTERISK: {
+      // Only try to parse as a type if we can't finish here; means that this asterisk
+      // should be part of the type. If we can finish, then including the asterisk in
+      // the type will put two complete expressions next to each-other.
+      // e.g. count * fn(a) vs count * *fn(a).
+      if (!ec.canFinish()) {
+        if (auto type = Type::tryParseType(c_)) {
+          ec.addExpr(std::move(type));
+          break;
+        }
       }
+    }
       // fallthrough
     default:
       ec.addOp(tok->type);

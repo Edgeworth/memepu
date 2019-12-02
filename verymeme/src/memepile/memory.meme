@@ -1,5 +1,5 @@
 fn malloc<T>(count: u32) *T {
-  // TODO
+  ret *T(_malloc(count * sizeof(T)));
 }
 
 fn memcpy<T>(dst: *T, src: *T, count: u32) {

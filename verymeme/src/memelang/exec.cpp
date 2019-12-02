@@ -36,6 +36,7 @@ Exec::Exec(ast::Module* m) : m_(m), s_(this), vm_(this) {}
 void Exec::run() {
   fprintf(stderr, "===BEGIN PROGRAM===\n");
   const auto& fnref = s_.maybeFindFn("main");
+  if (!fnref.fn) error("no main function to execute");
   s_.pushScope(nullptr);
   runFn(fnref, {});
   s_.popScope();
@@ -61,7 +62,7 @@ Val Exec::runFn(const FnRef& fnref, const std::vector<Val>& params) {
 }
 
 Val Exec::runBuiltinFn(ast::Op* n) {
-  const std::string& name = g<ast::VarRef>(n->left)->name;
+  const std::string& name = g<ast::Type>(n->left)->name;
   auto& args = g<ast::FnCallArgs>(n->right)->args;
   if (name == "printf") {
     if (args.empty()) error("printf requires at least 1 argument");
@@ -93,6 +94,12 @@ Val Exec::runBuiltinFn(ast::Op* n) {
     auto ret = Val(vm_.allocTmp(s_.get(s_.u32_t).size()), s_.u32_t);
     vm_.write(ret.hnd, uint32_t(s_.get(val.type).size()));
     return ret;
+  } else if (name == "_malloc") {
+    if (args.size() != 1) error("_malloc requires 1 argument");
+    auto val = eval(args[0].get());
+    if (val.type != s_.u32_t) error("_malloc requires u32 argument");
+    TypeId u8_ptr_t = s_.addType(Type(U8, false, {{.ptr = true}}, this));
+    return Val(vm_.allocTmp(vm_.ref<uint32_t>(val.hnd)), u8_ptr_t);
   } else
     error("unknown builtin function " + name);
   return INVALID_VAL;
@@ -158,15 +165,17 @@ Val Exec::runOp(ast::Op* op) {
     // Type constructor / conversion
     if (typeid(*op->left) == typeid(ast::Type)) {
       TypeId type = s_.typeFromAst(g<ast::Type>(op->left));
-      if (args->args.size() != 1)
-        error("conversion must have 1 arg");  // TODO: arbitrary conversions?
-      Val val = eval(args->args[0].get());
-      Val res(vm_.allocTmp(s_.get(type).size()), type);
-      invokeBuiltin(val, [this, &res](auto val_v) {
-        invokeBuiltin(
-            res, [this, &val_v, &res](auto res_v) { vm_.write(res.hnd, decltype(res_v)(val_v)); });
-      });
-      return res;
+      if (s_.get(type).isBuiltin()) {
+        if (args->args.size() != 1)
+          error("conversion must have 1 arg");  // TODO: arbitrary conversions?
+        Val val = eval(args->args[0].get());
+        Val res(vm_.allocTmp(s_.get(type).size()), type);
+        invokeBuiltin(val, [this, &res](auto val_v) {
+          invokeBuiltin(res,
+              [this, &val_v, &res](auto res_v) { vm_.write(res.hnd, decltype(res_v)(val_v)); });
+        });
+        return res;
+      }
     }
 
     const auto& fnref = getFnRefFromNode(op->left.get());
@@ -178,12 +187,12 @@ Val Exec::runOp(ast::Op* op) {
     return runFn(fnref, params);
   }
   case ast::Expr::MEMBER_ACCESS: {
-    auto access = g<ast::VarRef>(op->right.get());  // Right side must be a varref.
     // Left side must either be a type or an evaluated value.
-    if (typeid(*op->left.get()) == typeid(ast::Type)) {
+    if (typeid(*op->left) == typeid(ast::Type)) {
+      auto strct = g<ast::Type>(op->left);
+      auto access = g<ast::Type>(op->right);
       // In this case we are calling a static member function.
-      return Val(
-          vm_.mapFn(s_.findStructFn(g<ast::Type>(op->left)->name, access->name)), INVALID_TYPEID);
+      return Val(vm_.mapFn(s_.findStructFn(strct->name, access->name)), INVALID_TYPEID);
     }
     auto left = eval(op->left.get());
 
@@ -266,7 +275,8 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
 }
 
 FnRef Exec::getFnRefFromNode(ast::Node* n) {
-  if (typeid(*n) == typeid(ast::VarRef)) return s_.maybeFindFn(g<ast::VarRef>(n)->name);
+  // TODO: need to make sure mapping is propagated - maybeFindFn needs to use the params.
+  if (typeid(*n) == typeid(ast::Type)) return s_.maybeFindFn(g<ast::Type>(n)->name);
   auto res = eval(n);
   return vm_.getFn(res.hnd);
 }
