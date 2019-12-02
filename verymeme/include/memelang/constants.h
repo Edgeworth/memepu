@@ -19,6 +19,7 @@ inline const char* U64 = "u64";
 inline const char* F32 = "f32";
 inline const char* F64 = "f64";
 
+inline const char* BUILTIN_FNS[] = {"printf", "readf", "_malloc", "sizeof"};
 inline const char* BUILTIN_TYPES[] = {BOOL, I8, I16, I32, I64, U8, U16, U32, U64, F32, F64};
 const std::map<std::string, int> BUILTIN_SIZE = {{BOOL, 1}, {I8, 1}, {I16, 2}, {I32, 4}, {I64, 8},
     {U8, 1}, {U16, 2}, {U32, 4}, {U64, 8}, {F32, 4}, {F64, 8}};

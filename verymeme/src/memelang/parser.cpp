@@ -37,11 +37,12 @@ std::string Parser::astToString() {
 void Parser::collectTypeIdents() {
   std::unordered_set<std::string> type_idents;
   type_idents.insert(std::begin(BUILTIN_TYPES), std::end(BUILTIN_TYPES));
+  type_idents.insert(std::begin(BUILTIN_FNS), std::end(BUILTIN_FNS));
 
   // Collect type idents for everything in the module.
   for (const auto& ctx : c_) {
     while (ctx->hasTok()) {
-      if (ctx->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM})) {
+      if (ctx->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM, Tok::FN})) {
         ctx->consumeTok();
         // Next token should be the ident.
         type_idents.insert(ctx->consumeTok()->str_val);

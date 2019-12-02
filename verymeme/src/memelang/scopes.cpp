@@ -147,6 +147,7 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
 
 FnRef Scope::maybeFindFn(const std::string& name) {
   if (!fns_.contains(name)) return INVALID_FNREF;
+  // TODO: compute mapping
   return FnRef(fns_[name], INVALID_VAL, Mapping(e_));
 }
 
