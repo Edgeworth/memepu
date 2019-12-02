@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "memelang/constants.h"
 #include "memelang/ast.h"
 #include "verymeme/macros.h"
 
@@ -58,6 +59,7 @@ public:
   int size() const;
   bool isPtr() const { return !quals.empty() && quals.back().ptr; }
   bool isArray() const { return !quals.empty() && quals.back().array != 0; }
+  bool isBuiltin() const { return BUILTIN_SIZE.find(name) != BUILTIN_SIZE.end(); }
   std::string toString() const;
   // E.g. *T => **u8. if parameter is *u8.
   void addInnerType(TypeId id);

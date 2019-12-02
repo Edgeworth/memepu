@@ -28,7 +28,6 @@ const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
     {"while", Tok::WHILE}, {"ret", Tok::RET}, {"static", Tok::STATIC}, {"const", Tok::CONST},
     // Specially handled tokens:
     {"asm", Tok::ASM}, {"//", Tok::COMMENT}, {"\"", Tok::DQUOTE}, {"'", Tok::QUOTE}};
-
 }  // namespace
 
 std::string Tok::desc() const {
