@@ -36,7 +36,7 @@ private:
 
     bool operator!=(const State& s) const;
     State transitionTo(const State& s) const;
-    std::string toString() const;
+    std::string str() const;
   };
 
   // TODO(improvement): Needs to support more than 2 layers.

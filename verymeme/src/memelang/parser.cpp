@@ -30,7 +30,7 @@ std::string Parser::astToString() {
   verify_expr(root_ != nullptr, "null root");
   std::string s;
   root_->visit(
-      [&s](Node& n, int depth) { s += std::string(uint64_t(depth), ' ') + n.toString() + "\n"; });
+      [&s](Node& n, int depth) { s += std::string(uint64_t(depth), ' ') + n.str() + "\n"; });
   return s;
 }
 

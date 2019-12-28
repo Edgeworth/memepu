@@ -22,7 +22,7 @@ struct Point {
   Point operator-() const;
 
   int64_t cross(const Point& p) const;
-  std::string toString() const { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
+  std::string str() const { return "(" + std::to_string(x) + ", " + std::to_string(y) + ")"; }
   COMPARISON(Point, x, y);
 };
 
@@ -72,7 +72,7 @@ struct Rect {
 
   bool empty() const { return width() == 0 && height() == 0; }
 
-  std::string toString() const {
+  std::string str() const {
     return "{" + std::to_string(left) + ", " + std::to_string(top) + ", " + std::to_string(right) +
         ", " + std::to_string(bottom) + "}";
   }
