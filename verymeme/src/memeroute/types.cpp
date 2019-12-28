@@ -51,7 +51,7 @@ std::ostream& operator<<(std::ostream& str, const Side& o) {
 
 std::istream& operator>>(std::istream& str, Side& o) { return inputEnum(str, o, SIDE_MAPPING); }
 
-std::string Net::PinId::toString() const { return component_id + "-" + pin_id; }
+std::string Net::PinId::str() const { return component_id + "-" + pin_id; }
 
 Rect Shape::bbox() const {
   switch (type) {
@@ -110,8 +110,7 @@ void Pcb::verifyAndSetup() {
     for (const auto& pin_id : kv.second.pin_ids) {
       findPinForPinId(pin_id);  // Make sure the component and pin exists.
 
-      verify_expr(
-          pin_ids.count(pin_id) == 0, "pin '%s' in multiple nets", pin_id.toString().c_str());
+      verify_expr(pin_ids.count(pin_id) == 0, "pin '%s' in multiple nets", pin_id.str().c_str());
       pin_ids.insert(pin_id);
     }
   }
@@ -151,8 +150,7 @@ const Pin& Pcb::findPinForPinId(const Net::PinId& pin_id) const {
   auto image_iter = images.find(component.image_id);
   verify_expr(image_iter != images.end(), "unknown image '%s'", component.image_id.c_str());
   auto pin_iter = image_iter->second.pins.find(pin_id.pin_id);
-  verify_expr(
-      pin_iter != image_iter->second.pins.end(), "unknown pin '%s'", pin_id.toString().c_str());
+  verify_expr(pin_iter != image_iter->second.pins.end(), "unknown pin '%s'", pin_id.str().c_str());
   return pin_iter->second;
 }
 

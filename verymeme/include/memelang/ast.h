@@ -17,7 +17,7 @@ namespace memelang::ast {
   type(const type&) = delete; \
   type& operator=(const type&) = delete; \
   ~type() = default; \
-  std::string toString() const override; \
+  std::string str() const override; \
   std::vector<Node*> children() override
 
 struct Node {
@@ -27,7 +27,7 @@ struct Node {
   explicit Node(Parser::Ctx& c) : tok(*c.curTok()) {}
   virtual ~Node() = default;
 
-  virtual std::string toString() const = 0;
+  virtual std::string str() const = 0;
   virtual std::vector<Node*> children() = 0;
   void visit(const std::function<void(Node&, int)>& f, int depth = 0) {
     f(*this, depth);
@@ -39,6 +39,7 @@ struct Node {
 struct Typelist : public Node {
   std::vector<std::string> names;
 
+  // Adds the wildcard names in this Typelist to the current context, to resolve types vs vars.
   void pushTypes(Parser::Ctx& c);
   void popTypes(Parser::Ctx& c);
 

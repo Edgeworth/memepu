@@ -12,15 +12,12 @@
 
 namespace memelang::exec {
 
-// TODO: Don't hardcode these.
-const inline std::unordered_set<std::string> WILDCARD_HACK = {"T", "I", "A", "B"};
-
 class Exec {
 public:
   explicit Exec(ast::Module* m);
 
   void run();
-  void error(const std::string& msg) const;
+  [[noreturn]] void error(const std::string& msg) const;
   Val eval(ast::Node* n);
   VM& vm() { return vm_; }
   Scope& scope() { return s_; }
@@ -34,7 +31,7 @@ private:
   Scope s_;
   VM vm_;
 
-  Val runFn(const FnRef& fnref, const std::vector<Val>& params);
+  Val runFn(TypeId fnid, const std::vector<Val>& params, Val ths);
   Val runBuiltinFn(ast::Op* n);
   Val runStmtBlk(ast::StmtBlk* blk);
   Val runStmt(ast::Node* stmt);
@@ -46,7 +43,6 @@ private:
   Val runOp(ast::Op* op);
 
   Val valFromAstType(ast::Type* type);
-  FnRef getFnRefFromNode(ast::Node* n);
 
   // Value operations:
   Val assign(Val l, Val r);
@@ -90,9 +86,9 @@ private:
       return std::invoke(op, vm_.ref<float>(v.hnd));
     else if (v.type == s_.f64_t)
       return std::invoke(op, vm_.ref<double>(v.hnd));
-    else if (s_.get(v.type).isPtr())
+    else if (s_.t(v.type).isPtr())
       return std::invoke(op, vm_.ref<Hnd>(v.hnd));
-    error("not builtin: " + s_.get(v.type).toString());
+    error("not builtin: " + s_.t(v.type).str());
     return std::invoke(op, vm_.ref<int8_t>(v.hnd));
   }
 
@@ -102,14 +98,15 @@ private:
         r.hnd == INVALID_HND)
       error("attempt operate on value with undeducible type");
 
-    if (auto fnref = s_.findImplFn(l, {addr(r)}, "Comparable", op_name); fnref.fn)
-      return runFn(fnref, {addr(r)});
-    if (auto fnref = s_.findImplFn(l, {addr(r)}, "BinaryArith", op_name); fnref.fn)
-      return runFn(fnref, {addr(r)});
+    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "Comparable", op_name); fnid != INVALID_TYPEID)
+      return runFn(fnid, {addr(r)}, l);
+    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "BinaryArith", op_name);
+        fnid != INVALID_TYPEID)
+      return runFn(fnid, {addr(r)}, l);
 
     if (l.type != r.type)
-      error("no binop intf defined and types don't match: " + s_.get(l.type).toString() + " " +
-          s_.get(r.type).toString());
+      error("no binop intf defined and types don't match: " + s_.t(l.type).str() + " " +
+          s_.t(r.type).str());
 
     return invokeBuiltin(l, [this, &default_op, &r, &type_if_builtin](auto lt) {
       auto res = default_op(lt, vm_.ref<decltype(lt)>(r.hnd));
@@ -124,7 +121,8 @@ private:
     if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND)
       error("attempt operate on value with undeducible type");
 
-    if (auto fnref = s_.findImplFn(l, {}, "UnaryArith", op_name); fnref.fn) return runFn(fnref, {});
+    if (auto fnid = s_.findImplFn(l.type, {}, "UnaryArith", op_name); fnid != INVALID_TYPEID)
+      return runFn(fnid, {}, l);
     return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
   }
 };

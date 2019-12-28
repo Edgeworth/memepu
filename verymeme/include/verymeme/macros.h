@@ -2,6 +2,7 @@
 #define VERYMEME_MACROS_H
 
 #include <cstdio>
+#include <cstdlib>
 #include <string>
 
 // Crash so AFL can find bugs.

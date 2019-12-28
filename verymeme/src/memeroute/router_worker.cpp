@@ -29,8 +29,8 @@ bool RouterWorker::State::operator!=(const RouterWorker::State& s) const {
   return p != s.p || layer != s.layer;
 }
 
-std::string RouterWorker::State::toString() const {
-  return "{" + p.toString() + ", " + std::to_string(layer) + "}";
+std::string RouterWorker::State::str() const {
+  return "{" + p.str() + ", " + std::to_string(layer) + "}";
 }
 
 RouterWorker::RouterWorker(Pcb pcb) : pcb_(std::move(pcb)) {}
@@ -45,7 +45,7 @@ Point RouterWorker::convertWorldToGrid(const Point& p) const {
   const Point grid_point = {(p.x - boundary_.left) * GRID_COLS / boundary_.width(),
       (p.y - boundary_.top) * GRID_ROWS / boundary_.height()};
   verify_expr(grid_point.x < GRID_COLS && grid_point.y < GRID_ROWS,
-      "grid point %s from %s out of range", grid_point.toString().c_str(), p.toString().c_str());
+      "grid point %s from %s out of range", grid_point.str().c_str(), p.str().c_str());
   return grid_point;
 }
 
