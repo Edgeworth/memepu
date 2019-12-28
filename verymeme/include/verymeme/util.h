@@ -22,4 +22,17 @@ std::vector<T> reverse(std::vector<T>&& vec) {
   return reversed;
 }
 
+template <typename T>
+struct AutoReset {
+  explicit AutoReset(T callable) : callable_(callable) {}
+  ~AutoReset() { callable_(); }
+  AutoReset(const AutoReset<T>&) = delete;
+  AutoReset(AutoReset<T>&&) = delete;
+  AutoReset<T>& operator=(AutoReset<T>&&) = delete;
+  AutoReset<T>& operator=(const AutoReset<T>&) = delete;
+
+private:
+  T callable_;
+};
+
 #endif  // VERYMEME_UTIL_H

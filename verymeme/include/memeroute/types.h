@@ -69,7 +69,7 @@ struct Net {
     std::string component_id;
     std::string pin_id;
 
-    std::string toString() const;
+    std::string str() const;
     COMPARISON(PinId, component_id, pin_id);
   };
 

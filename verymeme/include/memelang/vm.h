@@ -18,8 +18,6 @@ public:
   void popStack();
   Hnd allocTmp(int size);
   void expireTmp(Val tmp);
-  Hnd mapFn(const FnRef& fn);
-  FnRef getFn(Hnd hnd);
 
   // T should be packed.
   template <typename T>
@@ -47,8 +45,6 @@ private:
   int tmp_ptr_{TMP_OFFSET};
   Exec* exec_;
   std::vector<uint8_t> mem_;
-  std::map<FnRef, Hnd> fn_map_;
-  std::vector<FnRef> fns_;
 };
 
 }  // namespace memelang::exec

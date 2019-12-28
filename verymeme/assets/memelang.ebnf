@@ -48,9 +48,10 @@ expr : expr '[' expr ']'  // Array subscript
 // Type related:
 typebound : IDENT ; // TODO: Support complex type bounds?
 typelist : '<' typebound (',' typebound)* '>' ;
+// Identifies a kind of type (e.g. struct name, intf name, enum name, function name).
 typename : IDENT typelist? ;
-// Identifiers either a concrete type or a set of types that should be deduced to a single type.
 qualifier : 'const'? '*' | '[' int_lit ']';
+// Identifies a concrete type.
 type : qualifier* 'const'? (IDENT ('<' type (',' type)* '>')?);
 
 // Function related:
