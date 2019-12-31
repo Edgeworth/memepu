@@ -45,9 +45,11 @@ void Type::resolveWildcardWith(TypeId concrete) {
 }
 
 std::string Mapping::str() const {
-  return join(
-      map.begin(), map.end(),
-      [this](auto& kv) { return kv.first.str() + ":" + e_->scope().t(kv.second).str(); }, ", ");
+  auto f = [this](auto& kv) {
+    if (kv.second == INVALID_TYPEID) return "unmapped " + kv.first.str();
+    return kv.first.str() + ":" + e_->scope().t(kv.second).str();
+  };
+  return join(map.begin(), map.end(), f, ", ");
 }
 
 void Mapping::merge(const Mapping& m) {

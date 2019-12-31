@@ -3,7 +3,7 @@ fn malloc<T>(count: u32) *T {
 }
 
 fn memcpy<T>(dst: *T, src: *T, count: u32) {
-  for i := 0; i < count; ++i {
+  for i := 0u; i < count; ++i {
     dst[i] = src[i];
   }
 }
