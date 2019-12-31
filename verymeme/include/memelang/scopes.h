@@ -27,9 +27,11 @@ public:
     nestScopeUnsafe();
     return AutoReset([this]() { unnestScopeUnsafe(); });
   }
-
+  void mergeMapping(const Mapping& m);
+  void unmergeMapping(const Mapping& m);
   Val findVar(const std::string& name) const;
   Val declareVar(const std::string& name, Val v);
+  std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
 
   TypeId addType(const Type& t);
   const Type& t(TypeId id);
@@ -56,8 +58,6 @@ private:
   void popScopeUnsafe();
   void nestScopeUnsafe();  // Nests scope inside current scope-space.
   void unnestScopeUnsafe();
-  void mergeMapping(const Mapping& m);
-  void unmergeMapping(const Mapping& m);
   TypeInfo typeInfoForTypename(const std::string& name);
   Val maybeFindVar(const std::string& name) const;
   TypeId addBuiltinStorage(const std::string& name);

@@ -41,12 +41,15 @@ void Exec::run() {
 Val Exec::runFn(TypeId fnid, const std::vector<Val>& params, Val ths) {
   const auto& fninfo = std::get<FnInfo>(s_.t(fnid).info);
   auto* fn = fninfo.fn;
-  Mapping fn_map = typelistToMapping(fn->sig->tname->tlist.get(), nullptr);
-  fn_map.merge(s_.t(fnid).m);
-  auto autoscope = s_.autoScope(fn, fn_map);
+  Mapping existing_map = typelistToMapping(fn->sig->tname->tlist.get(), nullptr);
+  existing_map.merge(s_.t(fnid).m);
+  auto autoscope = s_.autoScope(fn, existing_map);
+  // Resolve any other wildcards + check types.
+  const auto& [can_do, fn_mapping] = s_.maybeMappingForFnCall(fn, params);
+  if (!can_do) error("cannot call function " + fn->str());
+  s_.mergeMapping(fn_mapping);
   printf("calling fn: %s\n", s_.t(fnid).str().c_str());
 
-  if (fn->sig->params.size() != params.size()) error("wrong number of arguments");
   if (ths.hnd != INVALID_HND) s_.declareVar("this", addr(ths));
   for (int i = 0; i < int(fn->sig->params.size()); ++i) {
     auto& decl = fn->sig->params[i];

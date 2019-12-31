@@ -183,30 +183,14 @@ TypeId Scope::findImplFn(TypeId this_type, const std::vector<Val>& args,
     auto autoscope = autoScope(ast_impl, typelistToMapping(ast_impl->tlist.get(), e_));
     TypeId impl = typeFromAst(ast_impl->type.get());
     auto [impler_dist, impler_mapping] = dist(this_type, impl, e_);
-    printf("IMPLER DIST: %d, mapping: %s, impl: \n", impler_dist, impler_mapping.str().c_str());
     if (impler_dist >= best_impler_dist) continue;
 
     for (const auto& fn : ast_impl->fns) {
       if (fn->sig->tname->name != fn_name) continue;  // wrong name
-      if (fn->sig->params.size() != args.size()) continue;  // wrong number of params
-
-      bool can_do = true;
-      Mapping fn_mapping(e_);
-      for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
-        TypeId param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
-        TypeId arg_type = args[param_idx].type;
-        auto [param_dist, param_mapping] = dist(arg_type, param_type, e_);
-        if (param_dist == Mapping::NOT_SUBTYPE) {
-          can_do = false;
-          break;
-        }
-        mergeMapping(param_mapping);
-        fn_mapping.merge(param_mapping);
-      }
-      unmergeMapping(fn_mapping);
+      const auto& [can_do, fn_mapping] = maybeMappingForFnCall(fn.get(), args);
       if (!can_do) continue;
       best_fn = fn.get();
-      best_fn_mapping = std::move(fn_mapping);
+      best_fn_mapping = fn_mapping;
       best_impler = impler_mapping;
       best_impler_dist = impler_dist;
     }
@@ -237,6 +221,25 @@ TypeId Scope::addBuiltinStorage(const std::string& name) {
   BuiltinStorageInfo info(name);
   builtin_storage_.emplace(name, info);
   return addType(Type(info, e_));
+}
+
+std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args) {
+  Mapping fn_mapping(e_);
+  if (fn->sig->params.size() != args.size()) return {false, fn_mapping};  // wrong number of params
+
+  for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
+    TypeId param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
+    TypeId arg_type = args[param_idx].type;
+    auto [param_dist, param_mapping] = dist(arg_type, param_type, e_);
+    if (param_dist == Mapping::NOT_SUBTYPE) {
+      unmergeMapping(fn_mapping);
+      return {false, fn_mapping};
+    }
+    mergeMapping(param_mapping);
+    fn_mapping.merge(param_mapping);
+  }
+  unmergeMapping(fn_mapping);
+  return {true, fn_mapping};
 }
 
 }  // namespace memelang::exec
