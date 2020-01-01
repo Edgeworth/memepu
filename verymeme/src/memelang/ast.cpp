@@ -66,24 +66,37 @@ StrLit::StrLit(Parser::Ctx& c) : Node(c) { val = c.consumeTok(Tok::STR_LIT)->str
 std::string StrLit::str() const { return (fmt("StrLit(%s)") % val).str(); }
 std::vector<Node*> StrLit::children() { return {}; }
 
+VarRef::VarRef(Parser::Ctx& c) : Node(c) { name = c.consumeTok(Tok::IDENT)->str_val; }
+std::string VarRef::str() const { return (fmt("VarRef(%s)") % name).str(); }
+std::vector<Node*> VarRef::children() { return {}; }
+
+CompoundLitFragment::CompoundLitFragment(Parser::Ctx& c) : Node(c) {
+  if (c.hasTok(Tok::IDENT) && c.hasTok(Tok::COLON, 1)) {
+    name = std::make_unique<VarRef>(c);
+    c.consumeTok(Tok::COLON);
+  }
+  lit = ExprParser(c).parse();
+}
+std::string CompoundLitFragment::str() const { return "CompoundLitFragment"; }
+std::vector<Node*> CompoundLitFragment::children() { return flattenChildren(name, lit); }
+
 CompoundLit::CompoundLit(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LBRACE);
+  const bool is_named_initializer = c.hasTok(Tok::IDENT) && c.hasTok(Tok::COLON, 1);
   while (!c.hasTok(Tok::RBRACE)) {
-    lits.emplace_back(ExprParser(c).parse());
+    frags.emplace_back(std::make_unique<CompoundLitFragment>(c));
+    if (is_named_initializer && !frags.back()->name) c.error("missing initializer name");
+    if (!is_named_initializer && frags.back()->name) c.error("extraneous initializer name");
     if (!c.maybeConsumeTok(Tok::COMMA)) break;
   }
   c.consumeTok(Tok::RBRACE);
 }
 std::string CompoundLit::str() const { return "CompoundLit"; }
-std::vector<Node*> CompoundLit::children() { return {}; }
+std::vector<Node*> CompoundLit::children() { return flattenChildren(frags); }
 
 Op::Op(Parser::Ctx& c) : Node(c) {}
 std::string Op::str() const { return (fmt("Op(%s)") % type).str(); }
 std::vector<Node*> Op::children() { return flattenChildren(left, right); }
-
-VarRef::VarRef(Parser::Ctx& c) : Node(c) { name = c.consumeTok(Tok::IDENT)->str_val; }
-std::string VarRef::str() const { return (fmt("VarRef(%s)") % name).str(); }
-std::vector<Node*> VarRef::children() { return {}; }
 
 Typelist::Typelist(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LANGLE);
@@ -373,6 +386,7 @@ std::string Impl::str() const { return "Impl"; }
 std::vector<Node*> Impl::children() { return flattenChildren(tlist, tintf, type, fns); }
 
 File::File(Parser::Ctx& c) : Node(c) {
+  filename = c.cts->filename();
   while (c.hasTok()) {
     switch (c.curTok()->type) {
     case Tok::FN: fns.emplace_back(std::make_unique<Fn>(c)); break;
@@ -384,7 +398,7 @@ File::File(Parser::Ctx& c) : Node(c) {
     }
   }
 }
-std::string File::str() const { return "File"; }
+std::string File::str() const { return "File(" + filename + ")"; }
 std::vector<Node*> File::children() { return flattenChildren(fns, enums, intfs, structs, impls); }
 
 Module::Module(const std::vector<std::unique_ptr<Parser::Ctx>>& ctxs) {
