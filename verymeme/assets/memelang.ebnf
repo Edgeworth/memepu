@@ -55,7 +55,7 @@ qualifier : 'const'? '*' | '[' int_lit ']';
 type : qualifier* 'const'? (IDENT ('<' type (',' type)* '>')?);
 
 // Function related:
-fn_decl : fn_signature ';' ; // Only allowed in interfaces.
+fn_decl : fn_signature ';' ;  // Only allowed in interfaces.
 fn_signature : 'fn' typename
     ('()' | '(' fn_var_decl (',' fn_var_decl)* ')') type? ;
 fn_call : type ('()' | '(' expr (',' expr)* ')') ;

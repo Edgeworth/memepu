@@ -71,6 +71,7 @@ std::unique_ptr<Node> ExprParser::parse() {
       }
       break;
     case Tok::LBRACE:
+      // finish if we can - handles e.g. if a == b { vs if a == {} {
       if (ec.canFinish()) return ec.finish();
       ec.addExpr(std::make_unique<CompoundLit>(c_));
       break;

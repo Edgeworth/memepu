@@ -161,6 +161,7 @@ Val Exec::runOp(ast::Op* op) {
     const auto& type = s_.t(tid);
 
     // Type constructor / conversion
+    // TODO: Move this to compound literal.
     if (std::holds_alternative<BuiltinStorageInfo>(type.info)) {
       if (args->args.size() != 1)
         error("conversion must have 1 arg");  // TODO: arbitrary conversions?
@@ -253,6 +254,7 @@ Val Exec::eval(ast::Node* n) {
   }
   if (typeid(*n) == typeid(ast::CompoundLit)) {
     // TODO: fix this.
+    // TODO: change to T {...} notation?
     return INVALID_VAL;
   }
   if (typeid(*n) == typeid(ast::Type)) return Val(INVALID_HND, s_.typeFromAst(g<ast::Type>(n)));
