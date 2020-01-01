@@ -138,16 +138,23 @@ struct StrLit : public Node {
   DEFNLT(StrLit, val);
 };
 
-struct CompoundLit : public Node {
-  std::vector<std::unique_ptr<Node>> lits;
-
-  DEFNLT(CompoundLit, lits);
-};
-
 struct VarRef : public Node {
   std::string name;
 
   DEFNLT(VarRef, name);
+};
+
+struct CompoundLitFragment : public Node {
+  std::unique_ptr<VarRef> name;  // Maybe be null.
+  std::unique_ptr<Node> lit;
+
+  DEFNLT(CompoundLitFragment, name, lit);
+};
+
+struct CompoundLit : public Node {
+  std::vector<std::unique_ptr<CompoundLitFragment>> frags;
+
+  DEFNLT(CompoundLit, frags);
 };
 
 struct Op : public Node {
@@ -281,6 +288,7 @@ struct File : public Node {
   std::vector<std::unique_ptr<Intf>> intfs;
   std::vector<std::unique_ptr<Struct>> structs;
   std::vector<std::unique_ptr<Impl>> impls;
+  std::string filename;
 
   DEFNLT(File, fns, enums, intfs, structs, impls);
 };
