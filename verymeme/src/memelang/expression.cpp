@@ -41,7 +41,7 @@ const std::unordered_set<Expr> RIGHT_ASSOC = {Expr::PREFIX_INC, Expr::PREFIX_DEC
 
 std::unique_ptr<Node> ExprParser::parse() {
   // A top level expression must end either with semicolon (statement), comma (struct/array
-  // literal, function call), closing paren (function call, for, if, match), closing brace
+  // literal, function call), closing paren (function call), closing brace
   // (compound literal), closing square bracket (array index).
   ExprCtx ec(c_);
   while (!c_.hasTok({Tok::SEMICOLON, Tok::COMMA, Tok::RPAREN, Tok::RBRACE, Tok::RSQUARE})) {
@@ -66,8 +66,8 @@ std::unique_ptr<Node> ExprParser::parse() {
         c_.consumeTok();
         ec.addExpr(parse());
         c_.consumeTok(Tok::RSQUARE);
-      } else {  // Otherwise it's the start of a type.
-        ec.addExpr(std::make_unique<Type>(c_));
+      } else {  // Otherwise it's the start of a type or compound literal.
+        ec.pushTypeOrCompoundLit(std::make_unique<Type>(c_));
       }
       break;
     case Tok::LBRACE:
@@ -76,11 +76,11 @@ std::unique_ptr<Node> ExprParser::parse() {
       ec.addExpr(std::make_unique<CompoundLit>(c_));
       break;
     case Tok::IDENT:
-      if (c_.type_idents.count(tok->str_val)) {  // If it's the name of a type, take type.
-        ec.addExpr(std::make_unique<Type>(c_));
-      } else {
+      // If it's the name of a type, take type or compound literal.
+      // TODO: Need to handle namespaces etc?
+      if (c_.type_idents.count(tok->str_val)) ec.pushTypeOrCompoundLit(std::make_unique<Type>(c_));
+      else
         ec.addExpr(std::make_unique<VarRef>(c_));
-      }
       break;
     case Tok::BOOL_LIT: ec.addExpr(std::make_unique<BoolLit>(c_)); break;
     case Tok::UINT_LIT:  // fallthrough
@@ -94,7 +94,8 @@ std::unique_ptr<Node> ExprParser::parse() {
       // e.g. count * fn(a) vs count * *fn(a).
       if (!ec.canFinish()) {
         if (auto type = Type::tryParseType(c_)) {
-          ec.addExpr(std::move(type));
+          printf("pushing type: %s\n", type->str().c_str());
+          ec.pushTypeOrCompoundLit(std::move(type));
           break;
         }
       }
@@ -115,6 +116,13 @@ std::unique_ptr<Node> ExprParser::ExprCtx::finish() {
   return std::move(s_[0]);
 }
 
+void ExprParser::ExprCtx::pushTypeOrCompoundLit(std::unique_ptr<Type> type) {
+  // If there is a brace following, it's a compound literal - otherwise, just a type.
+  if (c_.hasTok(Tok::LBRACE)) addExpr(std::make_unique<CompoundLit>(c_, std::move(type)));
+  else
+    addExpr(std::move(type));
+}
+
 void ExprParser::ExprCtx::addOp(Tok::Type type) {
   if (canFinish() && POSTFIX_UNOP_MAP.count(type)) {
     processStack(PRECEDENCE[POSTFIX_UNOP_MAP[type]]);
@@ -131,7 +139,7 @@ void ExprParser::ExprCtx::addOp(Tok::Type type) {
     ops_.emplace_back(std::make_unique<Op>(c_));
     ops_.back()->type = PREFIX_UNOP_MAP[type];
   } else {
-    c_.error("unexpected token");
+    c_.error("unexpected token: ");
   }
 }
 

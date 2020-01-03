@@ -1,6 +1,7 @@
 // status: ok
+// input: ''
 // output: 'F(1)=1\nF(2)=2\nF(3)=3\nF(4)=5\n'
-
+// returns: 0
 fn fib(n: i32) i32 {
   if (n == 1 || n == 0) {
     ret 1;
@@ -8,8 +9,9 @@ fn fib(n: i32) i32 {
   ret fib(n - 1) + fib(n - 2);
 }
 
-fn main() i32 {
+fn main() i8 {
   for i := 1; i < 5; ++i {
     printf("F(%d)=%d\n", i, fib(i));
   }
+  ret 0;
 }

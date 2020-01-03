@@ -92,7 +92,7 @@ CompoundLit::CompoundLit(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::RBRACE);
 }
 std::string CompoundLit::str() const { return "CompoundLit"; }
-std::vector<Node*> CompoundLit::children() { return flattenChildren(frags); }
+std::vector<Node*> CompoundLit::children() { return flattenChildren(type, frags); }
 
 Op::Op(Parser::Ctx& c) : Node(c) {}
 std::string Op::str() const { return (fmt("Op(%s)") % type).str(); }
@@ -150,14 +150,9 @@ std::string Qualifier::str() const {
 }
 std::vector<Node*> Qualifier::children() { return flattenChildren(array); }
 
-Type::Type(Parser::Ctx& c) : Node(c) {
-  while (c.hasTok({Tok::ASTERISK, Tok::LSQUARE}) ||
-      (c.hasTok(Tok::CONST) && c.hasTok(Tok::ASTERISK, 1)))
-    quals.emplace_back(std::make_unique<Qualifier>(c));
-  cnst = c.maybeConsumeTok(Tok::CONST);
-
+UnqualifiedType::UnqualifiedType(Parser::Ctx& c) : Node(c) {
   name = c.consumeTok(Tok::IDENT)->str_val;
-  if (!c.type_idents.contains(name)) c.error("not typename: " + name);
+
   if (c.hasTok(Tok::LANGLE)) {
     c.consumeTok(Tok::LANGLE);
     while (c.curTok()->type != Tok::RANGLE) {
@@ -167,8 +162,31 @@ Type::Type(Parser::Ctx& c) : Node(c) {
     c.consumeTok(Tok::RANGLE);
   }
 }
-std::string Type::str() const { return (fmt("Type(%s%s)") % (cnst ? "const " : "") % name).str(); }
-std::vector<Node*> Type::children() { return flattenChildren(quals, params); }
+std::string UnqualifiedType::str() const { return (fmt("UnqualifiedType(%s)") % name).str(); }
+std::vector<Node*> UnqualifiedType::children() { return flattenChildren(params); }
+
+Type::Type(Parser::Ctx& c) : Node(c) {
+  while (c.hasTok({Tok::ASTERISK, Tok::LSQUARE}) ||
+      (c.hasTok(Tok::CONST) && c.hasTok(Tok::ASTERISK, 1)))
+    quals.emplace_back(std::make_unique<Qualifier>(c));
+  cnst = c.maybeConsumeTok(Tok::CONST);
+
+  std::string str_path = c.curTok()->str_val;
+  while (c.type_idents.contains(str_path)) {
+    c.maybeConsumeTok(Tok::DOT);
+    path.emplace_back(std::make_unique<UnqualifiedType>(c));
+    if (!c.hasTok(Tok::DOT) || !c.hasTok(Tok::IDENT, 1)) break;
+    str_path += '.';
+    str_path += c.peekTok(1)->str_val;
+  }
+  if (path.empty()) c.error("unknown type: " + str_path);
+}
+std::string Type::str() const {
+  const auto p = join(
+      path.begin(), path.end(), [](const auto& t) { return t->str(); }, ".");
+  return (fmt("Type(%s%s)") % (cnst ? "const " : "") % p).str();
+}
+std::vector<Node*> Type::children() { return flattenChildren(path, quals); }
 std::unique_ptr<Type> Type::tryParseType(Parser::Ctx& c) {
   Parser::Ctx c_cpy = c;
   try {
@@ -335,17 +353,19 @@ Enum::Enum(Parser::Ctx& c) : Node(c) {
 
   if (tname->tlist) tname->tlist->pushTypes(c);
   while (!c.hasTok(Tok::RBRACE)) {
-    if (c.hasTok(Tok::COMMA, 1)) untyped_enums.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
+    if (c.hasTok(Tok::COMMA, 1)) numbered_variants.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
     else
-      typed_enums.emplace_back(std::make_unique<VarDecl>(c));
+      data_variants.emplace_back(std::make_unique<VarDecl>(c));
     c.consumeTok(Tok::COMMA);
   }
   if (tname->tlist) tname->tlist->popTypes(c);
 
   c.consumeTok(Tok::RBRACE);
 }
-std::string Enum::str() const { return (fmt("Enum(%1% untyped)") % untyped_enums.size()).str(); }
-std::vector<Node*> Enum::children() { return flattenChildren(tname, typed_enums); }
+std::string Enum::str() const {
+  return (fmt("Enum(%1% numbered)") % numbered_variants.size()).str();
+}
+std::vector<Node*> Enum::children() { return flattenChildren(tname, data_variants); }
 
 Struct::Struct(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::STRUCT);
@@ -354,18 +374,15 @@ Struct::Struct(Parser::Ctx& c) : Node(c) {
 
   if (tname->tlist) tname->tlist->pushTypes(c);
   while (!c.hasTok(Tok::RBRACE)) {
-    if (c.hasTok({Tok::FN, Tok::STATIC})) fns.emplace_back(std::make_unique<Fn>(c));
-    else {
-      var_decls.emplace_back(std::make_unique<VarDecl>(c));
-      c.consumeTok(Tok::SEMICOLON);
-    }
+    var_decls.emplace_back(std::make_unique<VarDecl>(c));
+    c.consumeTok(Tok::COMMA);
   }
   if (tname->tlist) tname->tlist->popTypes(c);
 
   c.consumeTok(Tok::RBRACE);
 }
 std::string Struct::str() const { return "Struct"; }
-std::vector<Node*> Struct::children() { return flattenChildren(tname, var_decls, fns); }
+std::vector<Node*> Struct::children() { return flattenChildren(tname, var_decls); }
 
 Impl::Impl(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::IMPL);
@@ -373,13 +390,15 @@ Impl::Impl(Parser::Ctx& c) : Node(c) {
   if (tlist) tlist->pushTypes(c);
 
   tintf = std::make_unique<Type>(c);
-  c.consumeTok(Tok::FOR);
-  type = std::make_unique<Type>(c);
+  if (c.hasTok(Tok::FOR)) {
+    c.consumeTok(Tok::FOR);
+    type = std::make_unique<Type>(c);
+  } else {
+    std::swap(tintf, type);  // no interface, just struct implementation.
+  }
   c.consumeTok(Tok::LBRACE);
-
   while (!c.hasTok(Tok::RBRACE)) fns.emplace_back(std::make_unique<Fn>(c));
   if (tlist) tlist->popTypes(c);
-
   c.consumeTok(Tok::RBRACE);
 }
 std::string Impl::str() const { return "Impl"; }

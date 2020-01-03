@@ -20,6 +20,7 @@ private:
     explicit ExprCtx(Parser::Ctx& c) : c_(c) {}
 
     std::unique_ptr<Node> finish();
+    void pushTypeOrCompoundLit(std::unique_ptr<Type> type);
     void addExpr(std::unique_ptr<Node> e) { s_.emplace_back(std::move(e)); }
     void addOp(Tok::Type type);
     bool canFinish() const { return s_.size() - binop_count == 1; }

@@ -102,4 +102,9 @@ Mapping typelistToMapping(ast::Typelist* tlist, Exec* e) {
   return m;
 }
 
+std::string typepathToString(ast::Type* type) {
+  return join(
+      type->path.begin(), type->path.end(), [](const auto& t) { return t->name; }, ".");
+}
+
 }  // namespace memelang::exec

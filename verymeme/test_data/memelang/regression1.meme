@@ -1,0 +1,9 @@
+// status: compile_error
+// input: ''
+// output: ''
+// returns: 0
+struct Empty {}
+fn main() i8 {
+  e :=*Empty{};
+  ret 0;
+}

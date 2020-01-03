@@ -1,43 +1,45 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
 enum Result<T, E> {
   Ok: T,
-  Error: E,
+  Err: E,
 }
 
 fn trysomething(succeed: i8) Result<i8, bool> {
   if (succeed > 3) {
-    ret Ok(5);
+    ret Result.Ok{5};
   } else {
-    ret Err(false);
+    ret Result.Err{false};
   }
-  ret Ok(1);
+  ret Result.Ok{1};
 }
 
 fn main() i8 {
-  match (trysomething(4)) {
-    Ok(v) {
-      print("Got value");
-    } Err(e) {
-      print("Got error");
-    }
-  }
-  match (a) {
-    1 {}
-    2 {}
-    3 {print(5);}
-  }
-  match (test_enum) {
-    Test1 {}
-    Test2 {}
-    Test3(x) {print(x);}
+  match trysomething(4) {
+    Ok{v}: { print("Got value"); }
+    Err{e}: { print("Got error"); }
   }
   match a {
-    1 {}
-    2 {}
-    3 {print(5);}
+    1: {}
+    2: {}
+    3: { print(5); }
   }
   match test_enum {
-    Test1 {}
-    Test2 {}
-    Test3(x) {print(x);}
+    Test1: {}
+    Test2: {}
+    Test3{x}: { print(x); }
   }
+  match a {
+    1: {}
+    2: {}
+    3: { print(5); }
+  }
+  match test_enum {
+    Test1: {}
+    Test2: {}
+    Test3{x}: { print(x); }
+  }
+  ret 0;
 }

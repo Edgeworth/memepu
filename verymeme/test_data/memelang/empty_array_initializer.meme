@@ -1,0 +1,9 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+fn main() i8 {
+  array := [5]i8{};
+  array : [5]i8 = {};
+  ret 0;
+}

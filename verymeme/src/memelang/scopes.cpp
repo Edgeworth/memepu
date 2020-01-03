@@ -114,7 +114,7 @@ const Type& Scope::t(TypeId id) {
 }
 
 TypeId Scope::typeFromAst(ast::Type* ast_type) {
-  Type new_type(typeInfoForTypename(ast_type->name), ast_type->cnst, {}, Mapping(e_), e_);
+  Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, {}, Mapping(e_), e_);
 
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
@@ -143,11 +143,13 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
     // Allow ast type to specify fewer parameters than required - can deduce rest.
     // e.g. want to do memcpy(a, b, cnt) rather than memcpy<u8>(a, b, cnt).
     const auto wildcard_count = tname->tlist ? tname->tlist->names.size() : 0;
-    if (ast_type->params.size() > wildcard_count)
+    // TODO: Handle wildcards in all parts of type path.
+    const auto& params = ast_type->path.back()->params;
+    if (params.size() > wildcard_count)
       e_->error("bad number of type parameters for " + new_type.str());
     for (int i = 0; i < int(wildcard_count); ++i) {
       TypeId tid = INVALID_TYPEID;
-      if (i < int(ast_type->params.size())) tid = typeFromAst(ast_type->params[i].get());
+      if (i < int(params.size())) tid = typeFromAst(params[i].get());
       new_type.m.map[WildcardInfo(tname->tlist->names[i])] = tid;
     }
   }
@@ -161,13 +163,6 @@ TypeId Scope::maybeFindFn(const std::string& name) {
   return addType(Type(fns_.find(name)->second, e_));
 }
 
-TypeId Scope::findStructFn(const std::string& struct_name, const std::string& fn_name) {
-  if (!structs_.contains(struct_name)) return INVALID_TYPEID;
-  for (const auto& fn : structs_.find(struct_name)->second.st->fns)
-    if (fn->sig->tname->name == fn_name) return addType(Type(FnInfo(fn.get()), e_));
-  return INVALID_TYPEID;
-}
-
 TypeId Scope::findImplFn(TypeId this_type, const std::vector<Val>& args,
     const std::string& intf_name, const std::string& fn_name) {
   ast::Fn* best_fn = nullptr;
@@ -177,7 +172,8 @@ TypeId Scope::findImplFn(TypeId this_type, const std::vector<Val>& args,
   // For each implementation, check the distance between types.
   // Select the implementation which has the closest distance that has a function that matches.
   for (const auto& ast_impl : impls_) {
-    if (ast_impl->tintf->name != intf_name) continue;
+    // TODO: Scope resolution?
+    if (typepathToString(ast_impl->tintf.get()) != intf_name) continue;
 
     // Set up mapping in this impl typename.
     auto autoscope = autoScope(ast_impl, typelistToMapping(ast_impl->tlist.get(), e_));
@@ -200,15 +196,16 @@ TypeId Scope::findImplFn(TypeId this_type, const std::vector<Val>& args,
   return addType(Type(FnInfo(best_fn), false, {}, best_fn_mapping, e_));
 }
 
-TypeInfo Scope::typeInfoForTypename(const std::string& name) {
-  if (scopes_.back().m.map.contains(WildcardInfo(name))) return WildcardInfo(name);
-  if (builtin_storage_.contains(name)) return builtin_storage_.find(name)->second;
-  if (builtin_fns_.contains(name)) return builtin_fns_.find(name)->second;
-  if (fns_.contains(name)) return fns_.find(name)->second;
-  if (enums_.contains(name)) return enums_.find(name)->second;
-  if (intfs_.contains(name)) return intfs_.find(name)->second;
-  if (structs_.contains(name)) return structs_.find(name)->second;
-  e_->error("unknown typename " + name);
+TypeInfo Scope::typeInfoForAstType(ast::Type* type) {
+  const auto path = typepathToString(type);
+  if (scopes_.back().m.map.contains(WildcardInfo(path))) return WildcardInfo(path);
+  if (builtin_storage_.contains(path)) return builtin_storage_.find(path)->second;
+  if (builtin_fns_.contains(path)) return builtin_fns_.find(path)->second;
+  if (fns_.contains(path)) return fns_.find(path)->second;
+  if (enums_.contains(path)) return enums_.find(path)->second;
+  if (intfs_.contains(path)) return intfs_.find(path)->second;
+  if (structs_.contains(path)) return structs_.find(path)->second;
+  e_->error("unknown typename " + path);
 }
 
 std::string Scope::stacktrace() const {

@@ -172,6 +172,8 @@ private:
 
 std::pair<int, Mapping> dist(TypeId aid, TypeId bid, Exec* e);
 Mapping typelistToMapping(ast::Typelist* tlist, Exec* e);
+// Converts the path in |type| to a string - this doesn't include template parameters.
+std::string typepathToString(ast::Type* type);
 
 }  // namespace memelang::exec
 

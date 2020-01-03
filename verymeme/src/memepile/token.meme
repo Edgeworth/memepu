@@ -1,8 +1,9 @@
-
 struct FileContents {
-  filename: const string;
-  data: const string;
+  filename: const string,
+  data: const string,
+}
 
+impl FileContents {
   static fn new(filename: *string, data: *string) FileContents {
     ret {
       filename: *filename,
@@ -11,6 +12,4 @@ struct FileContents {
   }
 }
 
-struct Tokeniser {
-
-}
+struct Tokeniser {}

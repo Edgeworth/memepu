@@ -17,6 +17,9 @@ namespace, struct, enum, function, impl all have scope
 scope has wildcard mapping. mapping can be to invalid type (no mapping yet)
 
 
+typename: for defining a type
+type: for instantiating a type defined by a typename
+
 ## Built-in types
 i8, i16, i32, i64, u8, u16, u32, u64, bool, f32, f64
 

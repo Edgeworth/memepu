@@ -1,12 +1,18 @@
-enum Unit {}
+// status: ok
+// input: ''
+// output: ''
+// returns: 4
 enum TestEnum {
   Test1, Test2, Test3: A,
 }
 enum Result<R, E> {
   Ok: R, Err: E,
 }
-fn test<T>(a: const *T) Unit {}
-struct A { v: i8; z: bool; static fn new() Unit {} }
+fn test<T>(a: const *T) {}
+struct A { v: i8, z: bool, }
+impl A {
+  static fn new() {}
+}
 intf Intf {}
 intf IntfT<T> {}
 impl Intf for A {}
@@ -16,11 +22,11 @@ fn main() i8 {
   asm {
     lhu r30, 3
   }
-  st : A = {};
-  test_enum := Test3(st);
+  st : A = A{};
+  test_enum := TestEnum.Test3{st};
   st.v = 0x3;
-  e := i8(0);
-  a := i8(02);
+  e := i8{0};
+  a := i8{02};
   d : [40]i8 = {};
   d[--st.v] = 1;
   d[st.v++] = 1;
@@ -29,14 +35,14 @@ fn main() i8 {
     test<i8>(&e);
   } else if (true) {} else {
     match a {
-      1 {}
-      2 {}
-      3 {print(5);}
+      1: {}
+      2: {}
+      3: { print(5); }
     }
     match test_enum {
-      Test1 {}
-      Test2 {}
-      Test3(x) {print(x);}
+      Test1: {}
+      Test2: {}
+      Test3{x}: { print(x); }
     }
   }
   b : const = -(34 + 32) * (55 / 3) - -4;
@@ -48,7 +54,7 @@ fn main() i8 {
   '\"';
   "b\"";
   5.5;
-  for f := i8(0); f < 10; f++ {
+  for f := i8{0}; f < 10; f++ {
     ret 4;
   }
   // Big comment "\" ''
