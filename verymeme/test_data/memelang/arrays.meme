@@ -1,5 +1,7 @@
-enum Unit {}
-
+// status: ok
+// input: ''
+// output: ''
+// returns: 4
 fn takesbyvalue(arr: [42]i8) i8 {
   ret arr[0];
 }
@@ -13,7 +15,7 @@ fn takesbyptr(arr: *i8) i8 {
 }
 
 fn main() i8 {
-  arr : [42]i8 =&{0, 1, 2, 3};
+  arr := [42]i8{0, 1, 2, 3};
   takesbyvalue(arr);
   takesbyref(&arr);
   takesbyptr(&arr);

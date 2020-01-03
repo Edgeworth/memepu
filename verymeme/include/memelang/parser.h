@@ -21,6 +21,7 @@ public:
 
     explicit Ctx(const FileContents* cts);
 
+    const Tok* peekTok(int peek = 0) const;
     const Tok* curTok() const { return curTok(std::vector<Tok::Type>{}); }
     const Tok* curTok(const std::vector<Tok::Type>& ts) const;
 

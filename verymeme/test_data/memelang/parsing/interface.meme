@@ -1,4 +1,0 @@
-intf Meme<T> {
-    fn testFunc() i8;
-    fn testFunc2(a: *T) i16;
-}

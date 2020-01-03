@@ -61,7 +61,7 @@ Val Exec::runFn(TypeId fnid, const std::vector<Val>& params, Val ths) {
 }
 
 Val Exec::runBuiltinFn(ast::Op* n) {
-  const std::string& name = g<ast::Type>(n->left)->name;
+  const std::string& name = g<ast::Type>(n->left)->path.back()->name;
   auto& args = g<ast::FnCallArgs>(n->right)->args;
   TypeId u8_ptr_t =
       s_.addType(Type(s_.t(s_.u8_t).info, false, {{.ptr = true}}, Mapping(this), this));
@@ -181,13 +181,6 @@ Val Exec::runOp(ast::Op* op) {
     }
   }
   case ast::Expr::MEMBER_ACCESS: {
-    // Left side must either be a type or an evaluated value.
-    if (typeid(*op->left) == typeid(ast::Type)) {
-      auto strct = g<ast::Type>(op->left);
-      auto access = g<ast::Type>(op->right);
-      // In this case we are calling a static member function.
-      return Val(INVALID_HND, s_.findStructFn(strct->name, access->name));
-    }
     auto left = eval(op->left.get());
     // TODO: finish
     break;

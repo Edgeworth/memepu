@@ -1,15 +1,5 @@
 ### TODO soon
 
-インタプリタを改善しながらmemelangでコンパイラをかく
-[1] 2019/10/07(月)～2019/10/13(日) 字句解析 + stdlib
-[2] 2019/10/14(月)～2019/10/20(日) 構文解析
-[3] 2019/10/21(月)～2019/10/27(日) 構文解析
-[4] 2019/10/28(月)～2019/11/03(日) 意味解析
-[5] 2019/11/04(月)～2019/11/10(日) 意味解析
-[6] 2019/11/11(月)～2019/11/17(日) 中間表現
-[7] 2019/11/18(月)～2019/11/24(日) 中間表現
-[8] 2019/11/25(月)～2019/11/28(木) 最適化
-
 switch to multiple data busses for optimisation?
 
 remove const from memelang, add mut; make default const.
@@ -43,7 +33,6 @@ remove const from memelang, add mut; make default const.
 - Finish DSN parsing. Better displaying.
 
 #### memelang
-- Finish parser, write interpreter
 
 ### TODO later
 #### memecad

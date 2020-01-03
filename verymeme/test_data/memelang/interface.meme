@@ -1,0 +1,9 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+intf Meme<T> {
+  fn testFunc() i8;
+  fn testFunc2(a: *T) i16;
+}
+fn main() i8 { ret 0; }

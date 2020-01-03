@@ -1,0 +1,18 @@
+// status: compile_error
+// input: ''
+// output: ''
+// returns: 0
+fn bubblesort<T>(v: const* vector<*T>) {}
+struct vector<T> {}
+impl<T> vector<T> {
+  fn push(v: i32) {}
+  static fn new() vector<T> { ret {}; }
+}
+fn main() i32 {
+  v := vector<i8>.new();
+  v.push(1);
+  bubblesort(&v);
+  d := vector<i16>{};
+  d * *&vector<i16>{};
+  ret 0;
+}
