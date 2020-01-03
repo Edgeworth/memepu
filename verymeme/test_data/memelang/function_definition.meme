@@ -1,0 +1,17 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+struct vector<T> {}
+
+fn bubblesort<T>(v: const* vector<*T>) {
+  for i := 0u; i < v.size(); i++ {
+    for j := 0u; j < v.size() - 1; j++ {
+      if v[j] > v[j + 1] {
+        swap(v[j], v[j + 1]);
+      }
+    }
+  }
+}
+
+fn main() i8 { ret 0; }

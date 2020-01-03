@@ -17,9 +17,11 @@ fn print_str(s: *string) {
 }
 
 struct string {
-  data: *u8;
-  len: u32;
+  data: *u8,
+  len: u32,
+}
 
+impl string {
   static fn new(s: *u8) string {
     len := strlen(s);
     data := malloc<u8>(len);

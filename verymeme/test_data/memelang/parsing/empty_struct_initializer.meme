@@ -1,4 +1,0 @@
-struct Empty {}
-fn main() i8 {
-  e : Empty = {};
-}

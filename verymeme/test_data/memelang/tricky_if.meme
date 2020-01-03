@@ -1,0 +1,14 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+enum Test {
+  Test1: u32, Test2: u32,
+}
+fn main() i8 {
+  a := Test.Test1{2};
+  if a == Test.Test1{3} {
+    a = Test.Test1{3};
+  }
+  ret 0;
+}

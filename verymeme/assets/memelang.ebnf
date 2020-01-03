@@ -4,18 +4,18 @@ file : (intf_defn | struct_defn | fn_defn | enum_defn | impl_defn)* EOF;
 // Top level constructs:
 intf_defn : 'intf' typename intf_blk ;
 struct_defn : 'struct' typename struct_blk ;
-fn_defn : fn_signature stmt_blk ;
 enum_defn : 'enum' typename enum_blk ;
-impl_defn : 'impl' typelist? type 'for' type impl_blk ;
+impl_defn : 'impl' typelist? type ('for' type)? impl_blk ;
+fn_defn : fn_signature stmt_blk ;
 
 // Block related:
 stmt_blk : LBRACE stmt* RBRACE ;
-struct_blk : LBRACE ('static'? fn_defn | member_var_decl ';')* RBRACE ;
-impl_blk : LBRACE fn_defn* RBRACE ;
+struct_blk : LBRACE (member_var_decl ',')* RBRACE ;
+impl_blk : LBRACE ('static'? fn_defn)* RBRACE ;
 intf_blk : LBRACE fn_decl* RBRACE ;
 enum_blk : LBRACE ((IDENT | member_var_decl) ',')* RBRACE ;  // No type means no associated data.
 // TODO: Ranges / OR / values / tuples / destructuring?
-match_blk : LBRACE ((IDENT ('(' IDENT ')')? | literal) stmt_blk)* RBRACE ;
+match_blk : LBRACE ((IDENT | literal) ':' stmt_blk)* RBRACE ;
 
 // Statement related:
 stmt : expr ';' | stmt_var_defn | stmt_ret | stmt_for | stmt_if | stmt_while | stmt_match | ASM ;
@@ -32,7 +32,7 @@ stmt_var_defn : IDENT ':=' expr ';' | IDENT ':' ('const' | type) '=' expr ';' ;
 
 // Expression related:
 literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | compound_lit;
-compound_lit : LBRACE RBRACE | LBRACE ((IDENT ':' expr ',')* (IDENT ':' expr)  | (expr ',')* expr) RBRACE ;
+compound_lit : type? LBRACE RBRACE | type? LBRACE ((IDENT ':' expr ',')* (IDENT ':' expr)  | (expr ',')* expr) RBRACE ;
 expr : expr '[' expr ']'  // Array subscript
     | fn_call  // Function call
     | expr '.' (fn_call | IDENT)  // Member access
@@ -50,9 +50,10 @@ typebound : IDENT ; // TODO: Support complex type bounds?
 typelist : '<' typebound (',' typebound)* '>' ;
 // Identifies a kind of type (e.g. struct name, intf name, enum name, function name).
 typename : IDENT typelist? ;
-qualifier : 'const'? '*' | '[' int_lit ']';
-// Identifies a concrete type.
-type : qualifier* 'const'? (IDENT ('<' type (',' type)* '>')?);
+qualifier : 'const'? '*' | '[' expr ']';  // expr must be constant at compile time
+unqualified_type : (IDENT ('<' type (',' type)* '>')?) ;
+// Identifies a concrete type - can include type accessors (e.g. namespace, enum).
+type : qualifier* 'const'? ((unqualified_type '.')* unqualified_type) ;
 
 // Function related:
 fn_decl : fn_signature ';' ;  // Only allowed in interfaces.

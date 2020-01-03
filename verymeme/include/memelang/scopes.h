@@ -38,7 +38,6 @@ public:
   TypeId typeFromAst(ast::Type* ast_type);
 
   TypeId maybeFindFn(const std::string& name);
-  TypeId findStructFn(const std::string& struct_name, const std::string& fn_name);
   TypeId findImplFn(TypeId this_type, const std::vector<Val>& args, const std::string& intf_name,
       const std::string& fn_name);
 
@@ -58,7 +57,7 @@ private:
   void popScopeUnsafe();
   void nestScopeUnsafe();  // Nests scope inside current scope-space.
   void unnestScopeUnsafe();
-  TypeInfo typeInfoForTypename(const std::string& name);
+  TypeInfo typeInfoForAstType(ast::Type* type);
   Val maybeFindVar(const std::string& name) const;
   TypeId addBuiltinStorage(const std::string& name);
 

@@ -1,0 +1,10 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+struct Empty {}
+fn main() i8 {
+  e := Empty{};
+  e : Empty = Empty{};
+  ret 0;
+}

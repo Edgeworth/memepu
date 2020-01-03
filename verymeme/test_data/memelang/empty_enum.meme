@@ -1,0 +1,6 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+enum Unit {}
+fn main() i8 { ret 0; }

@@ -1,0 +1,10 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+fn print_cstr(s: *u8) {
+  while *s != 0 {
+    printf("%c", *(s++));
+  }
+}
+fn main() i8 { ret 0; }

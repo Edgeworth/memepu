@@ -1,4 +1,0 @@
-// status: compile_error
-struct Empty {}
-fn main() i8 {// e := Empty^{});
-}

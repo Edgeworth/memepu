@@ -1,0 +1,28 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+fn main() i8 {
+  val := i8{2};
+  ptr : *i8 = &val;
+  pptr : **i8 = &ptr;
+
+  cval := i8{2};
+  cptr_ci8 : const* const i8 = &cval;
+  cptr_cptr_ci8 : const* const* const i8 = &cptr_ci8;
+
+  array_cptr_ci8 : [42] const* const i8 = [42]const* const i8{};
+  array_cptr_ci8_deduce1 := [42]const* const i8{};
+  array_cptr_ci8_deduce2 : [42] const* const i8 = {};
+  cptr_array_ci8 : const* [42] const i8 = *[42]i8{0};
+  cptr_array_ci8_deduce1 := *[42]i8{0};
+  cptr_array_ci8_deduce2 : const* [42] const i8 = {};
+
+  multidim_array : [40][30]i8 = [40][30]i8{};
+  multidim_array_deduce1 := [40][30]i8{};
+  multidim_array_deduce2 : [40][30]i8 = {};
+  cmultidim_array : [40][30]const i8 = [40][30]const i8{};
+  cmultidim_array_deduce1 := [40][30]const i8{};
+  cmultidim_array_deduce2 : [40][30]const i8 = {};
+  ret 0;
+}

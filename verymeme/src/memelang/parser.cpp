@@ -42,15 +42,32 @@ void Parser::collectTypeIdents() {
   // Collect type idents for everything in the module.
   for (const auto& ctx : c_) {
     while (ctx->hasTok()) {
+      const bool wasEnum = ctx->hasTok(Tok::ENUM);
       if (ctx->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM, Tok::FN})) {
         ctx->consumeTok();
         // Next token should be the ident.
-        type_idents.insert(ctx->consumeTok()->str_val);
+        // TODO: Handle namespaces?
+        const std::string type_ident = ctx->consumeTok()->str_val;
+        type_idents.insert(type_ident);
+
+        // Collect enum idents.
+        if (wasEnum) {
+          // Can't parse using regular Enum code because it may reference another enum type.
+          while (!ctx->hasTok(Tok::LBRACE)) ctx->consumeTok();
+          ctx->consumeTok(Tok::LBRACE);
+          while (!ctx->hasTok(Tok::RBRACE)) {
+            // Collect all enum variants. These are all types - numbered variants are treated
+            // as types.
+            type_idents.insert(type_ident + "." + ctx->consumeTok(Tok::IDENT)->str_val);
+            while (!ctx->hasTok(Tok::COMMA)) ctx->consumeTok(); // TODO: WRONG
+            ctx->consumeTok(Tok::COMMA);
+          }
+        }
       } else {
         ctx->consumeTok();
       }
     }
-    ctx->reset();
+    ctx->reset();  // Go back to the beginning for actual parsing.
   }
 
   for (const auto& ctx : c_) ctx->type_idents = type_idents;
@@ -60,6 +77,11 @@ Parser::Ctx::Ctx(const FileContents* contents) : cts(contents) {
   Tokeniser tokeniser(cts);
   for (const auto& tok : tokeniser.tokenise())
     if (tok.type != Tok::COMMENT) toks_.push_back(tok);
+}
+
+const Tok* Parser::Ctx::peekTok(int peek) const {
+  if (!hasTok(std::vector<Tok::Type>{}, peek)) error("unexpected end of file");
+  return &toks_[idx_ + peek];
 }
 
 const Tok* Parser::Ctx::curTok(const std::vector<Tok::Type>& ts) const {

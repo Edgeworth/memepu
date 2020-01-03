@@ -1,6 +1,8 @@
 // status: ok
+// input: ''
 // output: 'F(1)=1\nF(2)=2\nF(3)=3\nF(4)=5\n'
-fn main() i32 {
+// returns: 0
+fn main() i8 {
   a := 1;
   b := 1;
   tmp := 0;
@@ -10,4 +12,5 @@ fn main() i32 {
     a = tmp;
     printf("F(%d)=%d\n", i, a);
   }
+  ret 0;
 }

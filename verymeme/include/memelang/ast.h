@@ -61,15 +61,23 @@ struct Qualifier : public Node {
   DEFNLT(Qualifier, array, cnst, ptr);
 };
 
-struct Type : public Node {
+struct Type;
+
+struct UnqualifiedType : public Node {
   std::string name;
-  std::vector<std::unique_ptr<Qualifier>> quals;
   std::vector<std::unique_ptr<Type>> params;
+
+  DEFNLT(UnqualifiedType, name, params);
+};
+
+struct Type : public Node {
+  std::vector<std::unique_ptr<UnqualifiedType>> path;
+  std::vector<std::unique_ptr<Qualifier>> quals;
   bool cnst = false;
 
   static std::unique_ptr<Type> tryParseType(Parser::Ctx& c);
 
-  DEFNLT(Type, name, quals, params, cnst);
+  DEFNLT(Type, path, quals, cnst);
 };
 
 // Expression related:
@@ -145,14 +153,17 @@ struct VarRef : public Node {
 };
 
 struct CompoundLitFragment : public Node {
-  std::unique_ptr<VarRef> name;  // Maybe be null.
+  std::unique_ptr<VarRef> name;  // Optional.
   std::unique_ptr<Node> lit;
 
   DEFNLT(CompoundLitFragment, name, lit);
 };
 
 struct CompoundLit : public Node {
+  std::unique_ptr<Type> type;  // Optional.
   std::vector<std::unique_ptr<CompoundLitFragment>> frags;
+
+  CompoundLit(Parser::Ctx& c, std::unique_ptr<Type> t) : CompoundLit(c) { type = std::move(t); }
 
   DEFNLT(CompoundLit, frags);
 };
@@ -259,18 +270,17 @@ struct Intf : public Node {
 
 struct Enum : public Node {
   std::unique_ptr<Typename> tname;
-  std::vector<std::unique_ptr<VarDecl>> typed_enums;
-  std::vector<std::string> untyped_enums;
+  std::vector<std::unique_ptr<VarDecl>> data_variants;
+  std::vector<std::string> numbered_variants;
 
-  DEFNLT(Enum, tname, typed_enums, untyped_enums);
+  DEFNLT(Enum, tname, data_variants, numbered_variants);
 };
 
 struct Struct : public Node {
   std::unique_ptr<Typename> tname;
   std::vector<std::unique_ptr<VarDecl>> var_decls;
-  std::vector<std::unique_ptr<Fn>> fns;
 
-  DEFNLT(Struct, tname, var_decls, fns);
+  DEFNLT(Struct, tname, var_decls);
 };
 
 struct Impl : public Node {
