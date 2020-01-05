@@ -25,26 +25,6 @@ stmt_while : 'while' expr stmt_blk ;
 stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
 stmt_match : 'match' expr match_blk ;
 
-// Variable related:
-member_var_decl : IDENT ':' type;
-fn_var_decl : IDENT ':' type;
-stmt_var_defn : IDENT ':=' expr ';' | IDENT ':' ('const' | type) '=' expr ';' ;
-
-// Expression related:
-literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | compound_lit;
-compound_lit : type? LBRACE RBRACE | type? LBRACE ((IDENT ':' expr ',')* (IDENT ':' expr)  | (expr ',')* expr) RBRACE ;
-expr : expr '[' expr ']'  // Array subscript
-    | fn_call  // Function call
-    | expr '.' (fn_call | IDENT)  // Member access
-    | expr '?'  // Result syntactic sugar
-    | expr postfix_op  // Postfix operations
-    | <assoc=right> prefix_op expr  // Prefix operations
-    | expr binary_op expr  // Binary operations
-    | <assoc=right> expr '?' expr ':' expr  // Ternary expression
-    | <assoc=right> expr '=' expr  // Assignment
-    | '(' expr ')' // Grouped expression
-    | IDENT | type | literal ;
-
 // Type related:
 typebound : IDENT ; // TODO: Support complex type bounds?
 typelist : '<' typebound (',' typebound)* '>' ;
@@ -55,11 +35,33 @@ unqualified_type : (IDENT ('<' type (',' type)* '>')?) ;
 // Identifies a concrete type - can include type accessors (e.g. namespace, enum).
 type : qualifier* 'const'? ((unqualified_type '.')* unqualified_type) ;
 
+// Variable related:
+member_var_decl : IDENT ':' type;
+fn_var_decl : IDENT ':' type;
+stmt_var_defn : IDENT ':=' expr ';' | IDENT ':' ('const' | type) '=' expr ';' ;
+
 // Function related:
 fn_decl : fn_signature ';' ;  // Only allowed in interfaces.
 fn_signature : 'fn' typename
     ('()' | '(' fn_var_decl (',' fn_var_decl)* ')') type? ;
-fn_call : type ('()' | '(' expr (',' expr)* ')') ;
+
+// Expression related:
+literal : STR_LIT | CHAR_LIT | int_lit | float_lit | bool_lit | compound_lit;
+compound_lit : type? LBRACE RBRACE
+  | type? LBRACE ((IDENT ':' expr ',')* (IDENT ':' expr)
+  | (expr ',')* expr) RBRACE ;
+ref : IDENT | unqualified_type ;  // Reference can either be to a variable or to a typevalue.
+expr : expr '[' expr ']'  // Array subscript
+    | expr ('()' | '(' expr (',' expr)* ')')  // Function call
+    | expr '.' ref  // Member access
+    | expr '?'  // Result syntactic sugar
+    | expr postfix_op  // Postfix operations
+    | <assoc=right> prefix_op expr  // Prefix operations
+    | expr binary_op expr  // Binary operations
+    | <assoc=right> expr '?' expr ':' expr  // Ternary expression
+    | <assoc=right> expr '=' expr  // Assignment
+    | '(' expr ')' // Grouped expression
+    | ref | literal ;
 
 // Terminals:
 // Parse << and >> as two separate tokens to allow stuff like vector<vector<T>>.

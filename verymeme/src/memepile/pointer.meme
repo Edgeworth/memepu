@@ -1,6 +1,6 @@
 impl<T> BinaryArith<*T, u32> for *T {
   fn add(o: *u32) *T {
-    ret *this + *T(*o);
+    ret *this + *T{*o};
   }
 }
 
@@ -14,6 +14,6 @@ impl<T> UnaryArith<*T> for *T {
 
 impl<I, T> Indexable<I, *T> for *T {
   fn index(idx: *I) *T {
-    ret *this + *T(*idx * sizeof(**this));
+    ret *this + *T{*idx * sizeof(**this)};
   }
 }

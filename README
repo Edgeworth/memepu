@@ -19,14 +19,16 @@ Process for adding a new leaf module for verymeme:
 ### Fuzzing
 Build with:
 
-cmake -DUSE_AFL=yes -DCMAKE_BUILD_TYPE=Release verymeme
+export PFX=./
+
+cmake -DUSE_AFL=yes -DCMAKE_BUILD_TYPE=Release $PFX/verymeme
 AFL_SKIP_CPUFREQ=yes AFL_PRELOAD=/usr/local/lib/afl/libdislocator.so \
-  afl-fuzz -m 1024M -i verymeme/test_data/memelang/parsing -o memelang_fuzz \
-  -x verymeme/assets/afl/memelang.dict -- memelang @@
+  afl-fuzz -m 1024M -i $PFX/verymeme/test_data/memelang/parsing -o memelang_fuzz \
+  -x $PFX/verymeme/assets/afl/memelang.dict -- ./memelang @@
 
 Or for persistent mode:
-cmake -DUSE_AFL=clang -DCMAKE_BUILD_TYPE=Release verymeme
+cmake -DUSE_AFL=clang -DCMAKE_BUILD_TYPE=Release $PFX/verymeme
 
 AFL_SKIP_CPUFREQ=yes AFL_PRELOAD=/usr/local/lib/afl/libdislocator.so \
-  afl-fuzz -m 1024M -i verymeme/test_data/memelang/parsing -o memelang_fuzz \
-  -x verymeme/assets/afl/memelang.dict -- memelang
+  afl-fuzz -m 1024M -i $PFX/verymeme/test_data/memelang/parsing -o memelang_fuzz \
+  -x $PFX/verymeme/assets/afl/memelang.dict -- ./memelang
