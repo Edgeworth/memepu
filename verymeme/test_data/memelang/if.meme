@@ -1,0 +1,9 @@
+// status: ok
+// input: ''
+// output: ''
+// returns: 0
+fn main() i8 {
+  // Test that e parses as a ref properly (not trying to include template params past <).
+  if e < d[3] {}
+  ret 0;
+}

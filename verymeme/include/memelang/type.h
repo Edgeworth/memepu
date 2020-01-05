@@ -20,19 +20,21 @@ namespace memelang::exec {
 class Type;
 class Exec;
 using TypeId = int32_t;
-constexpr inline TypeId INVALID_TYPEID = -1;
 using Hnd = int32_t;
-constexpr inline Hnd INVALID_HND = -1;
+constexpr inline TypeId INVL_TID = -1;
+constexpr inline Hnd INVL_HND = -1;
 
 struct Val {
   Hnd hnd;  // Handle into VM memory. If invalid, this value represents a type.
   TypeId type;
 
   constexpr Val(Hnd hnd, TypeId type) : hnd(hnd), type(type) {}
-  constexpr Val() : hnd(INVALID_HND), type(INVALID_TYPEID) {}
+  constexpr Val() : hnd(INVL_HND), type(INVL_TID) {}
+
+  COMPARISON(Val, hnd, type);
 };
 
-constexpr inline Val INVALID_VAL = Val(INVALID_HND, INVALID_TYPEID);
+constexpr inline Val INVL_VAL = Val(INVL_HND, INVL_TID);
 
 class IntfInfo {
 public:

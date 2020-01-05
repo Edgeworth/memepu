@@ -20,6 +20,21 @@ scope has wildcard mapping. mapping can be to invalid type (no mapping yet)
 typename: for defining a type
 type: for instantiating a type defined by a typename
 
+some constructs have both types and values - e.g. enum variants are types, but numbered variants
+also may be treated as a value.
+defining functions defines a type for that function, but referencing it in a function call
+treats it as a value. but parsing e.g. malloc<u8> requires treating it as a type
+
+these two are 'typevalues' - types that are treated as values. Typevalues must be unqualified.
+
+ref: identifies a variable or a typevalue.
+
+difficult parsing cases:
+malloc<u8>();  // malloc<u8> is a bit like a type, but it's being used as a value
+value: malloc<u8> = {};  // can't use it like this
+e < d[3];  // this shouldn't try to ref e and think < starts template params
+*something;  // parsing depends on whether something is a valid type or not
+
 ## Built-in types
 i8, i16, i32, i64, u8, u16, u32, u64, bool, f32, f64
 
@@ -37,6 +52,7 @@ signed and unsigned literals: 128, 128u => i32, u32
 Member access can either be value.value or type.function.
 
 ## Scoping
+Not allowed to declare variables shadowing another variable.
 
 ## Pointers and arrays
 

@@ -35,32 +35,34 @@ std::string Parser::astToString() {
 }
 
 void Parser::collectTypeIdents() {
-  std::unordered_set<std::string> type_idents;
-  type_idents.insert(std::begin(BUILTIN_TYPES), std::end(BUILTIN_TYPES));
-  type_idents.insert(std::begin(BUILTIN_FNS), std::end(BUILTIN_FNS));
+  std::unordered_set<std::string> types;
+  types.insert(std::begin(BUILTIN_TYPES), std::end(BUILTIN_TYPES));
 
   // Collect type idents for everything in the module.
   for (const auto& ctx : c_) {
     while (ctx->hasTok()) {
       const bool wasEnum = ctx->hasTok(Tok::ENUM);
-      if (ctx->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM, Tok::FN})) {
+      // Functions are not treated as types by the parser - e.g. *somefn(x) means dereference
+      // the return value of the function, not a pointer type.
+      if (ctx->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM})) {
         ctx->consumeTok();
         // Next token should be the ident.
         // TODO: Handle namespaces?
         const std::string type_ident = ctx->consumeTok()->str_val;
-        type_idents.insert(type_ident);
+        types.insert(type_ident);
 
         // Collect enum idents.
         if (wasEnum) {
           // Can't parse using regular Enum code because it may reference another enum type.
           while (!ctx->hasTok(Tok::LBRACE)) ctx->consumeTok();
           ctx->consumeTok(Tok::LBRACE);
+          std::string prev_ident;
           while (!ctx->hasTok(Tok::RBRACE)) {
-            // Collect all enum variants. These are all types - numbered variants are treated
-            // as types.
-            type_idents.insert(type_ident + "." + ctx->consumeTok(Tok::IDENT)->str_val);
-            while (!ctx->hasTok(Tok::COMMA)) ctx->consumeTok(); // TODO: WRONG
-            ctx->consumeTok(Tok::COMMA);
+            // Collect all enum variants. Data variants are types, numbered variants are typevalues,
+            // so don't include them.
+            prev_ident = ctx->curTok()->str_val;
+            ctx->consumeTok();
+            if (ctx->hasTok(Tok::COLON)) types.insert(type_ident + "." + prev_ident);
           }
         }
       } else {
@@ -70,7 +72,7 @@ void Parser::collectTypeIdents() {
     ctx->reset();  // Go back to the beginning for actual parsing.
   }
 
-  for (const auto& ctx : c_) ctx->type_idents = type_idents;
+  for (const auto& ctx : c_) ctx->types = types;
 }
 
 Parser::Ctx::Ctx(const FileContents* contents) : cts(contents) {

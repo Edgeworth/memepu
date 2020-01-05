@@ -66,27 +66,24 @@ StrLit::StrLit(Parser::Ctx& c) : Node(c) { val = c.consumeTok(Tok::STR_LIT)->str
 std::string StrLit::str() const { return (fmt("StrLit(%s)") % val).str(); }
 std::vector<Node*> StrLit::children() { return {}; }
 
-VarRef::VarRef(Parser::Ctx& c) : Node(c) { name = c.consumeTok(Tok::IDENT)->str_val; }
-std::string VarRef::str() const { return (fmt("VarRef(%s)") % name).str(); }
-std::vector<Node*> VarRef::children() { return {}; }
-
 CompoundLitFragment::CompoundLitFragment(Parser::Ctx& c) : Node(c) {
   if (c.hasTok(Tok::IDENT) && c.hasTok(Tok::COLON, 1)) {
-    name = std::make_unique<VarRef>(c);
+    name = c.consumeTok()->str_val;
     c.consumeTok(Tok::COLON);
   }
   lit = ExprParser(c).parse();
 }
-std::string CompoundLitFragment::str() const { return "CompoundLitFragment"; }
-std::vector<Node*> CompoundLitFragment::children() { return flattenChildren(name, lit); }
+std::string CompoundLitFragment::str() const { return "CompoundLitFragment(" + name + ")"; }
+std::vector<Node*> CompoundLitFragment::children() { return flattenChildren(lit); }
 
 CompoundLit::CompoundLit(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::LBRACE);
   const bool is_named_initializer = c.hasTok(Tok::IDENT) && c.hasTok(Tok::COLON, 1);
   while (!c.hasTok(Tok::RBRACE)) {
     frags.emplace_back(std::make_unique<CompoundLitFragment>(c));
-    if (is_named_initializer && !frags.back()->name) c.error("missing initializer name");
-    if (!is_named_initializer && frags.back()->name) c.error("extraneous initializer name");
+    if (is_named_initializer && frags.back()->name.empty()) c.error("missing initializer name");
+    if (!is_named_initializer && !frags.back()->name.empty())
+      c.error("extraneous initializer name");
     if (!c.maybeConsumeTok(Tok::COMMA)) break;
   }
   c.consumeTok(Tok::RBRACE);
@@ -114,14 +111,14 @@ std::string Typelist::str() const { return "Typelist(" + join(names, ", ") + ")"
 std::vector<Node*> Typelist::children() { return {}; }
 void Typelist::pushTypes(Parser::Ctx& c) {
   for (const auto& name : names) {
-    if (c.type_idents.contains(name)) c.error("type " + name + " already defined");
-    c.type_idents.insert(name);
+    if (c.types.contains(name)) c.error("type " + name + " already defined");
+    c.types.insert(name);
   }
 }
 void Typelist::popTypes(Parser::Ctx& c) {
   for (const auto& name : names) {
-    bug_unless(c.type_idents.contains(name));
-    c.type_idents.erase(name);
+    bug_unless(c.types.contains(name));
+    c.types.erase(name);
   }
 }
 
@@ -150,20 +147,27 @@ std::string Qualifier::str() const {
 }
 std::vector<Node*> Qualifier::children() { return flattenChildren(array); }
 
-UnqualifiedType::UnqualifiedType(Parser::Ctx& c) : Node(c) {
+Ref::Ref(Parser::Ctx& c) : Node(c) {
   name = c.consumeTok(Tok::IDENT)->str_val;
 
+  // This might be just a less-than - so we might need to back-track.
+  Parser::Ctx c_cpy = c;
   if (c.hasTok(Tok::LANGLE)) {
     c.consumeTok(Tok::LANGLE);
     while (c.curTok()->type != Tok::RANGLE) {
-      params.emplace_back(std::make_unique<Type>(c));
+      auto type = Type::tryParseType(c);
+      if (type) params.emplace_back(std::move(type));
+      else {
+        c = c_cpy;
+        return;
+      }
       if (!c.maybeConsumeTok(Tok::COMMA)) break;
     }
     c.consumeTok(Tok::RANGLE);
   }
 }
-std::string UnqualifiedType::str() const { return (fmt("UnqualifiedType(%s)") % name).str(); }
-std::vector<Node*> UnqualifiedType::children() { return flattenChildren(params); }
+std::string Ref::str() const { return (fmt("Ref(%s)") % name).str(); }
+std::vector<Node*> Ref::children() { return flattenChildren(params); }
 
 Type::Type(Parser::Ctx& c) : Node(c) {
   while (c.hasTok({Tok::ASTERISK, Tok::LSQUARE}) ||
@@ -172,9 +176,10 @@ Type::Type(Parser::Ctx& c) : Node(c) {
   cnst = c.maybeConsumeTok(Tok::CONST);
 
   std::string str_path = c.curTok()->str_val;
-  while (c.type_idents.contains(str_path)) {
+  // TODO: Need to carry around some notion of scope?
+  while (c.types.contains(str_path)) {
     c.maybeConsumeTok(Tok::DOT);
-    path.emplace_back(std::make_unique<UnqualifiedType>(c));
+    path.emplace_back(std::make_unique<Ref>(c));
     if (!c.hasTok(Tok::DOT) || !c.hasTok(Tok::IDENT, 1)) break;
     str_path += '.';
     str_path += c.peekTok(1)->str_val;
@@ -199,13 +204,13 @@ std::unique_ptr<Type> Type::tryParseType(Parser::Ctx& c) {
 }
 
 VarDecl::VarDecl(Parser::Ctx& c) : Node(c) {
-  ref = std::make_unique<VarRef>(c);
+  name = c.consumeTok(Tok::IDENT)->str_val;
   c.consumeTok(Tok::COLON);
   // Requires type if it's not part of a definition.
   if (!c.hasTok(Tok::EQUAL)) type = std::make_unique<Type>(c);
 }
-std::string VarDecl::str() const { return "VarDecl"; }
-std::vector<Node*> VarDecl::children() { return flattenChildren(ref, type); }
+std::string VarDecl::str() const { return "VarDecl(" + name + ")"; }
+std::vector<Node*> VarDecl::children() { return flattenChildren(type); }
 
 FnCallArgs::FnCallArgs(Parser::Ctx& c) : Node(c) {
   while (c.curTok()->type != Tok::RPAREN) {

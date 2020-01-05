@@ -46,7 +46,7 @@ void Type::resolveWildcardWith(TypeId concrete) {
 
 std::string Mapping::str() const {
   auto f = [this](auto& kv) {
-    if (kv.second == INVALID_TYPEID) return "unmapped " + kv.first.str();
+    if (kv.second == INVL_TID) return "unmapped " + kv.first.str();
     return kv.first.str() + ":" + e_->scope().t(kv.second).str();
   };
   return join(map.begin(), map.end(), f, ", ");
@@ -56,7 +56,7 @@ void Mapping::merge(const Mapping& m) {
   for (const auto& [wildcard, type] : m.map) {
     auto iter = map.find(wildcard);
     // Allow overwriting unmapped wildcards.
-    if (iter != map.end() && iter->second != INVALID_TYPEID)
+    if (iter != map.end() && iter->second != INVL_TID)
       e_->error("duplicate template parameter " + wildcard.str());
     map[wildcard] = type;
   }
@@ -98,7 +98,7 @@ std::pair<int, Mapping> dist(TypeId aid, TypeId bid, Exec* e) {
 Mapping typelistToMapping(ast::Typelist* tlist, Exec* e) {
   Mapping m(e);
   if (!tlist) return m;
-  for (const auto& wildcard : tlist->names) m.map.emplace(WildcardInfo(wildcard), INVALID_TYPEID);
+  for (const auto& wildcard : tlist->names) m.map.emplace(WildcardInfo(wildcard), INVL_TID);
   return m;
 }
 

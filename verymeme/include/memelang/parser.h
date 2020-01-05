@@ -17,7 +17,7 @@ public:
   class Ctx {
   public:
     const FileContents* cts;
-    std::unordered_set<std::string> type_idents;
+    std::unordered_set<std::string> types;  // Regular types - may be qualified.
 
     explicit Ctx(const FileContents* cts);
 
