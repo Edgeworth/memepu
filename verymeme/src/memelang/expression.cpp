@@ -78,9 +78,9 @@ std::unique_ptr<Node> ExprParser::parse() {
     case Tok::IDENT:
       // If it's the name of a type, take type or compound literal.
       // TODO: Need to handle namespaces etc?
-      if (c_.type_idents.count(tok->str_val)) ec.pushTypeOrCompoundLit(std::make_unique<Type>(c_));
+      if (c_.types.count(tok->str_val)) ec.pushTypeOrCompoundLit(std::make_unique<Type>(c_));
       else
-        ec.addExpr(std::make_unique<VarRef>(c_));
+        ec.addExpr(std::make_unique<Ref>(c_));
       break;
     case Tok::BOOL_LIT: ec.addExpr(std::make_unique<BoolLit>(c_)); break;
     case Tok::UINT_LIT:  // fallthrough
@@ -94,7 +94,6 @@ std::unique_ptr<Node> ExprParser::parse() {
       // e.g. count * fn(a) vs count * *fn(a).
       if (!ec.canFinish()) {
         if (auto type = Type::tryParseType(c_)) {
-          printf("pushing type: %s\n", type->str().c_str());
           ec.pushTypeOrCompoundLit(std::move(type));
           break;
         }

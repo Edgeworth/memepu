@@ -18,7 +18,7 @@ public:
 
   void run();
   [[noreturn]] void error(const std::string& msg) const;
-  Val eval(ast::Node* n);
+  Val eval(ast::Node* n, TypeId typectx);
   VM& vm() { return vm_; }
   Scope& scope() { return s_; }
   ast::Module* module() { return m_; }
@@ -33,13 +33,13 @@ private:
 
   Val runFn(TypeId fnid, const std::vector<Val>& params, Val ths);
   Val runBuiltinFn(ast::Op* n);
-  Val runStmtBlk(ast::StmtBlk* blk);
-  Val runStmt(ast::Node* stmt);
+  Val runStmtBlk(ast::StmtBlk* blk, TypeId typectx);
+  Val runStmt(ast::Node* stmt, TypeId typectx);
   void runVarDefn(ast::VarDefn* defn);
   Val runVarDecl(ast::VarDecl* decl);
-  Val runFor(ast::For* fr);
-  Val runWhile(ast::While* wh);
-  Val runIf(ast::If* ifst);
+  Val runFor(ast::For* fr, TypeId typectx);
+  Val runWhile(ast::While* wh, TypeId typectx);
+  Val runIf(ast::If* ifst, TypeId typectx);
   Val runOp(ast::Op* op);
 
   Val valFromAstType(ast::Type* type);
@@ -62,7 +62,7 @@ private:
 
   template <typename F>
   auto invokeBuiltin(Val v, F op) {
-    if (v.type == INVALID_TYPEID || v.hnd == INVALID_HND)
+    if (v.type == INVL_TID || v.hnd == INVL_HND)
       error("attempt operate on value with undeducible type");
 
     if (v.type == s_.bool_t) return std::invoke(op, vm_.ref<bool>(v.hnd));
@@ -94,14 +94,12 @@ private:
 
   template <typename F>
   Val binop(Val l, Val r, TypeId type_if_builtin, const std::string& op_name, F default_op) {
-    if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND || r.type == INVALID_TYPEID ||
-        r.hnd == INVALID_HND)
+    if (l.type == INVL_TID || l.hnd == INVL_HND || r.type == INVL_TID || r.hnd == INVL_HND)
       error("attempt operate on value with undeducible type");
 
-    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "Comparable", op_name); fnid != INVALID_TYPEID)
+    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "Comparable", op_name); fnid != INVL_TID)
       return runFn(fnid, {addr(r)}, l);
-    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "BinaryArith", op_name);
-        fnid != INVALID_TYPEID)
+    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "BinaryArith", op_name); fnid != INVL_TID)
       return runFn(fnid, {addr(r)}, l);
 
     if (l.type != r.type)
@@ -118,10 +116,10 @@ private:
 
   template <typename F>
   Val unop(Val l, const std::string& op_name, F default_op) {
-    if (l.type == INVALID_TYPEID || l.hnd == INVALID_HND)
+    if (l.type == INVL_TID || l.hnd == INVL_HND)
       error("attempt operate on value with undeducible type");
 
-    if (auto fnid = s_.findImplFn(l.type, {}, "UnaryArith", op_name); fnid != INVALID_TYPEID)
+    if (auto fnid = s_.findImplFn(l.type, {}, "UnaryArith", op_name); fnid != INVL_TID)
       return runFn(fnid, {}, l);
     return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
   }

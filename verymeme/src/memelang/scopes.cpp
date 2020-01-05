@@ -81,24 +81,29 @@ void Scope::unmergeMapping(const Mapping& m) {
   scopes_.back().m.unmerge(m);
 }
 
-Val Scope::maybeFindVar(const std::string& name) const {
+Val Scope::maybeFindVar(const std::string& name) {
   bug_unless(!scopes_.empty() && !scopes_.back().vars.empty());
   const auto& vars = scopes_.back().vars;
   for (auto scope_iter = vars.rbegin(); scope_iter != vars.rend(); ++scope_iter) {
     auto iter = scope_iter->find(name);
     if (iter != scope_iter->end()) return iter->second;
   }
-  return INVALID_VAL;
+  // Check typevalues that could be in scope:
+  if (auto iter = fns_.find(name); iter != fns_.end())
+    return Val(INVL_HND, addType(Type(iter->second, e_)));
+  if (auto iter = builtin_fns_.find(name); iter != builtin_fns_.end())
+    return Val(INVL_HND, addType(Type(iter->second, e_)));
+  return INVL_VAL;
 }
 
-Val Scope::findVar(const std::string& name) const {
+Val Scope::findVar(const std::string& name) {
   auto val = maybeFindVar(name);
-  if (val.hnd == INVALID_HND) e_->error("undeclared variable " + name);
+  if (val == INVL_VAL) e_->error("undeclared variable " + name);
   return val;
 }
 
 Val Scope::declareVar(const std::string& name, Val v) {
-  if (maybeFindVar(name).hnd != INVALID_HND) e_->error("redeclaration of var " + name);
+  if (maybeFindVar(name) != INVL_VAL) e_->error("redeclaration of var " + name);
   scopes_.back().vars.back()[name] = v;
   return v;
 }
@@ -114,15 +119,16 @@ const Type& Scope::t(TypeId id) {
 }
 
 TypeId Scope::typeFromAst(ast::Type* ast_type) {
+  if (!ast_type) return INVL_TID;
   Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, {}, Mapping(e_), e_);
 
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
     auto& q = new_type.quals.emplace_back();
     if ((*i)->array) {
-      auto array_val = e_->eval((*i)->array.get());
+      auto array_val = e_->eval((*i)->array.get(), u32_t);
       if (array_val.type != u32_t) e_->error("array size must be u32");
-      q.array = e_->vm().ref<int32_t>(array_val.hnd);
+      q.array = e_->vm().ref<uint32_t>(array_val.hnd);
     }
     q.ptr = (*i)->ptr;
     q.cnst = (*i)->cnst;
@@ -133,7 +139,7 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
     // Maybe resolve if wildcard type.
     const auto& wildcard = std::get<WildcardInfo>(new_type.info);
     auto iter = scopes_.back().m.map.find(wildcard);
-    if (iter != scopes_.back().m.map.end() && iter->second != INVALID_TYPEID)
+    if (iter != scopes_.back().m.map.end() && iter->second != INVL_TID)
       new_type.resolveWildcardWith(iter->second);
   } else if (!std::holds_alternative<BuiltinStorageInfo>(new_type.info) &&
       !std::holds_alternative<BuiltinFnInfo>(new_type.info)) {
@@ -148,7 +154,7 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
     if (params.size() > wildcard_count)
       e_->error("bad number of type parameters for " + new_type.str());
     for (int i = 0; i < int(wildcard_count); ++i) {
-      TypeId tid = INVALID_TYPEID;
+      TypeId tid = INVL_TID;
       if (i < int(params.size())) tid = typeFromAst(params[i].get());
       new_type.m.map[WildcardInfo(tname->tlist->names[i])] = tid;
     }
@@ -158,7 +164,7 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
 }
 
 TypeId Scope::maybeFindFn(const std::string& name) {
-  if (!fns_.contains(name)) return INVALID_TYPEID;
+  if (!fns_.contains(name)) return INVL_TID;
   // TODO: generate mapping between fn typelist and type params.
   return addType(Type(fns_.find(name)->second, e_));
 }
@@ -173,7 +179,7 @@ TypeId Scope::findImplFn(TypeId this_type, const std::vector<Val>& args,
   // Select the implementation which has the closest distance that has a function that matches.
   for (const auto& ast_impl : impls_) {
     // TODO: Scope resolution?
-    if (typepathToString(ast_impl->tintf.get()) != intf_name) continue;
+    if (!ast_impl->tintf || typepathToString(ast_impl->tintf.get()) != intf_name) continue;
 
     // Set up mapping in this impl typename.
     auto autoscope = autoScope(ast_impl, typelistToMapping(ast_impl->tlist.get(), e_));
@@ -191,7 +197,7 @@ TypeId Scope::findImplFn(TypeId this_type, const std::vector<Val>& args,
       best_impler_dist = impler_dist;
     }
   }
-  if (!best_fn) return INVALID_TYPEID;
+  if (!best_fn) return INVL_TID;
   best_fn_mapping.merge(best_impler);
   return addType(Type(FnInfo(best_fn), false, {}, best_fn_mapping, e_));
 }

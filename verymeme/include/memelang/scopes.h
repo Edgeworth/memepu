@@ -29,15 +29,16 @@ public:
   }
   void mergeMapping(const Mapping& m);
   void unmergeMapping(const Mapping& m);
-  Val findVar(const std::string& name) const;
+
+  Val findVar(const std::string& name);
   Val declareVar(const std::string& name, Val v);
-  std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
 
   TypeId addType(const Type& t);
   const Type& t(TypeId id);
   TypeId typeFromAst(ast::Type* ast_type);
 
   TypeId maybeFindFn(const std::string& name);
+  std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
   TypeId findImplFn(TypeId this_type, const std::vector<Val>& args, const std::string& intf_name,
       const std::string& fn_name);
 
@@ -57,8 +58,9 @@ private:
   void popScopeUnsafe();
   void nestScopeUnsafe();  // Nests scope inside current scope-space.
   void unnestScopeUnsafe();
+
   TypeInfo typeInfoForAstType(ast::Type* type);
-  Val maybeFindVar(const std::string& name) const;
+  Val maybeFindVar(const std::string& name);
   TypeId addBuiltinStorage(const std::string& name);
 
   Exec* e_;

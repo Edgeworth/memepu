@@ -63,15 +63,15 @@ struct Qualifier : public Node {
 
 struct Type;
 
-struct UnqualifiedType : public Node {
+struct Ref : public Node {
   std::string name;
   std::vector<std::unique_ptr<Type>> params;
 
-  DEFNLT(UnqualifiedType, name, params);
+  DEFNLT(Ref, name, params);
 };
 
 struct Type : public Node {
-  std::vector<std::unique_ptr<UnqualifiedType>> path;
+  std::vector<std::unique_ptr<Ref>> path;
   std::vector<std::unique_ptr<Qualifier>> quals;
   bool cnst = false;
 
@@ -81,7 +81,6 @@ struct Type : public Node {
 };
 
 // Expression related:
-
 enum class Expr {
   ARRAY_ACCESS,
   MEMBER_ACCESS,
@@ -146,14 +145,8 @@ struct StrLit : public Node {
   DEFNLT(StrLit, val);
 };
 
-struct VarRef : public Node {
-  std::string name;
-
-  DEFNLT(VarRef, name);
-};
-
 struct CompoundLitFragment : public Node {
-  std::unique_ptr<VarRef> name;  // Optional.
+  std::string name;  // Optional.
   std::unique_ptr<Node> lit;
 
   DEFNLT(CompoundLitFragment, name, lit);
@@ -179,10 +172,10 @@ struct Op : public Node {
 
 // Function related:
 struct VarDecl : public Node {
-  std::unique_ptr<VarRef> ref;
+  std::string name;
   std::unique_ptr<Type> type;
 
-  DEFNLT(VarDecl, ref, type);
+  DEFNLT(VarDecl, name, type);
 };
 
 struct FnCallArgs : public Node {
@@ -285,7 +278,7 @@ struct Struct : public Node {
 
 struct Impl : public Node {
   std::unique_ptr<Typelist> tlist;
-  std::unique_ptr<Type> tintf;
+  std::unique_ptr<Type> tintf;  // Optional.
   std::unique_ptr<Type> type;
   std::vector<std::unique_ptr<Fn>> fns;
 
