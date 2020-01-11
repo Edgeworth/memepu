@@ -37,9 +37,9 @@ public:
   const Type& t(TypeId id);
   TypeId typeFromAst(ast::Type* ast_type);
 
-  TypeId maybeFindFn(const std::string& name);
+  FnSetInfo maybeFindFn(const std::string& name);
   std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
-  TypeId findImplFn(TypeId this_type, const std::vector<Val>& args, const std::string& intf_name,
+  FnSetInfo findImplFnSet(TypeId this_type, const std::string& intf_name,
       const std::string& fn_name);
 
   std::string stacktrace() const;
@@ -60,6 +60,9 @@ private:
   void unnestScopeUnsafe();
 
   TypeInfo typeInfoForAstType(ast::Type* type);
+  // Computes current mapping for an (optional) typelist.
+  // Optional |ast_type| specifies explicit mappings.
+  Mapping typelistToMapping(ast::Typelist* tlist, ast::Type* ast_type);
   Val maybeFindVar(const std::string& name);
   TypeId addBuiltinStorage(const std::string& name);
 
@@ -67,7 +70,7 @@ private:
   std::vector<ScopeData> scopes_;
   Bimap<TypeId, Type> types_;  // Contains instantiated types.
   TypeId next_id_ = 1;
-  std::map<std::string, FnInfo> fns_;
+  std::map<std::string, FnSetInfo> fns_;
   std::map<std::string, EnumInfo> enums_;
   std::map<std::string, IntfInfo> intfs_;
   std::map<std::string, StructInfo> structs_;

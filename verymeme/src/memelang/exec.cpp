@@ -32,39 +32,40 @@ Exec::Exec(ast::Module* m) : m_(m), s_(this), vm_(this) {}
 
 void Exec::run() {
   fprintf(stderr, "===BEGIN PROGRAM===\n");
-  TypeId fnid = s_.maybeFindFn("main");
-  if (fnid == INVL_TID) error("no main function to execute");
-  runFn(fnid, {}, INVL_VAL);
+  FnSetInfo fnset = s_.maybeFindFn("main");
+  if (!runFn(fnset, {}, INVL_VAL)) error("no main function to execute");
   fprintf(stderr, "===END PROGRAM===\n");
 }
 
-Val Exec::runFn(TypeId fnid, const std::vector<Val>& params, Val ths) {
-  const auto& fninfo = std::get<FnInfo>(s_.t(fnid).info);
-  auto* fn = fninfo.fn;
-  Mapping existing_map = typelistToMapping(fn->sig->tname->tlist.get(), nullptr);
-  existing_map.merge(s_.t(fnid).m);
-  auto autoscope = s_.autoScope(fn, existing_map);
-  // Resolve any other wildcards + check types.
-  const auto& [can_do, fn_mapping] = s_.maybeMappingForFnCall(fn, params);
-  if (!can_do) error("cannot call function " + fn->str());
-  s_.mergeMapping(fn_mapping);
+std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& params, Val ths) {
+  // Look for first doable option based on parameters.
+  for (const auto& fninfo : fnset.fns) {
+    const auto& fn = fninfo.fn;
+    const auto& m = fninfo.m;
+    // TODO: does m contain mapping for e.g. template param?
+    auto autoscope = s_.autoScope(fn, m);
+    // Resolve any other wildcards + check types.
+    const auto& [can_do, fn_mapping] = s_.maybeMappingForFnCall(fn, params);
+    if (!can_do) continue;
+    s_.mergeMapping(fn_mapping);
 
-  if (ths.hnd != INVL_HND) s_.declareVar("this", addr(ths));
-  for (int i = 0; i < int(fn->sig->params.size()); ++i) {
-    auto& decl = fn->sig->params[i];
-    runStmt(decl.get(), s_.typeFromAst(decl->type.get()));
-    assign(s_.findVar(decl->name), params[i]);
+    if (ths.hnd != INVL_HND) s_.declareVar("this", addr(ths));
+    for (int i = 0; i < int(fn->sig->params.size()); ++i) {
+      auto& decl = fn->sig->params[i];
+      runStmt(decl.get(), s_.typeFromAst(decl->type.get()));
+      assign(s_.findVar(decl->name), params[i]);
+    }
+    TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get());
+    auto val = runStmtBlk(fn->blk.get(), ret_type);
+    return val;
   }
-  TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get());
-  auto val = runStmtBlk(fn->blk.get(), ret_type);
-  return val;
+  return std::nullopt;
 }
 
 Val Exec::runBuiltinFn(ast::Op* n) {
   const std::string& name = g<ast::Ref>(n->left)->name;
   auto& args = g<ast::FnCallArgs>(n->right)->args;
-  TypeId u8_ptr_t =
-      s_.addType(Type(s_.t(s_.u8_t).info, false, {{.ptr = true}}, Mapping(this), this));
+  TypeId u8_ptr_t = s_.addType(Type(s_.t(s_.u8_t).info, false, {{.ptr = true}}, this));
   if (name == "printf") {
     if (args.empty()) error("printf requires at least 1 argument");
     if (typeid(*args[0]) != typeid(ast::StrLit)) error("printf must take string literal for now");
@@ -149,22 +150,32 @@ Val Exec::runOp(ast::Op* op) {
   switch (op->type) {
   case ast::Expr::FN_CALL: {
     auto* args = g<ast::FnCallArgs>(op->right);
+    printf("fn call of %s\n", op->left->str().c_str());
+
     TypeId tid = left.type;
     const auto& type = s_.t(tid);
 
     if (std::holds_alternative<BuiltinFnInfo>(type.info)) {
       return runBuiltinFn(op);
-    } else if (std::holds_alternative<FnInfo>(type.info)) {
+    } else if (std::holds_alternative<FnSetInfo>(type.info)) {
       std::vector<Val> params;
       // TODO: allow deduction of types of fn parameters.
       for (auto& arg : args->args) params.emplace_back(eval(arg.get(), INVL_TID));
-      return runFn(tid, params, INVL_VAL);  // TODO: member call
+      // TODO: member call
+      if (auto opt = runFn(std::get<FnSetInfo>(type.info), params, INVL_VAL); opt)
+        return opt.value();
+      else
+        error("unable to resolve function");
     } else {
       error("function call on non-function");  // TODO: Paren operator?
     }
   }
   case ast::Expr::MEMBER_ACCESS: {
     printf("member access of %s\n", op->left->str().c_str());
+    const auto& type = s_.t(left.type);
+    //    if (std::holds_alternative<StructInfo>(type.info)) {
+    //      s_.findImplFn(left.type, )
+    //    }
 
     // TODO: finish
     break;
@@ -307,8 +318,8 @@ Val Exec::array_access(Val l, Val r) {
   if (l.type == INVL_TID || l.hnd == INVL_HND || r.type == INVL_TID || r.hnd == INVL_HND)
     error("attempt operate on value with undeducible type");
 
-  if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "Indexable", "index"); fnid != INVL_TID)
-    return deref(runFn(fnid, {addr(r)}, l));
+  if (auto opt = runFn(s_.findImplFnSet(l.type, "Indexable", "index"), {addr(r)}, l); opt)
+    return deref(opt.value());
 
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
   if (!s_.t(l.type).isArray()) error("array access on non-array type");
