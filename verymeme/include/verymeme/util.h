@@ -7,6 +7,9 @@
 
 constexpr float EP = 1e-6;
 
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
 template <typename M, typename K, typename V>
 V getDefault(const M& map, const K& key, const V& def) {
   auto iter = map.find(key);

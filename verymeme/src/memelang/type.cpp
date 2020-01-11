@@ -30,18 +30,8 @@ std::string Type::str() const {
   std::string rep = "Type(" + info_str + "; quals: ";
   rep += join(
       quals.rbegin(), quals.rend(), [](auto& i) { return i.str(); }, ", ");
-  rep += "; mapping: " + m.str() + ")";
+  rep += ")";
   return rep;
-}
-
-void Type::resolveWildcardWith(TypeId concrete) {
-  const auto& t = e_->scope().t(concrete);
-  info = t.info;
-  m.merge(t.m);
-  auto new_quals = t.quals;
-  // TODO: handle const here.
-  new_quals.insert(new_quals.end(), quals.begin(), quals.end());
-  quals = std::move(new_quals);
 }
 
 std::string Mapping::str() const {
@@ -55,9 +45,11 @@ std::string Mapping::str() const {
 void Mapping::merge(const Mapping& m) {
   for (const auto& [wildcard, type] : m.map) {
     auto iter = map.find(wildcard);
-    // Allow overwriting unmapped wildcards.
-    if (iter != map.end() && iter->second != INVL_TID)
-      e_->error("duplicate template parameter " + wildcard.str());
+    // Allow overwriting unmapped wildcards. Allow skipping unmapped wildcards in |m|.
+    if (iter != map.end() && iter->second != INVL_TID) {
+      if (type == INVL_TID) continue;
+      else e_->error("duplicate template parameter " + wildcard.str());
+    }
     map[wildcard] = type;
   }
 }
@@ -69,10 +61,8 @@ void Mapping::unmerge(const Mapping& m) {
   }
 }
 
-std::pair<int, Mapping> dist(TypeId aid, TypeId bid, Exec* e) {
-  const auto& a = e->scope().t(aid);
-  const auto& b = e->scope().t(bid);
-  if (aid == bid) return {0, a.m};  // Same types have no distance cost.
+std::pair<int, Mapping> dist(const Type& a, const Type& b, Exec* e) {
+  if (a == b) return {0, Mapping(e)};  // Same types have no distance cost.
 
   // TODO: Our type must be fully specified for now.
   if (std::holds_alternative<WildcardInfo>(a.info)) unimplemented();
@@ -95,11 +85,12 @@ std::pair<int, Mapping> dist(TypeId aid, TypeId bid, Exec* e) {
   return {int(wildcard_type.quals.size()) + 1, std::move(m)};
 }
 
-Mapping typelistToMapping(ast::Typelist* tlist, Exec* e) {
-  Mapping m(e);
-  if (!tlist) return m;
-  for (const auto& wildcard : tlist->names) m.map.emplace(WildcardInfo(wildcard), INVL_TID);
-  return m;
+void resolveWildcardWith(Type& wildcard, const Type& concrete) {
+  wildcard.info = concrete.info;
+  auto new_quals = concrete.quals;
+  // TODO: handle const here.
+  new_quals.insert(new_quals.end(), wildcard.quals.begin(), wildcard.quals.end());
+  wildcard.quals = std::move(new_quals);
 }
 
 std::string typepathToString(ast::Type* type) {

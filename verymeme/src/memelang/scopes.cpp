@@ -17,21 +17,21 @@ Scope::Scope(Exec* exec)
   for (const auto& file : e_->module()->files) {
     for (auto& fn : file->fns) {
       e_->setContext(fn.get());
-      fns_.emplace(fn->sig->tname->name, FnInfo(fn.get()));
+      fns_.emplace(fn->sig->tname->name, FnSetInfo({{fn.get(), Mapping(e_)}}));
     }
     for (auto& enm : file->enums) {
       e_->setContext(enm.get());
-      if (!enums_.emplace(enm->tname->name, EnumInfo(enm.get())).second)
+      if (!enums_.emplace(enm->tname->name, EnumInfo(enm.get(), Mapping(e_))).second)
         e_->error("duplicate enum definition");
     }
     for (auto& intf : file->intfs) {
       e_->setContext(intf.get());
-      if (!intfs_.emplace(intf->tname->name, IntfInfo(intf.get())).second)
+      if (!intfs_.emplace(intf->tname->name, IntfInfo(intf.get(), Mapping(e_))).second)
         e_->error("duplicate interface definition");
     }
     for (auto& strct : file->structs) {
       e_->setContext(strct.get());
-      if (!structs_.emplace(strct->tname->name, StructInfo(strct.get())).second)
+      if (!structs_.emplace(strct->tname->name, StructInfo(strct.get(), Mapping(e_))).second)
         e_->error("duplicate struct definition");
     }
     for (auto& impl : file->impls) {
@@ -120,7 +120,7 @@ const Type& Scope::t(TypeId id) {
 
 TypeId Scope::typeFromAst(ast::Type* ast_type) {
   if (!ast_type) return INVL_TID;
-  Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, {}, Mapping(e_), e_);
+  Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, {}, e_);
 
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
@@ -135,71 +135,98 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
 
     bug_unless(q.array || q.ptr);  // Qualifier must either be array or pointer.
   }
-  if (std::holds_alternative<WildcardInfo>(new_type.info)) {
-    // Maybe resolve if wildcard type.
-    const auto& wildcard = std::get<WildcardInfo>(new_type.info);
-    auto iter = scopes_.back().m.map.find(wildcard);
-    if (iter != scopes_.back().m.map.end() && iter->second != INVL_TID)
-      new_type.resolveWildcardWith(iter->second);
-  } else if (!std::holds_alternative<BuiltinStorageInfo>(new_type.info) &&
-      !std::holds_alternative<BuiltinFnInfo>(new_type.info)) {
-    // Map type parameters to wildcards based on typename.
-    const auto* tname = std::visit([](auto&& v) { return v.tname(); }, new_type.info);
-    bug_unless(tname);
-    // Allow ast type to specify fewer parameters than required - can deduce rest.
-    // e.g. want to do memcpy(a, b, cnt) rather than memcpy<u8>(a, b, cnt).
-    const auto wildcard_count = tname->tlist ? tname->tlist->names.size() : 0;
-    // TODO: Handle wildcards in all parts of type path.
-    const auto& params = ast_type->path.back()->params;
-    if (params.size() > wildcard_count)
-      e_->error("bad number of type parameters for " + new_type.str());
-    for (int i = 0; i < int(wildcard_count); ++i) {
-      TypeId tid = INVL_TID;
-      if (i < int(params.size())) tid = typeFromAst(params[i].get());
-      new_type.m.map[WildcardInfo(tname->tlist->names[i])] = tid;
-    }
-  }
+
+  std::visit(overloaded{[this, &new_type](const WildcardInfo& wildcard) {
+                          // Maybe resolve if wildcard type.
+                          auto iter = scopes_.back().m.map.find(wildcard);
+                          if (iter != scopes_.back().m.map.end() && iter->second != INVL_TID)
+                            resolveWildcardWith(new_type, t(iter->second));
+                        },
+                 [](const BuiltinStorageInfo&) {}, [](const BuiltinFnInfo&) {},
+                 [this, ast_type](FnSetInfo& fnset) {
+                   for (auto& fninfo : fnset.fns)
+                     fninfo.m = typelistToMapping(fninfo.fn->sig->tname->tlist.get(), ast_type);
+                 },
+                 [this, ast_type](IntfInfo& info) {
+                   info.m = typelistToMapping(info.intf->tname->tlist.get(), ast_type);
+                 },
+                 [this, ast_type](StructInfo& info) {
+                   info.m = typelistToMapping(info.st->tname->tlist.get(), ast_type);
+                 },
+                 [this, ast_type](EnumInfo& info) {
+                   info.m = typelistToMapping(info.en->tname->tlist.get(), ast_type);
+                 },
+                 [this, ast_type](FnInfo& info) {
+                   info.m = typelistToMapping(info.fn->sig->tname->tlist.get(), ast_type);
+                 }},
+      new_type.info);
 
   return addType(new_type);
 }
 
-TypeId Scope::maybeFindFn(const std::string& name) {
-  if (!fns_.contains(name)) return INVL_TID;
-  // TODO: generate mapping between fn typelist and type params.
-  return addType(Type(fns_.find(name)->second, e_));
-}
+Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Type* ast_type) {
+  Mapping m(e_);
+  int wildcard_count = 0;
+  if (tlist) {
+    wildcard_count = tlist->names.size();
+    for (const auto& wildcard : tlist->names) m.map.emplace(WildcardInfo(wildcard), INVL_TID);
+  }
 
-TypeId Scope::findImplFn(TypeId this_type, const std::vector<Val>& args,
-    const std::string& intf_name, const std::string& fn_name) {
-  ast::Fn* best_fn = nullptr;
-  Mapping best_fn_mapping(e_);
-  Mapping best_impler(e_);
-  int best_impler_dist = Mapping::NOT_SUBTYPE;
-  // For each implementation, check the distance between types.
-  // Select the implementation which has the closest distance that has a function that matches.
-  for (const auto& ast_impl : impls_) {
-    // TODO: Scope resolution?
-    if (!ast_impl->tintf || typepathToString(ast_impl->tintf.get()) != intf_name) continue;
+  if (ast_type) {
+    // TODO: Handle wildcards in all parts of type path.
+    // Allow ast type to specify fewer parameters than required - can deduce rest.
+    // e.g. want to do memcpy(a, b, cnt) rather than memcpy<u8>(a, b, cnt).
+    const auto& params = ast_type->path.back()->params;
+    if (int(params.size()) > wildcard_count)
+      e_->error("bad number of type parameters for " + ast_type->str());
 
-    // Set up mapping in this impl typename.
-    auto autoscope = autoScope(ast_impl, typelistToMapping(ast_impl->tlist.get(), e_));
-    TypeId impl = typeFromAst(ast_impl->type.get());
-    auto [impler_dist, impler_mapping] = dist(this_type, impl, e_);
-    if (impler_dist >= best_impler_dist) continue;
-
-    for (const auto& fn : ast_impl->fns) {
-      if (fn->sig->tname->name != fn_name) continue;  // wrong name
-      const auto& [can_do, fn_mapping] = maybeMappingForFnCall(fn.get(), args);
-      if (!can_do) continue;
-      best_fn = fn.get();
-      best_fn_mapping = fn_mapping;
-      best_impler = impler_mapping;
-      best_impler_dist = impler_dist;
+    for (int i = 0; i < int(wildcard_count); ++i) {
+      TypeId tid = INVL_TID;
+      if (i < int(params.size())) tid = typeFromAst(params[i].get());
+      m.map[WildcardInfo(tlist->names[i])] = tid;
     }
   }
-  if (!best_fn) return INVL_TID;
-  best_fn_mapping.merge(best_impler);
-  return addType(Type(FnInfo(best_fn), false, {}, best_fn_mapping, e_));
+
+  return m;
+}
+
+FnSetInfo Scope::maybeFindFn(const std::string& name) {
+  auto iter = fns_.find(name);
+  if (iter == fns_.end()) return FnSetInfo({});
+  // TODO: generate mapping between fn typelist and type params.
+  return iter->second;
+}
+
+FnSetInfo Scope::findImplFnSet(
+    TypeId this_type, const std::string& intf_name, const std::string& fn_name) {
+  std::vector<std::pair<int, FnInfo>> fns;
+  for (const auto& ast_impl : impls_) {
+    // TODO: Scope resolution?
+    // Skip if it doesn't match this interface or if it's an interface-less query and one is
+    // specified.
+    if ((!ast_impl->tintf && !intf_name.empty()) ||
+        typepathToString(ast_impl->tintf.get()) != intf_name)
+      continue;
+
+    // Set up mapping in this impl typename.
+    Mapping impl_mapping = typelistToMapping(ast_impl->tlist.get(), nullptr);
+    auto autoscope = autoScope(ast_impl, impl_mapping);
+    TypeId impl = typeFromAst(ast_impl->type.get());
+    auto [impler_dist, impler_mapping] = dist(t(this_type), t(impl), e_);
+    if (impler_dist == Mapping::NOT_SUBTYPE) continue;
+
+    // Make sure to include types that might be resolved by function params.
+    impler_mapping.merge(impl_mapping);
+    for (const auto& fn : ast_impl->fns) {
+      if (fn->sig->tname->name != fn_name) continue;  // wrong name
+      fns.emplace_back(impler_dist, FnInfo(fn.get(), impler_mapping));
+    }
+  }
+  std::sort(fns.begin(), fns.end());
+  std::vector<FnInfo> flat_fns;
+  flat_fns.reserve(fns.size());
+  for (auto& v : fns) flat_fns.emplace_back(std::move(v.second));
+  return FnSetInfo(std::move(flat_fns));
 }
 
 TypeInfo Scope::typeInfoForAstType(ast::Type* type) {
@@ -207,7 +234,7 @@ TypeInfo Scope::typeInfoForAstType(ast::Type* type) {
   if (scopes_.back().m.map.contains(WildcardInfo(path))) return WildcardInfo(path);
   if (builtin_storage_.contains(path)) return builtin_storage_.find(path)->second;
   if (builtin_fns_.contains(path)) return builtin_fns_.find(path)->second;
-  if (fns_.contains(path)) return fns_.find(path)->second;
+  if (fns_.contains(path)) return FnSetInfo({fns_.find(path)->second});
   if (enums_.contains(path)) return enums_.find(path)->second;
   if (intfs_.contains(path)) return intfs_.find(path)->second;
   if (structs_.contains(path)) return structs_.find(path)->second;
@@ -233,7 +260,7 @@ std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::ve
   for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
     TypeId param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
     TypeId arg_type = args[param_idx].type;
-    auto [param_dist, param_mapping] = dist(arg_type, param_type, e_);
+    auto [param_dist, param_mapping] = dist(t(arg_type), t(param_type), e_);
     if (param_dist == Mapping::NOT_SUBTYPE) {
       unmergeMapping(fn_mapping);
       return {false, fn_mapping};
