@@ -31,7 +31,7 @@ private:
   Scope s_;
   VM vm_;
 
-  Val runFn(TypeId fnid, const std::vector<Val>& params, Val ths);
+  std::optional<Val> runFn(const FnSetInfo& fnset, const std::vector<Val>& params, Val ths);
   Val runBuiltinFn(ast::Op* n);
   Val runStmtBlk(ast::StmtBlk* blk, TypeId typectx);
   Val runStmt(ast::Node* stmt, TypeId typectx);
@@ -97,10 +97,10 @@ private:
     if (l.type == INVL_TID || l.hnd == INVL_HND || r.type == INVL_TID || r.hnd == INVL_HND)
       error("attempt operate on value with undeducible type");
 
-    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "Comparable", op_name); fnid != INVL_TID)
-      return runFn(fnid, {addr(r)}, l);
-    if (auto fnid = s_.findImplFn(l.type, {addr(r)}, "BinaryArith", op_name); fnid != INVL_TID)
-      return runFn(fnid, {addr(r)}, l);
+    if (auto opt = runFn(s_.findImplFnSet(l.type, "Comparable", op_name), {addr(r)}, l); opt)
+      return opt.value();
+    if (auto opt = runFn(s_.findImplFnSet(l.type, "BinaryArith", op_name), {addr(r)}, l); opt)
+      return opt.value();
 
     if (l.type != r.type)
       error("no binop intf defined and types don't match: " + s_.t(l.type).str() + " " +
@@ -119,8 +119,8 @@ private:
     if (l.type == INVL_TID || l.hnd == INVL_HND)
       error("attempt operate on value with undeducible type");
 
-    if (auto fnid = s_.findImplFn(l.type, {}, "UnaryArith", op_name); fnid != INVL_TID)
-      return runFn(fnid, {}, l);
+    if (auto opt = runFn(s_.findImplFnSet(l.type, "UnaryArith", op_name), {}, l); opt)
+      return opt.value();
     return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
   }
 };
