@@ -90,13 +90,27 @@ Val Scope::maybeFindVar(const std::string& name) {
   }
   // Check typevalues that could be in scope:
   if (auto iter = fns_.find(name); iter != fns_.end())
-    return Val(INVL_HND, addType(Type(iter->second, e_)));
+    return Val(INVL_HND, addType(Type(iter->second)));
   if (auto iter = builtin_fns_.find(name); iter != builtin_fns_.end())
-    return Val(INVL_HND, addType(Type(iter->second, e_)));
+    return Val(INVL_HND, addType(Type(iter->second)));
   return INVL_VAL;
 }
 
-Val Scope::findVar(const std::string& name) {
+Val Scope::findValue(ast::Ref* ref) {
+  auto val = findValue(ref->name);
+  const auto& type = t(val.type);
+  // Map functions if this is a FnSet.
+  if (auto* fnset = std::get_if<FnSetInfo>(&type.info); fnset) {
+    std::vector<FnInfo> mapped_fnset;
+    mapped_fnset.reserve(fnset->fns.size());
+    for (const FnInfo& fn : fnset->fns)
+      mapped_fnset.emplace_back(fn.fn, typelistToMapping(fn.fn->sig->tname->tlist.get(), ref));
+    return Val(INVL_HND, addType(Type(FnSetInfo(std::move(mapped_fnset)))));
+  }
+  return val;
+}
+
+Val Scope::findValue(const std::string& name) {
   auto val = maybeFindVar(name);
   if (val == INVL_VAL) e_->error("undeclared variable " + name);
   return val;
@@ -120,7 +134,7 @@ const Type& Scope::t(TypeId id) {
 
 TypeId Scope::typeFromAst(ast::Type* ast_type) {
   if (!ast_type) return INVL_TID;
-  Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, {}, e_);
+  Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, {});
 
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
@@ -136,6 +150,7 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
     bug_unless(q.array || q.ptr);  // Qualifier must either be array or pointer.
   }
 
+  auto* ref = ast_type->path.back().get();
   std::visit(overloaded{[this, &new_type](const WildcardInfo& wildcard) {
                           // Maybe resolve if wildcard type.
                           auto iter = scopes_.back().m.map.find(wildcard);
@@ -143,28 +158,28 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
                             resolveWildcardWith(new_type, t(iter->second));
                         },
                  [](const BuiltinStorageInfo&) {}, [](const BuiltinFnInfo&) {},
-                 [this, ast_type](FnSetInfo& fnset) {
+                 [this, ref](FnSetInfo& fnset) {
                    for (auto& fninfo : fnset.fns)
-                     fninfo.m = typelistToMapping(fninfo.fn->sig->tname->tlist.get(), ast_type);
+                     fninfo.m = typelistToMapping(fninfo.fn->sig->tname->tlist.get(), ref);
                  },
-                 [this, ast_type](IntfInfo& info) {
-                   info.m = typelistToMapping(info.intf->tname->tlist.get(), ast_type);
+                 [this, ref](IntfInfo& info) {
+                   info.m = typelistToMapping(info.intf->tname->tlist.get(), ref);
                  },
-                 [this, ast_type](StructInfo& info) {
-                   info.m = typelistToMapping(info.st->tname->tlist.get(), ast_type);
+                 [this, ref](StructInfo& info) {
+                   info.m = typelistToMapping(info.st->tname->tlist.get(), ref);
                  },
-                 [this, ast_type](EnumInfo& info) {
-                   info.m = typelistToMapping(info.en->tname->tlist.get(), ast_type);
+                 [this, ref](EnumInfo& info) {
+                   info.m = typelistToMapping(info.en->tname->tlist.get(), ref);
                  },
-                 [this, ast_type](FnInfo& info) {
-                   info.m = typelistToMapping(info.fn->sig->tname->tlist.get(), ast_type);
+                 [this, ref](FnInfo& info) {
+                   info.m = typelistToMapping(info.fn->sig->tname->tlist.get(), ref);
                  }},
       new_type.info);
 
   return addType(new_type);
 }
 
-Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Type* ast_type) {
+Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
   Mapping m(e_);
   int wildcard_count = 0;
   if (tlist) {
@@ -172,29 +187,21 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Type* ast_type) {
     for (const auto& wildcard : tlist->names) m.map.emplace(WildcardInfo(wildcard), INVL_TID);
   }
 
-  if (ast_type) {
+  if (ref) {
     // TODO: Handle wildcards in all parts of type path.
     // Allow ast type to specify fewer parameters than required - can deduce rest.
     // e.g. want to do memcpy(a, b, cnt) rather than memcpy<u8>(a, b, cnt).
-    const auto& params = ast_type->path.back()->params;
-    if (int(params.size()) > wildcard_count)
-      e_->error("bad number of type parameters for " + ast_type->str());
+    if (int(ref->params.size()) > wildcard_count)
+      e_->error("bad number of type parameters for " + ref->str());
 
     for (int i = 0; i < int(wildcard_count); ++i) {
       TypeId tid = INVL_TID;
-      if (i < int(params.size())) tid = typeFromAst(params[i].get());
+      if (i < int(ref->params.size())) tid = typeFromAst(ref->params[i].get());
       m.map[WildcardInfo(tlist->names[i])] = tid;
     }
   }
 
   return m;
-}
-
-FnSetInfo Scope::maybeFindFn(const std::string& name) {
-  auto iter = fns_.find(name);
-  if (iter == fns_.end()) return FnSetInfo({});
-  // TODO: generate mapping between fn typelist and type params.
-  return iter->second;
 }
 
 FnSetInfo Scope::findImplFnSet(
@@ -204,9 +211,8 @@ FnSetInfo Scope::findImplFnSet(
     // TODO: Scope resolution?
     // Skip if it doesn't match this interface or if it's an interface-less query and one is
     // specified.
-    if ((!ast_impl->tintf && !intf_name.empty()) ||
-        typepathToString(ast_impl->tintf.get()) != intf_name)
-      continue;
+    if (!ast_impl->tintf && !intf_name.empty()) continue;
+    if (ast_impl->tintf && typepathToString(ast_impl->tintf.get()) != intf_name) continue;
 
     // Set up mapping in this impl typename.
     Mapping impl_mapping = typelistToMapping(ast_impl->tlist.get(), nullptr);
@@ -250,7 +256,7 @@ std::string Scope::stacktrace() const {
 TypeId Scope::addBuiltinStorage(const std::string& name) {
   BuiltinStorageInfo info(name);
   builtin_storage_.emplace(name, info);
-  return addType(Type(info, e_));
+  return addType(Type(info));
 }
 
 std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args) {

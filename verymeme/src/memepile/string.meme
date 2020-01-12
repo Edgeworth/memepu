@@ -11,8 +11,10 @@ fn print_cstr(s: *u8) {
 }
 
 fn print_str(s: *string) {
-  for i := 0; i < s.len; ++i {
-    printf("%c", s[i]);
+  printf("string len: %d\n", s.len);
+  ret;
+  for i := 0u; i < s.len; ++i {
+    printf("%c", (*s)[i]);
   }
 }
 
@@ -32,6 +34,6 @@ impl string {
 
 impl<I> Indexable<I, u8> for string {
   fn index(idx: *I) *u8 {
-    ret &data[idx];
+    ret &this.data[*idx];
   }
 }
