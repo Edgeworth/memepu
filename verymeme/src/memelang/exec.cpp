@@ -24,16 +24,20 @@ T* g(std::unique_ptr<R>& n) {
 // See if the expression contains a return statement, and return it if it returns.
 #define CHECK(expr) \
   do { \
-    auto val = (expr); \
-    if (val.hnd != INVL_HND) return val; \
+    auto opt = (expr); \
+    static_assert( \
+        std::is_same<decltype(opt), std::optional<Val>>::value, "must use optional<Val>"); \
+    if (opt) return opt; \
   } while (0)
 
 Exec::Exec(ast::Module* m) : m_(m), s_(this), vm_(this) {}
 
 void Exec::run() {
   fprintf(stderr, "===BEGIN PROGRAM===\n");
-  FnSetInfo fnset = s_.maybeFindFn("main");
-  if (!runFn(fnset, {}, INVL_VAL)) error("no main function to execute");
+  const auto& type = s_.t(s_.findValue("main").type);
+
+  if (!std::holds_alternative<FnSetInfo>(type.info)) error("main name does not refer to function");
+  if (!runFn(std::get<FnSetInfo>(type.info), {}, INVL_VAL)) error("no main function to execute");
   fprintf(stderr, "===END PROGRAM===\n");
 }
 
@@ -42,22 +46,23 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
   for (const auto& fninfo : fnset.fns) {
     const auto& fn = fninfo.fn;
     const auto& m = fninfo.m;
-    // TODO: does m contain mapping for e.g. template param?
     auto autoscope = s_.autoScope(fn, m);
     // Resolve any other wildcards + check types.
     const auto& [can_do, fn_mapping] = s_.maybeMappingForFnCall(fn, params);
+
     if (!can_do) continue;
     s_.mergeMapping(fn_mapping);
 
-    if (ths.hnd != INVL_HND) s_.declareVar("this", addr(ths));
+    if (ths.hasStorage()) s_.declareVar("this", addr(ths));
     for (int i = 0; i < int(fn->sig->params.size()); ++i) {
       auto& decl = fn->sig->params[i];
       runStmt(decl.get(), s_.typeFromAst(decl->type.get()));
-      assign(s_.findVar(decl->name), params[i]);
+      assign(s_.findValue(decl->name), params[i]);
     }
     TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get());
     auto val = runStmtBlk(fn->blk.get(), ret_type);
-    return val;
+    // Succesfully executed the function, so make sure to return something.
+    return val ? val : INVL_VAL;
   }
   return std::nullopt;
 }
@@ -65,11 +70,13 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
 Val Exec::runBuiltinFn(ast::Op* n) {
   const std::string& name = g<ast::Ref>(n->left)->name;
   auto& args = g<ast::FnCallArgs>(n->right)->args;
-  TypeId u8_ptr_t = s_.addType(Type(s_.t(s_.u8_t).info, false, {{.ptr = true}}, this));
+  TypeId u8_ptr_t = s_.addType(Type(s_.t(s_.u8_t).info, false, {{.ptr = true}}));
   if (name == "printf") {
     if (args.empty()) error("printf requires at least 1 argument");
     if (typeid(*args[0]) != typeid(ast::StrLit)) error("printf must take string literal for now");
     boost::format fmt = boost::format(g<ast::StrLit>(args[0])->val);
+    //    printf("op: %s, name: %s fmt string: %s\n", n->str().c_str(), name.c_str(),
+    //    g<ast::StrLit>(args[0])->val.c_str());
     for (int i = 1; i < int(args.size()); ++i)
       invokeBuiltin(eval(args[i].get(), INVL_TID), [&fmt](auto& a) { fmt = fmt % a; });
     printf("%s", fmt.str().c_str());
@@ -103,13 +110,13 @@ Val Exec::runBuiltinFn(ast::Op* n) {
   error("unknown builtin function " + name);
 }
 
-Val Exec::runStmtBlk(ast::StmtBlk* blk, TypeId typectx) {
+std::optional<Val> Exec::runStmtBlk(ast::StmtBlk* blk, TypeId typectx) {
   auto autonest = s_.autoNest();
   for (auto& stmt : blk->stmts) CHECK(runStmt(stmt.get(), typectx));
-  return INVL_VAL;
+  return std::nullopt;
 }
 
-Val Exec::runStmt(ast::Node* stmt, TypeId typectx) {
+std::optional<Val> Exec::runStmt(ast::Node* stmt, TypeId typectx) {
   setContext(stmt);
 
   if (typeid(*stmt) == typeid(ast::VarDefn)) {
@@ -124,19 +131,22 @@ Val Exec::runStmt(ast::Node* stmt, TypeId typectx) {
   } else if (typeid(*stmt) == typeid(ast::While)) {
     return runWhile(g<ast::While>(stmt), typectx);
   } else if (typeid(*stmt) == typeid(ast::Ret)) {
-    return eval(g<ast::Ret>(stmt)->ret.get(), typectx);
+    auto* ret = g<ast::Ret>(stmt);
+    if (ret->ret) return eval(ret->ret.get(), typectx);
+    return std::nullopt;
   } else if (typeid(*stmt) == typeid(ast::If)) {
     return runIf(g<ast::If>(stmt), typectx);
   } else {
     error("unimplemented statement " + stmt->str());
   }
-  return INVL_VAL;
+  return std::nullopt;
 }
 
 void Exec::runVarDefn(ast::VarDefn* defn) {
-  bug_unless(defn->defn);
   auto val = eval(defn->defn.get(), s_.typeFromAst(defn->decl->type.get()));
-  s_.declareVar(defn->decl->name, val);
+  auto cpy = Val(vm_.allocStack(s_.t(val.type).size()), val.type);
+  copy(cpy, val);  // Make sure to copy to not grab references to existing objects.
+  s_.declareVar(defn->decl->name, cpy);
 }
 
 Val Exec::runVarDecl(ast::VarDecl* decl) {
@@ -150,11 +160,9 @@ Val Exec::runOp(ast::Op* op) {
   switch (op->type) {
   case ast::Expr::FN_CALL: {
     auto* args = g<ast::FnCallArgs>(op->right);
-    printf("fn call of %s\n", op->left->str().c_str());
 
     TypeId tid = left.type;
     const auto& type = s_.t(tid);
-
     if (std::holds_alternative<BuiltinFnInfo>(type.info)) {
       return runBuiltinFn(op);
     } else if (std::holds_alternative<FnSetInfo>(type.info)) {
@@ -165,19 +173,26 @@ Val Exec::runOp(ast::Op* op) {
       if (auto opt = runFn(std::get<FnSetInfo>(type.info), params, INVL_VAL); opt)
         return opt.value();
       else
-        error("unable to resolve function");
+        error("unable to resolve function " + type.str());
     } else {
-      error("function call on non-function");  // TODO: Paren operator?
+      error("function call on non-function " + type.str());  // TODO: Paren operator?
     }
   }
   case ast::Expr::MEMBER_ACCESS: {
-    printf("member access of %s\n", op->left->str().c_str());
-    const auto& type = s_.t(left.type);
-    //    if (std::holds_alternative<StructInfo>(type.info)) {
-    //      s_.findImplFn(left.type, )
-    //    }
+    if (typeid(*op->right) != typeid(ast::Ref)) error("member access must be ref");
+    auto* ref = g<ast::Ref>(op->right);
 
-    // TODO: finish
+    const auto& type = s_.t(left.type);
+    if (std::holds_alternative<StructInfo>(type.info)) {
+      const auto& info = std::get<StructInfo>(type.info);
+      auto fnset = s_.findImplFnSet(left.type, "", ref->name);
+      if (!fnset.fns.empty()) return Val(INVL_HND, s_.addType(Type(std::move(fnset))));
+      printf("do access at %d %s\n", left.hnd, ref->name.c_str());
+      if (auto val = info.access(left.hnd, ref->name); val != INVL_VAL) return val;
+      error("unknown struct member " + ref->name);
+    } else {
+      error("unimplemented member access");
+    }
     break;
   }
   case ast::Expr::ASSIGNMENT: return assign(left, eval(op->right.get(), left.type));
@@ -195,10 +210,9 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::UNARY_DEREF: return deref(left);
   default: error("unhandled op");
   }
-  return INVL_VAL;
 }
 
-Val Exec::runFor(ast::For* fr, TypeId typectx) {
+std::optional<Val> Exec::runFor(ast::For* fr, TypeId typectx) {
   runVarDefn(fr->var_defn.get());
   while (true) {
     auto cond_val = eval(fr->cond.get(), s_.bool_t);
@@ -207,33 +221,33 @@ Val Exec::runFor(ast::For* fr, TypeId typectx) {
     CHECK(runStmtBlk(fr->blk.get(), typectx));
     eval(fr->update.get(), INVL_TID);
   }
-  return INVL_VAL;
+  return std::nullopt;
 }
 
-Val Exec::runWhile(ast::While* wh, TypeId typectx) {
+std::optional<Val> Exec::runWhile(ast::While* wh, TypeId typectx) {
   while (true) {
     auto cond_val = eval(wh->cond.get(), s_.bool_t);
     if (cond_val.type != s_.bool_t) error("while condition not boolean");
     if (!vm_.ref<bool>(cond_val.hnd)) break;
     CHECK(runStmtBlk(wh->blk.get(), typectx));
   }
-  return INVL_VAL;
+  return std::nullopt;
 }
 
-Val Exec::runIf(ast::If* ifst, TypeId typectx) {
+std::optional<Val> Exec::runIf(ast::If* ifst, TypeId typectx) {
   auto cond_val = eval(ifst->cond.get(), s_.bool_t);
   if (cond_val.type != s_.bool_t) error("if condition not boolean");
   if (vm_.ref<bool>(cond_val.hnd)) CHECK(runStmtBlk(ifst->then.get(), typectx));
   else if (ifst->els)
     CHECK(runStmtBlk(ifst->els.get(), typectx));
-  return INVL_VAL;
+  return std::nullopt;
 }
 
 Val Exec::eval(ast::Node* n, TypeId typectx) {
   setContext(n);
 
   if (typeid(*n) == typeid(ast::Op)) return runOp(g<ast::Op>(n));
-  if (typeid(*n) == typeid(ast::Ref)) return s_.findVar(g<ast::Ref>(n)->name);
+  if (typeid(*n) == typeid(ast::Ref)) return s_.findValue(g<ast::Ref>(n));
   if (typeid(*n) == typeid(ast::IntLit)) {
     TypeId type = g<ast::IntLit>(n)->unsign ? s_.u32_t : s_.i32_t;
     auto val = Val(vm_.allocTmp(s_.t(type).size()), type);
@@ -247,6 +261,7 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
     if (tid == INVL_TID) error("undeducible type");
     const auto& type = s_.t(tid);
     Val res(vm_.allocTmp(type.size()), tid);
+    vm_.memset(res, 0, s_.t(res.type).size());
     // Type constructor / conversion
     if (std::holds_alternative<BuiltinStorageInfo>(type.info) && !cmpd->frags.empty()) {
       if (cmpd->frags.size() != 1) error("conversion must have 1 arg");
@@ -255,8 +270,22 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
         invokeBuiltin(
             res, [this, &val_v, &res](auto res_v) { vm_.write(res.hnd, decltype(res_v)(val_v)); });
       });
-    } else {
-      vm_.memset(res, 0, s_.t(res.type).size());
+    } else if (auto* st = std::get_if<StructInfo>(&type.info); st) {
+      int offset = 0;
+      printf("struct at %d\n", res.hnd);
+      for (const auto& frag : cmpd->frags) {
+        if (!frag->name.empty()) {
+          Val dst = st->access(res.hnd, frag->name);
+          printf("WRITE VAL NAME OF: %s %d\n", frag->name.c_str(),
+              vm_.ref<int32_t>(eval(frag->lit.get(), dst.type).hnd));
+          copy(dst, eval(frag->lit.get(), dst.type));
+        } else {
+          Val dst = st->access(res.hnd, offset);
+          Val src = eval(frag->lit.get(), dst.type);
+          copy(dst, src);
+          offset += s_.t(src.type).size();
+        }
+      }
     }
     return res;
   }
@@ -315,8 +344,7 @@ Val Exec::neq(Val l, Val r) {
 }
 
 Val Exec::array_access(Val l, Val r) {
-  if (l.type == INVL_TID || l.hnd == INVL_HND || r.type == INVL_TID || r.hnd == INVL_HND)
-    error("attempt operate on value with undeducible type");
+  if (!l.hasStorage() || !r.hasStorage()) error("attempt operate on value without storage");
 
   if (auto opt = runFn(s_.findImplFnSet(l.type, "Indexable", "index"), {addr(r)}, l); opt)
     return deref(opt.value());
@@ -346,9 +374,7 @@ Val Exec::postinc(Val l) {
 }
 
 Val Exec::addr(Val l) {
-  if (l.type == INVL_TID || l.hnd == INVL_HND)
-    error("attempt operate on value with undeducible type");
-
+  if (!l.hasStorage()) error("attempt operate on value without storage");
   auto new_type = s_.t(l.type);
   new_type.quals.emplace_back();
   new_type.quals.back().ptr = true;
@@ -358,17 +384,13 @@ Val Exec::addr(Val l) {
 }
 
 Val Exec::copy(Val dst, Val src) {
-  if (dst.type == INVL_TID || dst.hnd == INVL_HND || src.type == INVL_TID || src.hnd == INVL_HND)
-    error("attempt operate on value with undeducible type");
-
+  if (!src.hasStorage() || !dst.hasStorage()) error("attempt operate on value without storage");
   vm_.memcpy(dst, src, s_.t(src.type).size());
   return dst;
 }
 
 Val Exec::deref(Val l) {
-  if (l.type == INVL_TID || l.hnd == INVL_HND)
-    error("attempt operate on value with undeducible type");
-
+  if (!l.hasStorage()) error("attempt operate on value without storage");
   Type new_type = s_.t(l.type);
   if (!new_type.isPtr()) error("attempt to dereference non-pointer type");
   new_type.quals.pop_back();  // Remove ptr.

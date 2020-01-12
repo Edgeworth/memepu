@@ -28,8 +28,11 @@ struct Val {
   Hnd hnd;  // Handle into VM memory. If invalid, this value represents a type.
   TypeId type;
 
-  constexpr Val(Hnd hnd, TypeId type) : hnd(hnd), type(type) {}
+  constexpr Val(Hnd hnd, TypeId type) : hnd(hnd), type(type) {
+    bug_unless(!(hnd != INVL_HND && type == INVL_TID));  // Don't allow storage with no type.
+  }
   constexpr Val() : hnd(INVL_HND), type(INVL_TID) {}
+  constexpr bool hasStorage() const { return hnd != INVL_HND; }
 
   COMPARISON(Val, hnd, type);
 };
@@ -50,17 +53,14 @@ class Mapping {
 public:
   constexpr static int NOT_SUBTYPE = INT_MAX / 2;
   std::map<WildcardInfo, TypeId> map;
+  Exec* e;
 
-  explicit Mapping(Exec* e) : e_(e) {}
-
+  explicit Mapping(Exec* e) : e(e) {}
   std::string str() const;
   void merge(const Mapping& mapping);
   void unmerge(const Mapping& mapping);
 
   COMPARISON(Mapping, map);
-
-private:
-  Exec* e_;
 };
 
 class IntfInfo {
@@ -76,13 +76,24 @@ public:
 
 class StructInfo {
 public:
+  struct MemberInfo {
+    int offset;
+    TypeId type;
+  };
+
   ast::Struct* st;
   Mapping m;
+  std::map<std::string, MemberInfo> mems;
 
-  explicit StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {}
-  int size() const { unimplemented(); }
+  explicit StructInfo(ast::Struct* st, Mapping m);
+  int size() const { return size_; }
+  Val access(Hnd hnd, const std::string& member) const;
+  Val access(Hnd hnd, int offset) const;
   std::string str() const { return "Struct(" + st->tname->name + ")"; }
   COMPARISON(StructInfo, st);
+
+private:
+  int size_ = 0;
 };
 
 class EnumInfo {
@@ -105,7 +116,7 @@ public:
     bug_unless(BUILTIN_SIZE.contains(name));
     return BUILTIN_SIZE.find(name)->second;
   }
-  std::string str() const { return "Builtin(" + name + ")"; }
+  std::string str() const { return "BuiltinStorage(" + name + ")"; }
   COMPARISON(BuiltinStorageInfo, name);
 };
 
@@ -115,7 +126,7 @@ public:
 
   explicit BuiltinFnInfo(std::string name) : name(std::move(name)) {}
   int size() const { unimplemented(); }
-  std::string str() const { return "Builtin(" + name + ")"; }
+  std::string str() const { return "BuiltinFn(" + name + ")"; }
   COMPARISON(BuiltinFnInfo, name);
 };
 
@@ -163,19 +174,15 @@ public:
   // Holds qualifiers from right to left (innermost first).
   std::vector<Qualifier> quals;
 
-  Type(const TypeInfo& info, Exec* e) : Type(info, false, {}, e) {}
-  Type(TypeInfo info, bool cnst, std::vector<Qualifier> quals, Exec* e)
-      : info(std::move(info)), cnst(cnst), quals(std::move(quals)), e_(e) {}
+  explicit Type(const TypeInfo& info) : Type(info, false, {}) {}
+  Type(TypeInfo info, bool cnst, std::vector<Qualifier> quals)
+      : info(std::move(info)), cnst(cnst), quals(std::move(quals)) {}
   int size() const;
   bool isPtr() const { return !quals.empty() && quals.back().ptr; }
   bool isArray() const { return !quals.empty() && quals.back().array != 0; }
-
   std::string str() const;
 
   COMPARISON(Type, info, cnst, quals);
-
-private:
-  Exec* e_;
 };
 
 std::pair<int, Mapping> dist(const Type& a, const Type& b, Exec* e);

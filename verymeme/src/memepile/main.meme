@@ -9,6 +9,7 @@ fn main() i32 {
   printf("strlen result: %d\n", strlen(&data[0]));
 
   str := string.new(&data[0]);
- // print_str(&str);
+  printf("size of string: %d\n", sizeof(str));
+  print_str(&str);
   ret 0;
 }

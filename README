@@ -31,4 +31,4 @@ cmake -DUSE_AFL=clang -DCMAKE_BUILD_TYPE=Release $PFX/verymeme
 
 AFL_SKIP_CPUFREQ=yes AFL_PRELOAD=/usr/local/lib/afl/libdislocator.so \
   afl-fuzz -m 1024M -i $PFX/verymeme/test_data/memelang/parsing -o memelang_fuzz \
-  -x $PFX/verymeme/assets/afl/memelang.dict -- ./memelang
+  -x $PFX/verymeme/assets/afl/memelang.dict -t 100 -- ./memelang

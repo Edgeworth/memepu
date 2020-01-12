@@ -29,6 +29,14 @@ these two are 'typevalues' - types that are treated as values. Typevalues must b
 
 ref: identifies a variable or a typevalue.
 
+mappings:
+several layers of mappings. e.g. for regular function calls:
+function ref level mapping: malloc<u8> => T = u8
+parameter level deduction mapping: memcpy(a, b, count): T = type of a
+e.g. for impl calls for a struct
+
+e.g. for interface impl calls
+
 difficult parsing cases:
 malloc<u8>();  // malloc<u8> is a bit like a type, but it's being used as a value
 value: malloc<u8> = {};  // can't use it like this

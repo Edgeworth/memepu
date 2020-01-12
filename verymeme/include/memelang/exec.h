@@ -33,13 +33,13 @@ private:
 
   std::optional<Val> runFn(const FnSetInfo& fnset, const std::vector<Val>& params, Val ths);
   Val runBuiltinFn(ast::Op* n);
-  Val runStmtBlk(ast::StmtBlk* blk, TypeId typectx);
-  Val runStmt(ast::Node* stmt, TypeId typectx);
+  std::optional<Val> runStmtBlk(ast::StmtBlk* blk, TypeId typectx);
+  std::optional<Val> runStmt(ast::Node* stmt, TypeId typectx);
   void runVarDefn(ast::VarDefn* defn);
   Val runVarDecl(ast::VarDecl* decl);
-  Val runFor(ast::For* fr, TypeId typectx);
-  Val runWhile(ast::While* wh, TypeId typectx);
-  Val runIf(ast::If* ifst, TypeId typectx);
+  std::optional<Val> runFor(ast::For* fr, TypeId typectx);
+  std::optional<Val> runWhile(ast::While* wh, TypeId typectx);
+  std::optional<Val> runIf(ast::If* ifst, TypeId typectx);
   Val runOp(ast::Op* op);
 
   Val valFromAstType(ast::Type* type);
@@ -62,8 +62,7 @@ private:
 
   template <typename F>
   auto invokeBuiltin(Val v, F op) {
-    if (v.type == INVL_TID || v.hnd == INVL_HND)
-      error("attempt operate on value with undeducible type");
+    if (!v.hasStorage()) error("attempt operate on value without storage");
 
     if (v.type == s_.bool_t) return std::invoke(op, vm_.ref<bool>(v.hnd));
     else if (v.type == s_.i8_t)
@@ -89,14 +88,10 @@ private:
     else if (s_.t(v.type).isPtr())
       return std::invoke(op, vm_.ref<Hnd>(v.hnd));
     error("not builtin: " + s_.t(v.type).str());
-    return std::invoke(op, vm_.ref<int8_t>(v.hnd));
   }
 
   template <typename F>
   Val binop(Val l, Val r, TypeId type_if_builtin, const std::string& op_name, F default_op) {
-    if (l.type == INVL_TID || l.hnd == INVL_HND || r.type == INVL_TID || r.hnd == INVL_HND)
-      error("attempt operate on value with undeducible type");
-
     if (auto opt = runFn(s_.findImplFnSet(l.type, "Comparable", op_name), {addr(r)}, l); opt)
       return opt.value();
     if (auto opt = runFn(s_.findImplFnSet(l.type, "BinaryArith", op_name), {addr(r)}, l); opt)
@@ -116,12 +111,9 @@ private:
 
   template <typename F>
   Val unop(Val l, const std::string& op_name, F default_op) {
-    if (l.type == INVL_TID || l.hnd == INVL_HND)
-      error("attempt operate on value with undeducible type");
-
     if (auto opt = runFn(s_.findImplFnSet(l.type, "UnaryArith", op_name), {}, l); opt)
       return opt.value();
-    return invokeBuiltin(l, [this, &default_op](auto lt) { return default_op(lt); });
+    return invokeBuiltin(l, [&default_op](auto lt) { return default_op(lt); });
   }
 };
 
