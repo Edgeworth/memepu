@@ -103,9 +103,12 @@ Val Exec::runBuiltinFn(ast::Op* n) {
     return ret;
   } else if (name == "_malloc") {
     if (args.size() != 1) error("_malloc requires 1 argument");
-    auto val = eval(args[0].get(), s_.u32_t);
-    if (val.type != s_.u32_t) error("_malloc requires u32 argument");
-    return Val(vm_.allocTmp(vm_.ref<uint32_t>(val.hnd)), u8_ptr_t);
+    auto arg = eval(args[0].get(), s_.u32_t);
+    if (arg.type != s_.u32_t) error("_malloc requires u32 argument");
+    Hnd data = vm_.allocTmp(vm_.ref<uint32_t>(arg.hnd));
+    auto ret_val = Val(vm_.allocStack(s_.t(u8_ptr_t).size()), u8_ptr_t);
+    vm_.write(ret_val.hnd, data);
+    return ret_val;
   }
   error("unknown builtin function " + name);
 }
