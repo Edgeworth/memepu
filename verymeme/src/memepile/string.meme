@@ -27,6 +27,7 @@ impl string {
   static fn new(s: *u8) string {
     len := strlen(s);
     data := malloc<u8>(len);
+    printf("malloc: %p\n", data);
     memcpy(data, s, len);
     ret {data: data, len: len};
   }
