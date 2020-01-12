@@ -278,7 +278,7 @@ std::vector<Node*> Asm::children() { return {}; }
 
 Ret::Ret(Parser::Ctx& c) : Node(c) {
   c.consumeTok(Tok::RET);
-  ret = ExprParser(c).parse();
+  if (!c.hasTok(Tok::SEMICOLON)) ret = ExprParser(c).parse();
 }
 std::string Ret::str() const { return "Ret"; }
 std::vector<Node*> Ret::children() { return flattenChildren(ret); }

@@ -37,7 +37,7 @@ std::string Type::str() const {
 std::string Mapping::str() const {
   auto f = [this](auto& kv) {
     if (kv.second == INVL_TID) return "unmapped " + kv.first.str();
-    return kv.first.str() + ":" + e_->scope().t(kv.second).str();
+    return kv.first.str() + ":" + e->scope().t(kv.second).str();
   };
   return join(map.begin(), map.end(), f, ", ");
 }
@@ -48,7 +48,8 @@ void Mapping::merge(const Mapping& m) {
     // Allow overwriting unmapped wildcards. Allow skipping unmapped wildcards in |m|.
     if (iter != map.end() && iter->second != INVL_TID) {
       if (type == INVL_TID) continue;
-      else e_->error("duplicate template parameter " + wildcard.str());
+      else
+        e->error("duplicate template parameter " + wildcard.str());
     }
     map[wildcard] = type;
   }
@@ -96,6 +97,28 @@ void resolveWildcardWith(Type& wildcard, const Type& concrete) {
 std::string typepathToString(ast::Type* type) {
   return join(
       type->path.begin(), type->path.end(), [](const auto& t) { return t->name; }, ".");
+}
+
+StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {
+  auto& s = m.e->scope();
+  auto autoscope = s.autoScope(st, m);
+  for (const auto& member : st->var_decls) {
+    TypeId tid = s.typeFromAst(member->type.get());
+    mems.emplace(member->name, MemberInfo{size_, tid});
+    size_ += s.t(tid).size();
+  }
+}
+
+Val StructInfo::access(Hnd hnd, const std::string& member) const {
+  auto iter = mems.find(member);
+  if (iter == mems.end()) return INVL_VAL;
+  return Val(hnd + iter->second.offset, iter->second.type);
+}
+
+Val StructInfo::access(Hnd hnd, int offset) const {
+  for (const auto& kv : mems)
+    if (kv.second.offset == offset) return Val(hnd + offset, kv.second.type);
+  m.e->error("no value at offset " + std::to_string(offset));
 }
 
 }  // namespace memelang::exec

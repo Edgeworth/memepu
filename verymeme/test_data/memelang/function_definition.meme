@@ -14,4 +14,8 @@ fn bubblesort<T>(v: const* vector<*T>) {
   }
 }
 
+fn noreturn() {
+  ret;
+}
+
 fn main() i8 { ret 0; }

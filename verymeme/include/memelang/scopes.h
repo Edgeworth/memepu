@@ -30,17 +30,18 @@ public:
   void mergeMapping(const Mapping& m);
   void unmergeMapping(const Mapping& m);
 
-  Val findVar(const std::string& name);
+  Val findValue(ast::Ref* ref);
+  Val findValue(const std::string& name);
   Val declareVar(const std::string& name, Val v);
 
   TypeId addType(const Type& t);
   const Type& t(TypeId id);
   TypeId typeFromAst(ast::Type* ast_type);
 
-  FnSetInfo maybeFindFn(const std::string& name);
   std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
-  FnSetInfo findImplFnSet(TypeId this_type, const std::string& intf_name,
-      const std::string& fn_name);
+  // TODO: Should use ref instead of fn_name.
+  FnSetInfo findImplFnSet(
+      TypeId this_type, const std::string& intf_name, const std::string& fn_name);
 
   std::string stacktrace() const;
 
@@ -61,8 +62,8 @@ private:
 
   TypeInfo typeInfoForAstType(ast::Type* type);
   // Computes current mapping for an (optional) typelist.
-  // Optional |ast_type| specifies explicit mappings.
-  Mapping typelistToMapping(ast::Typelist* tlist, ast::Type* ast_type);
+  // Optional |ref| specifies explicit mappings.
+  Mapping typelistToMapping(ast::Typelist* tlist, ast::Ref* ref);
   Val maybeFindVar(const std::string& name);
   TypeId addBuiltinStorage(const std::string& name);
 

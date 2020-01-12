@@ -16,7 +16,7 @@ public:
     return true;
   }
   const Key& keyForValue(const Value& val) {
-    Record r{.k = {}, .v = val};
+    Record r{{}, val};
     return records.find(r)->k;
   }
   const Value& operator[](const Key& key) {
