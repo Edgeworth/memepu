@@ -84,7 +84,7 @@ struct vector<T> {
 
 impl<T> Iterable<T> for vector<T> {
   fn iter() vector_iter<T> {
-    ret vector_iter<T>.new(this);
+    ret vector_iter<T>.new(self);
   }
 }
 

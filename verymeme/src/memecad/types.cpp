@@ -106,7 +106,7 @@ bool Sheet::Label::operator<(const Sheet::Label& o) const {
 }
 
 Rect Sheet::Label::bbox() const {
-  const int text_length = int(text.size()) * dimension;
+  const int text_length = text.size() * dimension;
   switch (direction) {
   case Direction::LEFT: return {p.x - text_length, p.y - dimension, p.x, p.y};
   case Direction::DOWN: return {p.x - dimension, p.y, p.x, p.y + text_length};

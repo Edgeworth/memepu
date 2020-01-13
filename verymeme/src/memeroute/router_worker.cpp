@@ -164,7 +164,7 @@ RouterWorker::RoutingResult RouterWorker::bfsAndAddToGrid(const std::vector<Stat
   // Clear vias to begin with. Collect and add to blocked at the end. Traces in this net can
   // intersect vias.
   tmp_vias_.clear();
-  for (int i = 1; i < int(states.size()); ++i) {
+  for (int i = 1; i < states.size(); ++i) {
     if (!bfsOnce(states[i])) {
       succeeded = false;
       break;
@@ -181,11 +181,11 @@ RouterWorker::RoutingResult RouterWorker::bfsAndAddToGrid(const std::vector<Stat
         // TODO(improvement): Removing this restriction or doing it only for diagonal lines could
         // improve routing.
         // TODO(improvement): Handle trace width.
-        blocked_[r][c][l] += int(traces_[r][c][l]);
-        if (r > 0) blocked_[r - 1][c][l] += int(traces_[r][c][l]);
-        if (r + 1 < GRID_ROWS) blocked_[r + 1][c][l] += int(traces_[r][c][l]);
-        if (c > 0) blocked_[r][c - 1][l] += int(traces_[r][c][l]);
-        if (c + 1 < GRID_COLS) blocked_[r][c + 1][l] += int(traces_[r][c][l]);
+        blocked_[r][c][l] += traces_[r][c][l];
+        if (r > 0) blocked_[r - 1][c][l] += traces_[r][c][l];
+        if (r + 1 < GRID_ROWS) blocked_[r + 1][c][l] += traces_[r][c][l];
+        if (c > 0) blocked_[r][c - 1][l] += traces_[r][c][l];
+        if (c + 1 < GRID_COLS) blocked_[r][c + 1][l] += traces_[r][c][l];
       }
     }
   }
@@ -261,7 +261,7 @@ void RouterWorker::collectRoutesInternal(const State s) {
     Shape cur_path;
     cur_path.type = Shape::Type::PATH;
     cur_path.path.width = std::min(boundary_.width() / GRID_COLS, boundary_.height() / GRID_ROWS);
-    for (int idx = 0; idx < int(tmp_states_.size()); ++idx) {
+    for (int idx = 0; idx < tmp_states_.size(); ++idx) {
       // Needs a new path if we're just starting or jumped layers.
       const bool needs_new_path = idx == 0 || tmp_states_[idx].layer != tmp_states_[idx - 1].layer;
       if (needs_new_path) {

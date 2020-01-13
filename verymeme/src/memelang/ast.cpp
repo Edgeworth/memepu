@@ -170,6 +170,7 @@ std::string Ref::str() const { return (fmt("Ref(%s)") % name).str(); }
 std::vector<Node*> Ref::children() { return flattenChildren(params); }
 
 Type::Type(Parser::Ctx& c) : Node(c) {
+  ref = c.maybeConsumeTok(Tok::AMPERSAND);
   while (c.hasTok({Tok::ASTERISK, Tok::LSQUARE}) ||
       (c.hasTok(Tok::CONST) && c.hasTok(Tok::ASTERISK, 1)))
     quals.emplace_back(std::make_unique<Qualifier>(c));
@@ -189,7 +190,7 @@ Type::Type(Parser::Ctx& c) : Node(c) {
 std::string Type::str() const {
   const auto p = join(
       path.begin(), path.end(), [](const auto& t) { return t->str(); }, ".");
-  return (fmt("Type(%s%s)") % (cnst ? "const " : "") % p).str();
+  return (fmt("Type(%s%s%s)") % (cnst ? "const " : "") % (ref ? "ref" : "") % p).str();
 }
 std::vector<Node*> Type::children() { return flattenChildren(path, quals); }
 std::unique_ptr<Type> Type::tryParseType(Parser::Ctx& c) {

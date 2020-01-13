@@ -57,6 +57,7 @@ private:
   Val preinc(Val l);
   Val postinc(Val l);
   Val addr(Val l);
+  Val ref(Val l);
   Val copy(Val dst, Val src);
   Val deref(Val l);
 
@@ -64,42 +65,43 @@ private:
   auto invokeBuiltin(Val v, F op) {
     if (!v.hasStorage()) error("attempt operate on value without storage");
 
-    if (v.type == s_.bool_t) return std::invoke(op, vm_.ref<bool>(v.hnd));
-    else if (v.type == s_.i8_t)
+    const Type& t = s_.t(v.type);
+    if (s_.t(s_.bool_t).isSubsetOf(t)) return std::invoke(op, vm_.ref<bool>(v.hnd));
+    else if (s_.t(s_.i8_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<int8_t>(v.hnd));
-    else if (v.type == s_.i16_t)
+    else if (s_.t(s_.i16_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<int16_t>(v.hnd));
-    else if (v.type == s_.i32_t)
+    else if (s_.t(s_.i32_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<int32_t>(v.hnd));
-    else if (v.type == s_.i64_t)
+    else if (s_.t(s_.i64_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<int64_t>(v.hnd));
-    else if (v.type == s_.u8_t)
+    else if (s_.t(s_.u8_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<uint8_t>(v.hnd));
-    else if (v.type == s_.u16_t)
+    else if (s_.t(s_.u16_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<uint16_t>(v.hnd));
-    else if (v.type == s_.u32_t)
+    else if (s_.t(s_.u32_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<uint32_t>(v.hnd));
-    else if (v.type == s_.u64_t)
+    else if (s_.t(s_.u64_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<uint64_t>(v.hnd));
-    else if (v.type == s_.f32_t)
+    else if (s_.t(s_.f32_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<float>(v.hnd));
-    else if (v.type == s_.f64_t)
+    else if (s_.t(s_.f64_t).isSubsetOf(t))
       return std::invoke(op, vm_.ref<double>(v.hnd));
-    else if (s_.t(v.type).isPtr())
+    else if (t.isPtr())
       return std::invoke(op, vm_.ref<Hnd>(v.hnd));
-    error("not builtin: " + s_.t(v.type).str());
+    error("not builtin: " + t.str());
   }
 
   template <typename F>
   Val binop(Val l, Val r, TypeId type_if_builtin, const std::string& op_name, F default_op) {
-    if (auto opt = runFn(s_.findImplFnSet(l, "Comparable", op_name), {addr(r)}); opt)
+    if (auto opt = runFn(s_.findImplFnSet(l, "Comparable", op_name), {ref(r)}); opt)
       return opt.value();
-    if (auto opt = runFn(s_.findImplFnSet(l, "BinaryArith", op_name), {addr(r)}); opt)
+    if (auto opt = runFn(s_.findImplFnSet(l, "BinaryArith", op_name), {ref(r)}); opt)
       return opt.value();
 
-    if (l.type != r.type)
-      error("no binop intf defined and types don't match: " + s_.t(l.type).str() + " " +
-          s_.t(r.type).str());
+    if (!s_.t(l.type).hasIntersection(s_.t(r.type)))
+      error("no binop intf defined for " + op_name +
+          " and types don't match: " + s_.t(l.type).str() + " " + s_.t(r.type).str());
 
     return invokeBuiltin(l, [this, &default_op, &r, &type_if_builtin](auto lt) {
       auto res = default_op(lt, vm_.ref<decltype(lt)>(r.hnd));

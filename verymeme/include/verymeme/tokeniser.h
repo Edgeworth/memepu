@@ -12,7 +12,7 @@ public:
 
   template <typename T = std::string>
   T peek(int ahead = 0) {
-    verify_expr(idx_ + ahead < int(toks_.size()), "expecting token");
+    verify_expr(idx_ + ahead < toks_.size(), "expecting token");
     return boost::lexical_cast<T>(toks_[idx_ + ahead]);
   }
 
@@ -23,7 +23,7 @@ public:
     return value;
   }
 
-  bool hasTokens() { return idx_ < int(toks_.size()); }
+  bool hasTokens() { return idx_ < toks_.size(); }
 
   std::string lines(int num_lines = 1);
   std::string substr(int st, int en);

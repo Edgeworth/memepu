@@ -143,16 +143,16 @@ public:
 class FnSetInfo {
 public:
   std::vector<FnInfo> fns;  // N.B. These are ordered by preference.
-  Val ths;  // May be INVL_VAL.
+  Val self;  // May be INVL_VAL.
 
-  explicit FnSetInfo(std::vector<FnInfo> fns, Val ths) : fns(std::move(fns)), ths(ths) {}
+  explicit FnSetInfo(std::vector<FnInfo> fns, Val self) : fns(std::move(fns)), self(self) {}
   int size() const { unimplemented(); }
   std::string str() const {
     const std::string s = join(
         fns.begin(), fns.end(), [](const auto& fn) { return fn.str(); }, ", ");
     return "FnSetInfo(" + s + ")";
   }
-  COMPARISON(FnSetInfo, fns, ths);
+  COMPARISON(FnSetInfo, fns, self);
 };
 
 using TypeInfo = std::variant<IntfInfo, StructInfo, EnumInfo, FnInfo, FnSetInfo, WildcardInfo,
@@ -163,8 +163,9 @@ struct Qualifier {
   bool ptr = false;
   bool cnst = false;
 
+  bool isSubsetOf(const Qualifier& o) const;
+  bool hasIntersection(const Qualifier& o) const;
   std::string str() const;
-
   COMPARISON(Qualifier, array, ptr, cnst);
 };
 
@@ -172,21 +173,25 @@ class Type {
 public:
   TypeInfo info;
   bool cnst;
+  bool ref;
   // Holds qualifiers from right to left (innermost first).
   std::vector<Qualifier> quals;
 
-  explicit Type(const TypeInfo& info) : Type(info, false, {}) {}
-  Type(TypeInfo info, bool cnst, std::vector<Qualifier> quals)
-      : info(std::move(info)), cnst(cnst), quals(std::move(quals)) {}
+  explicit Type(const TypeInfo& info) : Type(info, false, false, {}) {}
+  Type(TypeInfo info, bool cnst, bool ref, std::vector<Qualifier> quals)
+      : info(std::move(info)), cnst(cnst), ref(ref), quals(std::move(quals)) {}
   int size() const;
   bool isPtr() const { return !quals.empty() && quals.back().ptr; }
   bool isArray() const { return !quals.empty() && quals.back().array != 0; }
+  bool isSubsetOf(const Type& o) const;  // Computes if this type is a subset of |o|. (e.g. const)
+  // Computes whether there is a type that is a subset of this type and |o|.
+  bool hasIntersection(const Type& o) const;
   std::string str() const;
 
   COMPARISON(Type, info, cnst, quals);
 };
 
-std::pair<int, Mapping> dist(const Type& a, const Type& b, Exec* e);
+std::pair<int, Mapping> distFrom(const Type& a, const Type& b, Exec* e);
 // E.g. *T => **u8. if parameter is *u8.
 void resolveWildcardWith(Type& wildcard, const Type& concrete);
 // Converts the path in |type| to a string - this doesn't include template parameters.

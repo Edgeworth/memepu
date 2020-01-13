@@ -4,10 +4,10 @@ struct FileContents {
 }
 
 impl FileContents {
-  static fn new(filename: *string, data: *string) FileContents {
+  static fn new(filename: &const string, data: &const string) FileContents {
     ret {
-      filename: *filename,
-      data: *data
+      filename: filename,  // TODO: deep copy
+      data: data
     };
   }
 }
