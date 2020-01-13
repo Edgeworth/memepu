@@ -143,15 +143,16 @@ public:
 class FnSetInfo {
 public:
   std::vector<FnInfo> fns;  // N.B. These are ordered by preference.
+  Val ths;  // May be INVL_VAL.
 
-  explicit FnSetInfo(std::vector<FnInfo> fns) : fns(std::move(fns)) {}
+  explicit FnSetInfo(std::vector<FnInfo> fns, Val ths) : fns(std::move(fns)), ths(ths) {}
   int size() const { unimplemented(); }
   std::string str() const {
     const std::string s = join(
         fns.begin(), fns.end(), [](const auto& fn) { return fn.str(); }, ", ");
     return "FnSetInfo(" + s + ")";
   }
-  COMPARISON(FnSetInfo, fns);
+  COMPARISON(FnSetInfo, fns, ths);
 };
 
 using TypeInfo = std::variant<IntfInfo, StructInfo, EnumInfo, FnInfo, FnSetInfo, WildcardInfo,

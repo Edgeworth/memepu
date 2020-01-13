@@ -40,8 +40,7 @@ public:
 
   std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
   // TODO: Should use ref instead of fn_name.
-  FnSetInfo findImplFnSet(
-      TypeId this_type, const std::string& intf_name, const std::string& fn_name);
+  FnSetInfo findImplFnSet(Val ths, const std::string& intf_name, const std::string& fn_name);
 
   std::string stacktrace() const;
 
@@ -81,17 +80,7 @@ private:
 
 public:
   // Built-in types (initialize after).
-  TypeId bool_t;
-  TypeId i8_t;
-  TypeId i16_t;
-  TypeId i32_t;
-  TypeId i64_t;
-  TypeId u8_t;
-  TypeId u16_t;
-  TypeId u32_t;
-  TypeId u64_t;
-  TypeId f32_t;
-  TypeId f64_t;
+  TypeId bool_t, i8_t, i16_t, i32_t, i64_t, u8_t, u16_t, u32_t, u64_t, f32_t, f64_t, u8_ptr_t;
 };
 
 }  // namespace memelang::exec

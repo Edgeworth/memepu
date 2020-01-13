@@ -31,7 +31,7 @@ private:
   Scope s_;
   VM vm_;
 
-  std::optional<Val> runFn(const FnSetInfo& fnset, const std::vector<Val>& params, Val ths);
+  std::optional<Val> runFn(const FnSetInfo& fnset, const std::vector<Val>& params);
   Val runBuiltinFn(ast::Op* n);
   std::optional<Val> runStmtBlk(ast::StmtBlk* blk, TypeId typectx);
   std::optional<Val> runStmt(ast::Node* stmt, TypeId typectx);
@@ -92,9 +92,9 @@ private:
 
   template <typename F>
   Val binop(Val l, Val r, TypeId type_if_builtin, const std::string& op_name, F default_op) {
-    if (auto opt = runFn(s_.findImplFnSet(l.type, "Comparable", op_name), {addr(r)}, l); opt)
+    if (auto opt = runFn(s_.findImplFnSet(l, "Comparable", op_name), {addr(r)}); opt)
       return opt.value();
-    if (auto opt = runFn(s_.findImplFnSet(l.type, "BinaryArith", op_name), {addr(r)}, l); opt)
+    if (auto opt = runFn(s_.findImplFnSet(l, "BinaryArith", op_name), {addr(r)}); opt)
       return opt.value();
 
     if (l.type != r.type)
@@ -111,8 +111,7 @@ private:
 
   template <typename F>
   Val unop(Val l, const std::string& op_name, F default_op) {
-    if (auto opt = runFn(s_.findImplFnSet(l.type, "UnaryArith", op_name), {}, l); opt)
-      return opt.value();
+    if (auto opt = runFn(s_.findImplFnSet(l, "UnaryArith", op_name), {}); opt) return opt.value();
     return invokeBuiltin(l, [&default_op](auto lt) { return default_op(lt); });
   }
 };
