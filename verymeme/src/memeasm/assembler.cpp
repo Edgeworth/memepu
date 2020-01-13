@@ -24,7 +24,7 @@ std::vector<std::string> getLines(const std::string& data) {
   std::vector<std::string> lines;
   while (std::getline(ss, line)) {
     int last_idx = 0;
-    while (last_idx < int(line.size()) && line[last_idx] != ';') last_idx++;  // Remove comments.
+    while (last_idx < line.size() && line[last_idx] != ';') last_idx++;  // Remove comments.
     const auto& s = trim(line.substr(0, last_idx), " \t\n");
     lines.push_back(s);  // Include blank lines so line numbers are accurate.
   }
@@ -45,7 +45,7 @@ Assembler::Assembler(const std::string& model_json) {
     mnemonic.opcode = kv.second.get<int>("opcode");
     mnemonic.imm_relative = kv.second.get<bool>("imm_relative");
     std::string mnemonic_rx = PREAMBLE_RX;
-    for (int i = 0; i < int(mnemonic_str.size()); ++i) {
+    for (int i = 0; i < mnemonic_str.size(); ++i) {
       if (mnemonic_str[i] == '%') {
         verify_expr(i < int(mnemonic_str.size()) - 2, "ill-formed ksm model (BUG)");
         i += 2;  // Skip % and number.
@@ -94,7 +94,7 @@ std::vector<uint32_t> Assembler::assemble(const std::string& data) {
 void Assembler::assembleInternal(bool first_pass) {
   std::regex label_rx(std::string(PREAMBLE_RX) + LABEL_RX + POSTAMBLE_RX);
 
-  for (int lnum = 0; lnum < int(lines_.size()); ++lnum) {
+  for (int lnum = 0; lnum < lines_.size(); ++lnum) {
     const std::string& line = lines_[lnum];
     if (line.empty()) continue;
 
@@ -126,8 +126,8 @@ uint32_t Assembler::convertMnemonicStringToOpword(
 
     auto opword = uint32_t(mnemonic.opcode);
     int reg_count = 0;
-    for (int i = 0; i < int(mnemonic.params.size()); ++i) {
-      verify_expr(i + 1 < int(sm.size()), "%d: missing parameter %s", lnum, line.c_str());
+    for (int i = 0; i < mnemonic.params.size(); ++i) {
+      verify_expr(i + 1 < sm.size(), "%d: missing parameter %s", lnum, line.c_str());
       const auto& pstr = sm[i + 1].str();
       switch (mnemonic.params[i]) {
       case Parameter::REGISTER: {
@@ -176,7 +176,7 @@ int64_t Assembler::resolveLabel(const std::string& lstr, int lnum, bool first_pa
   if (first_pass) {  // Defining labels in first pass.
     verify_expr(
         labels_.count(label) == 0, "%d: duplicate label definition of %s", lnum + 1, label.c_str());
-    labels_[label] = int(bin_.size()) * memeware::OPWORD_SIZE;
+    labels_[label] = bin_.size() * memeware::OPWORD_SIZE;
     return 0;
   }
 

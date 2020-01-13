@@ -74,10 +74,11 @@ struct Type : public Node {
   std::vector<std::unique_ptr<Ref>> path;
   std::vector<std::unique_ptr<Qualifier>> quals;
   bool cnst = false;
+  bool ref = false;
 
   static std::unique_ptr<Type> tryParseType(Parser::Ctx& c);
 
-  DEFNLT(Type, path, quals, cnst);
+  DEFNLT(Type, ref, path, quals, cnst);
 };
 
 // Expression related:

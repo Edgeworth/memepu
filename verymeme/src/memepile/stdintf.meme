@@ -1,5 +1,5 @@
 intf BinaryArith<A, B> {
-  fn add(o: *A) A;
+  fn add(o: &const A) A;
 }
 
 intf UnaryArith<T> {
@@ -7,18 +7,18 @@ intf UnaryArith<T> {
 }
 
 intf Comparable<T> {
-  fn neq(o: *T) bool;
+  fn neq(o: &const T) bool;
 }
 
 intf Indexable<I, T> {
-  fn index(idx: *I) *T;
+  fn index(idx: &const I) &T;
 }
 
 intf Convertible<A, B> {
-  fn from(v: *A) B;
+  fn from(v: &const A) B;
 }
 
 // TODO: do this? e.g. for automatic decay to pointer?
 intf ImplicitConvertible<A, B> {
-  fn from_implicit(v: *A) B;
+  fn from_implicit(v: &const A) B;
 }

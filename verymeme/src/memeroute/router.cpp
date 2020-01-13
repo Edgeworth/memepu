@@ -63,7 +63,7 @@ public:
     pop.total_fitness = 0;
     float size_fitness = 0;
     std::sort(pop.genes.begin(), pop.genes.end());
-    for (int i = 0; i < int(pop.genes.size()); ++i) {
+    for (int i = 0; i < pop.genes.size(); ++i) {
       bug_unless(pop.genes[i].fitness >= 0.0f);
       pop.total_fitness += pop.genes[i].fitness;
       if (i < pop_size_) size_fitness += pop.genes[i].fitness;
@@ -79,7 +79,7 @@ public:
       const float selection = uniform_dist(r_);
       float round_robin_sum = 0;
       int sel = 0;
-      for (; sel < int(pop.genes.size()) && round_robin_sum <= selection; ++sel)
+      for (; sel < pop.genes.size() && round_robin_sum <= selection; ++sel)
         round_robin_sum += pop.genes[sel].fitness;
       bug_unless(sel != 0);
       return_pop.genes.push_back(mutate(pop.genes[sel - 1]));
@@ -122,7 +122,7 @@ RouterWorker::InvocationParams invocationParamsFromGene(
   params.net_names.reserve(net_names.size());
   bug_unless(net_names.size() == gene.nums.size());
   for (int idx : gene.nums) {
-    bug_unless(idx >= 0 && idx < int(net_names.size()));
+    bug_unless(idx >= 0 && idx < net_names.size());
     params.net_names.push_back(net_names[idx]);
   }
   return params;
@@ -154,11 +154,11 @@ RouterWorker::RoutingResult Router::route() {
   for (int gen_num = 0; gen_num < NUM_GENERATIONS; ++gen_num) {
     printf("Running generation %d...\n", gen_num + 1);
     RouterWorker::RoutingResult best;
-    for (int i = 0; i < int(pop.genes.size()); ++i)
+    for (int i = 0; i < pop.genes.size(); ++i)
       work_queue.push({WorkMessage::Type::ROUTE, i /* work_id */,
           invocationParamsFromGene(net_names, pop.genes[i])});
 
-    for (int i = 0; i < int(pop.genes.size()); ++i) {
+    for (int i = 0; i < pop.genes.size(); ++i) {
       const ResultMessage& result = result_queue.yield();
       printf("Got result with work id %d with %d failed\n", result.work_id, result.result.failed);
       pop.genes[result.work_id].fitness = 100.f / (float(result.result.failed) + 1.f);

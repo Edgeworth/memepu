@@ -11,7 +11,7 @@ Scope::Scope(Exec* exec)
       i16_t(addBuiltinStorage(I16)), i32_t(addBuiltinStorage(I32)), i64_t(addBuiltinStorage(I64)),
       u8_t(addBuiltinStorage(U8)), u16_t(addBuiltinStorage(U16)), u32_t(addBuiltinStorage(U32)),
       u64_t(addBuiltinStorage(U64)), f32_t(addBuiltinStorage(F32)), f64_t(addBuiltinStorage(F64)),
-      u8_ptr_t(addType(Type(t(u8_t).info, false, {{.ptr = true}}))) {
+      u8_ptr_t(addType(Type(t(u8_t).info, false, false, {{.ptr = true}}))) {
   pushScopeUnsafe(nullptr, Mapping(e_));
 
   for (const auto& fn : BUILTIN_FNS) builtin_fns_.emplace(fn, BuiltinFnInfo(fn));
@@ -40,6 +40,7 @@ Scope::Scope(Exec* exec)
       impls_.emplace_back(impl.get());
     }
   }
+  e_->setContext(nullptr);  // Reset context.
 }
 
 void Scope::pushScopeUnsafe(ast::Node* ctx, const Mapping& m) {
@@ -52,7 +53,7 @@ void Scope::pushScopeUnsafe(ast::Node* ctx, const Mapping& m) {
     scopes_.back().ctx +=
         prevctx ? " from " + prevctx->tok.fpos() + ":" + prevctx->tok.span() : " (no ctx)";
   } else {
-    scopes_.back().ctx = "global ctx";
+    scopes_.back().ctx = "<base>";
   }
   nestScopeUnsafe();
 }
@@ -106,7 +107,7 @@ Val Scope::findValue(ast::Ref* ref) {
     mapped_fnset.reserve(fnset->fns.size());
     for (const FnInfo& fn : fnset->fns)
       mapped_fnset.emplace_back(fn.fn, typelistToMapping(fn.fn->sig->tname->tlist.get(), ref));
-    return Val(INVL_HND, addType(Type(FnSetInfo(std::move(mapped_fnset), fnset->ths))));
+    return Val(INVL_HND, addType(Type(FnSetInfo(std::move(mapped_fnset), fnset->self))));
   }
   return val;
 }
@@ -135,7 +136,7 @@ const Type& Scope::t(TypeId id) {
 
 TypeId Scope::typeFromAst(ast::Type* ast_type) {
   if (!ast_type) return INVL_TID;
-  Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, {});
+  Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, ast_type->ref, {});
 
   // Look through qualifiers reversed.
   for (auto i = ast_type->quals.rbegin(); i != ast_type->quals.rend(); ++i) {
@@ -192,12 +193,12 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
     // TODO: Handle wildcards in all parts of type path.
     // Allow ast type to specify fewer parameters than required - can deduce rest.
     // e.g. want to do memcpy(a, b, cnt) rather than memcpy<u8>(a, b, cnt).
-    if (int(ref->params.size()) > wildcard_count)
+    if (ref->params.size() > wildcard_count)
       e_->error("bad number of type parameters for " + ref->str());
 
-    for (int i = 0; i < int(wildcard_count); ++i) {
+    for (int i = 0; i < wildcard_count; ++i) {
       TypeId tid = INVL_TID;
-      if (i < int(ref->params.size())) tid = typeFromAst(ref->params[i].get());
+      if (i < ref->params.size()) tid = typeFromAst(ref->params[i].get());
       m.map[WildcardInfo(tlist->names[i])] = tid;
     }
   }
@@ -205,7 +206,7 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
   return m;
 }
 
-FnSetInfo Scope::findImplFnSet(Val ths, const std::string& intf_name, const std::string& fn_name) {
+FnSetInfo Scope::findImplFnSet(Val self, const std::string& intf_name, const std::string& fn_name) {
   std::vector<std::pair<int, FnInfo>> fns;
   for (const auto& ast_impl : impls_) {
     // TODO: Scope resolution?
@@ -218,7 +219,7 @@ FnSetInfo Scope::findImplFnSet(Val ths, const std::string& intf_name, const std:
     Mapping impl_mapping = typelistToMapping(ast_impl->tlist.get(), nullptr);
     auto autoscope = autoScope(ast_impl, impl_mapping);
     TypeId impl = typeFromAst(ast_impl->type.get());
-    auto [impler_dist, impler_mapping] = dist(t(ths.type), t(impl), e_);
+    auto [impler_dist, impler_mapping] = distFrom(t(self.type), t(impl), e_);
     if (impler_dist == Mapping::NOT_SUBTYPE) continue;
 
     // Make sure to include types that might be resolved by function params.
@@ -232,7 +233,7 @@ FnSetInfo Scope::findImplFnSet(Val ths, const std::string& intf_name, const std:
   std::vector<FnInfo> flat_fns;
   flat_fns.reserve(fns.size());
   for (auto& v : fns) flat_fns.emplace_back(std::move(v.second));
-  return FnSetInfo(std::move(flat_fns), ths);
+  return FnSetInfo(std::move(flat_fns), self);
 }
 
 TypeInfo Scope::typeInfoForAstType(ast::Type* type) {
@@ -263,10 +264,10 @@ std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::ve
   Mapping fn_mapping(e_);
   if (fn->sig->params.size() != args.size()) return {false, fn_mapping};  // wrong number of params
 
-  for (int param_idx = 0; param_idx < int(fn->sig->params.size()); ++param_idx) {
-    TypeId param_type = typeFromAst(fn->sig->params[param_idx]->type.get());
-    TypeId arg_type = args[param_idx].type;
-    auto [param_dist, param_mapping] = dist(t(arg_type), t(param_type), e_);
+  for (int i = 0; i < fn->sig->params.size(); ++i) {
+    TypeId fn_arg_tid = typeFromAst(fn->sig->params[i]->type.get());
+    TypeId arg_tid = args[i].type;
+    auto [param_dist, param_mapping] = distFrom(t(arg_tid), t(fn_arg_tid), e_);
     if (param_dist == Mapping::NOT_SUBTYPE) {
       unmergeMapping(fn_mapping);
       return {false, fn_mapping};

@@ -11,10 +11,10 @@ fn main() i32 {
   str := string.new(&data[0]);
   str2 := string.new("hello: ");
   printf("size of string: %d\nprint_str: ", sizeof(str));
-  print_str(&str);
+  print_str(str);
   printf("\n");
   printf("combined string: ");
-  print_str(&(str2 + str));
+  print_str(str2 + str);
   printf("\n");
   ret 0;
 }

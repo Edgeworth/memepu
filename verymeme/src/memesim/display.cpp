@@ -54,8 +54,8 @@ void Display::run() {
         win_->close();
         break;
       case sf::Event::MouseMoved: {
-        const int x = ev.mouseMove.x * VGA_WIDTH / int(win_->getSize().x);
-        const int y = ev.mouseMove.y * VGA_HEIGHT / int(win_->getSize().y);
+        const int x = ev.mouseMove.x * VGA_WIDTH / win_->getSize().x;
+        const int y = ev.mouseMove.y * VGA_HEIGHT / win_->getSize().y;
         simulator_->scheduleCommand({Simulator::Cmd::Type::SET_MOUSE, {x, y}, receiver_});
         break;
       }

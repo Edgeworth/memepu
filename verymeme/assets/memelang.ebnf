@@ -19,7 +19,7 @@ match_blk : LBRACE ((IDENT | literal) ':' stmt_blk)* RBRACE ;
 
 // Statement related:
 stmt : expr ';' | stmt_var_defn | stmt_ret | stmt_for | stmt_if | stmt_while | stmt_match | ASM ;
-stmt_ret : 'ret' expr ';' ;
+stmt_ret : 'ret' expr? ';' ;
 stmt_for : 'for' stmt_var_defn expr ';' expr stmt_blk ;
 stmt_while : 'while' expr stmt_blk ;
 stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
@@ -33,7 +33,7 @@ typename : IDENT typelist? ;
 qualifier : 'const'? '*' | '[' expr ']';  // expr must be constant at compile time
 unqualified_type : (IDENT ('<' type (',' type)* '>')?) ;
 // Identifies a concrete type - can include type accessors (e.g. namespace, enum).
-type : qualifier* 'const'? ((unqualified_type '.')* unqualified_type) ;
+type : '&'? qualifier* 'const'? ((unqualified_type '.')* unqualified_type) ;
 
 // Variable related:
 member_var_decl : IDENT ':' type;

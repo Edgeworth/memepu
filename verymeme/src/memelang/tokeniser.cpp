@@ -54,11 +54,11 @@ Tokeniser::Tokeniser(const FileContents* cts) : cts_(cts) { bug_unless(cts_); }
 std::vector<Tok> Tokeniser::tokenise() {
   toks_.clear();
   const auto& data = cts_->data();
-  for (int i = 0; i < int(data.size()); ++i)
+  for (int i = 0; i < data.size(); ++i)
     verify_expr(isprint(data[i]) || data[i] == '\n', "unprintable character '%c' at %s", data[i],
         cts_->fpos(i).c_str());
 
-  while (idx_ < int(data.size())) {
+  while (idx_ < data.size()) {
     if (startsNewToken(data[idx_]) || atCompleteToken()) pushCurrentToken();
 
     if (!isspace(data[idx_])) curtok_ += data[idx_];
@@ -156,14 +156,14 @@ bool Tokeniser::atCompleteToken() {
 
 bool Tokeniser::isChar(char c, const char* msg) {
   const auto& data = cts_->data();
-  verify_expr(idx_ < int(data.size()), msg);
+  verify_expr(idx_ < data.size(), msg);
   return data[idx_] == c;
 }
 
 char Tokeniser::grabEscapedChar() {
   const auto& data = cts_->data();
   if (data[idx_] != '\\') return data[idx_++];
-  verify_expr(++idx_ < int(data.size()), "unexpected EOF in escape sequence");
+  verify_expr(++idx_ < data.size(), "unexpected EOF in escape sequence");
   idx_++;
   switch (data[idx_ - 1]) {
   case 'n': return '\n';

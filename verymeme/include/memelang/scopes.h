@@ -40,7 +40,7 @@ public:
 
   std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
   // TODO: Should use ref instead of fn_name.
-  FnSetInfo findImplFnSet(Val ths, const std::string& intf_name, const std::string& fn_name);
+  FnSetInfo findImplFnSet(Val self, const std::string& intf_name, const std::string& fn_name);
 
   std::string stacktrace() const;
 

@@ -24,12 +24,12 @@ std::vector<sf::VertexArray> createPathWithThickness(
     const std::vector<sf::Vector2f>& points, float thickness, const sf::Color& color) {
   sf::VertexArray quads(sf::PrimitiveType::Quads);
   std::vector<sf::VertexArray> circles;
-  for (int i = 0; i < int(points.size()); ++i) {
+  for (int i = 0; i < points.size(); ++i) {
     const auto& p0 = points[i];
     sf::Transform p0_tf;
     p0_tf.translate(p0);
     circles.push_back(createCircle(thickness / 2.0f, p0_tf, color, true /* filled */));
-    if (i + 1 >= int(points.size())) continue;
+    if (i + 1 >= points.size()) continue;
 
     const auto& p1 = points[i + 1];
     if (length(p0 - p1) > EP) {
@@ -84,8 +84,7 @@ sf::VertexArray createCircle(float radius, sf::Transform tf, const sf::Color& co
   sf::CircleShape circle(radius);
   sf::VertexArray array(filled ? sf::PrimitiveType::TriangleFan : sf::PrimitiveType::LineStrip);
   tf.translate(-radius, -radius);
-  for (int i = 0; i < int(circle.getPointCount()); ++i)
-    array.append({tf * circle.getPoint(i), color});
+  for (int i = 0; i < circle.getPointCount(); ++i) array.append({tf * circle.getPoint(i), color});
   if (!filled) array.append({tf * circle.getPoint(0), color});
   return array;
 }

@@ -40,7 +40,7 @@ public:
 
     for (uint64_t i = 0; i < (1ull << bitsum); ++i) {
       uint32_t bitcum = 0;
-      for (uint32_t bitidx = 0; bitidx < int(sizeof...(Ns)); ++bitidx) {
+      for (uint32_t bitidx = 0; bitidx < sizeof...(Ns); ++bitidx) {
         param[bitidx] = (i >> bitcum) & ((1ull << bits[bitidx]) - 1);
         bitcum += bits[bitidx];
       }

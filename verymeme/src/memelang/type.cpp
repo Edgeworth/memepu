@@ -7,6 +7,16 @@
 
 namespace memelang::exec {
 
+bool Qualifier::isSubsetOf(const Qualifier& o) const {
+  if (cnst && !o.cnst) return false;
+  return hasIntersection(o);
+}
+
+bool Qualifier::hasIntersection(const Qualifier& o) const {
+  if (array != o.array) return false;
+  return ptr == o.ptr;
+}
+
 std::string Qualifier::str() const {
   std::string q;
   if (array) q += std::to_string(array);
@@ -25,11 +35,33 @@ int Type::size() const {
   return size;
 }
 
+bool Type::isSubsetOf(const Type& o) const {
+  if (info != o.info) return false;
+  if (cnst && !o.cnst) return false;  // Can't assign const to non-const.
+  if (quals.size() != o.quals.size()) return false;
+  for (int i = 0; i < quals.size(); ++i)
+    if (!quals[i].isSubsetOf(o.quals[i])) return false;
+  return true;
+}
+
+bool Type::hasIntersection(const Type& o) const {
+  if (info != o.info) return false;
+  if (quals.size() != o.quals.size()) return false;
+  for (int i = 0; i < quals.size(); ++i)
+    if (!quals[i].hasIntersection(o.quals[i])) return false;
+  return true;
+}
+
 std::string Type::str() const {
   std::string info_str = std::visit([](const auto& v) { return v.str(); }, info);
-  std::string rep = "Type(" + info_str + "; quals: ";
-  rep += join(
-      quals.rbegin(), quals.rend(), [](auto& i) { return i.str(); }, ", ");
+  std::string rep = "Type(" + info_str;
+  if (cnst) rep += "; cnst";
+  if (ref) rep += "; ref";
+  if (!quals.empty()) {
+    rep += "; ";
+    rep += join(
+        quals.rbegin(), quals.rend(), [](auto& i) { return i.str(); }, ", ");
+  }
   rep += ")";
   return rep;
 }
@@ -62,8 +94,8 @@ void Mapping::unmerge(const Mapping& m) {
   }
 }
 
-std::pair<int, Mapping> dist(const Type& a, const Type& b, Exec* e) {
-  if (a == b) return {0, Mapping(e)};  // Same types have no distance cost.
+std::pair<int, Mapping> distFrom(const Type& a, const Type& b, Exec* e) {
+  if (a.isSubsetOf(b)) return {0, Mapping(e)};  // Same types have no distance cost.
 
   // TODO: Our type must be fully specified for now.
   if (std::holds_alternative<WildcardInfo>(a.info)) unimplemented();
@@ -72,8 +104,8 @@ std::pair<int, Mapping> dist(const Type& a, const Type& b, Exec* e) {
 
   int qual_idx = 0;
   Type wildcard_type = a;
-  for (; qual_idx < int(b.quals.size()); ++qual_idx) {
-    if (qual_idx >= int(a.quals.size()))
+  for (; qual_idx < b.quals.size(); ++qual_idx) {
+    if (qual_idx >= a.quals.size())
       return {Mapping::NOT_SUBTYPE, Mapping(e)};  // Too many qualifiers on wildcard - can't match.
     if (a.quals[qual_idx] != b.quals[qual_idx])
       return {Mapping::NOT_SUBTYPE, Mapping(e)};  // Qualifiers don't match.
@@ -83,7 +115,7 @@ std::pair<int, Mapping> dist(const Type& a, const Type& b, Exec* e) {
   // plus one for actually having a wildcard.
   Mapping m(e);
   m.map[std::get<WildcardInfo>(b.info)] = e->scope().addType(wildcard_type);
-  return {int(wildcard_type.quals.size()) + 1, std::move(m)};
+  return {wildcard_type.quals.size() + 1, std::move(m)};
 }
 
 void resolveWildcardWith(Type& wildcard, const Type& concrete) {
