@@ -10,14 +10,15 @@ Scope::Scope(Exec* exec)
     : e_(exec), bool_t(addBuiltinStorage(BOOL)), i8_t(addBuiltinStorage(I8)),
       i16_t(addBuiltinStorage(I16)), i32_t(addBuiltinStorage(I32)), i64_t(addBuiltinStorage(I64)),
       u8_t(addBuiltinStorage(U8)), u16_t(addBuiltinStorage(U16)), u32_t(addBuiltinStorage(U32)),
-      u64_t(addBuiltinStorage(U64)), f32_t(addBuiltinStorage(F32)), f64_t(addBuiltinStorage(F64)) {
+      u64_t(addBuiltinStorage(U64)), f32_t(addBuiltinStorage(F32)), f64_t(addBuiltinStorage(F64)),
+      u8_ptr_t(addType(Type(t(u8_t).info, false, {{.ptr = true}}))) {
   pushScopeUnsafe(nullptr, Mapping(e_));
 
   for (const auto& fn : BUILTIN_FNS) builtin_fns_.emplace(fn, BuiltinFnInfo(fn));
   for (const auto& file : e_->module()->files) {
     for (auto& fn : file->fns) {
       e_->setContext(fn.get());
-      fns_.emplace(fn->sig->tname->name, FnSetInfo({{fn.get(), Mapping(e_)}}));
+      fns_.emplace(fn->sig->tname->name, FnSetInfo({{fn.get(), Mapping(e_)}}, INVL_VAL));
     }
     for (auto& enm : file->enums) {
       e_->setContext(enm.get());
@@ -105,7 +106,7 @@ Val Scope::findValue(ast::Ref* ref) {
     mapped_fnset.reserve(fnset->fns.size());
     for (const FnInfo& fn : fnset->fns)
       mapped_fnset.emplace_back(fn.fn, typelistToMapping(fn.fn->sig->tname->tlist.get(), ref));
-    return Val(INVL_HND, addType(Type(FnSetInfo(std::move(mapped_fnset)))));
+    return Val(INVL_HND, addType(Type(FnSetInfo(std::move(mapped_fnset), fnset->ths))));
   }
   return val;
 }
@@ -204,8 +205,7 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
   return m;
 }
 
-FnSetInfo Scope::findImplFnSet(
-    TypeId this_type, const std::string& intf_name, const std::string& fn_name) {
+FnSetInfo Scope::findImplFnSet(Val ths, const std::string& intf_name, const std::string& fn_name) {
   std::vector<std::pair<int, FnInfo>> fns;
   for (const auto& ast_impl : impls_) {
     // TODO: Scope resolution?
@@ -218,7 +218,7 @@ FnSetInfo Scope::findImplFnSet(
     Mapping impl_mapping = typelistToMapping(ast_impl->tlist.get(), nullptr);
     auto autoscope = autoScope(ast_impl, impl_mapping);
     TypeId impl = typeFromAst(ast_impl->type.get());
-    auto [impler_dist, impler_mapping] = dist(t(this_type), t(impl), e_);
+    auto [impler_dist, impler_mapping] = dist(t(ths.type), t(impl), e_);
     if (impler_dist == Mapping::NOT_SUBTYPE) continue;
 
     // Make sure to include types that might be resolved by function params.
@@ -232,7 +232,7 @@ FnSetInfo Scope::findImplFnSet(
   std::vector<FnInfo> flat_fns;
   flat_fns.reserve(fns.size());
   for (auto& v : fns) flat_fns.emplace_back(std::move(v.second));
-  return FnSetInfo(std::move(flat_fns));
+  return FnSetInfo(std::move(flat_fns), ths);
 }
 
 TypeInfo Scope::typeInfoForAstType(ast::Type* type) {

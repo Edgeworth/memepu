@@ -9,7 +9,12 @@ fn main() i32 {
   printf("strlen result: %d\n", strlen(&data[0]));
 
   str := string.new(&data[0]);
-  printf("size of string: %d\n", sizeof(str));
+  str2 := string.new("hello: ");
+  printf("size of string: %d\nprint_str: ", sizeof(str));
   print_str(&str);
+  printf("\n");
+  printf("combined string: ");
+  print_str(&(str2 + str));
+  printf("\n");
   ret 0;
 }

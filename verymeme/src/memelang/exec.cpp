@@ -37,11 +37,11 @@ void Exec::run() {
   const auto& type = s_.t(s_.findValue("main").type);
 
   if (!std::holds_alternative<FnSetInfo>(type.info)) error("main name does not refer to function");
-  if (!runFn(std::get<FnSetInfo>(type.info), {}, INVL_VAL)) error("no main function to execute");
+  if (!runFn(std::get<FnSetInfo>(type.info), {})) error("no main function to execute");
   fprintf(stderr, "===END PROGRAM===\n");
 }
 
-std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& params, Val ths) {
+std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& params) {
   // Look for first doable option based on parameters.
   for (const auto& fninfo : fnset.fns) {
     const auto& fn = fninfo.fn;
@@ -53,7 +53,7 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
     if (!can_do) continue;
     s_.mergeMapping(fn_mapping);
 
-    if (ths.hasStorage()) s_.declareVar("this", addr(ths));
+    if (fnset.ths.hasStorage()) s_.declareVar("this", addr(fnset.ths));
     for (int i = 0; i < int(fn->sig->params.size()); ++i) {
       auto& decl = fn->sig->params[i];
       runStmt(decl.get(), s_.typeFromAst(decl->type.get()));
@@ -61,7 +61,7 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
     }
     TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get());
     auto val = runStmtBlk(fn->blk.get(), ret_type);
-    // Succesfully executed the function, so make sure to return something.
+    // Successfully executed the function, so make sure to return something.
     return val ? val : INVL_VAL;
   }
   return std::nullopt;
@@ -70,24 +70,21 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
 Val Exec::runBuiltinFn(ast::Op* n) {
   const std::string& name = g<ast::Ref>(n->left)->name;
   auto& args = g<ast::FnCallArgs>(n->right)->args;
-  TypeId u8_ptr_t = s_.addType(Type(s_.t(s_.u8_t).info, false, {{.ptr = true}}));
   if (name == "printf") {
     if (args.empty()) error("printf requires at least 1 argument");
     if (typeid(*args[0]) != typeid(ast::StrLit)) error("printf must take string literal for now");
     boost::format fmt = boost::format(g<ast::StrLit>(args[0])->val);
-    //    printf("op: %s, name: %s fmt string: %s\n", n->str().c_str(), name.c_str(),
-    //    g<ast::StrLit>(args[0])->val.c_str());
     for (int i = 1; i < int(args.size()); ++i)
       invokeBuiltin(eval(args[i].get(), INVL_TID), [&fmt](auto& a) { fmt = fmt % a; });
     printf("%s", fmt.str().c_str());
     return INVL_VAL;
   } else if (name == "readf") {
     if (args.size() != 2) error("readf requires 2 arguments");
-    auto read_ptr = eval(args[0].get(), u8_ptr_t);
+    auto read_ptr = eval(args[0].get(), s_.u8_ptr_t);
     auto read_sz = eval(args[1].get(), s_.u32_t);
 
-    if (read_ptr.type != u8_ptr_t)
-      error("wrong type: " + s_.t(read_ptr.type).str() + " need: " + s_.t(u8_ptr_t).str());
+    if (read_ptr.type != s_.u8_ptr_t)
+      error("wrong type: " + s_.t(read_ptr.type).str() + " need: " + s_.t(s_.u8_ptr_t).str());
     if (read_sz.type != s_.u32_t) error("wrong type: " + s_.t(read_sz.type).str());
     std::cin.getline(&vm_.ref<char>(deref(read_ptr).hnd), vm_.ref<int32_t>(read_sz.hnd));
 
@@ -106,7 +103,7 @@ Val Exec::runBuiltinFn(ast::Op* n) {
     auto arg = eval(args[0].get(), s_.u32_t);
     if (arg.type != s_.u32_t) error("_malloc requires u32 argument");
     Hnd data = vm_.allocTmp(vm_.ref<uint32_t>(arg.hnd));
-    auto ret_val = Val(vm_.allocStack(s_.t(u8_ptr_t).size()), u8_ptr_t);
+    auto ret_val = Val(vm_.allocStack(s_.t(s_.u8_ptr_t).size()), s_.u8_ptr_t);
     vm_.write(ret_val.hnd, data);
     return ret_val;
   }
@@ -136,7 +133,7 @@ std::optional<Val> Exec::runStmt(ast::Node* stmt, TypeId typectx) {
   } else if (typeid(*stmt) == typeid(ast::Ret)) {
     auto* ret = g<ast::Ret>(stmt);
     if (ret->ret) return eval(ret->ret.get(), typectx);
-    return std::nullopt;
+    return INVL_VAL;
   } else if (typeid(*stmt) == typeid(ast::If)) {
     return runIf(g<ast::If>(stmt), typectx);
   } else {
@@ -172,9 +169,8 @@ Val Exec::runOp(ast::Op* op) {
       std::vector<Val> params;
       // TODO: allow deduction of types of fn parameters.
       for (auto& arg : args->args) params.emplace_back(eval(arg.get(), INVL_TID));
-      // TODO: member call
-      if (auto opt = runFn(std::get<FnSetInfo>(type.info), params, INVL_VAL); opt)
-        return opt.value();
+      // TODO: member call -> add ths param to FnSetInfo;
+      if (auto opt = runFn(std::get<FnSetInfo>(type.info), params); opt) return opt.value();
       else
         error("unable to resolve function " + type.str());
     } else {
@@ -186,12 +182,12 @@ Val Exec::runOp(ast::Op* op) {
     auto* ref = g<ast::Ref>(op->right);
 
     const auto& type = s_.t(left.type);
+    Hnd data_hnd = type.isPtr() ? deref(left).hnd : left.hnd;
     if (std::holds_alternative<StructInfo>(type.info)) {
       const auto& info = std::get<StructInfo>(type.info);
-      auto fnset = s_.findImplFnSet(left.type, "", ref->name);
+      auto fnset = s_.findImplFnSet(left, "", ref->name);
       if (!fnset.fns.empty()) return Val(INVL_HND, s_.addType(Type(std::move(fnset))));
-      printf("do access at %d %s\n", left.hnd, ref->name.c_str());
-      if (auto val = info.access(left.hnd, ref->name); val != INVL_VAL) return val;
+      if (auto val = info.access(data_hnd, ref->name); val != INVL_VAL) return val;
       error("unknown struct member " + ref->name);
     } else {
       error("unimplemented member access");
@@ -257,6 +253,14 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
     vm_.write(val.hnd, uint32_t(g<ast::IntLit>(n)->val));
     return val;
   }
+  if (typeid(*n) == typeid(ast::StrLit)) {
+    const std::string& s = g<ast::StrLit>(n)->val;
+    auto val = Val(vm_.allocTmp(s_.t(s_.u8_ptr_t).size()), s_.u8_ptr_t);
+    auto storage_hnd = vm_.allocTmp(s.size());
+    vm_.write(val.hnd, storage_hnd);
+    for (int i = 0; i < int(s.size()); ++i) vm_.write(storage_hnd + i, s[i]);
+    return val;
+  }
   if (typeid(*n) == typeid(ast::CompoundLit)) {
     const auto& cmpd = g<ast::CompoundLit>(n);
     // Use given type if it exists, otherwise use type context.
@@ -275,12 +279,9 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
       });
     } else if (auto* st = std::get_if<StructInfo>(&type.info); st) {
       int offset = 0;
-      printf("struct at %d\n", res.hnd);
       for (const auto& frag : cmpd->frags) {
         if (!frag->name.empty()) {
           Val dst = st->access(res.hnd, frag->name);
-          printf("WRITE VAL NAME OF: %s %d\n", frag->name.c_str(),
-              vm_.ref<int32_t>(eval(frag->lit.get(), dst.type).hnd));
           copy(dst, eval(frag->lit.get(), dst.type));
         } else {
           Val dst = st->access(res.hnd, offset);
@@ -349,7 +350,7 @@ Val Exec::neq(Val l, Val r) {
 Val Exec::array_access(Val l, Val r) {
   if (!l.hasStorage() || !r.hasStorage()) error("attempt operate on value without storage");
 
-  if (auto opt = runFn(s_.findImplFnSet(l.type, "Indexable", "index"), {addr(r)}, l); opt)
+  if (auto opt = runFn(s_.findImplFnSet(l, "Indexable", "index"), {addr(r)}); opt)
     return deref(opt.value());
 
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
