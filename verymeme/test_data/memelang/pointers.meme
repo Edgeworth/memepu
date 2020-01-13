@@ -6,6 +6,7 @@ fn main() i8 {
   val := i8{2};
   ptr : *i8 = &val;
   pptr : **i8 = &ptr;
+  refpptr : &**i8 = pptr;
 
   cval := i8{2};
   cptr_ci8 : const* const i8 = &cval;

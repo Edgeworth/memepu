@@ -1,19 +1,19 @@
 impl<T> BinaryArith<*T, u32> for *T {
-  fn add(o: *u32) *T {
-    ret *this + *T{*o};
+  fn add(o: &u32) *T {
+    ret self + *T{o};
   }
 }
 
 impl<T> UnaryArith<*T> for *T {
   fn postinc() *T {
-    tmp := *this;
-    *this = *this + sizeof(**this);
+    tmp := self;
+    self = self + sizeof(*self);
     ret tmp;
   }
 }
 
-impl<I, T> Indexable<I, *T> for *T {
-  fn index(idx: *I) *T {
-    ret *this + *T{*idx * sizeof(**this)};
+impl<I, T> Indexable<I, *T> for *const T {
+  fn index(idx: &const I) &const T {
+    ret *(self + *T{idx * sizeof(*self)});
   }
 }

@@ -114,7 +114,7 @@ void Parser::Ctx::error(const std::string& msg) const {
 }
 
 bool Parser::Ctx::hasTok(const std::vector<Tok::Type>& ts, int peek) const {
-  if (idx_ + peek >= int(toks_.size())) return false;
+  if (idx_ + peek >= toks_.size()) return false;
   if (ts.empty()) return true;
   const auto& token = toks_[idx_ + peek];
   return std::any_of(ts.begin(), ts.end(), [token](auto type) { return token.type == type; });
