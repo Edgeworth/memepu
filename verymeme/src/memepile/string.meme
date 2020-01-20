@@ -10,22 +10,22 @@ fn print_cstr(s: *u8) {
   }
 }
 
-fn print_str(s: &const string) {
+fn print_str(s: &const String) {
   for i := 0u; i < s.len; ++i {
     printf("%c", s[i]);
   }
 }
 
-struct string {
+struct String {
   data: *u8,
   len: u32,
 }
 
-impl string {
-  static fn new(s: *u8) string {
-    ret string.new(s, strlen(s));
+impl String {
+  static fn new(s: *u8) String {
+    ret String.new(s, strlen(s));
   }
-  static fn new(s: *u8, len: u32) string {
+  static fn new(s: *u8, len: u32) String {
     data := malloc<u8>(len);
     memcpy(data, s, len);
     ret {data: data, len: len};
@@ -37,15 +37,15 @@ impl string {
   }
 }
 
-impl<I> Indexable<I, u8> for const string {
-  fn index(idx: &const I) &u8 {
+impl<I> Indexable<I, const u8> for const String {
+  fn index(idx: &const I) &const u8 {
     ret self.data[idx];
   }
 }
 
-impl BinaryArith<string, string> for const string {
-  fn add(o: &const string) string {
-    tmp := string{};
+impl BinaryArith<String, String> for const String {
+  fn add(o: &const String) String {
+    tmp := String{};
     tmp.resize(self.len + o.len);
     memcpy(tmp.data, self.data, self.len);
     memcpy(tmp.data + self.len, o.data, o.len);

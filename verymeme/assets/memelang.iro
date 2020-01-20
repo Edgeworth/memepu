@@ -177,7 +177,7 @@ main : context {
   }
 
   : pattern {
-    regex \= (ret|for|while|if|else|match)
+    regex \= (ret|for|while|if|else|match|import)
     styles [] = .keyword;
   }
 

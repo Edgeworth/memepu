@@ -1,6 +1,7 @@
 fn malloc<T>(count: u32) *T {
   ret *T{_malloc(count * sizeof(T))};
 }
+
 fn free<T>(ptr: *T) {
   // Currently no-op.
 }

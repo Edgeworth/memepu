@@ -102,7 +102,11 @@ public:
   Mapping m;
 
   explicit EnumInfo(ast::Enum* en, Mapping m) : en(en), m(std::move(m)) {}
-  int size() const { unimplemented(); }
+  int size() const {
+    // TODO: Support typed enums
+    return 4;
+  }
+  Val access(const std::string& member) const;
   std::string str() const { return "Enum(" + en->tname->name + ")"; }
   COMPARISON(EnumInfo, en);
 };
@@ -186,14 +190,15 @@ public:
   bool isSubsetOf(const Type& o) const;  // Computes if this type is a subset of |o|. (e.g. const)
   // Computes whether there is a type that is a subset of this type and |o|.
   bool hasIntersection(const Type& o) const;
+  // Resolves wildcards recursively within this type given a mapping. Any mappings for contained
+  // types will also be used.
+  void resolveType(const Mapping& m);
   std::string str() const;
 
   COMPARISON(Type, info, cnst, quals);
 };
 
 std::pair<int, Mapping> distFrom(const Type& a, const Type& b, Exec* e);
-// E.g. *T => **u8. if parameter is *u8.
-void resolveWildcardWith(Type& wildcard, const Type& concrete);
 // Converts the path in |type| to a string - this doesn't include template parameters.
 std::string typepathToString(ast::Type* type);
 
