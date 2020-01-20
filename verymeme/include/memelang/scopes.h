@@ -37,6 +37,7 @@ public:
   TypeId addType(const Type& t);
   const Type& t(TypeId id);
   TypeId typeFromAst(ast::Type* ast_type);
+  Mapping typelistToMapping(ast::Typelist* tlist, ast::Ref* ref);
 
   std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
   // TODO: Should use ref instead of fn_name.
@@ -62,7 +63,6 @@ private:
   TypeInfo typeInfoForAstType(ast::Type* type);
   // Computes current mapping for an (optional) typelist.
   // Optional |ref| specifies explicit mappings.
-  Mapping typelistToMapping(ast::Typelist* tlist, ast::Ref* ref);
   Val maybeFindVar(const std::string& name);
   TypeId addBuiltinStorage(const std::string& name);
 

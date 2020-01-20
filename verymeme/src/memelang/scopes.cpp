@@ -222,6 +222,11 @@ FnSetInfo Scope::findImplFnSet(Val self, const std::string& intf_name, const std
     auto [impler_dist, impler_mapping] = distFrom(t(self.type), t(impl), e_);
     if (impler_dist == Mapping::NOT_SUBTYPE) continue;
 
+    // TODO(hack): Need to match based on parameter list order, not wildcard character.
+    // e.g. vector<T> vs for vector<I>
+    const auto& self_t = t(self.type);
+    if (auto* info = std::get_if<StructInfo>(&self_t.info); info) impler_mapping.merge(info->m);
+
     // Make sure to include types that might be resolved by function params.
     impler_mapping.merge(impl_mapping);
     for (const auto& fn : ast_impl->fns) {

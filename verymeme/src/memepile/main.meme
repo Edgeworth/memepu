@@ -1,20 +1,19 @@
-
 fn main() i32 {
-  SIZE := 128u;
-  data : [SIZE]u8 = {};
-  nbytes := readf(&data[0], SIZE);
-  printf("got %d bytes: ", nbytes);
-  print_cstr(&data[0]);
-  printf("\n");
-  printf("strlen result: %d\n", strlen(&data[0]));
+//  SIZE := 4096u;
+//  data : [SIZE]u8 = {};
+//  nbytes := readf(&data[0], SIZE);
+//  s := String.new(&data[0]);
+//  printf("got %d bytes: ", nbytes);
+//  print_str(s);
+//  printf("\n");
 
-  str := string.new(&data[0]);
-  str2 := string.new("hello: ");
-  printf("size of string: %d\nprint_str: ", sizeof(str));
-  print_str(str);
-  printf("\n");
-  printf("combined string: ");
-  print_str(str2 + str);
-  printf("\n");
+//  cts := FileContents.new(String.new("stdin"), s);  // TODO: Do something about String.new
+//  t := Tokeniser.new(cts);
+//  toks := t.tokenise();
+
+//  for i := 0u; i < toks.size; ++i {
+//    printf("Tok %d: %s\n", i, toks[i].str());
+//  }
+  Vector<Tok>.new().push(Tok{});
   ret 0;
 }

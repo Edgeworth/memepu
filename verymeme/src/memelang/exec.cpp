@@ -42,6 +42,7 @@ void Exec::run() {
 
 std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& params) {
   // Look for first doable option based on parameters.
+  printf("RUN FN: %s\n", fnset.str().c_str());
   for (const auto& fninfo : fnset.fns) {
     const auto& fn = fninfo.fn;
     const auto& m = fninfo.m;
@@ -59,6 +60,7 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
     }
     TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get());
     auto val = runStmtBlk(fn->blk.get(), ret_type);
+    printf("returning: %s\n", val ? s_.t(val.value().type).str().c_str() : "none");
     // Successfully executed the function, so make sure to return something.
     return val ? val : INVL_VAL;
   }
@@ -186,6 +188,10 @@ Val Exec::runOp(ast::Op* op) {
       if (!fnset.fns.empty()) return Val(INVL_HND, s_.addType(Type(std::move(fnset))));
       if (auto val = info.access(data_hnd, ref->name); val != INVL_VAL) return val;
       error("unknown struct member " + ref->name);
+    } else if (std::holds_alternative<EnumInfo>(type.info)) {
+      const auto& info = std::get<EnumInfo>(type.info);
+      // TODO: Typed enums
+      return info.access(ref->name);
     } else {
       error("unimplemented member access");
     }

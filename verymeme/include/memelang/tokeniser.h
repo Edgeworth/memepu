@@ -59,6 +59,7 @@ struct Tok {
     FOR,
     WHILE,
     RET,
+    IMPORT,
     STATIC,
     CONST,
     // Complex tokens
