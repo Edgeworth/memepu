@@ -247,6 +247,13 @@ struct If : public Node {
   DEFNLT(If, cond, then, els);
 };
 
+struct Import : public Node {
+  std::string name;
+
+  DEFNLT(Import, name);
+};
+
+
 // Top level constructs:
 struct Fn : public Node {
   std::unique_ptr<FnSig> sig;
@@ -292,9 +299,10 @@ struct File : public Node {
   std::vector<std::unique_ptr<Intf>> intfs;
   std::vector<std::unique_ptr<Struct>> structs;
   std::vector<std::unique_ptr<Impl>> impls;
+  std::vector<std::unique_ptr<Import>> imports;
   std::string filename;
 
-  DEFNLT(File, fns, enums, intfs, structs, impls);
+  DEFNLT(File, fns, enums, intfs, structs, impls, imports);
 };
 
 struct Module : public Node {

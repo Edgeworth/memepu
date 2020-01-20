@@ -1,0 +1,44 @@
+struct Vector<T> {
+  data: *T,
+  size: u32,
+  cap: u32,
+}
+
+impl<T> Vector<T> {
+  fn push(val: &const T) {
+    if self.size == self.cap {
+      self.cap = self.cap * 2u;
+      newdata := malloc<T>(self.cap * sizeof(T));
+      for i := 0u; i < self.size; ++i {
+        newdata[i] = self.data[i];
+      }
+      free(self.data);
+      self.data = newdata;
+    }
+    self.data[self.size++] = val;
+  }
+
+  fn pop() T {
+    --self.size;
+    ret self.data[self.size];
+  }
+
+  static fn new() Vector<T> {
+    printf("SIZEOF: %d\n", sizeof(*T));
+    ret {
+      data: *T{},
+      size: 0,
+      cap: 0,
+    };
+  }
+}
+
+// TODO: destructors
+//impl<T> Destructible<T> for Vector<T> {
+//  fn destroy() {
+//    for i := 0; i < size; i++ {
+//      data_[i].destroy();
+//    }
+//    free(data_);
+//  }
+//}

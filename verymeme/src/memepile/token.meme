@@ -1,15 +1,47 @@
 struct FileContents {
-  filename: const string,
-  data: const string,
+  filename: const String,
+  data: const String,
 }
 
 impl FileContents {
-  static fn new(filename: &const string, data: &const string) FileContents {
+  static fn new(filename: &const String, data: &const String) FileContents {
     ret {
       filename: filename,  // TODO: deep copy
-      data: data
+      data: data,
     };
   }
 }
 
-struct Tokeniser {}
+enum TokType {
+  PLUS, DPLUS, MINUS, DMINUS,
+}
+
+struct Tok {
+  type: TokType,
+  loc: i32,
+  size: i32,
+  int_val: i32,  // TODO: i64
+  str_val: String,
+}
+
+impl Tok {
+  fn str() String {
+    ret String.new("Tok(") + str_val + String.new(")");  // TODO: add +=
+  }
+}
+
+struct Tokeniser {
+  cts: const FileContents,
+  toks: Vector<Tok>,
+}
+
+impl Tokeniser {
+  static fn new(cts: &const FileContents) Tokeniser {
+    ret {cts: cts, toks: Vector<Tok>.new()};
+  }
+
+  fn tokenise() Vector<Tok> {
+    self.toks.push(Tok{type: TokType.PLUS, loc: 0, size: 0, int_val: 0, str_val: String.new("test")});
+    ret self.toks;  // TODO: copy constructor etc?
+  }
+}

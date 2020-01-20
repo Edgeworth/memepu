@@ -18,12 +18,14 @@ enum_blk : LBRACE ((IDENT | member_var_decl) ',')* RBRACE ;  // No type means no
 match_blk : LBRACE ((IDENT | literal) ':' stmt_blk)* RBRACE ;
 
 // Statement related:
-stmt : expr ';' | stmt_var_defn | stmt_ret | stmt_for | stmt_if | stmt_while | stmt_match | ASM ;
+stmt : expr ';' | stmt_var_defn | stmt_ret | stmt_for | stmt_if | stmt_while | stmt_match |
+  stmt_import | ASM ;
 stmt_ret : 'ret' expr? ';' ;
 stmt_for : 'for' stmt_var_defn expr ';' expr stmt_blk ;
 stmt_while : 'while' expr stmt_blk ;
 stmt_if : 'if' expr stmt_blk ('else' stmt_if)* ('else' stmt_blk)? ;
 stmt_match : 'match' expr match_blk ;
+stmt_import : 'import' STR_LIT ;
 
 // Type related:
 typebound : IDENT ; // TODO: Support complex type bounds?

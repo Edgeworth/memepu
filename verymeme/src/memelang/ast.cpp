@@ -325,6 +325,13 @@ If::If(Parser::Ctx& c) : Node(c) {
 std::string If::str() const { return "If"; }
 std::vector<Node*> If::children() { return flattenChildren(cond, then, els); }
 
+Import::Import(Parser::Ctx& c) : Node(c) {
+  c.consumeTok(Tok::IMPORT);
+  name = c.consumeTok(Tok::STR_LIT)->str_val;
+}
+std::string Import::str() const { return "Import(" + name + ")"; }
+std::vector<Node*> Import::children() { return {}; }
+
 Fn::Fn(Parser::Ctx& c) : Node(c) {
   sig = std::make_unique<FnSig>(c);
 
@@ -419,12 +426,15 @@ File::File(Parser::Ctx& c) : Node(c) {
     case Tok::INTF: intfs.emplace_back(std::make_unique<Intf>(c)); break;
     case Tok::STRUCT: structs.emplace_back(std::make_unique<Struct>(c)); break;
     case Tok::IMPL: impls.emplace_back(std::make_unique<Impl>(c)); break;
+    case Tok::IMPORT: imports.emplace_back(std::make_unique<Import>(c)); break;
     default: c.error("unexpected token"); break;
     }
   }
 }
 std::string File::str() const { return "File(" + filename + ")"; }
-std::vector<Node*> File::children() { return flattenChildren(fns, enums, intfs, structs, impls); }
+std::vector<Node*> File::children() {
+  return flattenChildren(fns, enums, intfs, structs, impls, imports);
+}
 
 Module::Module(const std::vector<std::unique_ptr<Parser::Ctx>>& ctxs) {
   for (const auto& ctx : ctxs) files.emplace_back(std::make_unique<File>(*ctx));

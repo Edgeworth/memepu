@@ -39,6 +39,7 @@ void Parser::collectTypeIdents() {
   types.insert(std::begin(BUILTIN_TYPES), std::end(BUILTIN_TYPES));
 
   // Collect type idents for everything in the module.
+  // TODO: handle public/private stuff + imports?
   for (const auto& ctx : c_) {
     while (ctx->hasTok()) {
       const bool wasEnum = ctx->hasTok(Tok::ENUM);

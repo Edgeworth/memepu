@@ -52,6 +52,15 @@ bool Type::hasIntersection(const Type& o) const {
   return true;
 }
 
+void Type::resolveType(const Mapping& m) {
+  // E.g. *T => **u8. if parameter is *u8.
+  wildcard.info = concrete.info;
+  auto new_quals = concrete.quals;
+  // TODO: handle const here.
+  new_quals.insert(new_quals.end(), wildcard.quals.begin(), wildcard.quals.end());
+  wildcard.quals = std::move(new_quals);
+}
+
 std::string Type::str() const {
   std::string info_str = std::visit([](const auto& v) { return v.str(); }, info);
   std::string rep = "Type(" + info_str;
@@ -118,14 +127,6 @@ std::pair<int, Mapping> distFrom(const Type& a, const Type& b, Exec* e) {
   return {wildcard_type.quals.size() + 1, std::move(m)};
 }
 
-void resolveWildcardWith(Type& wildcard, const Type& concrete) {
-  wildcard.info = concrete.info;
-  auto new_quals = concrete.quals;
-  // TODO: handle const here.
-  new_quals.insert(new_quals.end(), wildcard.quals.begin(), wildcard.quals.end());
-  wildcard.quals = std::move(new_quals);
-}
-
 std::string typepathToString(ast::Type* type) {
   return join(
       type->path.begin(), type->path.end(), [](const auto& t) { return t->name; }, ".");
@@ -133,6 +134,8 @@ std::string typepathToString(ast::Type* type) {
 
 StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {
   auto& s = m.e->scope();
+  // Include wildcards from this struct.
+  m.merge(s.typelistToMapping(st->tname->tlist.get(), nullptr));
   auto autoscope = s.autoScope(st, m);
   for (const auto& member : st->var_decls) {
     TypeId tid = s.typeFromAst(member->type.get());
@@ -144,13 +147,26 @@ StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {
 Val StructInfo::access(Hnd hnd, const std::string& member) const {
   auto iter = mems.find(member);
   if (iter == mems.end()) return INVL_VAL;
-  return Val(hnd + iter->second.offset, iter->second.type);
+  auto& s = m.e->scope();
+  return Val(hnd + iter->second.offset, s.addType(maybeResolveType(s.t(iter->second.type), m)));
 }
 
 Val StructInfo::access(Hnd hnd, int offset) const {
+  auto& s = m.e->scope();
   for (const auto& kv : mems)
-    if (kv.second.offset == offset) return Val(hnd + offset, kv.second.type);
+    if (kv.second.offset == offset)
+      return Val(hnd + offset, s.addType(maybeResolveType(s.t(kv.second.type), m)));
   m.e->error("no value at offset " + std::to_string(offset));
+}
+
+Val EnumInfo::access(const std::string& member) const {
+  for (int i = 0; i < en->numbered_variants.size(); ++i)
+    if (member == en->numbered_variants[i]) {
+      Hnd hnd = m.e->vm().allocTmp(size());
+      m.e->vm().write(hnd, int32_t(i));
+      return Val(hnd, m.e->scope().addType(Type(*this)));
+    }
+  m.e->error("no enum variant " + member);
 }
 
 }  // namespace memelang::exec
