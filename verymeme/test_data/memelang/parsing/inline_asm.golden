@@ -1,21 +1,25 @@
-File
- Fn
-  FnSig
-   Typename(main)
-   Type(i8)
-  StmtBlk
-   Asm(
+Module
+ File(inline_asm.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    Asm(
     lhu r3,5
   )
-   Asm(
-    lhu r3,5
-    lhu r3,5
-  )
-   Asm(
-    lhu r3,5
+    Asm(
     lhu r3,5
     lhu r3,5
   )
-   Asm()
-   StrLit(a string)
-   CharLit(0)
+    Asm(
+    lhu r3,5
+    lhu r3,5
+    lhu r3,5
+  )
+    Asm()
+    StrLit(a string)
+    CharLit(9)
+    Ret
+     IntLit(0)

@@ -3,20 +3,21 @@
 package common;
   // Must explicitly specify net types:
   `default_nettype none
-  // This should be defined for generating schematics. This will enable schematic specific features
-  // e.g. tri-state logic muxes.
-//  `define SCHEMATIC
-  // This enables hex files for look up tables. Using hex files makes formal
-  // verification very slow, so disabling this will instead use in-verilog implementations.
-  // Hexfiles are generated from probing in-verilog implementation behaviour using verilator.
-  // This line is modified by a sed expression by the build system so be careful.
-// `define HEXFILE
+
+  // SCHEMATIC:
+  //   This should be defined for generating schematics. This will enable schematic specific
+  //   features e.g. tri-state logic muxes.
+  // HEXFILE:
+  //   This enables hex files for look up tables. Using hex files makes formal
+  //   verification very slow, so disabling this will instead use in-verilog implementations.
+  //   Hexfiles are generated from probing in-verilog implementation behaviour using verilator.
+  //   This line is modified by a sed expression by the build system so be careful.
   // Defines whether or not to use bootstrapping for srams. TODO: Finish implementing.
 //  `define BOOTSTRAP
 
   // Schematics must use LUTs, so enable HEXFILE.
   `ifdef SCHEMATIC
-  // `define HEXFILE
+  `define HEXFILE
   `endif
 
   // TODO: yosys bug, does not support enums: https://github.com/YosysHQ/yosys/issues/248

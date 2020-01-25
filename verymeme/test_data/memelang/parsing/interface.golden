@@ -1,12 +1,30 @@
-File
- Intf
-  FnSig
-   Typename(testFunc)
-   Type(i8)
-  FnSig
-   Typename(testFunc2)
-   VarDecl
-    VarRef(a)
-    Type(T)
-     Qualifier(const: 0 ptr: 1, array: 0)
-   Type(i16)
+Module
+ File(interface.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    Ret
+     IntLit(0)
+  Intf
+   FnSig
+    Typename(testFunc)
+    Type(Ref(i8))
+     Ref(i8)
+   FnSig
+    Typename(testFunc2)
+    VarDecl(a)
+     Type(Ref(T))
+      Ref(T)
+      Qualifier(const: 0 ptr: 1, array: 0)
+    Type(Ref(i16))
+     Ref(i16)
+   FnSig
+    Typename(testFunc2)
+    VarDecl(a)
+     Type(refRef(T))
+      Ref(T)
+    Type(Ref(i16))
+     Ref(i16)

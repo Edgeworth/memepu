@@ -1,13 +1,24 @@
-File
- Fn
-  FnSig
-   Typename(main)
-   Type(i8)
-  StmtBlk
-   VarDefn
-    VarDecl
-     VarRef(e)
-     Type(Empty)
-    CompoundLit
- Struct
-  Typename(Empty)
+Module
+ File(empty_struct_initializer.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    VarDefn
+     VarDecl(e)
+     CompoundLit
+      Type(Ref(Empty))
+       Ref(Empty)
+    VarDefn
+     VarDecl(e)
+      Type(Ref(Empty))
+       Ref(Empty)
+     CompoundLit
+      Type(Ref(Empty))
+       Ref(Empty)
+    Ret
+     IntLit(0)
+  Struct
+   Typename(Empty)

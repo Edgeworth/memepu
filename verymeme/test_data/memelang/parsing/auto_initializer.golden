@@ -1,15 +1,22 @@
-File
- Fn
-  FnSig
-   Typename(main)
-   Type(i8)
-  StmtBlk
-   VarDefn
-    VarDecl
-     VarRef(e)
-    Op(FN_CALL)
-     Type(Empty)
-     FnCallArgs
-      CompoundLit
- Struct
-  Typename(Empty)
+Module
+ File(auto_initializer.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    VarDefn
+     VarDecl(e)
+     CompoundLit
+      Type(Ref(Empty))
+       Ref(Empty)
+    VarDefn
+     VarDecl(e)
+      Type(Ref(Empty))
+       Ref(Empty)
+     CompoundLit
+    Ret
+     IntLit(0)
+  Struct
+   Typename(Empty)

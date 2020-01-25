@@ -1,13 +1,24 @@
-File
- Fn
-  FnSig
-   Typename(main)
-   Type(i8)
-  StmtBlk
-   VarDefn
-    VarDecl
-     VarRef(array)
-     Type(i8)
-      Qualifier(const: 0 ptr: 0, array: IntLit(5))
-       IntLit(5)
-    CompoundLit
+Module
+ File(empty_array_initializer.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    VarDefn
+     VarDecl(array)
+     CompoundLit
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(5))
+        IntLit(5)
+    VarDefn
+     VarDecl(array)
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(5))
+        IntLit(5)
+     CompoundLit
+    Ret
+     IntLit(0)

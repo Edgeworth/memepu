@@ -136,6 +136,7 @@ module kpu(
   assign bus = mmu_out;
   assign bus[7:0] = control_ctrl_data;
   assign bus[15:0] = opword_immediate_out;
+  wire _unused_ok = {control_ctrl_data_n_out};
   `else
   assign bus = !control_reg_n_out ? reg_out : !control_tmp0_n_out ? tmp0_out :
     !control_tmp1_n_out ? tmp1_out : !control_mlu_n_out ? mlu_out : !control_shifter_n_out ?
