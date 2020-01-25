@@ -1,42 +1,53 @@
 struct Vector<T> {
   data: *T,
-  size: u32,
+  len: u32,
   cap: u32,
 }
 
 impl<T> Vector<T> {
   fn push(val: &const T) {
-    if self.size == self.cap {
+    if self.len == self.cap {
       self.cap = self.cap * 2u;
       newdata := malloc<T>(self.cap * sizeof(T));
-      for i := 0u; i < self.size; ++i {
+      for i := 0u; i < self.len; ++i {
         newdata[i] = self.data[i];
       }
       free(self.data);
       self.data = newdata;
     }
-    self.data[self.size++] = val;
+    self.data[self.len++] = val;
   }
 
   fn pop() T {
-    --self.size;
-    ret self.data[self.size];
+    --self.len;
+    ret self.data[self.len];
+  }
+
+  fn clear() {
+    free(self.data);
+    self.len = 0u;
+    self.cap = 0u;
   }
 
   static fn new() Vector<T> {
-    printf("SIZEOF: %d\n", sizeof(*T));
     ret {
       data: *T{},
-      size: 0,
-      cap: 0,
+      len: 0u,
+      cap: 0u,
     };
+  }
+}
+
+impl<I, T> Indexable<I, T> for Vector<T> {
+  fn index(idx: &const I) &const T {
+    ret self.data[idx];
   }
 }
 
 // TODO: destructors
 //impl<T> Destructible<T> for Vector<T> {
 //  fn destroy() {
-//    for i := 0; i < size; i++ {
+//    for i := 0; i < len; i++ {
 //      data_[i].destroy();
 //    }
 //    free(data_);
