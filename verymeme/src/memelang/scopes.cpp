@@ -153,31 +153,24 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
   }
 
   auto* ref = ast_type->path.back().get();
-  std::visit(overloaded{[this, &new_type](const WildcardInfo& wildcard) {
-                          // Maybe resolve if wildcard type.
-                          auto iter = scopes_.back().m.map.find(wildcard);
-                          if (iter != scopes_.back().m.map.end() && iter->second != INVL_TID)
-                            resolveWildcardWith(new_type, t(iter->second));
-                        },
-                 [](const BuiltinStorageInfo&) {}, [](const BuiltinFnInfo&) {},
-                 [this, ref](FnSetInfo& fnset) {
-                   for (auto& fninfo : fnset.fns)
-                     fninfo.m = typelistToMapping(fninfo.fn->sig->tname->tlist.get(), ref);
-                 },
-                 [this, ref](IntfInfo& info) {
-                   info.m = typelistToMapping(info.intf->tname->tlist.get(), ref);
-                 },
-                 [this, ref](StructInfo& info) {
-                   info.m = typelistToMapping(info.st->tname->tlist.get(), ref);
-                 },
-                 [this, ref](EnumInfo& info) {
-                   info.m = typelistToMapping(info.en->tname->tlist.get(), ref);
-                 },
-                 [this, ref](FnInfo& info) {
-                   info.m = typelistToMapping(info.fn->sig->tname->tlist.get(), ref);
-                 }},
-      new_type.info);
+  // Collect mapping from ast.
+  auto visitfn = overloaded{[](const WildcardInfo&) {}, [](const BuiltinStorageInfo&) {},
+      [](const BuiltinFnInfo&) {},
+      [this, ref](FnSetInfo& fnset) {
+        for (auto& fninfo : fnset.fns)
+          fninfo.m = typelistToMapping(fninfo.fn->sig->tname->tlist.get(), ref);
+      },
+      [this, ref](
+          IntfInfo& info) { info.m = typelistToMapping(info.intf->tname->tlist.get(), ref); },
+      [this, ref](
+          StructInfo& info) { info.m = typelistToMapping(info.st->tname->tlist.get(), ref); },
+      [this, ref](EnumInfo& info) { info.m = typelistToMapping(info.en->tname->tlist.get(), ref); },
+      [this, ref](
+          FnInfo& info) { info.m = typelistToMapping(info.fn->sig->tname->tlist.get(), ref); }};
+  std::visit(visitfn, new_type.info);
 
+  // Resolev type and add.
+  new_type.resolve(scopes_.back().m);
   return addType(new_type);
 }
 

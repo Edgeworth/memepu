@@ -39,12 +39,15 @@ struct Val {
 
 constexpr inline Val INVL_VAL = Val(INVL_HND, INVL_TID);
 
+class Mapping;
+
 class WildcardInfo {
 public:
   std::string name;
 
   explicit WildcardInfo(std::string name) : name(std::move(name)) {}
   int size() const { return 0; }
+  void resolve(const Mapping& m);
   std::string str() const { return "Wildcard(" + name + ")"; }
   COMPARISON(WildcardInfo, name);
 };
@@ -70,6 +73,7 @@ public:
 
   explicit IntfInfo(ast::Intf* intf, Mapping m) : intf(intf), m(std::move(m)) {}
   int size() const { unimplemented(); }
+  void resolve(const Mapping& m);
   std::string str() const { return "Intf(" + intf->tname->name + ")"; }
   COMPARISON(IntfInfo, intf);
 };
@@ -87,6 +91,7 @@ public:
 
   explicit StructInfo(ast::Struct* st, Mapping m);
   int size() const { return size_; }
+  void resolve(const Mapping& m);
   Val access(Hnd hnd, const std::string& member) const;
   Val access(Hnd hnd, int offset) const;
   std::string str() const { return "Struct(" + st->tname->name + ")"; }
@@ -106,6 +111,7 @@ public:
     // TODO: Support typed enums
     return 4;
   }
+  void resolve(const Mapping& m);
   Val access(const std::string& member) const;
   std::string str() const { return "Enum(" + en->tname->name + ")"; }
   COMPARISON(EnumInfo, en);
@@ -120,6 +126,7 @@ public:
     bug_unless(BUILTIN_SIZE.contains(name));
     return BUILTIN_SIZE.find(name)->second;
   }
+  void resolve(const Mapping& m);
   std::string str() const { return "BuiltinStorage(" + name + ")"; }
   COMPARISON(BuiltinStorageInfo, name);
 };
@@ -130,6 +137,7 @@ public:
 
   explicit BuiltinFnInfo(std::string name) : name(std::move(name)) {}
   int size() const { unimplemented(); }
+  void resolve(const Mapping& m);
   std::string str() const { return "BuiltinFn(" + name + ")"; }
   COMPARISON(BuiltinFnInfo, name);
 };
@@ -140,6 +148,7 @@ public:
   Mapping m;
   FnInfo(ast::Fn* fn, Mapping m) : fn(fn), m(std::move(m)) {}
   int size() const { unimplemented(); }
+  void resolve(const Mapping& m);
   std::string str() const { return "FnInfo(fn: " + fn->str() + ", m: " + m.str() + ")"; }
   COMPARISON(FnInfo, fn, m);
 };
@@ -151,6 +160,7 @@ public:
 
   explicit FnSetInfo(std::vector<FnInfo> fns, Val self) : fns(std::move(fns)), self(self) {}
   int size() const { unimplemented(); }
+  void resolve(const Mapping& m);
   std::string str() const {
     const std::string s = join(
         fns.begin(), fns.end(), [](const auto& fn) { return fn.str(); }, ", ");
@@ -192,7 +202,7 @@ public:
   bool hasIntersection(const Type& o) const;
   // Resolves wildcards recursively within this type given a mapping. Any mappings for contained
   // types will also be used.
-  void resolveType(const Mapping& m);
+  void resolve(const Mapping& m);
   std::string str() const;
 
   COMPARISON(Type, info, cnst, quals);
@@ -201,6 +211,7 @@ public:
 std::pair<int, Mapping> distFrom(const Type& a, const Type& b, Exec* e);
 // Converts the path in |type| to a string - this doesn't include template parameters.
 std::string typepathToString(ast::Type* type);
+Type resolveType(const Type& t, const Mapping& m);
 
 }  // namespace memelang::exec
 
