@@ -5,6 +5,14 @@ struct Vector<T> {
 }
 
 impl<T> Vector<T> {
+  static fn new() Vector<T> {
+    ret {
+      data: *T{},
+      len: 0u,
+      cap: 0u,
+    };
+  }
+
   fn push(val: &const T) {
     if self.len == self.cap {
       self.cap = self.cap * 2u;
@@ -27,14 +35,6 @@ impl<T> Vector<T> {
     free(self.data);
     self.len = 0u;
     self.cap = 0u;
-  }
-
-  static fn new() Vector<T> {
-    ret {
-      data: *T{},
-      len: 0u,
-      cap: 0u,
-    };
   }
 }
 

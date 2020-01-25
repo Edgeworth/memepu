@@ -39,23 +39,9 @@ struct Val {
 
 constexpr inline Val INVL_VAL = Val(INVL_HND, INVL_TID);
 
-class Mapping;
-
-class WildcardInfo {
-public:
-  std::string name;
-
-  explicit WildcardInfo(std::string name) : name(std::move(name)) {}
-  int size() const { return 0; }
-  void resolve(const Mapping& m);
-  std::string str() const { return "Wildcard(" + name + ")"; }
-  COMPARISON(WildcardInfo, name);
-};
-
 class Mapping {
 public:
-  constexpr static int NOT_SUBTYPE = INT_MAX / 2;
-  std::map<WildcardInfo, TypeId> map;
+  std::map<std::string, TypeId> map;
   Exec* e;
 
   explicit Mapping(Exec* e) : e(e) {}
@@ -66,6 +52,32 @@ public:
   COMPARISON(Mapping, map);
 };
 
+// Map from (depth, breath) => dist
+struct DistMap {
+  std::map<std::pair<int, int>, int> m;
+
+  bool operator<(const DistMap& o) const;
+  std::string str() const;
+};
+
+struct DistResult {
+  bool doable = false;
+  DistMap d;
+  Mapping m;
+};
+
+class WildcardInfo {
+public:
+  std::string name;
+
+  explicit WildcardInfo(std::string name) : name(std::move(name)) {}
+  int size() const { return 0; }
+  void resolve(const Mapping& m);
+  DistResult distTo(const WildcardInfo& o, Exec* e) const;
+  std::string str() const { return "Wildcard(" + name + ")"; }
+  COMPARISON(WildcardInfo, name);
+};
+
 class IntfInfo {
 public:
   ast::Intf* intf;
@@ -74,8 +86,9 @@ public:
   explicit IntfInfo(ast::Intf* intf, Mapping m) : intf(intf), m(std::move(m)) {}
   int size() const { unimplemented(); }
   void resolve(const Mapping& m);
+  DistResult distTo(const IntfInfo& o, Exec* e) const;
   std::string str() const { return "Intf(" + intf->tname->name + ")"; }
-  COMPARISON(IntfInfo, intf);
+  COMPARISON(IntfInfo, intf, m);
 };
 
 class StructInfo {
@@ -92,10 +105,11 @@ public:
   explicit StructInfo(ast::Struct* st, Mapping m);
   int size() const { return size_; }
   void resolve(const Mapping& m);
+  DistResult distTo(const StructInfo& o, Exec* e) const;
   Val access(Hnd hnd, const std::string& member) const;
   Val access(Hnd hnd, int offset) const;
-  std::string str() const { return "Struct(" + st->tname->name + ")"; }
-  COMPARISON(StructInfo, st);
+  std::string str() const { return "Struct(" + st->tname->name + +" m: " + m.str() + ")"; }
+  COMPARISON(StructInfo, st, m);
 
 private:
   int size_ = 0;
@@ -112,9 +126,10 @@ public:
     return 4;
   }
   void resolve(const Mapping& m);
+  DistResult distTo(const EnumInfo& o, Exec* e) const;
   Val access(const std::string& member) const;
   std::string str() const { return "Enum(" + en->tname->name + ")"; }
-  COMPARISON(EnumInfo, en);
+  COMPARISON(EnumInfo, en, m);
 };
 
 class BuiltinStorageInfo {
@@ -127,6 +142,7 @@ public:
     return BUILTIN_SIZE.find(name)->second;
   }
   void resolve(const Mapping& m);
+  DistResult distTo(const BuiltinStorageInfo& o, Exec* e) const;
   std::string str() const { return "BuiltinStorage(" + name + ")"; }
   COMPARISON(BuiltinStorageInfo, name);
 };
@@ -138,6 +154,7 @@ public:
   explicit BuiltinFnInfo(std::string name) : name(std::move(name)) {}
   int size() const { unimplemented(); }
   void resolve(const Mapping& m);
+  DistResult distTo(const BuiltinFnInfo& o, Exec* e) const;
   std::string str() const { return "BuiltinFn(" + name + ")"; }
   COMPARISON(BuiltinFnInfo, name);
 };
@@ -149,6 +166,7 @@ public:
   FnInfo(ast::Fn* fn, Mapping m) : fn(fn), m(std::move(m)) {}
   int size() const { unimplemented(); }
   void resolve(const Mapping& m);
+  DistResult distTo(const FnInfo& o, Exec* e) const;
   std::string str() const { return "FnInfo(fn: " + fn->str() + ", m: " + m.str() + ")"; }
   COMPARISON(FnInfo, fn, m);
 };
@@ -161,6 +179,7 @@ public:
   explicit FnSetInfo(std::vector<FnInfo> fns, Val self) : fns(std::move(fns)), self(self) {}
   int size() const { unimplemented(); }
   void resolve(const Mapping& m);
+  DistResult distTo(const FnSetInfo& o, Exec* e) const;
   std::string str() const {
     const std::string s = join(
         fns.begin(), fns.end(), [](const auto& fn) { return fn.str(); }, ", ");
@@ -205,10 +224,12 @@ public:
   void resolve(const Mapping& m);
   std::string str() const;
 
-  COMPARISON(Type, info, cnst, quals);
+  COMPARISON(Type, info, cnst, ref, quals);
 };
 
-std::pair<int, Mapping> distFrom(const Type& a, const Type& b, Exec* e);
+// |a| must be a resolved type - |b| can have unresolved wildcards. Returns what the mapping
+// should be for |b| to turn into |a|.
+DistResult distTo(const Type& a, const Type& b, Exec* e);
 // Converts the path in |type| to a string - this doesn't include template parameters.
 std::string typepathToString(ast::Type* type);
 Type resolveType(const Type& t, const Mapping& m);
