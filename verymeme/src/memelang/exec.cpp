@@ -42,7 +42,6 @@ void Exec::run() {
 
 std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& params) {
   // Look for first doable option based on parameters.
-  printf("RUN FN: %s\n", fnset.str().c_str());
   for (const auto& fninfo : fnset.fns) {
     const auto& fn = fninfo.fn;
     const auto& m = fninfo.m;
@@ -60,7 +59,6 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
     }
     TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get());
     auto val = runStmtBlk(fn->blk.get(), ret_type);
-    printf("returning: %s\n", val ? s_.t(val.value().type).str().c_str() : "none");
     // Successfully executed the function, so make sure to return something.
     return val ? val : INVL_VAL;
   }

@@ -13,7 +13,7 @@ impl FileContents {
 }
 
 enum TokType {
-  PLUS, DPLUS, MINUS, DMINUS,
+  PLUS, DPLUS, MINUS, DMINUS, IDENT
 }
 
 struct Tok {
@@ -26,22 +26,37 @@ struct Tok {
 
 impl Tok {
   fn str() String {
-    ret String.new("Tok(") + str_val + String.new(")");  // TODO: add +=
+    ret String.new("Tok(") + self.str_val + String.new(")");  // TODO: add +=
   }
 }
 
 struct Tokeniser {
   cts: const FileContents,
   toks: Vector<Tok>,
+  curtok: String,
 }
 
 impl Tokeniser {
   static fn new(cts: &const FileContents) Tokeniser {
-    ret {cts: cts, toks: Vector<Tok>.new()};
+    ret {cts: cts, toks: Vector<Tok>.new(), curtok: String{}};
   }
 
   fn tokenise() Vector<Tok> {
-    self.toks.push(Tok{type: TokType.PLUS, loc: 0, size: 0, int_val: 0, str_val: String.new("test")});
+    for i := 0u; i < cts.data.len; ++i {
+      if is_space(cts.data[i]) {
+        self.push_curtok();
+      } else {
+        self.curtok.push(cts.data[i]);
+      }
+    }
     ret self.toks;  // TODO: copy constructor etc?
+  }
+
+  fn push_curtok() {
+    if self.curtok.len != 0u {
+      // TODO: make copy / move_into or something
+      self.toks.push(Tok{type: TokType.IDENT, loc: 0, size: 0, int_val: 0, str_val: curtok});
+      curtok.clear();
+    }
   }
 }

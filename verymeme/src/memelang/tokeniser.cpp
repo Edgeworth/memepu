@@ -170,6 +170,8 @@ char Tokeniser::grabEscapedChar() {
   case 'n': return '\n';
   case 'r': return '\r';
   case 't': return '\t';
+  case 'v': return '\v';
+  case 'f': return '\f';
   case '\'': return '\'';
   case '\\': return '\\';
   case '"': return '"';

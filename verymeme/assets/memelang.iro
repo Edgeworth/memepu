@@ -131,7 +131,7 @@ styles [] {
 }
 
 __ident = ([a-zA-Z_]+[a-zA-Z0-9_]*)
-__escape = (\\\\(?:\\\\|'|"|t|r|n))
+__escape = (\\\\(?:\\\\|'|"|t|r|n|v|f))
 
 contexts [] {
 main : context {

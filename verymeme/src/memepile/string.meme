@@ -16,6 +16,10 @@ fn print_str(s: &const String) {
   }
 }
 
+fn is_space(c: u8) bool {
+  ret c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r';
+}
+
 struct String {
   data: *u8,
   len: u32,
@@ -25,15 +29,21 @@ impl String {
   static fn new(s: *u8) String {
     ret String.new(s, strlen(s));
   }
+
   static fn new(s: *u8, len: u32) String {
     data := malloc<u8>(len);
     memcpy(data, s, len);
     ret {data: data, len: len};
   }
+
   fn resize(len: u32) {
     free<u8>(self.data);
     self.data = malloc<u8>(len);
     self.len = len;
+  }
+
+  fn clear() {
+    self = String{};
   }
 }
 
