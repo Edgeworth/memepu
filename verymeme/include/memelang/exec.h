@@ -50,6 +50,7 @@ private:
   Val add(Val l, Val r);
   Val sub(Val l, Val r);
   Val lt(Val l, Val r);
+  Val gt(Val l, Val r);
   Val lor(Val l, Val r);
   Val eq(Val l, Val r);
   Val neq(Val l, Val r);

@@ -1,6 +1,8 @@
 fn strlen(s: *u8) u32 {
   len := 0u;
-  while s[len++] != 0 {}
+  while s[len] != 0 {
+    ++len;
+  }
   ret len;
 }
 
@@ -23,6 +25,7 @@ fn is_space(c: u8) bool {
 struct String {
   data: *u8,
   len: u32,
+  cap: u32,
 }
 
 impl String {
@@ -33,13 +36,29 @@ impl String {
   static fn new(s: *u8, len: u32) String {
     data := malloc<u8>(len);
     memcpy(data, s, len);
-    ret {data: data, len: len};
+    ret {data: data, len: len, cap: len};
+  }
+
+  fn push(c: u8) {
+    if self.len == self.cap {
+      self.cap = self.cap * 2u;
+      newdata := malloc<u8>(self.cap * sizeof(u8));
+      for i := 0u; i < self.len; ++i {
+        newdata[i] = self.data[i];
+      }
+      free(self.data);
+      self.data = newdata;
+    }
+    self.data[self.len++] = c;
   }
 
   fn resize(len: u32) {
-    free<u8>(self.data);
-    self.data = malloc<u8>(len);
     self.len = len;
+    if self.len > self.cap {
+      free(self.data);
+      self.data = malloc<u8>(self.len);
+      self.cap = self.len;
+    }
   }
 
   fn clear() {

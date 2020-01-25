@@ -169,7 +169,7 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
           FnInfo& info) { info.m = typelistToMapping(info.fn->sig->tname->tlist.get(), ref); }};
   std::visit(visitfn, new_type.info);
 
-  // Resolev type and add.
+  // Resolve type and add.
   new_type.resolve(scopes_.back().m);
   return addType(new_type);
 }
@@ -179,7 +179,7 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
   int wildcard_count = 0;
   if (tlist) {
     wildcard_count = tlist->names.size();
-    for (const auto& wildcard : tlist->names) m.map.emplace(WildcardInfo(wildcard), INVL_TID);
+    for (const auto& wildcard : tlist->names) m.map.emplace(wildcard, INVL_TID);
   }
 
   if (ref) {
@@ -192,7 +192,7 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
     for (int i = 0; i < wildcard_count; ++i) {
       TypeId tid = INVL_TID;
       if (i < ref->params.size()) tid = typeFromAst(ref->params[i].get());
-      m.map[WildcardInfo(tlist->names[i])] = tid;
+      m.map[tlist->names[i]] = tid;
     }
   }
 
@@ -200,7 +200,7 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
 }
 
 FnSetInfo Scope::findImplFnSet(Val self, const std::string& intf_name, const std::string& fn_name) {
-  std::vector<std::pair<int, FnInfo>> fns;
+  std::vector<std::pair<DistMap, FnInfo>> fns;
   for (const auto& ast_impl : impls_) {
     // TODO: Scope resolution?
     // Skip if it doesn't match this interface or if it's an interface-less query and one is
@@ -212,8 +212,8 @@ FnSetInfo Scope::findImplFnSet(Val self, const std::string& intf_name, const std
     Mapping impl_mapping = typelistToMapping(ast_impl->tlist.get(), nullptr);
     auto autoscope = autoScope(ast_impl, impl_mapping);
     TypeId impl = typeFromAst(ast_impl->type.get());
-    auto [impler_dist, impler_mapping] = distFrom(t(self.type), t(impl), e_);
-    if (impler_dist == Mapping::NOT_SUBTYPE) continue;
+    auto [doable, impler_dist, impler_mapping] = distTo(t(self.type), t(impl), e_);
+    if (!doable) continue;
 
     // TODO(hack): Need to match based on parameter list order, not wildcard character.
     // e.g. vector<T> vs for vector<I>
@@ -236,7 +236,7 @@ FnSetInfo Scope::findImplFnSet(Val self, const std::string& intf_name, const std
 
 TypeInfo Scope::typeInfoForAstType(ast::Type* type) {
   const auto path = typepathToString(type);
-  if (scopes_.back().m.map.contains(WildcardInfo(path))) return WildcardInfo(path);
+  if (scopes_.back().m.map.contains(path)) return WildcardInfo(path);
   if (builtin_storage_.contains(path)) return builtin_storage_.find(path)->second;
   if (builtin_fns_.contains(path)) return builtin_fns_.find(path)->second;
   if (fns_.contains(path)) return FnSetInfo({fns_.find(path)->second});
@@ -265,8 +265,8 @@ std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::ve
   for (int i = 0; i < fn->sig->params.size(); ++i) {
     TypeId fn_arg_tid = typeFromAst(fn->sig->params[i]->type.get());
     TypeId arg_tid = args[i].type;
-    auto [param_dist, param_mapping] = distFrom(t(arg_tid), t(fn_arg_tid), e_);
-    if (param_dist == Mapping::NOT_SUBTYPE) {
+    auto [cando, param_dist, param_mapping] = distTo(t(arg_tid), t(fn_arg_tid), e_);
+    if (!cando) {
       unmergeMapping(fn_mapping);
       return {false, fn_mapping};
     }

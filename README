@@ -3,6 +3,14 @@
 TODO fill out.
 
 ## Verymeme
+
+### Example commands:
+
+#### memecad
+
+#### memelang
+memelang ./src/memepile/{integral,memory,pointer,stdintf,vector,string,token,main}.meme
+
 ### Running tests
 Run run.py to run the tests for both SCHEMATIC and non-SCHEMATIC verilog
 configurations.

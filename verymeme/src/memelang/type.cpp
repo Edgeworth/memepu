@@ -7,28 +7,37 @@
 
 namespace memelang::exec {
 
-std::pair<int, Mapping> distFrom(const Type& a, const Type& b, Exec* e) {
-  if (a.isSubsetOf(b)) return {0, Mapping(e)};  // Same types have no distance cost.
+DistResult distTo(const Type& a, const Type& b, Exec* e) {
+  // Same types (modulo const/ref) have no distance cost.
+  if (a.isSubsetOf(b)) return {true, {}, Mapping(e)};
 
-  // TODO: Our type must be fully specified for now.
+  // TODO: Our type must be fully specified for now
+  //   if not, consider: vec<vec<T>> or vec<T> compared to vec<vec<T>>
   if (std::holds_alternative<WildcardInfo>(a.info)) unimplemented();
-  // TODO: Match child template parameters too.
-  if (!std::holds_alternative<WildcardInfo>(b.info)) return {Mapping::NOT_SUBTYPE, Mapping(e)};
+  if (!std::holds_alternative<WildcardInfo>(b.info)) {
+    // If neither |a| or |b| are wildcards, the top level type must match.
+    if (a.info.index() != b.info.index()) return {false, {}, Mapping(e)};
+    return std::visit(
+        [b, e](const auto& ainfo) {
+          return ainfo.distTo(std::get<std::remove_cvref_t<decltype(ainfo)>>(b.info), e);
+        },
+        a.info);
+  }
 
   int qual_idx = 0;
   Type wildcard_type = a;
   for (; qual_idx < b.quals.size(); ++qual_idx) {
-    if (qual_idx >= a.quals.size())
-      return {Mapping::NOT_SUBTYPE, Mapping(e)};  // Too many qualifiers on wildcard - can't match.
-    if (a.quals[qual_idx] != b.quals[qual_idx])
-      return {Mapping::NOT_SUBTYPE, Mapping(e)};  // Qualifiers don't match.
+    // Too many qualifiers on wildcard - can't match.
+    if (qual_idx >= a.quals.size()) return {false, {}, Mapping(e)};
+    // Qualifiers don't match.
+    if (a.quals[qual_idx] != b.quals[qual_idx]) return {false, {}, Mapping(e)};
     wildcard_type.quals.erase(wildcard_type.quals.begin());  // Pop front.
   }
   // For now, distance is how many qualifiers that were pushed into the wildcard (didn't match),
   // plus one for actually having a wildcard.
   Mapping m(e);
-  m.map[std::get<WildcardInfo>(b.info)] = e->scope().addType(wildcard_type);
-  return {wildcard_type.quals.size() + 1, std::move(m)};
+  m.map[std::get<WildcardInfo>(b.info).name] = e->scope().addType(wildcard_type);
+  return {true, {{{{0, 0}, wildcard_type.quals.size() + 1}}}, std::move(m)};
 }
 
 Type resolveType(const Type& t, const Mapping& m) {
@@ -92,7 +101,7 @@ void Type::resolve(const Mapping& m) {
   // TODO: resolve types here. types should be resolved by default (always;
   // maybe mapping can be removed if can do something about functions?;).
   if (auto* wildcard = std::get_if<WildcardInfo>(&info); wildcard) {
-    auto iter = m.map.find(*wildcard);
+    auto iter = m.map.find(wildcard->name);
     if (iter != m.map.end() && iter->second != INVL_TID) {
       const auto& concrete = m.e->scope().t(iter->second);
       info = concrete.info;
@@ -121,8 +130,8 @@ std::string Type::str() const {
 
 std::string Mapping::str() const {
   auto f = [this](auto& kv) {
-    if (kv.second == INVL_TID) return "unmapped " + kv.first.str();
-    return kv.first.str() + ":" + e->scope().t(kv.second).str();
+    if (kv.second == INVL_TID) return "unmapped " + kv.first;
+    return kv.first + ":" + e->scope().t(kv.second).str();
   };
   return join(map.begin(), map.end(), f, ", ");
 }
@@ -134,7 +143,7 @@ void Mapping::merge(const Mapping& m) {
     if (iter != map.end() && iter->second != INVL_TID) {
       if (type == INVL_TID) continue;
       else
-        e->error("duplicate template parameter " + wildcard.str());
+        e->error("duplicate template parameter " + wildcard);
     }
     map[wildcard] = type;
   }
@@ -150,8 +159,15 @@ void Mapping::unmerge(const Mapping& m) {
 void WildcardInfo::resolve(const Mapping&) {
   // Implemented in Type::resolve.
 }
+DistResult WildcardInfo::distTo(const WildcardInfo&, Exec* e) const {
+  return {true, {}, Mapping(e)};  // Wildcard matches any other wildcard.
+}
 
 void IntfInfo::resolve(const Mapping& m) {}
+
+DistResult IntfInfo::distTo(const IntfInfo&, Exec*) const {
+  unimplemented();  // Should not happen
+}
 
 StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {
   auto& s = m.e->scope();
@@ -167,6 +183,16 @@ StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {
 
 void StructInfo::resolve(const Mapping& m) {
   // TODO: Resolve types.
+}
+
+DistResult StructInfo::distTo(const StructInfo& o, Exec* e) const {
+  if (st != o.st) return {false, {}, Mapping(e)};  // Must be same kind of struct.
+  // TODO: also need to write merge fns for distresult etc
+//  DistResult res{true, {}, Mapping(e)};
+//  for (const auto& wildcard : st->tname->tlist->names) {
+//
+//  }
+  return {true, {}, Mapping(e)};  // TODO this
 }
 
 Val StructInfo::access(Hnd hnd, const std::string& member) const {
@@ -197,21 +223,59 @@ Val EnumInfo::access(const std::string& member) const {
 void EnumInfo::resolve(const Mapping& m) {
   // TODO: Resolve types.
 }
-
-void BuiltinStorageInfo::resolve(const Mapping&) {
-  // Nothing to do.
+DistResult EnumInfo::distTo(const EnumInfo& o, Exec* e) const {
+  // TODO: Compute distance.
+  unimplemented();
 }
 
-void BuiltinFnInfo::resolve(const Mapping&) {
-  // Nothing to do.
+void BuiltinStorageInfo::resolve(const Mapping&) {}
+DistResult BuiltinStorageInfo::distTo(const BuiltinStorageInfo& o, Exec* e) const {
+  return *this == o ? DistResult{true, {}, Mapping(e)} : DistResult{false, {}, Mapping(e)};
+}
+
+void BuiltinFnInfo::resolve(const Mapping&) {}
+DistResult BuiltinFnInfo::distTo(const BuiltinFnInfo&, Exec*) const {
+  unimplemented();  // Should not happen
 }
 
 void FnInfo::resolve(const Mapping&) {
   // Nothing to do - functions need to keep a mapping around for execution.
 }
+DistResult FnInfo::distTo(const FnInfo&, Exec*) const {
+  unimplemented();  // Should not happen
+}
 
 void FnSetInfo::resolve(const Mapping& m) {
   for (auto& fninfo : fns) fninfo.resolve(m);
 }
+DistResult FnSetInfo::distTo(const FnSetInfo&, Exec*) const {
+  unimplemented();  // Should not happen
+}
 
+bool DistMap::operator<(const DistMap& o) const {
+  std::pair<int, int> first_diff{-1, -1};
+  for (const auto& kv : m) {
+    auto iter = o.m.find(kv.first);
+    if (iter == o.m.end() || kv.second != iter->second) first_diff = kv.first;
+  }
+  for (const auto& kv : o.m) {
+    auto iter = m.find(kv.first);
+    if (iter == m.end() || kv.second != iter->second) first_diff = std::min(first_diff, kv.first);
+  }
+
+  if (!o.m.contains(first_diff)) return false;  // Also handles case where neither contain.
+  if (!m.contains(first_diff)) return true;
+  return m.find(first_diff)->second < o.m.find(first_diff)->second;
+}
+
+std::string DistMap::str() const {
+  std::string s = "DistMap(";
+  auto f = [](const auto& i) {
+    return std::to_string(i.first.first) + "x" + std::to_string(i.first.second) + "=>" +
+        std::to_string(i.second);
+  };
+  s += join(m.begin(), m.end(), f, ",");
+  s += ")";
+  return s;
+}
 }  // namespace memelang::exec

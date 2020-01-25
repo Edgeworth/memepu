@@ -200,6 +200,7 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::ADD: return add(left, eval(op->right.get(), left.type));
   case ast::Expr::SUB: return sub(left, eval(op->right.get(), left.type));
   case ast::Expr::LT: return lt(left, eval(op->right.get(), left.type));
+  case ast::Expr::GT: return gt(left, eval(op->right.get(), left.type));
   case ast::Expr::LOR: return lor(left, eval(op->right.get(), left.type));
   case ast::Expr::EQ: return eq(left, eval(op->right.get(), left.type));
   case ast::Expr::NEQ: return neq(left, eval(op->right.get(), left.type));
@@ -260,6 +261,11 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
     auto storage_hnd = vm_.allocTmp(s.size());
     vm_.write(val.hnd, storage_hnd);
     for (int i = 0; i < s.size(); ++i) vm_.write(storage_hnd + i, s[i]);
+    return val;
+  }
+  if (typeid(*n) == typeid(ast::CharLit)) {
+    auto val = Val(vm_.allocTmp(s_.t(s_.u8_t).size()), s_.u8_t);
+    vm_.write(val.hnd, uint8_t(g<ast::CharLit>(n)->val));
     return val;
   }
   if (typeid(*n) == typeid(ast::CompoundLit)) {
@@ -334,6 +340,10 @@ Val Exec::sub(Val l, Val r) {
 
 Val Exec::lt(Val l, Val r) {
   return binop(l, r, s_.bool_t, "lt", [](auto a, auto b) { return a < b; });
+}
+
+Val Exec::gt(Val l, Val r) {
+  return binop(l, r, s_.bool_t, "gt", [](auto a, auto b) { return a > b; });
 }
 
 Val Exec::lor(Val l, Val r) {

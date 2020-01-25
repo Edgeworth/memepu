@@ -102,7 +102,7 @@ void Tokeniser::pushCurrentToken() {
   switch (type) {
   case Tok::QUOTE:
     type = Tok::CHAR_LIT;
-    str_val = grabEscapedChar();
+    str_val = int_val = grabEscapedChar();
     verify_expr(isChar('\'', "unexpected EOF"), "unterminated char literal");
     idx_++;  // Skip '.
     break;
