@@ -1,22 +1,31 @@
-File
- Fn
-  FnSig
-   Typename(print_cstr)
-   VarDecl
-    VarRef(s)
-    Type(u8)
-     Qualifier(const: 0 ptr: 1, array: 0)
-  StmtBlk
-   While
-    Op(NEQ)
-     Op(UNARY_DEREF)
-      VarRef(s)
+Module
+ File(regression0.meme)
+  Fn(print_cstr)
+   FnSig
+    Typename(print_cstr)
+    VarDecl(s)
+     Type(Ref(u8))
+      Ref(u8)
+      Qualifier(const: 0 ptr: 1, array: 0)
+   StmtBlk
+    While
+     Op(NEQ)
+      Op(UNARY_DEREF)
+       Ref(s)
+      IntLit(0)
+     StmtBlk
+      Op(FN_CALL)
+       Ref(printf)
+       FnCallArgs
+        StrLit(%c)
+        Op(UNARY_DEREF)
+         Op(POSTFIX_INC)
+          Ref(s)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    Ret
      IntLit(0)
-    StmtBlk
-     Op(FN_CALL)
-      VarRef(printf)
-      FnCallArgs
-       StrLit(%c)
-       Op(UNARY_DEREF)
-        Op(POSTFIX_INC)
-         VarRef(s)

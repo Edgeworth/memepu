@@ -62,18 +62,18 @@ def create_build_config(hexfile):
   COMMON_FILE = 'verilog/common.v'
   VERYMEME_DIR = os.getcwd()
   path = '/tmp/verymeme'
+  hexfile_define = ''
   if hexfile:
     path += '_hexfile'
-    run_command("sed -i 's://\\s*`define HEXFILE:`define HEXFILE:' %s" % COMMON_FILE)
+    hexfile_define = '-DVERILOG_HEXFILE=YES'
   exists = os.path.exists(path)
   if not exists:
     os.makedirs(path)
   os.chdir(path)
-  run_command('cmake BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release %s' % VERYMEME_DIR)
+  run_command(
+    'cmake BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release %s %s' % (hexfile_define, VERYMEME_DIR))
   run_command('make -j $(nproc)')
   os.chdir(VERYMEME_DIR)
-  if hexfile:
-    run_command("sed -i 's:`define HEXFILE:// `define HEXFILE:' %s" % COMMON_FILE)
   return path
 
 

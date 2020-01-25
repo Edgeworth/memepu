@@ -26,7 +26,7 @@ module mmu(
   wire [31:0] vga_val;
   vga vga(.ADDR({ADDR[15:0]}), .N_WE(vga_n_we), .N_OE(vga_n_oe), .N_RST(N_RST), .IN(IN), .OUT(vga_val));
 
-  wire _unused_ok = & {ADDR}; // TODO REMOVE.
+  wire [31:0] _unused_ok = {ADDR}; // TODO REMOVE.
 
   `ifdef SCHEMATIC
   assign OUT = ram_val;

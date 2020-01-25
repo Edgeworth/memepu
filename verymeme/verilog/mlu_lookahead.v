@@ -33,7 +33,7 @@ module mlu_lookahead(
 
   `ifndef BOOTSTRAP
   // Mark bootstrap signals as okay to not be used if not using bootstrapping.
-  wire _unused_ok = &{BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
+  wire [26:0] _unused_ok = {BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
   `endif
 
   `ifdef FORMAL

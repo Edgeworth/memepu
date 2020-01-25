@@ -1,3 +1,12 @@
-File
- Struct
-  Typename(Empty)
+Module
+ File(empty_struct.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    Ret
+     IntLit(0)
+  Struct
+   Typename(Empty)

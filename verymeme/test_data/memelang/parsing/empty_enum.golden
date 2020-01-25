@@ -1,3 +1,12 @@
-File
- Enum(0 untyped)
-  Typename(Unit)
+Module
+ File(empty_enum.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    Ret
+     IntLit(0)
+  Enum(0 numbered)
+   Typename(Unit)

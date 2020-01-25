@@ -31,6 +31,11 @@ endif ()
 
 project(verymeme)
 
+# Add verilog SCHEMATIC configuration option.
+option(VERILOG_SCHEMATIC "Build KPU with SCHEMATIC define enabled. Force enables HEXFILE" OFF)
+# Add verilog HEXFILE configuration option.
+option(VERILOG_HEXFILE "Build KPU with HEXFILE define enabled." OFF)
+
 # Enable IPO if possible.
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result OUTPUT output)

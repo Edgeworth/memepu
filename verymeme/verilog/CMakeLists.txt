@@ -25,10 +25,18 @@ function(add_verilog_module VERILOG_MODULE)
   set(VERILOG_MODULE_SOURCES ${VERILOG_MODULE})
   get_filename_component(MODULE_NAME ${VERILOG_MODULE} NAME_WE)
 
-  message("Running verilator for ${VERILOG_MODULE}")
+  set(VERILATOR_DEFINES "")
+  if (${VERILOG_SCHEMATIC})
+    # Weird spacing because of verilator argument parsing.
+    set(VERILATOR_DEFINES "${VERILATOR_DEFINES}-DSCHEMATIC ")
+  endif ()
+  if (${VERILOG_HEXFILE})
+    set(VERILATOR_DEFINES "${VERILATOR_DEFINES}-DHEXFILE ")
+  endif ()
+    message("Running verilator for ${VERILOG_MODULE}. Defines: ${VERILATOR_DEFINES}")
   # Options: Enable assertions.
   execute_process(
-      COMMAND verilator --report-unoptflat --assert -Wall -O3 --no-threads
+      COMMAND verilator --report-unoptflat --assert -Wall -O3 --no-threads ${VERILATOR_DEFINES}
       -CFLAGS "${CMAKE_CXX_FLAGS}" --cc ${VERILOG_MODULE_SOURCES} -Mdir ${VERILATOR_OUTPUT_DIR}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} RESULT_VARIABLE retcode)
   if (NOT ${retcode} STREQUAL "0")

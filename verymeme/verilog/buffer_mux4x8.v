@@ -45,6 +45,6 @@ module buffer_mux4x8(
     end
   end
   `else
-  wire _unused_ok = &{N_RST};
+  wire _unused_ok = {N_RST};
   `endif
 endmodule
