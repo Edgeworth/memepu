@@ -38,6 +38,6 @@ module sram(
     assert (f_verify_data == mem[f_verify_addr]);
   end
   `else
-  wire _unused_ok = &{N_RST};
+  wire _unused_ok = {N_RST};
   `endif
 endmodule

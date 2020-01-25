@@ -77,6 +77,6 @@ module shifter(
     end
   end
   `else
-  wire _unused_ok = &{N_RST};
+  wire _unused_ok = {N_RST};
   `endif
 endmodule

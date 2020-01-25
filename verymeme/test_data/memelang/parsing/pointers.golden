@@ -1,84 +1,189 @@
-File
- Fn
-  FnSig
-   Typename(main)
-   Type(i8)
-  StmtBlk
-   VarDefn
-    VarDecl
-     VarRef(val)
-    Op(FN_CALL)
-     Type(i8)
-     FnCallArgs
-      IntLit(2)
-   VarDefn
-    VarDecl
-     VarRef(ptr)
-     Type(i8)
-      Qualifier(const: 0 ptr: 1, array: 0)
-    Op(UNARY_ADDR)
-     VarRef(val)
-   VarDefn
-    VarDecl
-     VarRef(pptr)
-     Type(i8)
-      Qualifier(const: 0 ptr: 1, array: 0)
-      Qualifier(const: 0 ptr: 1, array: 0)
-    Op(UNARY_ADDR)
-     VarRef(ptr)
-   VarDefn
-    VarDecl
-     VarRef(cval)
-    Op(FN_CALL)
-     Type(i8)
-     FnCallArgs
-      IntLit(2)
-   VarDefn
-    VarDecl
-     VarRef(cptr_ci8)
-     Type(const i8)
-      Qualifier(const: 1 ptr: 1, array: 0)
-    Op(UNARY_ADDR)
-     VarRef(cval)
-   VarDefn
-    VarDecl
-     VarRef(cptr_cptr_ci8)
-     Type(const i8)
-      Qualifier(const: 1 ptr: 1, array: 0)
-      Qualifier(const: 1 ptr: 1, array: 0)
-    Op(UNARY_ADDR)
-     VarRef(cptr_ci8)
-   VarDefn
-    VarDecl
-     VarRef(array_cptr_ci8)
-     Type(const i8)
-      Qualifier(const: 0 ptr: 0, array: IntLit(42))
-       IntLit(42)
-      Qualifier(const: 1 ptr: 1, array: 0)
-    CompoundLit
-   VarDefn
-    VarDecl
-     VarRef(cptr_array_ci8)
-     Type(const i8)
-      Qualifier(const: 1 ptr: 1, array: 0)
-      Qualifier(const: 0 ptr: 0, array: IntLit(42))
-       IntLit(42)
-    IntLit(0)
-   VarDefn
-    VarDecl
-     VarRef(multidim_array)
-     Type(i8)
-      Qualifier(const: 0 ptr: 0, array: IntLit(40))
-       IntLit(40)
-      Qualifier(const: 0 ptr: 0, array: IntLit(30))
-       IntLit(30)
-    CompoundLit
-   VarDefn
-    VarDecl
-     VarRef(cmultidim_array)
-     Type(const i8)
-      Qualifier(const: 0 ptr: 0, array: IntLit(40))
-       IntLit(40)
-      Qualifier(const: 0 ptr: 0, array: IntLit(30))
-       IntLit(30)
-    CompoundLit
+Module
+ File(pointers.meme)
+  Fn(main)
+   FnSig
+    Typename(main)
+    Type(Ref(i8))
+     Ref(i8)
+   StmtBlk
+    VarDefn
+     VarDecl(val)
+     CompoundLit
+      Type(Ref(i8))
+       Ref(i8)
+      CompoundLitFragment()
+       IntLit(2)
+    VarDefn
+     VarDecl(ptr)
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 1, array: 0)
+     Op(UNARY_ADDR)
+      Ref(val)
+    VarDefn
+     VarDecl(pptr)
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 1, array: 0)
+       Qualifier(const: 0 ptr: 1, array: 0)
+     Op(UNARY_ADDR)
+      Ref(ptr)
+    VarDefn
+     VarDecl(refpptr)
+      Type(refRef(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 1, array: 0)
+       Qualifier(const: 0 ptr: 1, array: 0)
+     Ref(pptr)
+    VarDefn
+     VarDecl(cval)
+     CompoundLit
+      Type(Ref(i8))
+       Ref(i8)
+      CompoundLitFragment()
+       IntLit(2)
+    VarDefn
+     VarDecl(cptr_ci8)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 1 ptr: 1, array: 0)
+     Op(UNARY_ADDR)
+      Ref(cval)
+    VarDefn
+     VarDecl(cptr_cptr_ci8)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 1 ptr: 1, array: 0)
+       Qualifier(const: 1 ptr: 1, array: 0)
+     Op(UNARY_ADDR)
+      Ref(cptr_ci8)
+    VarDefn
+     VarDecl(array_cptr_ci8)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+       Qualifier(const: 1 ptr: 1, array: 0)
+     CompoundLit
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+       Qualifier(const: 1 ptr: 1, array: 0)
+    VarDefn
+     VarDecl(array_cptr_ci8_deduce1)
+     CompoundLit
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+       Qualifier(const: 1 ptr: 1, array: 0)
+    VarDefn
+     VarDecl(array_cptr_ci8_deduce2)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+       Qualifier(const: 1 ptr: 1, array: 0)
+     CompoundLit
+    VarDefn
+     VarDecl(cptr_array_ci8)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 1 ptr: 1, array: 0)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+     CompoundLit
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 1, array: 0)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+      CompoundLitFragment()
+       IntLit(0)
+    VarDefn
+     VarDecl(cptr_array_ci8_deduce1)
+     CompoundLit
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 1, array: 0)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+      CompoundLitFragment()
+       IntLit(0)
+    VarDefn
+     VarDecl(cptr_array_ci8_deduce2)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 1 ptr: 1, array: 0)
+       Qualifier(const: 0 ptr: 0, array: IntLit(42))
+        IntLit(42)
+     CompoundLit
+    VarDefn
+     VarDecl(multidim_array)
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+     CompoundLit
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+    VarDefn
+     VarDecl(multidim_array_deduce1)
+     CompoundLit
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+    VarDefn
+     VarDecl(multidim_array_deduce2)
+      Type(Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+     CompoundLit
+    VarDefn
+     VarDecl(cmultidim_array)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+     CompoundLit
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+    VarDefn
+     VarDecl(cmultidim_array_deduce1)
+     CompoundLit
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+    VarDefn
+     VarDecl(cmultidim_array_deduce2)
+      Type(const Ref(i8))
+       Ref(i8)
+       Qualifier(const: 0 ptr: 0, array: IntLit(40))
+        IntLit(40)
+       Qualifier(const: 0 ptr: 0, array: IntLit(30))
+        IntLit(30)
+     CompoundLit
+    Ret
+     IntLit(0)

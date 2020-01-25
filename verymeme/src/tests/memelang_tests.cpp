@@ -11,13 +11,15 @@ namespace {
 
 namespace fs = std::filesystem;
 
-std::vector<std::pair<fs::path, fs::path>> getFileGoldenPairs(const std::string& dir) {
+const std::string TEST_DIR = "test_data/memelang";
+
+std::vector<std::pair<fs::path, fs::path>> getFileGoldenPairs(const std::string& golden_dir) {
   std::set<fs::path> paths;
-  for (const auto& p : fs::directory_iterator(dir))
+  for (const auto& p : fs::directory_iterator(golden_dir))
     paths.insert(fs::path(p.path()).replace_extension());
   std::vector<std::pair<fs::path, fs::path>> pairs;
   for (const auto& p : paths) {
-    const auto orig = fs::path(p).replace_extension(".meme");
+    const auto orig = fs::path(TEST_DIR) / fs::path(p).replace_extension(".meme").filename();
     const auto golden = fs::path(p).replace_extension(".golden");
     verify_expr(
         fs::exists(orig) && fs::exists(golden), "missing golden pair for %s", p.string().c_str());
