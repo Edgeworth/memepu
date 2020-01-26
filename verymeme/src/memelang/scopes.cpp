@@ -112,6 +112,16 @@ Val Scope::findValue(ast::Ref* ref) {
   return val;
 }
 
+Val Scope::coerceTo(Val l, TypeId tid) {
+  if (!t(l.type).canCoerceTo(t(tid)))
+    e_->error("cannot coerce" + t(l.type).str() + " to " + t(tid).str().c_str());
+  return Val(l.hnd, tid);
+}
+
+Val Scope::tryCoerceTo(Val l, TypeId tid) {
+  return tid != INVL_TID && t(l.type).canCoerceTo(t(tid)) ? coerceTo(l, tid) : l;
+}
+
 Val Scope::findValue(const std::string& name) {
   auto val = maybeFindVar(name);
   if (val == INVL_VAL) e_->error("undeclared variable " + name);
@@ -211,7 +221,7 @@ FnSetInfo Scope::findImplFnSet(Val self, const std::string& intf_name, const std
     // Set up mapping in this impl typename.
     Mapping impl_mapping = typelistToMapping(ast_impl->tlist.get(), nullptr);
     auto autoscope = autoScope(ast_impl, impl_mapping);
-     // Don't resolve type here - doesn't have to be concrete. Can't resolve non-concrete structs.
+    // Don't resolve type here - doesn't have to be concrete. Can't resolve non-concrete structs.
     TypeId impl = typeFromAst(ast_impl->type.get(), false);
     auto [doable, impler_dist, impler_mapping] = distTo(t(self.type), t(impl), e_);
     if (!doable) continue;
@@ -265,9 +275,10 @@ std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::ve
   for (int i = 0; i < fn->sig->params.size(); ++i) {
     // Don't resolve types in fn signature - not needed for distance calc, and can't resolve
     // structs unless they are concrete.
-    TypeId fn_arg_tid = typeFromAst(fn->sig->params[i]->type.get(), false);
-    TypeId arg_tid = args[i].type;
-    auto [cando, param_dist, param_mapping] = distTo(t(arg_tid), t(fn_arg_tid), e_);
+    const auto& fn_arg = t(typeFromAst(fn->sig->params[i]->type.get(), false));
+    const auto& arg = t(args[i].type);
+    // Try coercion as part of function dispatch.
+    auto [cando, param_dist, param_mapping] = distTo(arg, fn_arg, e_);
     if (!cando) {
       unmergeMapping(fn_mapping);
       return {false, fn_mapping};

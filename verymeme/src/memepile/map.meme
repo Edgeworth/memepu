@@ -44,6 +44,6 @@ impl<I, T> Indexable<I, T> for Map<I, T> {
     if !self.contains(idx) {
       self.push(idx, T{});
     }
-    ret self.get(idx);
+    ret *self.get(idx);
   }
 }

@@ -81,3 +81,17 @@ impl BinaryArith<String, String> for String {
     ret tmp;
   }
 }
+
+impl Comparable<String, String> for String {
+  fn eq(o: &const String) bool {
+    if self.len != o.len { ret false; }
+    for i := 0u; i < self.len; ++i {
+      if self[i] != o[i] { ret false; }
+    }
+    ret true;
+  }
+
+  fn neq(o: &const String) bool {
+    ret !self.eq(o);
+  }
+}
