@@ -145,7 +145,7 @@
       "A": "A",
       "N_E1": "E0",
       "N_E2": "E1",
-      "Y": "Y"
+      "N_Y": "S"
     }
   },
   {
@@ -256,17 +256,80 @@
   {
     "verilog_name": "sram",
     "description": "TODO: Replace with correct one.",
-    "kicad_name": "628128_TSOP32",
+    "kicad_name": "SRAMGENERIC",
     "verilog_to_kicad_map": {
-      "0": [
-        "A[16:12]",
-        "~CS1",
-        "GND"
-      ],
-      "1": [
-        "VCC",
-        "CS2"
-      ],
+      "0": "GND",
+      "1": "VCC",
+      "ADDR": "A[11:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q[7:0]",
+      "OUT_DATA": "Q[7:0]"
+    }
+  },
+  {
+    "verilog_name": "sram5x32",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "ADDR": "A[4:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "sram16x32",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "ADDR": "A[15:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "sram15x8",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "ADDR": "A[14:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q[7:0]",
+      "OUT_DATA": "Q[7:0]"
+    }
+  },
+  {
+    "verilog_name": "lut",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "ADDR": "A[11:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q[7:0]",
+      "OUT_DATA": "Q[7:0]"
+    }
+  },
+  {
+    "verilog_name": "lut12x32",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
       "ADDR": "A[11:0]",
       "N_WE": "~WE",
       "N_OE": "~OE",
@@ -275,103 +338,45 @@
     }
   },
   {
-    "verilog_name": "sram17x8",
-    "description": "TODO: Replace with correct one.",
-    "kicad_name": "628128_TSOP32",
-    "verilog_to_kicad_map": {
-      "0": [
-        "~CS1",
-        "GND"
-      ],
-      "1": [
-        "VCC",
-        "CS2"
-      ],
-      "ADDR": "A[16:0]",
-      "N_WE": "~WE",
-      "N_OE": "~OE",
-      "IN_DATA": "Q",
-      "OUT_DATA": "Q"
-    }
-  },
-  {
-    "verilog_name": "lut12x32",
-    "description": "TODO: Replace with correct one.",
-    "kicad_name": "628128_TSOP32",
-    "verilog_to_kicad_map": {
-      "0": [
-        "~CS1",
-        "GND"
-      ],
-      "1": [
-        "VCC",
-        "CS2"
-      ],
-      "ADDR": "A[16:0]",
-      "N_WE": "~WE",
-      "N_OE": "~OE",
-      "IN_DATA": "Q",
-      "OUT_DATA": "Q"
-    }
-  },
-  {
     "verilog_name": "lut12x8",
-    "description": "TODO: Replace with correct one.",
-    "kicad_name": "628128_TSOP32",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
     "verilog_to_kicad_map": {
-      "0": [
-        "~CS1",
-        "GND"
-      ],
-      "1": [
-        "VCC",
-        "CS2"
-      ],
-      "ADDR": "A[16:0]",
+      "0": "GND",
+      "1": "VCC",
+      "ADDR": "A[11:0]",
       "N_WE": "~WE",
       "N_OE": "~OE",
-      "IN_DATA": "Q",
-      "OUT_DATA": "Q"
+      "IN_DATA": "Q[7:0]",
+      "OUT_DATA": "Q[7:0]"
     }
   },
   {
     "verilog_name": "lut17x8",
-    "description": "TODO: Replace with correct one.",
-    "kicad_name": "628128_TSOP32",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
     "verilog_to_kicad_map": {
-      "0": [
-        "~CS1",
-        "GND"
-      ],
-      "1": [
-        "VCC",
-        "CS2"
-      ],
+      "0": "GND",
+      "1": "VCC",
       "ADDR": "A[16:0]",
       "N_WE": "~WE",
       "N_OE": "~OE",
-      "IN_DATA": "Q",
-      "OUT_DATA": "Q"
+      "IN_DATA": "Q[7:0]",
+      "OUT_DATA": "Q[7:0]"
     }
   },
   {
     "verilog_name": "eeprom",
-    "description": "TODO: Replace with correct one.",
-    "kicad_name": "628128_TSOP32",
+    "description": "TODO: Replace with correct one. Hacked to build for demo purposes.",
+    "kicad_name": "SRAMGENERIC",
     "verilog_to_kicad_map": {
-      "0": [
-        "~CS1",
-        "GND"
-      ],
-      "1": [
-        "VCC",
-        "CS2"
-      ],
-      "ADDR": "A[16:0]",
+      "0": "GND",
+      "1": "VCC",
+      "ADDR": "A[11:0]",
       "N_WE": "~WE",
       "N_OE": "~OE",
-      "IN_DATA": "Q",
-      "OUT_DATA": "Q"
+      "IN_DATA": "Q[7:0]",
+      "OUT_DATA": "Q[7:0]"
     }
   }
 ]

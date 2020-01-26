@@ -18,7 +18,6 @@ constexpr int SHEET_MARGIN = 1000;
 Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
   Sheet::Label parent_label = {};
   const std::string label_text = getIdForSigBit(bit);
-
   // Unused signal, so place a no-connect.
   if (label_text.empty()) {
     parent_label.type = Sheet::Label::Type::NOCONNECT;
@@ -43,6 +42,33 @@ Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
   return parent_label;
 }
 
+void handleChildMappingError(const std::string& child_name,
+    const std::set<Sheet::Label>& child_label_set, const ChildMapping& mapping) {
+  std::string msg = "Number of hierarchical labels in child '" + child_name +
+      "' does not match number of verilog connections.\nPossible causes:\n  1. Missing connection "
+      "or unused\n  2. Same physical pin also connected to local label (e.g. GND)\n  3. Connecting "
+      "a Kicad pin to multiple times to a multi-bit verilog signal (currently not supported)\nOnly "
+      "in hierarchical labels:\n";
+  std::set<std::string> child_label_strs;
+  for (const auto& label : child_label_set) {
+    child_label_strs.insert(label.text);
+    if (mapping.contains(label.text)) continue;
+    msg += "  " + label.text + "\n";
+  }
+  msg += "Only in verilog connections:\n";
+  for (const auto& kv : mapping) {
+    if (child_label_strs.contains(kv.first)) continue;
+    msg += "  " + kv.first + "\n";
+  }
+  verify_expr(false, msg.c_str());
+}
+
+std::string sanitiseKicadSheetName(std::string name) {
+  std::replace(name.begin(), name.end(), '\\', '-');
+  std::replace(name.begin(), name.end(), '$', 'p');
+  return name;
+}
+
 }  // namespace
 
 Schematic::SheetData::SheetData() : cur({SHEET_MARGIN, SHEET_MARGIN}) {}
@@ -50,11 +76,12 @@ Schematic::SheetData::SheetData() : cur({SHEET_MARGIN, SHEET_MARGIN}) {}
 std::vector<Schematic::SchematicFile> Schematic::writeHierarchy() {
   std::vector<Schematic::SchematicFile> files;
   for (auto& kv : sheets_) {
-    auto& [sheet_name, sheet_data] = kv;
-    sheet_data.sheet.title = sheet_name;
+    auto& [unsanitised_name, sheet_data] = kv;
+    const auto& name = sanitiseKicadSheetName(unsanitised_name);
+    sheet_data.sheet.title = name;
     sheet_data.sheet.id = 1;  // TODO(improvement): sheet index.
 
-    files.push_back({sheet_name + ".sch", writeSheet(sheet_data.sheet)});
+    files.push_back({name + ".sch", writeSheet(sheet_data.sheet)});
   }
   return files;
 }
@@ -64,21 +91,19 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   auto& parent = sheets_[parent_name];
   auto& ref = parent.sheet.refs.emplace_back();
   ref.name = title;
-  ref.filename = child_name + ".sch";
+  ref.filename = sanitiseKicadSheetName(child_name) + ".sch";
 
   // Plumb up hierarchical labels for this module to the parent:
   verify_expr(sheets_.count(child_name), "could not find child '%s' - maybe missing file",
       child_name.c_str());
   auto& child = sheets_[child_name];
   std::set<Sheet::Label> child_label_set;
-  for (const auto& label : child.sheet.labels) {
+  for (const auto& label : child.sheet.labels)
     if (label.type == Sheet::Label::Type::HIERARCHICAL) child_label_set.insert(label);
-  }
+  // TODO: Support connecting multiple hierarchical labels for each pin.
+  if (child_label_set.size() != mapping.size())
+    handleChildMappingError(child_name, child_label_set, mapping);
   std::vector<Sheet::Label> child_labels(child_label_set.begin(), child_label_set.end());
-  verify_expr(child_labels.size() == mapping.size(),
-      "number of hierarchical labels in child '%s' does not match number of verilog connections"
-      " - maybe missing connection / unused",
-      child_name.c_str());
 
   // Add hierarchical label for child sheet.
   int pack_y = ref.p.y + 100;
@@ -105,7 +130,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   std::vector<Sheet::Label> labels;
   for (int i = 0; i < child_labels.size(); ++i) {
     auto conn_iter = mapping.find(child_labels[i].text);
-    // Should have association from child label  to parent label
+    // Should have association from child label to parent label
     bug_unless(conn_iter != mapping.end());
     Sheet::Label& parent_label = labels.emplace_back(createParentLabel(conn_iter->second.bit));
     parent_label.connectToRefField(ref.fields[i]);

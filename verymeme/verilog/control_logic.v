@@ -129,7 +129,7 @@ module control_logic(
   wire [4:0] unused_misc_plane;
   wire microop_counter_n_rst;
   wire misc_n_set_interrupts;
-  chip74138 misc_plane_decoder(.A({1'b0, misc_plane}), .N_E1(1'b0), .N_E2(1'b0), .E3(1),
+  chip74138 misc_plane_decoder(.A({1'b0, misc_plane}), .N_E1(1'b0), .N_E2(1'b0), .E3(1'b1),
     .N_Y({unused_misc_plane, misc_n_set_interrupts, microop_counter_n_rst, unused_misc_none}));
 
   `ifdef FORMAL

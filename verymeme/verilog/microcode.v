@@ -16,7 +16,7 @@ module microcode(
   lut12x32 microcode(
     .ADDR(ADDR), .OUT_DATA(OUT),
     .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
-    .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
+    .IN_DATA({BOOTSTRAP_DATA, 24'bZ}));  // TODO(bootstrap): only feeding 8 bits in
   `else
   // These assignments must be kept up to date with control_logic.v.
   wire cond_var = ADDR[11];

@@ -45,6 +45,8 @@ std::string getIdForSigBit(const Yosys::SigBit& bit) {
     // .B(C[2:0], C_IN): The child signal B connects to C_IN and C[2:0]. So, use parent offset
     // and width values for deciding the parent label.
     if (bit.wire->width > 1) parent_label += std::to_string(bit.offset);
+  } else if (bit.data == Yosys::State::Sz) {
+    return "";  // Treat Z (high impedance) as no-connect.
   } else {
     verify_expr(bit.data == Yosys::State::S0 || bit.data == Yosys::State::S1,
         "unsupported state for signal: %d", int(bit.data));
