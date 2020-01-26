@@ -17,7 +17,7 @@ module kpu(
   // 0 when N_RST_ASYNC is low. Back to 1 upon deasserting N_RST_ASYNC and negedge of CLK.
   wire n_rst_first_edge;
   wire [1:0] unused_n_q;
-  chip74107 rst_deassert(.J({n_rst_first_edge, 1'b1}), .K(0), .N_CP({CLK, CLK}),
+  chip74107 rst_deassert(.J({n_rst_first_edge, 1'b1}), .K(2'b0), .N_CP({CLK, CLK}),
     .N_R({N_RST_ASYNC, N_RST_ASYNC}), .Q({n_rst, n_rst_first_edge}), .N_Q(unused_n_q));
 
   // Timer:
@@ -52,9 +52,9 @@ module kpu(
   // Scratch registers - invisible to running code.
   wire [31:0] tmp0_val /*verilator public*/, tmp0_out;
   wire [31:0] tmp1_val /*verilator public*/, tmp1_out;
-  register32 tmp0(.CLK(control_tmp0_in_clk), .IN(bus), .N_OE(0), .OUT(tmp0_val));
+  register32 tmp0(.CLK(control_tmp0_in_clk), .IN(bus), .N_OE(1'b0), .OUT(tmp0_val));
   buffer32 tmp0_buf(.IN(tmp0_val), .OUT(tmp0_out), .N_OE(control_tmp0_n_out));
-  register32 tmp1(.CLK(control_tmp1_in_clk), .IN(bus), .N_OE(0), .OUT(tmp1_val));
+  register32 tmp1(.CLK(control_tmp1_in_clk), .IN(bus), .N_OE(1'b0), .OUT(tmp1_val));
   buffer32 tmp1_buf(.IN(tmp1_val), .OUT(tmp1_out), .N_OE(control_tmp1_n_out));
 
   // Register file:
@@ -78,7 +78,7 @@ module kpu(
     .N_OE(control_opword_immediate_n_out));
 
   // Opword:
-  register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(0),
+  register32 opword(.CLK(control_opword_in_clk), .IN(bus), .N_OE(1'b0),
     .OUT({opword_bits, opword_opcode}));
 
   // Control logic:

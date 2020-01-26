@@ -18,8 +18,8 @@ module mmu(
   wire ram_n_oe;
   wire [31:0] ram_val;
   // TODO(improvement): Fault on wrong alignment?
-  sram#(.DEPTH(16), .WIDTH(32), .INITIAL("boot.hex")) ram(.ADDR(ADDR[15:0]), .N_WE(ram_n_we),
-    .N_OE(ram_n_oe), .IN_DATA(IN), .N_RST(N_RST), .OUT_DATA(ram_val));
+  sram16x32 ram(.ADDR(ADDR[15:0]), .N_WE(ram_n_we), .N_OE(ram_n_oe), .IN_DATA(IN), .N_RST(N_RST),
+    .OUT_DATA(ram_val));
 
   wire vga_n_we;
   wire vga_n_oe;

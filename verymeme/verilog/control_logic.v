@@ -66,7 +66,7 @@ module control_logic(
   wire cond_var /*verilator public*/;
   wire unused_n_cond_var;
   chip74151 cond_sel_mux(.I({4'b0, has_interrupt, MLU_NEGATIVE, MLU_CARRY, MLU_ZERO}),
-    .N_E(0), .S({1'b0, cond_var_sel}), .N_Y(unused_n_cond_var), .Y(cond_var));
+    .N_E(1'b0), .S({1'b0, cond_var_sel}), .N_Y(unused_n_cond_var), .Y(cond_var));
 
   // Microop counter:
   wire [4:0] microop_count /*verilator public*/;
@@ -100,7 +100,7 @@ module control_logic(
   wire [2:0] unused_control;
   // Latch on N_CLK - control signals change on falling clock, system stabilises, then read in
   // on rising clock.
-  register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(0),
+  register32 microcode_latch(.CLK(N_CLK), .IN(microcode_val), .N_OE(1'b0),
     .OUT({unused_control, cond_var_sel, opcode_sel, SHIFTER_ARITH, SHIFTER_PLANE, MLU_PLANE,
         misc_plane, in_plane, out_plane, REG_SEL, CTRL_DATA}));
 
@@ -111,7 +111,7 @@ module control_logic(
   wire mmu_in_clk;
   wire opcode_in_clk;
   wire unused_in_plane;
-  chip74238 in_plane_decoder(.A(in_plane), .N_E1(0), .N_E2(0), .E3(CLK),
+  chip74238 in_plane_decoder(.A(in_plane), .N_E1(1'b0), .N_E2(1'b0), .E3(CLK),
     .Y({unused_in_plane, opcode_in_clk, OPWORD_IN_CLK, mmu_in_clk, TMP1_IN_CLK, TMP0_IN_CLK,
         reg_in_clk, unused_in_none}));
 
@@ -119,7 +119,7 @@ module control_logic(
   // This must be updated if the signals in microcode.v are changed.
   wire unused_out_none;
   wire [5:0] unused_out_plane;
-  chip74154 out_plane_decoder(.A(out_plane), .N_E1(0), .N_E2(0),
+  chip74154 out_plane_decoder(.A(out_plane), .N_E1(1'b0), .N_E2(1'b0),
     .N_Y({unused_out_plane, OPWORD_IMMEDIATE_N_OUT, CTRL_DATA_N_OUT, TIMER_N_OUT, SHIFTER_N_OUT,
         MLU_N_OUT, MMU_N_OUT, TMP1_N_OUT, TMP0_N_OUT, REG_N_OUT, unused_out_none}));
 
@@ -129,7 +129,7 @@ module control_logic(
   wire [4:0] unused_misc_plane;
   wire microop_counter_n_rst;
   wire misc_n_set_interrupts;
-  chip74138 misc_plane_decoder(.A({1'b0, misc_plane}), .N_E1(0), .N_E2(0), .E3(1),
+  chip74138 misc_plane_decoder(.A({1'b0, misc_plane}), .N_E1(1'b0), .N_E2(1'b0), .E3(1),
     .N_Y({unused_misc_plane, misc_n_set_interrupts, microop_counter_n_rst, unused_misc_none}));
 
   `ifdef FORMAL

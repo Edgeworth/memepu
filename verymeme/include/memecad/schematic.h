@@ -34,7 +34,7 @@ private:
     Point packBoxesOffset(const std::vector<Rect>& rects);
   };
 
-  std::unordered_map<std::string, SheetData> sheets_;
+  std::map<std::string, SheetData> sheets_;
 };
 
 }  // namespace memecad

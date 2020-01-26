@@ -18,7 +18,7 @@ module bootstrapper(
   // TODO: This doesn't work, need to latch.
   // TODO: Need to be careful about CLK and not CLK. EEPROM needs to have data ready before doing.
   // TODO: Can put write enable lines inside eeprom?
-  assign N_BOOTED = !TIME[17];  // TODO: Use chip for this negate.
+//  assign N_BOOTED = !TIME[17];  // TODO: Use chip for this negate.
   // TODO: assign addr.
 //  eeprom bootstrap_eeprom(.ADDR({TIME[16:0]}), .N_OE(N_BOOTED), .OUT_DATA(DATA));
 

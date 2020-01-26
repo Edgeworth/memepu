@@ -17,7 +17,7 @@ module buffer_mux3x32(
   wire [3:0] unused_y2;
   wire unused_reg_sel;
   wire [2:0] reg_sel_decoded;
-  chip74139 decoder(.A1(SEL), .A2(0), .N_E1(0), .N_E2(1),
+  chip74139 decoder(.A1(SEL), .A2(2'b0), .N_E1(1'b0), .N_E2(1'b1),
     .N_Y1({unused_reg_sel, reg_sel_decoded}), .N_Y2(unused_y2));
 
   `ifdef SCHEMATIC
