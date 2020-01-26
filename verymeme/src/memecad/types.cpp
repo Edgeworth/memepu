@@ -10,6 +10,7 @@ namespace memecad {
 
 namespace {
 
+// Split e.g. LABEL1 => LABEL, 1 so ordering for numbers is done correctly.
 std::pair<std::string, int> toStringIntPair(const std::string& s) {
   std::string str;
   std::string num;

@@ -5,9 +5,8 @@
 #include "Vkpu_microcode.h"
 #include "Vkpu_mmu.h"
 #include "Vkpu_register_file.h"
-#include "Vkpu_sram__D10_W20.h"
-#include "Vkpu_sram__D5_W20.h"
-#include "Vkpu_sram__pi1.h"
+#include "Vkpu_sram16x32.h"
+#include "Vkpu_sram5x32.h"
 #include "Vkpu_vga.h"
 #include "memeasm/assembler.h"
 #include "memeware/constants.h"
@@ -16,9 +15,7 @@
 namespace memesim {
 
 namespace {
-
 const int PRINT_SPEED_MS = 5000;
-
 }  // namespace
 
 using namespace std::chrono;

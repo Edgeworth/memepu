@@ -36,13 +36,15 @@ option(VERILOG_SCHEMATIC "Build KPU with SCHEMATIC define enabled. Force enables
 # Add verilog HEXFILE configuration option.
 option(VERILOG_HEXFILE "Build KPU with HEXFILE define enabled." OFF)
 
-# Enable IPO if possible.
+# Enable IPO if possible (and not a debug build, for build performance).
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result OUTPUT output)
-if (result)
+if (result AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "Enabling IPO")
   cmake_policy(SET CMP0069 NEW)
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  message(STATUS "Skipping IPO for debug build")
 else ()
   message(WARNING "IPO is not supported: ${output}")
 endif ()

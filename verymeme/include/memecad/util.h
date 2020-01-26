@@ -12,6 +12,7 @@ std::string moduleName(const Yosys::Cell& cell);
 std::string moduleName(const Yosys::Module& module);
 std::string parentModuleType(const Yosys::Cell& cell);
 std::string modulePath(const Yosys::Cell& cell);
+// Gets representative id (label) for a SigBit. This may be empty for a no-connect.
 std::string getIdForSigBit(const Yosys::SigBit& bit);
 
 // Describes the connection between a child and parent. A child is either a child sheet or a leaf
@@ -22,8 +23,8 @@ struct ConnectionData {
   Yosys::RTLIL::SigBit bit;
 };
 
-using PinMapping = std::unordered_map<const Lib::Pin*, ConnectionData>;
-using ChildMapping = std::unordered_map<std::string, ConnectionData>;
+using PinMapping = std::map<const Lib::Pin*, ConnectionData>;
+using ChildMapping = std::map<std::string, ConnectionData>;
 
 }  // namespace memecad
 

@@ -18,6 +18,9 @@ public:
       const std::string& child_name, const std::string& parent_name);
   void addComponentToSheet(const std::string& lib_name, const Lib::Component& lib_component,
       const PinMapping& mapping, const std::string& sheet_name);
+  // Each module (sheet) needs some connections inside the module (not just down to child
+  // sheets or up to parent sheets) - e.g. for connections between local labels and hierarchical
+  // labels or connecting some child sheet pins to unused labels.
   void addModuleConnectionsToSheet(
       const std::string& sheet_name, const std::vector<Yosys::SigSig>& sigs);
   std::vector<SchematicFile> writeHierarchy();
