@@ -35,7 +35,7 @@ impl<K, V> Map<K, V> {
   }
 
   fn contains(k: K) bool {
-    ret !!self.get(k);
+    ret self.get(k) != *V{0};
   }
 }
 

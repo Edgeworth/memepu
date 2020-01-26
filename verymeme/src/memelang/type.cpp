@@ -174,18 +174,14 @@ DistResult IntfInfo::distTo(const IntfInfo&, Exec*) const {
 StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {}
 
 void StructInfo::resolve(const Mapping& outer_m) {
-  printf("RESOLVING %p %s\n", this, str().c_str());
   auto& s = m.e->scope();
   //  m.merge(outer_m); TODO: Adding this causes conflict between same types but one with empty
   //  mapping and one with a mapping
   // Include wildcards from this struct.
   m.merge(s.typelistToMapping(st->tname->tlist.get(), nullptr));
-  printf("CUR MAPPING: %s, outer map:%s\n", m.str().c_str(), outer_m.str().c_str());
-  printf("stack: %s\n", s.stacktrace().c_str());
   auto autoscope = s.autoScope(st, m);
   for (const auto& member : st->var_decls) {
     TypeId tid = s.typeFromAst(member->type.get(), true);
-    printf("member: %s\n", s.t(tid).str().c_str());
     mems.emplace(member->name, MemberInfo{size_, tid});
     size_ += s.t(tid).size();
   }
@@ -214,8 +210,6 @@ Val StructInfo::access(Hnd hnd, int offset) const {
   bug_unless(resolved_);
   auto& s = m.e->scope();
   for (const auto& kv : mems) {
-    printf(
-        "MEMBER: %s, offset: %d\n", m.e->scope().t(kv.second.type).str().c_str(), kv.second.offset);
     if (kv.second.offset == offset)
       return Val(hnd + offset, s.addType(resolveType(s.t(kv.second.type), m)));
   }

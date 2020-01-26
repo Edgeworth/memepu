@@ -105,7 +105,6 @@ public:
 
   explicit StructInfo(ast::Struct* st, Mapping m);
   int size() const {
-    printf("SIZE OF STRUCT: %p %s %d %d\n", this, str().c_str(), size_, int(resolved_));
     bug_unless(resolved_);
     return size_;
   }

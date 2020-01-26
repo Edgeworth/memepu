@@ -262,7 +262,6 @@ TypeId Scope::addBuiltinStorage(const std::string& name) {
 std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args) {
   Mapping fn_mapping(e_);
   if (fn->sig->params.size() != args.size()) return {false, fn_mapping};  // wrong number of params
-  printf("maybe mapping for fn call: %s\n", fn->sig->tname->str().c_str());
   for (int i = 0; i < fn->sig->params.size(); ++i) {
     // Don't resolve types in fn signature - not needed for distance calc, and can't resolve
     // structs unless they are concrete.
@@ -273,8 +272,6 @@ std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::ve
       unmergeMapping(fn_mapping);
       return {false, fn_mapping};
     }
-    printf("current fn mapping: %s, param mapping: %s, fn: %s\n", fn_mapping.str().c_str(),
-        param_mapping.str().c_str(), fn->sig->tname->str().c_str());
     mergeMapping(param_mapping);
     fn_mapping.merge(param_mapping);
   }
