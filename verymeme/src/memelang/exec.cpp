@@ -255,6 +255,11 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
     vm_.write(val.hnd, uint32_t(g<ast::IntLit>(n)->val));
     return val;
   }
+    if (typeid(*n) == typeid(ast::BoolLit)) {
+    auto val = Val(vm_.allocTmp(s_.t(s_.bool_t).size()), s_.bool_t);
+    vm_.write(val.hnd, uint8_t(g<ast::BoolLit>(n)->val));
+    return val;
+  }
   if (typeid(*n) == typeid(ast::StrLit)) {
     const std::string& s = g<ast::StrLit>(n)->val;
     auto val = Val(vm_.allocTmp(s_.t(s_.u8_ptr_t).size()), s_.u8_ptr_t);
@@ -274,7 +279,6 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
     TypeId tid = cmpd->type ? s_.typeFromAst(cmpd->type.get(), true) : typectx;
     if (tid == INVL_TID) error("undeducible type");
     const auto& type = s_.t(tid);
-    printf("typecontext: %s\n", type.str().c_str());
     Val res(vm_.allocTmp(type.size()), tid);
     vm_.memset(res, 0, s_.t(res.type).size());
     // Type constructor / conversion
@@ -287,7 +291,6 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
       });
     } else if (auto* st = std::get_if<StructInfo>(&type.info); st) {
       int offset = 0;
-      printf("TYPE: %s\n", type.str().c_str());
       for (const auto& frag : cmpd->frags) {
         if (!frag->name.empty()) {
           Val dst = st->access(res.hnd, frag->name);
