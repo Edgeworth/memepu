@@ -1,6 +1,7 @@
 #include <kernel/yosys.h>
 
 #include <boost/program_options.hpp>
+#include <filesystem>
 
 #include "memecad/parser.h"
 #include "memecad/yosys_module.h"
@@ -39,6 +40,7 @@ int main(int argc, char* argv[]) {
 
   auto files = memecad::convertVerilogToKicadSchematics(
       memecad_map_filename, verilog_filenames, kicad_library_filenames);
+  std::filesystem::create_directories("test");
   for (const auto& file : files) writeFile("test/" + file.filename, file.contents);
   printf("Finished writing %d files\n", int(files.size()));
 }

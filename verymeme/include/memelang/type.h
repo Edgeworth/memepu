@@ -71,7 +71,7 @@ public:
   std::string name;
 
   explicit WildcardInfo(std::string name) : name(std::move(name)) {}
-  int size() const { return 0; }
+  int size() const { unimplemented(); }
   void resolve(const Mapping& m);
   DistResult distTo(const WildcardInfo& o, Exec* e) const;
   std::string str() const { return "Wildcard(" + name + ")"; }
@@ -96,6 +96,7 @@ public:
   struct MemberInfo {
     int offset;
     TypeId type;
+    COMPARISON(MemberInfo, offset, type);
   };
 
   ast::Struct* st;
@@ -103,16 +104,21 @@ public:
   std::map<std::string, MemberInfo> mems;
 
   explicit StructInfo(ast::Struct* st, Mapping m);
-  int size() const { return size_; }
-  void resolve(const Mapping& m);
+  int size() const {
+    printf("SIZE OF STRUCT: %p %s %d %d\n", this, str().c_str(), size_, int(resolved_));
+    bug_unless(resolved_);
+    return size_;
+  }
+  void resolve(const Mapping& m);  // This must be called before the StructInfo can be used.
   DistResult distTo(const StructInfo& o, Exec* e) const;
   Val access(Hnd hnd, const std::string& member) const;
   Val access(Hnd hnd, int offset) const;
   std::string str() const { return "Struct(" + st->tname->name + +" m: " + m.str() + ")"; }
-  COMPARISON(StructInfo, st, m);
+  COMPARISON(StructInfo, st, m, mems);  // Also include mems, as resolved status affects this.
 
 private:
   int size_ = 0;
+  bool resolved_ = false;
 };
 
 class EnumInfo {
@@ -215,6 +221,7 @@ public:
       : info(std::move(info)), cnst(cnst), ref(ref), quals(std::move(quals)) {}
   int size() const;
   bool isPtr() const { return !quals.empty() && quals.back().ptr; }
+  bool isRefOrPtr() const { return ref || isPtr();}
   bool isArray() const { return !quals.empty() && quals.back().array != 0; }
   bool isSubsetOf(const Type& o) const;  // Computes if this type is a subset of |o|. (e.g. const)
   // Computes whether there is a type that is a subset of this type and |o|.

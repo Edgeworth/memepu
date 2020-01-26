@@ -2,6 +2,7 @@ fn main() i32 {
   SIZE := 4096u;
   data : [SIZE]u8 = {};
   nbytes := readf(&data[0], SIZE);
+
   s := String.new(&data[0]);
   printf("got %d bytes: ", nbytes);
   print_str(s);
@@ -16,5 +17,9 @@ fn main() i32 {
     print_str(toks[i].str());
     printf("\n");
   }
+
+  map := Map<i32, i32>.new();
+  map.push(3, 42);
+  map.push(1, 69);
   ret 0;
 }

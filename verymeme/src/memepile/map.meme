@@ -1,0 +1,49 @@
+
+struct KeyValue<K, V> {
+  k: K,
+  v: V,
+}
+
+struct Map<K, V> {
+  data: Vector<KeyValue<K, V>>,
+}
+
+impl<K, V> Map<K, V> {
+  static fn new() Map<K, V> {
+    ret {Vector<KeyValue<K, V>>.new()};
+  }
+
+  // Returns true if overwrote a value.
+  fn push(k: K, v: V) bool {
+    for i := 0u; i < self.data.len; ++i {
+      if self.data[i].k == k {
+        self.data[i].v = v;
+        ret true;
+      }
+    }
+    self.data.push(KeyValue<K, V>{k, v});  // TODO: Deduce fn args from fn sig.
+    ret false;
+  }
+
+  fn get(k: K) *V {
+    for i := 0u; i < self.data.len; ++i {
+      if self.data[i].k == k {
+        ret &self.data[i].v;
+      }
+    }
+    ret *V{0};
+  }
+
+  fn contains(k: K) bool {
+    ret !!self.get(k);
+  }
+}
+
+impl<I, T> Indexable<I, T> for Map<I, T> {
+  fn index(idx: &const I) &T {
+    if !self.contains(idx) {
+      self.push(idx, T{});
+    }
+    ret self.get(idx);
+  }
+}

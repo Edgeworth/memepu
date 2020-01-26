@@ -59,8 +59,10 @@ private:
   Val postinc(Val l);
   Val addr(Val l);
   Val ref(Val l);
+  Val maybe_unref(Val l);
+  Val follow_refptr(Val l);
   Val copy(Val dst, Val src);
-  Val deref(Val l);
+  Val deptr(Val l);
 
   template <typename F>
   auto invokeBuiltin(Val v, F op) {
