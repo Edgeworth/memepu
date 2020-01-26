@@ -7,11 +7,12 @@ intf UnaryArith<T> {
 }
 
 intf Comparable<T> {
+  fn eq(o: &const T) bool;
   fn neq(o: &const T) bool;
 }
 
 intf Indexable<I, T> {
-  fn index(idx: &const I) &T;
+  fn index(idx: &I) &T;
 }
 
 intf Convertible<A, B> {

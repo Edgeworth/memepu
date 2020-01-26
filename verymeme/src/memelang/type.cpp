@@ -137,13 +137,15 @@ std::string Mapping::str() const {
 }
 
 void Mapping::merge(const Mapping& m) {
+  auto& s = e->scope();
   for (const auto& [wildcard, type] : m.map) {
     auto iter = map.find(wildcard);
     // Allow overwriting unmapped wildcards. Allow skipping unmapped wildcards in |m|.
     if (iter != map.end() && iter->second != INVL_TID) {
-      if (type == INVL_TID) continue;
+      if (type == INVL_TID || iter->second == type) continue;
       else
-        e->error("duplicate template parameter " + wildcard);
+        e->error("duplicate template parameter " + wildcard +
+            ". Current type: " + s.t(iter->second).str() + ", given type: " + s.t(type).str());
     }
     map[wildcard] = type;
   }
@@ -169,33 +171,39 @@ DistResult IntfInfo::distTo(const IntfInfo&, Exec*) const {
   unimplemented();  // Should not happen
 }
 
-StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {
+StructInfo::StructInfo(ast::Struct* st, Mapping m) : st(st), m(std::move(m)) {}
+
+void StructInfo::resolve(const Mapping& outer_m) {
+  printf("RESOLVING %p %s\n", this, str().c_str());
   auto& s = m.e->scope();
+  //  m.merge(outer_m); TODO: Adding this causes conflict between same types but one with empty
+  //  mapping and one with a mapping
   // Include wildcards from this struct.
   m.merge(s.typelistToMapping(st->tname->tlist.get(), nullptr));
+  printf("CUR MAPPING: %s, outer map:%s\n", m.str().c_str(), outer_m.str().c_str());
+  printf("stack: %s\n", s.stacktrace().c_str());
   auto autoscope = s.autoScope(st, m);
   for (const auto& member : st->var_decls) {
-    TypeId tid = s.typeFromAst(member->type.get());
+    TypeId tid = s.typeFromAst(member->type.get(), true);
+    printf("member: %s\n", s.t(tid).str().c_str());
     mems.emplace(member->name, MemberInfo{size_, tid});
     size_ += s.t(tid).size();
   }
-}
-
-void StructInfo::resolve(const Mapping& m) {
-  // TODO: Resolve types.
+  resolved_ = true;
 }
 
 DistResult StructInfo::distTo(const StructInfo& o, Exec* e) const {
   if (st != o.st) return {false, {}, Mapping(e)};  // Must be same kind of struct.
   // TODO: also need to write merge fns for distresult etc
-//  DistResult res{true, {}, Mapping(e)};
-//  for (const auto& wildcard : st->tname->tlist->names) {
-//
-//  }
+  //  DistResult res{true, {}, Mapping(e)};
+  //  for (const auto& wildcard : st->tname->tlist->names) {
+  //
+  //  }
   return {true, {}, Mapping(e)};  // TODO this
 }
 
 Val StructInfo::access(Hnd hnd, const std::string& member) const {
+  bug_unless(resolved_);
   auto iter = mems.find(member);
   if (iter == mems.end()) return INVL_VAL;
   auto& s = m.e->scope();
@@ -203,11 +211,15 @@ Val StructInfo::access(Hnd hnd, const std::string& member) const {
 }
 
 Val StructInfo::access(Hnd hnd, int offset) const {
+  bug_unless(resolved_);
   auto& s = m.e->scope();
-  for (const auto& kv : mems)
+  for (const auto& kv : mems) {
+    printf(
+        "MEMBER: %s, offset: %d\n", m.e->scope().t(kv.second.type).str().c_str(), kv.second.offset);
     if (kv.second.offset == offset)
       return Val(hnd + offset, s.addType(resolveType(s.t(kv.second.type), m)));
-  m.e->error("no value at offset " + std::to_string(offset));
+  }
+  m.e->error("struct " + st->tname->name + ": no value at offset " + std::to_string(offset));
 }
 
 Val EnumInfo::access(const std::string& member) const {

@@ -134,7 +134,7 @@ const Type& Scope::t(TypeId id) {
   return types_[id];
 }
 
-TypeId Scope::typeFromAst(ast::Type* ast_type) {
+TypeId Scope::typeFromAst(ast::Type* ast_type, bool resolve) {
   if (!ast_type) return INVL_TID;
   Type new_type(typeInfoForAstType(ast_type), ast_type->cnst, ast_type->ref, {});
 
@@ -170,7 +170,7 @@ TypeId Scope::typeFromAst(ast::Type* ast_type) {
   std::visit(visitfn, new_type.info);
 
   // Resolve type and add.
-  new_type.resolve(scopes_.back().m);
+  if (resolve) new_type.resolve(scopes_.back().m);
   return addType(new_type);
 }
 
@@ -191,7 +191,7 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
 
     for (int i = 0; i < wildcard_count; ++i) {
       TypeId tid = INVL_TID;
-      if (i < ref->params.size()) tid = typeFromAst(ref->params[i].get());
+      if (i < ref->params.size()) tid = typeFromAst(ref->params[i].get(), true);
       m.map[tlist->names[i]] = tid;
     }
   }
@@ -211,7 +211,8 @@ FnSetInfo Scope::findImplFnSet(Val self, const std::string& intf_name, const std
     // Set up mapping in this impl typename.
     Mapping impl_mapping = typelistToMapping(ast_impl->tlist.get(), nullptr);
     auto autoscope = autoScope(ast_impl, impl_mapping);
-    TypeId impl = typeFromAst(ast_impl->type.get());
+     // Don't resolve type here - doesn't have to be concrete. Can't resolve non-concrete structs.
+    TypeId impl = typeFromAst(ast_impl->type.get(), false);
     auto [doable, impler_dist, impler_mapping] = distTo(t(self.type), t(impl), e_);
     if (!doable) continue;
 
@@ -261,15 +262,19 @@ TypeId Scope::addBuiltinStorage(const std::string& name) {
 std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args) {
   Mapping fn_mapping(e_);
   if (fn->sig->params.size() != args.size()) return {false, fn_mapping};  // wrong number of params
-
+  printf("maybe mapping for fn call: %s\n", fn->sig->tname->str().c_str());
   for (int i = 0; i < fn->sig->params.size(); ++i) {
-    TypeId fn_arg_tid = typeFromAst(fn->sig->params[i]->type.get());
+    // Don't resolve types in fn signature - not needed for distance calc, and can't resolve
+    // structs unless they are concrete.
+    TypeId fn_arg_tid = typeFromAst(fn->sig->params[i]->type.get(), false);
     TypeId arg_tid = args[i].type;
     auto [cando, param_dist, param_mapping] = distTo(t(arg_tid), t(fn_arg_tid), e_);
     if (!cando) {
       unmergeMapping(fn_mapping);
       return {false, fn_mapping};
     }
+    printf("current fn mapping: %s, param mapping: %s, fn: %s\n", fn_mapping.str().c_str(),
+        param_mapping.str().c_str(), fn->sig->tname->str().c_str());
     mergeMapping(param_mapping);
     fn_mapping.merge(param_mapping);
   }

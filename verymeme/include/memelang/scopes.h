@@ -36,7 +36,9 @@ public:
 
   TypeId addType(const Type& t);
   const Type& t(TypeId id);
-  TypeId typeFromAst(ast::Type* ast_type);
+  // Creates a type from |ast_type|, based on the current mapping. If |resolve| is true,
+  // the type will be resolved (have its wildcards mapped to types in-place and baked in).
+  TypeId typeFromAst(ast::Type* ast_type, bool resolve);
   Mapping typelistToMapping(ast::Typelist* tlist, ast::Ref* ref);
 
   std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);

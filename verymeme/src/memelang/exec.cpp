@@ -54,10 +54,10 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
     if (fnset.self.hasStorage()) s_.declareVar("self", ref(fnset.self));
     for (int i = 0; i < fn->sig->params.size(); ++i) {
       auto& decl = fn->sig->params[i];
-      runStmt(decl.get(), s_.typeFromAst(decl->type.get()));
+      runStmt(decl.get(), s_.typeFromAst(decl->type.get(), true));
       copy(s_.findValue(decl->name), params[i]);  // Use copy not assign so we can set const vals.
     }
-    TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get());
+    TypeId ret_type = s_.typeFromAst(fn->sig->ret_type.get(), true);
     auto val = runStmtBlk(fn->blk.get(), ret_type);
     // Successfully executed the function, so make sure to return something.
     return val ? val : INVL_VAL;
@@ -84,7 +84,7 @@ Val Exec::runBuiltinFn(ast::Op* n) {
     if (read_ptr.type != s_.u8_ptr_t)
       error("wrong type: " + s_.t(read_ptr.type).str() + " need: " + s_.t(s_.u8_ptr_t).str());
     if (read_sz.type != s_.u32_t) error("wrong type: " + s_.t(read_sz.type).str());
-    std::cin.getline(&vm_.ref<char>(deref(read_ptr).hnd), vm_.ref<int32_t>(read_sz.hnd));
+    std::cin.getline(&vm_.ref<char>(deptr(read_ptr).hnd), vm_.ref<int32_t>(read_sz.hnd));
 
     auto ret = Val(vm_.allocTmp(s_.t(s_.u32_t).size()), s_.u32_t);
     vm_.write(ret.hnd, uint32_t(std::cin.gcount()));
@@ -141,7 +141,7 @@ std::optional<Val> Exec::runStmt(ast::Node* stmt, TypeId typectx) {
 }
 
 void Exec::runVarDefn(ast::VarDefn* defn) {
-  auto val = eval(defn->defn.get(), s_.typeFromAst(defn->decl->type.get()));
+  auto val = eval(defn->defn.get(), s_.typeFromAst(defn->decl->type.get(), true));
   auto cpy = Val(vm_.allocStack(s_.t(val.type).size()), val.type);
   copy(cpy, val);  // Make sure to copy to not grab references to existing objects.
   s_.declareVar(defn->decl->name, cpy);
@@ -179,7 +179,7 @@ Val Exec::runOp(ast::Op* op) {
     auto* ref = g<ast::Ref>(op->right);
 
     const auto& type = s_.t(left.type);
-    Hnd data_hnd = type.isPtr() ? deref(left).hnd : left.hnd;
+    Hnd data_hnd = type.isRefOrPtr() ? follow_refptr(left).hnd : left.hnd;
     if (std::holds_alternative<StructInfo>(type.info)) {
       const auto& info = std::get<StructInfo>(type.info);
       auto fnset = s_.findImplFnSet(left, "", ref->name);
@@ -208,7 +208,7 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::PREFIX_INC: return preinc(left);
   case ast::Expr::POSTFIX_INC: return postinc(left);
   case ast::Expr::UNARY_ADDR: return addr(left);
-  case ast::Expr::UNARY_DEREF: return deref(left);
+  case ast::Expr::UNARY_DEREF: return deptr(left);
   default: error("unhandled op");
   }
 }
@@ -271,9 +271,10 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
   if (typeid(*n) == typeid(ast::CompoundLit)) {
     const auto& cmpd = g<ast::CompoundLit>(n);
     // Use given type if it exists, otherwise use type context.
-    TypeId tid = cmpd->type ? s_.typeFromAst(cmpd->type.get()) : typectx;
+    TypeId tid = cmpd->type ? s_.typeFromAst(cmpd->type.get(), true) : typectx;
     if (tid == INVL_TID) error("undeducible type");
     const auto& type = s_.t(tid);
+    printf("typecontext: %s\n", type.str().c_str());
     Val res(vm_.allocTmp(type.size()), tid);
     vm_.memset(res, 0, s_.t(res.type).size());
     // Type constructor / conversion
@@ -286,6 +287,7 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
       });
     } else if (auto* st = std::get_if<StructInfo>(&type.info); st) {
       int offset = 0;
+      printf("TYPE: %s\n", type.str().c_str());
       for (const auto& frag : cmpd->frags) {
         if (!frag->name.empty()) {
           Val dst = st->access(res.hnd, frag->name);
@@ -300,12 +302,12 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
     }
     return res;
   }
-  if (typeid(*n) == typeid(ast::Type)) return Val(INVL_HND, s_.typeFromAst(g<ast::Type>(n)));
+  if (typeid(*n) == typeid(ast::Type)) return Val(INVL_HND, s_.typeFromAst(g<ast::Type>(n), true));
   error("unimplemented eval node " + n->str());
 }
 
 Val Exec::valFromAstType(ast::Type* ast_type) {
-  auto type = s_.typeFromAst(ast_type);
+  auto type = s_.typeFromAst(ast_type, true);
   Val val = Val(vm_.allocStack(s_.t(type).size()), type);
   vm_.memset(val, 0, s_.t(type).size());
   return val;
@@ -327,15 +329,15 @@ Val Exec::assign(Val l, Val r) {
 }
 
 Val Exec::mul(Val l, Val r) {
-  return binop(l, r, l.type, "mul", [](auto a, auto b) { return a * b; });
+  return binop(l, r, maybe_unref(l).type, "mul", [](auto a, auto b) { return a * b; });
 }
 
 Val Exec::add(Val l, Val r) {
-  return binop(l, r, l.type, "add", [](auto a, auto b) { return a + b; });
+  return binop(l, r, maybe_unref(l).type, "add", [](auto a, auto b) { return a + b; });
 }
 
 Val Exec::sub(Val l, Val r) {
-  return binop(l, r, l.type, "sub", [](auto a, auto b) { return a - b; });
+  return binop(l, r, maybe_unref(l).type, "sub", [](auto a, auto b) { return a - b; });
 }
 
 Val Exec::lt(Val l, Val r) {
@@ -364,7 +366,7 @@ Val Exec::array_access(Val l, Val r) {
   if (auto opt = runFn(s_.findImplFnSet(l, "Indexable", "index"), {ref(r)}); opt)
     return opt.value();
 
-  Type new_type = s_.t(l.type);
+  Type new_type = s_.t(maybe_unref(l).type);
   if (r.type != s_.u32_t && r.type != s_.i32_t) error("array access index must be i32 or u32");
   if (!new_type.isArray()) error("array access on non-array type " + new_type.str());
   new_type.quals.pop_back();  // Remove array qualifier.
@@ -381,7 +383,7 @@ Val Exec::preinc(Val l) {
 
 Val Exec::postinc(Val l) {
   return unop(l, "postinc", [this, &l](auto v) {
-    Val tmp(vm_.allocTmp(s_.t(l.type).size()), l.type);
+    Val tmp(vm_.allocTmp(s_.t(l.type).size()), maybe_unref(l).type);
     copy(tmp, l);
     vm_.write(l.hnd, v + 1);
     return tmp;
@@ -404,15 +406,28 @@ Val Exec::ref(Val l) {
   return Val(l.hnd, s_.addType(ref_type));
 }
 
+Val Exec::maybe_unref(Val l) {
+  auto unref_type = s_.t(l.type);
+  unref_type.ref = false;
+  return Val(l.hnd, s_.addType(unref_type));
+}
+
+Val Exec::follow_refptr(Val l) {
+  const auto& type = s_.t(l.type);
+  if (!type.isRefOrPtr()) error("attempt to follow non-ref/ptr");
+  if (type.ref) return maybe_unref(l);
+  return deptr(l);
+}
+
 Val Exec::copy(Val dst, Val src) {
   if (!src.hasStorage() || !dst.hasStorage()) error("attempt operate on value without storage");
   vm_.memcpy(dst, src, s_.t(src.type).size());
   return dst;
 }
 
-Val Exec::deref(Val l) {
+Val Exec::deptr(Val l) {
   if (!l.hasStorage()) error("attempt operate on value without storage");
-  Type new_type = s_.t(l.type);
+  Type new_type = s_.t(maybe_unref(l).type);
   if (!new_type.isPtr()) error("attempt to dereference non-pointer type");
   new_type.quals.pop_back();  // Remove ptr.
   return Val(vm_.ref<Hnd>(l.hnd), s_.addType(new_type));

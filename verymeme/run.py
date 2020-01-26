@@ -102,8 +102,9 @@ def run_tests(path):
 
 def run_formal_verification():
   global queue
-  # Ignore lut17x8 because it takes too long to run.
-  IGNORES = ["workaround.v", "common.v", "lut17x8.v"]
+  # Ignore explicit sram and lut instantiates because they take too long to run.s
+  IGNORES = ["workaround.v", "common.v", "lut17x8.v", "lut12x8.v", "lut12x32.v", "sram5x32.v",
+             "sram16x32.v"]
   files = glob.glob("*.v")
   commands = []
   for file in files:
@@ -111,7 +112,7 @@ def run_formal_verification():
       continue
     name = os.path.splitext(os.path.basename(file))[0]
     commands.append('sby -t formally_verify.sby %s' % name)
-  queue = WorkerQueue()
+  queue = WorkerQueue()  # Set global queue variable so we can clean-up on SIGINT.
   queue.run(commands)
 
 
