@@ -66,13 +66,13 @@ impl String {
   }
 }
 
-impl<I> Indexable<I, const u8> for const String {
-  fn index(idx: &const I) &const u8 {
+impl<I> Indexable<I, u8> for String {
+  fn index(idx: &const I) &u8 {
     ret self.data[idx];
   }
 }
 
-impl BinaryArith<String, String> for const String {
+impl BinaryArith<String, String> for String {
   fn add(o: &const String) String {
     tmp := String{};
     tmp.resize(self.len + o.len);

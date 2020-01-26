@@ -39,7 +39,7 @@ impl<T> Vector<T> {
 }
 
 impl<I, T> Indexable<I, T> for Vector<T> {
-  fn index(idx: &const I) &const T {
+  fn index(idx: &const I) &T {
     ret self.data[idx];
   }
 }
