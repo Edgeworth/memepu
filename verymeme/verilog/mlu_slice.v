@@ -12,9 +12,8 @@ module mlu_slice(
   `ifdef HEXFILE
   wire [7:0] unused = 0;
   // TODO(bootstrapping): Use BOOTSTRAP_ADDR.
-  lut#(.DEPTH(12), .WIDTH(8), .INITIAL("mlu_slice.hex")) slice_mem(
-    .ADDR(ADDR), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
-    .IN_DATA(BOOTSTRAP_DATA), .OUT_DATA(OUT));
+  lut12x8 slice_mem(.ADDR(ADDR), .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED), .IN_DATA(BOOTSTRAP_DATA),
+    .OUT_DATA(OUT));
   `else
   wire [3:0] A = ADDR[3:0];
   wire [3:0] B = ADDR[7:4];

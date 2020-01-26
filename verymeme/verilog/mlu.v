@@ -25,8 +25,9 @@ module mlu(
 
   generate
     genvar i;
+    wire [7:0] carry_copy = {carrys[6:0], C_IN};
     for (i = 0; i < 8; i = i+1) begin
-      mlu_slice slice(.ADDR({i == 0 ? C_IN : carrys[i - 1], OP, B[i*4+3:i*4], A[i*4+3:i*4]}),
+      mlu_slice slice(.ADDR({carry_copy[i], OP, B[i*4+3:i*4], A[i*4+3:i*4]}),
         .OUT({unused_slice[i], slice_z[i], slice_g[i], slice_p[i], OUT[i*4+3:i*4]}),
         .BOOTSTRAP_ADDR(BOOTSTRAP_ADDR[11:0]), .BOOTSTRAP_DATA(BOOTSTRAP_DATA),
         .BOOTSTRAP_N_WE(BOOTSTRAP_MLU_SLICE_N_WE), .N_BOOTED(N_BOOTED));

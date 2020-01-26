@@ -11,9 +11,9 @@ module microcode(
   logic [8*20:0] mnemonic /*verilator public*/;
   logic imm_relative /*verilator public*/;
 
-  `ifdef HEXFILEA
+  `ifdef HEXFILE
   // TODO: change to specific lut chip
-  lut#(.DEPTH(12), .WIDTH(32), .INITIAL("microcode.hex")) microcode(
+  lut12x32 microcode(
     .ADDR(ADDR), .OUT_DATA(OUT),
     .N_WE(BOOTSTRAP_N_WE), .N_OE(N_BOOTED),
     .IN_DATA({BOOTSTRAP_DATA, 24'b0}));  // TODO(bootstrap): only feeding 8 bits in
@@ -604,7 +604,7 @@ module microcode(
 
   `ifndef BOOTSTRAP
   // Mark bootstrap signals as okay to not be used if not using bootstrapping.
-  wire _unused_ok = & {BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
+  wire [21:0] _unused_ok = {BOOTSTRAP_ADDR, BOOTSTRAP_DATA, N_BOOTED, BOOTSTRAP_N_WE};
   `endif
 
   `ifdef FORMAL

@@ -9,16 +9,16 @@ namespace {
 std::string checkModuleName(const std::string& name) {
   auto idx = name.find('\\');
   // Parametric modules and generated modules are prefixed with e.g. $gen$ or $paramod$, so just
-  // check for the presence of a \.
-
-  // Cell name must be user defined cell.
+  // check for the presence of a \. Cell name must be user defined cell.
   bug_unless(idx != std::string::npos);
-  return name.substr(1);
+  return name;
 }
 
 }  // namespace
 
-std::string moduleType(const Yosys::Cell& cell) { return checkModuleName(cell.type.str()); }
+std::string moduleType(const Yosys::Cell& cell) {
+  return "$abstract" + checkModuleName(cell.type.str());
+}
 
 std::string moduleName(const Yosys::Cell& cell) { return checkModuleName(cell.name.str()); }
 

@@ -18,8 +18,8 @@ module register_file(
 
   // TODO: change to specific sram chip.
   // 32 registers.
-  sram#(.DEPTH(5), .WIDTH(32)) registers(.ADDR(reg_src), .N_WE(N_WE), .N_OE(N_OE),
-    .IN_DATA(IN_DATA), .N_RST(N_RST), .OUT_DATA(OUT_DATA));
+  sram5x32 registers(.ADDR(reg_src), .N_WE(N_WE), .N_OE(N_OE), .IN_DATA(IN_DATA), .N_RST(N_RST),
+    .OUT_DATA(OUT_DATA));
 
   `ifdef FORMAL
   always_comb begin

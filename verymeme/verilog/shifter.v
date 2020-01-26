@@ -17,7 +17,7 @@ module shifter(
   wire n_right_shift;
   wire n_signext8;
   wire n_signext16;
-  chip74139 decoder(.A1(SEL), .A2(0), .N_E1(0), .N_E2(1),
+  chip74139 decoder(.A1(SEL), .A2(2'b0), .N_E1(1'b0), .N_E2(1'b1),
     .N_Y1({n_signext16, n_signext8, n_right_shift, n_left_shift}), .N_Y2(unused_y2));
 
   // Collect shift-in bit from |IN| not |pre_reversed| to avoid stacking gate delays.

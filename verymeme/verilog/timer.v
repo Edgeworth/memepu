@@ -44,7 +44,7 @@ module timer(
 
   always_ff @(posedge CLK) begin
     if (f_past && N_RST != 0) begin
-      assert (TIME == $past(TIME)+4'b1);  // Increment should work.
+      assert (TIME == $past(TIME)+1'b1);  // Increment should work.
     end
   end
   `endif
