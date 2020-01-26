@@ -9,7 +9,7 @@ namespace memelang::exec {
 
 DistResult distTo(const Type& a, const Type& b, Exec* e) {
   // Same types (modulo const/ref) have no distance cost.
-  if (a.isSubsetOf(b)) return {true, {}, Mapping(e)};
+  if (a.canCoerceTo(b)) return {true, {}, Mapping(e)};
 
   // TODO: Our type must be fully specified for now
   //   if not, consider: vec<vec<T>> or vec<T> compared to vec<vec<T>>
@@ -51,7 +51,7 @@ std::string typepathToString(ast::Type* type) {
       type->path.begin(), type->path.end(), [](const auto& t) { return t->name; }, ".");
 }
 
-bool Qualifier::isSubsetOf(const Qualifier& o) const {
+bool Qualifier::canCoerceTo(const Qualifier& o) const {
   if (cnst && !o.cnst) return false;
   return hasIntersection(o);
 }
@@ -79,12 +79,12 @@ int Type::size() const {
   return size;
 }
 
-bool Type::isSubsetOf(const Type& o) const {
+bool Type::canCoerceTo(const Type& o) const {
   if (info != o.info) return false;
   if (cnst && !o.cnst) return false;  // Can't assign const to non-const.
   if (quals.size() != o.quals.size()) return false;
   for (int i = 0; i < quals.size(); ++i)
-    if (!quals[i].isSubsetOf(o.quals[i])) return false;
+    if (!quals[i].canCoerceTo(o.quals[i])) return false;
   return true;
 }
 
@@ -141,9 +141,10 @@ void Mapping::merge(const Mapping& m) {
   for (const auto& [wildcard, type] : m.map) {
     auto iter = map.find(wildcard);
     // Allow overwriting unmapped wildcards. Allow skipping unmapped wildcards in |m|.
+    // Allow overwriting with a more coercible type (e.g. i32 to const i32).
     if (iter != map.end() && iter->second != INVL_TID) {
-      if (type == INVL_TID || iter->second == type) continue;
-      else
+      if (type == INVL_TID || s.t(iter->second).canCoerceTo(s.t(type))) continue;
+      else if (!s.t(type).canCoerceTo(s.t(iter->second)))
         e->error("duplicate template parameter " + wildcard +
             ". Current type: " + s.t(iter->second).str() + ", given type: " + s.t(type).str());
     }

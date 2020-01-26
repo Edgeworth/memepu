@@ -201,7 +201,7 @@ struct Qualifier {
   bool ptr = false;
   bool cnst = false;
 
-  bool isSubsetOf(const Qualifier& o) const;
+  bool canCoerceTo(const Qualifier& o) const;
   bool hasIntersection(const Qualifier& o) const;
   std::string str() const;
   COMPARISON(Qualifier, array, ptr, cnst);
@@ -222,8 +222,9 @@ public:
   bool isPtr() const { return !quals.empty() && quals.back().ptr; }
   bool isRefOrPtr() const { return ref || isPtr();}
   bool isArray() const { return !quals.empty() && quals.back().array != 0; }
-  bool isSubsetOf(const Type& o) const;  // Computes if this type is a subset of |o|. (e.g. const)
-  // Computes whether there is a type that is a subset of this type and |o|.
+  bool canCoerceTo(const Type& o) const;  // Computes if this type can be coerced to |o|
+  // Computes whether there is a type that is a subset of this type and |o|. Or, is there a type
+  // that both this and |o| can be coerced to.
   bool hasIntersection(const Type& o) const;
   // Resolves wildcards recursively within this type given a mapping. Any mappings for contained
   // types will also be used.

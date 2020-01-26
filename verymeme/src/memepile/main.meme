@@ -18,12 +18,12 @@ fn main() i32 {
     printf("\n");
   }
 
-  map := Map<i32, i32>.new();
-  map.push(3, 42);
-  map.push(1, 69);
-  printf("map val: %d\n", *map.get(3));
-  printf("map contains 3: %d\n", map.contains(3));
-  printf("map contains 4: %d\n", map.contains(4));
-  printf("map val: %d\n", map[3]);
+  map := Map<String, i32>.new();
+  map.push(String.new("hello"), 42);
+  map.push(String.new("world"), 69);
+  printf("map val: %d\n", *map.get(String.new("hello")));
+  printf("map contains hello: %d\n", map.contains(String.new("hello")));
+  printf("map contains heallo: %d\n", map.contains(String.new("heallo")));
+  printf("map val: %d\n", map[String.new("world")]);
   ret 0;
 }
