@@ -59,6 +59,19 @@
     }
   },
   {
+    "verilog_name": "chip7474",
+    "kicad_name": "74HC74",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "D": "12,2",
+      "CP": "11,3",
+      "N_R": "13,1",
+      "Q": "9,5",
+      "N_Q": "8,6"
+    }
+  },
+  {
     "verilog_name": "chip7486",
     "kicad_name": "74HC86",
     "verilog_to_kicad_map": {
@@ -67,6 +80,72 @@
       "A": "12,9,4,1",
       "B": "13,10,5,2",
       "Y": "11,8,6,3"
+    }
+  },
+  {
+    "verilog_name": "chip74107",
+    "kicad_name": "74LS107",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "J": "8,1",
+      "K": "11,4",
+      "N_CP": "9,12",
+      "N_R": "10,13",
+      "Q": "5,3",
+      "N_Q": "6,2"
+    }
+  },
+  {
+    "verilog_name": "chip74138",
+    "kicad_name": "74LS138",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "A": "A",
+      "N_E1": "E1",
+      "N_E2": "E2",
+      "E3": "E3",
+      "N_Y": "O"
+    }
+  },
+  {
+    "verilog_name": "chip74139",
+    "kicad_name": "74LS139",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "A1": "14,2",
+      "A2": "13,3",
+      "N_E1": "1",
+      "N_E2": "15",
+      "N_Y1": "7,6,5,4",
+      "N_Y2": "9,10,11,12"
+    }
+  },
+  {
+    "verilog_name": "chip74151",
+    "kicad_name": "74LS151",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "I": "I",
+      "N_E": "~E",
+      "S": "S",
+      "Y": "Z",
+      "N_Y": "~Z"
+    }
+  },
+  {
+    "verilog_name": "chip74154",
+    "kicad_name": "74LS154",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "A": "A",
+      "N_E1": "E0",
+      "N_E2": "E1",
+      "Y": "Y"
     }
   },
   {
@@ -86,6 +165,43 @@
     }
   },
   {
+    "verilog_name": "chip74238",
+    "kicad_name": "74HC238",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "A": "A",
+      "N_E1": "~G2A",
+      "N_E2": "~G2B",
+      "E3": "G1",
+      "Y": "Y"
+    }
+  },
+  {
+    "verilog_name": "chip74245",
+    "description": "octal bus transceiver - enabled only in one direction - A=>B",
+    "kicad_name": "74HC245",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC,1",
+      "IN": "A",
+      "N_OE": "CE",
+      "OUT": "B"
+    }
+  },
+  {
+    "verilog_name": "chip74273",
+    "kicad_name": "74HC273",
+    "verilog_to_kicad_map": {
+      "0": "GND",
+      "1": "VCC",
+      "D": "D",
+      "N_MR": "~Mr",
+      "CP": "Cp",
+      "Q": "Q"
+    }
+  },
+  {
     "verilog_name": "chip74299",
     "kicad_name": "74LS74299",
     "verilog_to_kicad_map": {
@@ -100,6 +216,19 @@
       "IO": "IO",
       "Q0": "Q0",
       "Q7": "Q7"
+    }
+  },
+  {
+    "verilog_name": "chip74590",
+    "kicad_name": "74HC590",
+    "verilog_to_kicad_map": {
+      "0": "GND,CPR,~CE",
+      "1": "VCC",
+      "N_MRC": "~MRC",
+      "N_OE": "~OE",
+      "CPC": "CPC",
+      "N_RCO": "~RCO",
+      "Q_OUT": "Q"
     }
   },
   {
@@ -126,6 +255,7 @@
   },
   {
     "verilog_name": "sram",
+    "description": "TODO: Replace with correct one.",
     "kicad_name": "628128_TSOP32",
     "verilog_to_kicad_map": {
       "0": [
@@ -146,6 +276,87 @@
   },
   {
     "verilog_name": "sram17x8",
+    "description": "TODO: Replace with correct one.",
+    "kicad_name": "628128_TSOP32",
+    "verilog_to_kicad_map": {
+      "0": [
+        "~CS1",
+        "GND"
+      ],
+      "1": [
+        "VCC",
+        "CS2"
+      ],
+      "ADDR": "A[16:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "lut12x32",
+    "description": "TODO: Replace with correct one.",
+    "kicad_name": "628128_TSOP32",
+    "verilog_to_kicad_map": {
+      "0": [
+        "~CS1",
+        "GND"
+      ],
+      "1": [
+        "VCC",
+        "CS2"
+      ],
+      "ADDR": "A[16:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "lut12x8",
+    "description": "TODO: Replace with correct one.",
+    "kicad_name": "628128_TSOP32",
+    "verilog_to_kicad_map": {
+      "0": [
+        "~CS1",
+        "GND"
+      ],
+      "1": [
+        "VCC",
+        "CS2"
+      ],
+      "ADDR": "A[16:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "lut17x8",
+    "description": "TODO: Replace with correct one.",
+    "kicad_name": "628128_TSOP32",
+    "verilog_to_kicad_map": {
+      "0": [
+        "~CS1",
+        "GND"
+      ],
+      "1": [
+        "VCC",
+        "CS2"
+      ],
+      "ADDR": "A[16:0]",
+      "N_WE": "~WE",
+      "N_OE": "~OE",
+      "IN_DATA": "Q",
+      "OUT_DATA": "Q"
+    }
+  },
+  {
+    "verilog_name": "eeprom",
+    "description": "TODO: Replace with correct one.",
     "kicad_name": "628128_TSOP32",
     "verilog_to_kicad_map": {
       "0": [

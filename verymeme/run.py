@@ -3,10 +3,21 @@ import argparse
 import glob
 import multiprocessing
 import os
+import signal
 import subprocess
 
 import sys
 import time
+
+queue = None
+
+
+def signal_handler(signum, frame):
+  print('Got signal %s' % str(signum))
+  if queue is not None:
+    print('...shutting down queue')
+    queue.cleanup()
+    sys.exit(1)
 
 
 class WorkerQueue:
@@ -14,7 +25,8 @@ class WorkerQueue:
     self.popens = {}
     self.max_procs = multiprocessing.cpu_count()
 
-  def run_one_process(self, command):
+  @staticmethod
+  def run_one_process(command):
     print('Running command "%s".' % command)
     return subprocess.Popen(command, shell=True, stdin=subprocess.DEVNULL,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -26,6 +38,7 @@ class WorkerQueue:
 
   def run(self, commands):
     total_num_commands = len(commands)
+    failed_commands = []
     while len(commands) > 0 or len(self.popens) > 0:
       while len(self.popens) < self.max_procs and len(commands) > 0:
         command = commands.pop()
@@ -38,17 +51,18 @@ class WorkerQueue:
         ret = popen.poll()
         if ret is not None:
           something_happened = True
+          del self.popens[command]
+          finished_commands = total_num_commands - len(commands) - len(self.popens)
+          status = 'succeeded'
           if ret != 0:
-            self.cleanup()
-            print('Running command "%s" failed.' % command)
-            sys.exit(1)
-          else:
-            del self.popens[command]
-            finished_commands = total_num_commands - len(commands) - len(self.popens)
-            print(
-              'Command "%s" succeeded. (%d/%d)' % (command, finished_commands, total_num_commands))
+            status = 'FAILED'
+            failed_commands.append(command)
+          print(
+            'Command "%s" %s. (%d/%d)' % (command, status, finished_commands, total_num_commands))
       if not something_happened:
         time.sleep(0.1)
+    if failed_commands:
+      print('FAILED: %s' % ', '.join(failed_commands))
 
 
 def run_command(command):
@@ -87,6 +101,7 @@ def run_tests(path):
 
 
 def run_formal_verification():
+  global queue
   # Ignore lut17x8 because it takes too long to run.
   IGNORES = ["workaround.v", "common.v", "lut17x8.v"]
   files = glob.glob("*.v")
@@ -96,7 +111,8 @@ def run_formal_verification():
       continue
     name = os.path.splitext(os.path.basename(file))[0]
     commands.append('sby -t formally_verify.sby %s' % name)
-  WorkerQueue().run(commands)
+  queue = WorkerQueue()
+  queue.run(commands)
 
 
 def check_pwd():
@@ -119,6 +135,8 @@ parser.add_argument('-a', '--all', action='store_true', default=False, required=
 args = parser.parse_args()
 
 check_pwd()
+
+signal.signal(signal.SIGINT, signal_handler)
 
 if args.memeware or args.all:
   generate_memeware()

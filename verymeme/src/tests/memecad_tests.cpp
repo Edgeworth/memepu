@@ -39,7 +39,7 @@ TEST_F(SchematicTest, Alu0) {
   auto files = memecad::convertVerilogToKicadSchematics("test_data/memecad/memecad_map.json",
       {"test_data/memecad/alu/alu.v", "test_data/memecad/alu/alu_lookahead.v",
           "test_data/memecad/alu/sram17x8.v", "test_data/memecad/alu/alu_slice.v",
-          "test_data/memecad/alu/sram.v", "test_data/memecad/chip7408.v"},
+          "test_data/memecad/alu/sram16x32.v", "test_data/memecad/chip7408.v"},
       {"test_data/memecad/74xx.lib", "test_data/memecad/Memory_RAM.lib"});
   EXPECT_EQ(3u, files.size());
   for (const auto& file : files) {

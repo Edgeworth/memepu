@@ -83,8 +83,9 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
         printf("  Checking child '%s'\n", cell_id.c_str());
 
         // Add edge from child to parent, for reverse top-sort.
-        auto* child_module = design->module("$abstract" + cell->type.str());
-        verify_expr(child_module != nullptr, "expected module '%s' to exist", cell->type.c_str());
+        auto* child_module = design->module(moduleType(*cell));
+        verify_expr(
+            child_module != nullptr, "expected module %s' to exist", moduleType(*cell).c_str());
 
         if (mapper_.isMappedModule(*child_module)) continue;  // Don't need to process leaf modules.
         adj[child_module].push_back(module);
