@@ -8,7 +8,7 @@ namespace memelang::ast {
 
 namespace {
 
-constexpr char SEPARATORS[] = "/*+-<>(){}[]; \t\r\n?,:.=\"'&";
+constexpr char SEPARATORS[] = "!/*+-<>(){}[]; \t\r\n?,:.=\"'&";
 
 // Stores the tokens which are just a simple string match.
 const std::unordered_map<std::string, Tok::Type> SIMPLE_TOKENS = {
