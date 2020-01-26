@@ -57,10 +57,11 @@ private:
   Val array_access(Val l, Val r);
   Val preinc(Val l);
   Val postinc(Val l);
+  Val linvert(Val l);
   Val addr(Val l);
   Val ref(Val l);
-  Val maybe_unref(Val l);
-  Val follow_refptr(Val l);
+  Val discardCr(Val l);
+  Val followRefPtr(Val l);
   Val copy(Val dst, Val src);
   Val deptr(Val l);
 
@@ -69,26 +70,26 @@ private:
     if (!v.hasStorage()) error("attempt operate on value without storage");
 
     const Type& t = s_.t(v.type);
-    if (s_.t(s_.bool_t).isSubsetOf(t)) return std::invoke(op, vm_.ref<bool>(v.hnd));
-    else if (s_.t(s_.i8_t).isSubsetOf(t))
+    if (s_.t(s_.bool_t).canCoerceTo(t)) return std::invoke(op, vm_.ref<bool>(v.hnd));
+    else if (s_.t(s_.i8_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<int8_t>(v.hnd));
-    else if (s_.t(s_.i16_t).isSubsetOf(t))
+    else if (s_.t(s_.i16_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<int16_t>(v.hnd));
-    else if (s_.t(s_.i32_t).isSubsetOf(t))
+    else if (s_.t(s_.i32_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<int32_t>(v.hnd));
-    else if (s_.t(s_.i64_t).isSubsetOf(t))
+    else if (s_.t(s_.i64_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<int64_t>(v.hnd));
-    else if (s_.t(s_.u8_t).isSubsetOf(t))
+    else if (s_.t(s_.u8_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<uint8_t>(v.hnd));
-    else if (s_.t(s_.u16_t).isSubsetOf(t))
+    else if (s_.t(s_.u16_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<uint16_t>(v.hnd));
-    else if (s_.t(s_.u32_t).isSubsetOf(t))
+    else if (s_.t(s_.u32_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<uint32_t>(v.hnd));
-    else if (s_.t(s_.u64_t).isSubsetOf(t))
+    else if (s_.t(s_.u64_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<uint64_t>(v.hnd));
-    else if (s_.t(s_.f32_t).isSubsetOf(t))
+    else if (s_.t(s_.f32_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<float>(v.hnd));
-    else if (s_.t(s_.f64_t).isSubsetOf(t))
+    else if (s_.t(s_.f64_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<double>(v.hnd));
     else if (t.isPtr())
       return std::invoke(op, vm_.ref<Hnd>(v.hnd));

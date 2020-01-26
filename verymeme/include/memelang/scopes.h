@@ -40,6 +40,8 @@ public:
   // the type will be resolved (have its wildcards mapped to types in-place and baked in).
   TypeId typeFromAst(ast::Type* ast_type, bool resolve);
   Mapping typelistToMapping(ast::Typelist* tlist, ast::Ref* ref);
+  Val coerceTo(Val l, TypeId tid);
+  Val tryCoerceTo(Val l, TypeId tid);
 
   std::pair<bool, Mapping> maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args);
   // TODO: Should use ref instead of fn_name.
