@@ -43,204 +43,6 @@ interrupt:
   seti
   lhu r31,end
 
-bitmapspace:
-dw 00000000
-dw 00000000
-dw 00000000
-dw 00000000
-dw 00000000
-bitmapexclam:
-dw 0000ff00
-dw 0000ff00
-dw 0000ff00
-dw 00000000
-dw 0000ff00
-bitmapquotedbl:
-dw 00ff00ff
-dw 00ff00ff
-dw 00000000
-dw 00000000
-dw 00000000
-bitmapnumbersign:
-dw 00ff00ff
-dw 00ffffff
-dw 00ff00ff
-dw 00ffffff
-dw 00ff00ff
-bitmapdollar:
-dw 00ffff00
-dw 0000ffff
-dw 00ffff00
-dw 0000ffff
-dw 0000ff00
-bitmappercent:
-dw 000000ff
-dw 00ff0000
-dw 0000ff00
-dw 000000ff
-dw 00ff0000
-bitmapampersand:
-dw 0000ffff
-dw 0000ffff
-dw 00ffffff
-dw 00ff00ff
-dw 00ffff00
-bitmapquotesingle:
-dw 0000ff00
-dw 0000ff00
-dw 00000000
-dw 00000000
-dw 00000000
-bitmapparenleft:
-dw 00ff0000
-dw 0000ff00
-dw 0000ff00
-dw 0000ff00
-dw 00ff0000
-bitmapparenright:
-dw 000000ff
-dw 0000ff00
-dw 0000ff00
-dw 0000ff00
-dw 000000ff
-bitmapasterisk:
-dw 00ff00ff
-dw 0000ff00
-dw 00ff00ff
-dw 00000000
-dw 00000000
-bitmapplus:
-dw 00000000
-dw 0000ff00
-dw 00ffffff
-dw 0000ff00
-dw 00000000
-bitmapcomma:
-dw 00000000
-dw 00000000
-dw 00000000
-dw 0000ff00
-dw 000000ff
-bitmaphyphen:
-dw 00000000
-dw 00000000
-dw 00ffffff
-dw 00000000
-dw 00000000
-bitmapperiod:
-dw 00000000
-dw 00000000
-dw 00000000
-dw 00000000
-dw 0000ff00
-bitmapslash:
-dw 00ff0000
-dw 00ff0000
-dw 0000ff00
-dw 000000ff
-dw 000000ff
-bitmapzero:
-dw 00ffff00
-dw 00ff00ff
-dw 00ff00ff
-dw 00ff00ff
-dw 0000ffff
-bitmapone:
-dw 0000ff00
-dw 0000ffff
-dw 0000ff00
-dw 0000ff00
-dw 0000ff00
-bitmaptwo:
-dw 0000ffff
-dw 00ff0000
-dw 0000ff00
-dw 000000ff
-dw 00ffffff
-bitmapthree:
-dw 0000ffff
-dw 00ff0000
-dw 0000ff00
-dw 00ff0000
-dw 0000ffff
-bitmapfour:
-dw 00ff00ff
-dw 00ff00ff
-dw 00ffffff
-dw 00ff0000
-dw 00ff0000
-bitmapfive:
-dw 00ffffff
-dw 000000ff
-dw 0000ffff
-dw 00ff0000
-dw 0000ffff
-bitmapsix:
-dw 00ffff00
-dw 000000ff
-dw 00ffffff
-dw 00ff00ff
-dw 00ffffff
-bitmapseven:
-dw 00ffffff
-dw 00ff0000
-dw 0000ff00
-dw 000000ff
-dw 000000ff
-bitmapeight:
-dw 00ffffff
-dw 00ff00ff
-dw 00ffffff
-dw 00ff00ff
-dw 00ffffff
-bitmapnine:
-dw 00ffffff
-dw 00ff00ff
-dw 00ffffff
-dw 00ff0000
-dw 0000ffff
-bitmapcolon:
-dw 00000000
-dw 0000ff00
-dw 00000000
-dw 0000ff00
-dw 00000000
-bitmapsemicolon:
-dw 00000000
-dw 0000ff00
-dw 00000000
-dw 0000ff00
-dw 000000ff
-bitmapless:
-dw 00ff0000
-dw 0000ff00
-dw 000000ff
-dw 0000ff00
-dw 00ff0000
-bitmapequal:
-dw 00000000
-dw 00ffffff
-dw 00000000
-dw 00ffffff
-dw 00000000
-bitmapgreater:
-dw 000000ff
-dw 0000ff00
-dw 00ff0000
-dw 0000ff00
-dw 000000ff
-bitmapquestion:
-dw 00ffffff
-dw 00ff0000
-dw 0000ff00
-dw 00000000
-dw 0000ff00
-bitmapat:
-dw 0000ff00
-dw 00ff00ff
-dw 00ffffff
-dw 000000ff
-dw 00ffff00
 bitmapA:
 dw 0000ff00
 dw 00ff00ff
@@ -397,189 +199,273 @@ dw 00ff0000
 dw 0000ff00
 dw 000000ff
 dw 00ffffff
+bitmapzero:
+dw 00ffff00
+dw 00ff00ff
+dw 00ff00ff
+dw 00ff00ff
+dw 0000ffff
+bitmapone:
+dw 0000ff00
+dw 0000ffff
+dw 0000ff00
+dw 0000ff00
+dw 0000ff00
+bitmaptwo:
+dw 0000ffff
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 00ffffff
+bitmapthree:
+dw 0000ffff
+dw 00ff0000
+dw 0000ff00
+dw 00ff0000
+dw 0000ffff
+bitmapfour:
+dw 00ff00ff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff0000
+dw 00ff0000
+bitmapfive:
+dw 00ffffff
+dw 000000ff
+dw 0000ffff
+dw 00ff0000
+dw 0000ffff
+bitmapsix:
+dw 00ffff00
+dw 000000ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+bitmapseven:
+dw 00ffffff
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 000000ff
+bitmapeight:
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+bitmapnine:
+dw 00ffffff
+dw 00ff00ff
+dw 00ffffff
+dw 00ff0000
+dw 0000ffff
+bitmapescape:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaplcontrol:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaplshift:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaplalt:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaplsystem:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaprcontrol:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaprshift:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapralt:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaprsystem:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapmenu:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
 bitmapbracketleft:
 dw 00ffffff
 dw 000000ff
 dw 000000ff
 dw 000000ff
 dw 00ffffff
-bitmapbackslash:
-dw 00000000
-dw 000000ff
-dw 0000ff00
-dw 00ff0000
-dw 00000000
 bitmapbracketright:
 dw 00ffffff
 dw 00ff0000
 dw 00ff0000
 dw 00ff0000
 dw 00ffffff
-bitmapasciicircum:
-dw 0000ff00
-dw 00ff00ff
+bitmapsemicolon:
 dw 00000000
-dw 00000000
-dw 00000000
-bitmapunderscore:
-dw 00000000
-dw 00000000
-dw 00000000
-dw 00000000
-dw 00ffffff
-bitmapgrave:
-dw 000000ff
 dw 0000ff00
 dw 00000000
-dw 00000000
-dw 00000000
-bitmapa:
-dw 00000000
-dw 0000ffff
-dw 00ffff00
-dw 00ff00ff
-dw 00ffffff
-bitmapb:
+dw 0000ff00
 dw 000000ff
-dw 0000ffff
-dw 00ff00ff
-dw 00ff00ff
-dw 0000ffff
-bitmapc:
+bitmapcomma:
 dw 00000000
-dw 00ffff00
+dw 00000000
+dw 00000000
+dw 0000ff00
 dw 000000ff
-dw 000000ff
-dw 00ffff00
-bitmapd:
+bitmapperiod:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 0000ff00
+bitmapquotedbl:
+dw 00ff00ff
+dw 00ff00ff
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapslash:
 dw 00ff0000
-dw 00ffff00
-dw 00ff00ff
-dw 00ff00ff
-dw 00ffff00
-bitmape:
-dw 00000000
-dw 00ffff00
-dw 00ff00ff
-dw 0000ffff
-dw 00ffff00
-bitmapf:
 dw 00ff0000
 dw 0000ff00
-dw 00ffffff
-dw 0000ff00
-dw 0000ff00
-bitmapg:
-dw 000000ff
-dw 0000ffff
-dw 00ff00ff
-dw 00ff00ff
-dw 00ff00ff
-bitmapi:
-dw 0000ff00
-dw 00000000
-dw 0000ff00
-dw 0000ff00
-dw 0000ff00
-bitmapj:
-dw 000000ff
-dw 00ff00ff
-dw 0000ffff
-dw 0000ffff
-dw 00ff00ff
-bitmapl:
-dw 0000ffff
-dw 0000ff00
-dw 0000ff00
-dw 0000ff00
-dw 00ffffff
-bitmapm:
-dw 00000000
-dw 00ffffff
-dw 00ffffff
-dw 00ffffff
-dw 00ff00ff
-bitmapn:
-dw 00000000
-dw 0000ffff
-dw 00ff00ff
-dw 00ff00ff
-dw 00ff00ff
-bitmapo:
-dw 00000000
-dw 0000ff00
-dw 00ff00ff
-dw 00ff00ff
-dw 0000ff00
-bitmapp:
-dw 00000000
-dw 00ffff00
 dw 000000ff
 dw 000000ff
+bitmapbackslash:
+dw 00000000
 dw 000000ff
-bitmaps:
-dw 00000000
-dw 00ffff00
-dw 0000ffff
-dw 00ffff00
-dw 0000ffff
-bitmapt:
-dw 0000ff00
-dw 00ffffff
-dw 0000ff00
-dw 0000ff00
-dw 00ffff00
-bitmapu:
-dw 00000000
-dw 00ff00ff
-dw 00ff00ff
-dw 00ff00ff
-dw 00ffff00
-bitmapv:
-dw 00000000
-dw 00ff00ff
-dw 00ff00ff
-dw 00ffffff
-dw 0000ff00
-bitmapw:
-dw 00000000
-dw 00ff00ff
-dw 00ffffff
-dw 00ffffff
-dw 00ffffff
-bitmapx:
-dw 00000000
-dw 00ff00ff
-dw 0000ff00
-dw 0000ff00
-dw 00ff00ff
-bitmapy:
-dw 00000000
-dw 00ffffff
-dw 00ffff00
-dw 0000ffff
-dw 00ffffff
-bitmapbraceleft:
-dw 00ffff00
-dw 0000ff00
-dw 000000ff
-dw 0000ff00
-dw 00ffff00
-bitmapbar:
-dw 0000ff00
-dw 0000ff00
-dw 00000000
-dw 0000ff00
-dw 0000ff00
-bitmapbraceright:
-dw 0000ffff
 dw 0000ff00
 dw 00ff0000
-dw 0000ff00
-dw 0000ffff
+dw 00000000
 bitmapasciitilde:
 dw 00ffff00
 dw 0000ffff
 dw 00000000
 dw 00000000
 dw 00000000
+bitmapequal:
+dw 00000000
+dw 00ffffff
+dw 00000000
+dw 00ffffff
+dw 00000000
+bitmaphyphen:
+dw 00000000
+dw 00000000
+dw 00ffffff
+dw 00000000
+dw 00000000
+bitmapspace:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapenter:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapbackspace:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaptab:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmappageup:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmappagedown:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapend:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmaphome:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapinsert:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapdelete:
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+dw 00000000
+bitmapplus:
+dw 00000000
+dw 0000ff00
+dw 00ffffff
+dw 0000ff00
+dw 00000000
+bitmapminus:
+dw 00000000
+dw 00000000
+dw 00ffffff
+dw 00000000
+dw 00000000
+bitmapasterisk:
+dw 00ff00ff
+dw 0000ff00
+dw 00ff00ff
+dw 00000000
+dw 00000000
+bitmapdivide:
+dw 00ff0000
+dw 00ff0000
+dw 0000ff00
+dw 000000ff
+dw 000000ff
