@@ -17,9 +17,7 @@ impl<T> Vector<T> {
     if self.len == self.cap {
       self.cap = self.cap * 2u;
       newdata := malloc<T>(self.cap * sizeof(T));
-      for i := 0u; i < self.len; ++i {
-        newdata[i] = self.data[i];
-      }
+      memcpy(newdata, self.data, sizeof(newdata));
       free(self.data);
       self.data = newdata;
     }

@@ -45,6 +45,9 @@ e < d[3];  // this shouldn't try to ref e and think < starts template params
 
 references - affect binding only
 
+coercions - (const, ref) + ones for string / custom ones? interaction with type deduction
+and what template types are resolved to
+
 ## Built-in types
 i8, i16, i32, i64, u8, u16, u32, u64, bool, f32, f64
 
