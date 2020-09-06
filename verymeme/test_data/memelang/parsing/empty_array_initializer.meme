@@ -1,0 +1,3 @@
+fn main() i8 {
+  array : [5]i8 = {};
+}
