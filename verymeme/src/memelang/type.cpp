@@ -23,7 +23,6 @@ DistResult distTo(const Type& a, const Type& b, Exec* e) {
         },
         a.info);
   }
-
   int qual_idx = 0;
   Type wildcard_type = a;
   for (; qual_idx < b.quals.size(); ++qual_idx) {

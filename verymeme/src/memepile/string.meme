@@ -22,6 +22,10 @@ fn is_space(c: u8) bool {
   ret c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r';
 }
 
+fn is_print(c: u8) bool {
+  ret c >= 0x1f && c != 0x7f;
+}
+
 struct String {
   data: *u8,
   len: u32,

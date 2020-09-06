@@ -14,7 +14,7 @@ fn main() i32 {
 
   for i := 0u; i < toks.len; ++i {
     printf("Tok %d: ", i);
-    print_str(toks[i].str());
+    print_str(toks[i].to_str());
     printf("\n");
   }
 
