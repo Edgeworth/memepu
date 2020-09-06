@@ -20,44 +20,51 @@ struct Tok {
   type: TokType,
   loc: i32,
   size: i32,
-  int_val: i32,  // TODO: i64
-  str_val: String,
+  int: i32,  // TODO: i64
+  str: String,
 }
 
 impl Tok {
-  fn str() String {
-    ret String.new("Tok(") + self.str_val + String.new(")");  // TODO: add +=
+  fn to_str() String {
+    ret String.new("Tok(") + self.str + String.new(")");  // TODO: add +=
   }
 }
 
 struct Tokeniser {
-  cts: const FileContents,
+  cts: &const FileContents,
   toks: Vector<Tok>,
-  curtok: String,
+  curtok_: String,
 }
 
 impl Tokeniser {
   static fn new(cts: &const FileContents) Tokeniser {
-    ret {cts: cts, toks: Vector<Tok>.new(), curtok: String{}};
+    ret {cts: cts, toks: Vector<Tok>.new(), curtok_: String{}};
   }
 
   fn tokenise() Vector<Tok> {
+   // for i := 0u; i < self.cts.data.len; ++i {
+   //   if !is_print(self.cts.data[i]) && self.cts.data[i] != '\n'  {
+        // ERROR
+    //    ret Vector.new();
+   //   }
+   // }
+
     for i := 0u; i < self.cts.data.len; ++i {
       if is_space(self.cts.data[i]) {
-        self.push_curtok();
+        self.push_curtok_();
       } else {
-        self.curtok.push(self.cts.data[i]);
+        self.curtok_.push(self.cts.data[i]);
       }
     }
-    self.push_curtok();
+    self.push_curtok_();
     ret self.toks;  // TODO: copy constructor etc?
   }
 
-  fn push_curtok() {
-    if self.curtok.len != 0u {
+  fn push_curtok_() {
+    if self.curtok_.len != 0u {
       // TODO: make copy / move_into or something
-      self.toks.push(Tok{type: TokType.IDENT, loc: 0, size: 0, int_val: 0, str_val: self.curtok});
-      self.curtok.clear();
+      self.toks.push(Tok{type: TokType.IDENT, loc: 0, size: 0, int: 0, str: self.curtok_});
+      self.curtok_.clear();
     }
   }
 }
