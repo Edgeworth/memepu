@@ -78,7 +78,8 @@ std::unique_ptr<Node> ExprParser::parse() {
     case Tok::IDENT:
       // If it's the name of a type, take type or compound literal.
       // TODO: Need to handle namespaces etc?
-      if (c_.types.count(tok->str_val)) ec.pushTypeOrCompoundLit(std::make_unique<Type>(c_));
+      if (c_.types.count(tok->str_val))
+        ec.pushTypeOrCompoundLit(std::make_unique<Type>(c_));
       else
         ec.addExpr(std::make_unique<Ref>(c_));
       break;
@@ -117,7 +118,8 @@ std::unique_ptr<Node> ExprParser::ExprCtx::finish() {
 
 void ExprParser::ExprCtx::pushTypeOrCompoundLit(std::unique_ptr<Type> type) {
   // If there is a brace following, it's a compound literal - otherwise, just a type.
-  if (c_.hasTok(Tok::LBRACE)) addExpr(std::make_unique<CompoundLit>(c_, std::move(type)));
+  if (c_.hasTok(Tok::LBRACE))
+    addExpr(std::make_unique<CompoundLit>(c_, std::move(type)));
   else
     addExpr(std::move(type));
 }

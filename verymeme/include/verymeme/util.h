@@ -12,7 +12,7 @@ struct overloaded : Ts... {
   using Ts::operator()...;
 };
 template <class... Ts>
-overloaded(Ts...)->overloaded<Ts...>;
+overloaded(Ts...) -> overloaded<Ts...>;
 
 template <typename M, typename K, typename V>
 V getDefault(const M& map, const K& key, const V& def) {

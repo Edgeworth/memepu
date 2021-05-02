@@ -134,7 +134,8 @@ void Mapper::addCell(const Yosys::RTLIL::Cell& cell) {
   // component. There should be a mapped module for each leaf module. Look up using the full
   // type name, not the result of |moduleType| because the '\' is used during lookup.
   const auto* mapping = findMappingForModuleType(moduleType(cell), root_);
-  if (mapping) addMappedModule(cell, *mapping);
+  if (mapping)
+    addMappedModule(cell, *mapping);
   else
     addUnmappedModule(cell);
 }

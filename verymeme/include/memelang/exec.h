@@ -70,7 +70,8 @@ private:
     if (!v.hasStorage()) error("attempt operate on value without storage");
 
     const Type& t = s_.t(v.type);
-    if (s_.t(s_.bool_t).canCoerceTo(t)) return std::invoke(op, vm_.ref<bool>(v.hnd));
+    if (s_.t(s_.bool_t).canCoerceTo(t))
+      return std::invoke(op, vm_.ref<bool>(v.hnd));
     else if (s_.t(s_.i8_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<int8_t>(v.hnd));
     else if (s_.t(s_.i16_t).canCoerceTo(t))
