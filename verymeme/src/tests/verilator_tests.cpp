@@ -153,7 +153,8 @@ class Chip74299Test : public ExhaustiveVerilatorTest<2, 2, 1, 1, 1, 8> {
     chip.CP = 1;
     chip.eval();
     uint32_t result = IO;
-    if (S == 0b01) result = uint8_t((result << 1u) | DSL);
+    if (S == 0b01)
+      result = uint8_t((result << 1u) | DSL);
     else if (S == 0b10)
       result = uint8_t((result >> 1u) | (DSR << 7u));
     EXPECT_EQ(N_MR && N_OE == 0b00 ? result : 0, chip.IO);
@@ -164,10 +165,10 @@ class Chip74299Test : public ExhaustiveVerilatorTest<2, 2, 1, 1, 1, 8> {
 
 TEST_F(Chip74299Test, Exhaustive) { run(); }
 
-#define TEST_MLU_OP(result) \
-  EXPECT_EQ(uint32_t(result), mlu.OUT); \
+#define TEST_MLU_OP(result)                           \
+  EXPECT_EQ(uint32_t(result), mlu.OUT);               \
   EXPECT_EQ(((result)&0x100000000ull) >> 32u, mlu.C); \
-  EXPECT_EQ(uint32_t(result) ? 0 : 1, mlu.Z); \
+  EXPECT_EQ(uint32_t(result) ? 0 : 1, mlu.Z);         \
   EXPECT_EQ((result)&0x80000000u ? 1 : 0, mlu.N)
 
 void testMluOps(Vmlu& mlu, uint64_t a, uint64_t b, uint64_t c_in) {
@@ -263,7 +264,8 @@ public:
     switch (memeware::Shifter(SEL)) {
     case memeware::SHIFTER_LEFT_SHIFT: EXPECT_EQ(IN << SHFT, shifter_.OUT); break;
     case memeware::SHIFTER_RIGHT_SHIFT:
-      if (ARITH) EXPECT_EQ(int32_t(IN) >> SHFT, shifter_.OUT);
+      if (ARITH)
+        EXPECT_EQ(int32_t(IN) >> SHFT, shifter_.OUT);
       else
         EXPECT_EQ(IN >> SHFT, shifter_.OUT);
       break;

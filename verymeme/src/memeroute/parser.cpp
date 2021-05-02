@@ -178,7 +178,8 @@ private:
       } else {
         t_.expect({"("});
         const std::string& child = t_.peek();
-        if (child == "string_quote") t_.expect({"string_quote", "\"", ")"});
+        if (child == "string_quote")
+          t_.expect({"string_quote", "\"", ")"});
         else if (child == "space_in_quoted_tokens" || child == "host_cad" ||
             child == "host_version")
           ignoreRestOfExpression();

@@ -62,7 +62,8 @@ std::vector<Tok> Tokeniser::tokenise() {
   while (idx_ < data.size()) {
     if (startsNewToken(data[idx_]) || atCompleteToken()) pushCurrentToken();
 
-    if (!isspace(data[idx_])) curtok_ += data[idx_];
+    if (!isspace(data[idx_]))
+      curtok_ += data[idx_];
     else
       can_merge_ = false;  // Can't merge across spaces.
     idx_++;

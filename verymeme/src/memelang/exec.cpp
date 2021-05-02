@@ -22,12 +22,12 @@ T* g(std::unique_ptr<R>& n) {
 }  // namespace
 
 // See if the expression contains a return statement, and return it if it returns.
-#define CHECK(expr) \
-  do { \
-    auto opt = (expr); \
-    static_assert( \
+#define CHECK(expr)                                                                        \
+  do {                                                                                     \
+    auto opt = (expr);                                                                     \
+    static_assert(                                                                         \
         std::is_same<decltype(opt), std::optional<Val>>::value, "must use optional<Val>"); \
-    if (opt) return opt; \
+    if (opt) return opt;                                                                   \
   } while (0)
 
 Exec::Exec(ast::Module* m) : m_(m), s_(this), vm_(this) {}
@@ -167,7 +167,8 @@ Val Exec::runOp(ast::Op* op) {
       std::vector<Val> params;
       // TODO: allow deduction of types of fn parameters.
       for (auto& arg : args->args) params.emplace_back(eval(arg.get(), INVL_TID));
-      if (auto opt = runFn(std::get<FnSetInfo>(type.info), params); opt) return opt.value();
+      if (auto opt = runFn(std::get<FnSetInfo>(type.info), params); opt)
+        return opt.value();
       else
         error("unable to resolve function " + type.str());
     } else {
@@ -239,7 +240,8 @@ std::optional<Val> Exec::runWhile(ast::While* wh, TypeId typectx) {
 std::optional<Val> Exec::runIf(ast::If* ifst, TypeId typectx) {
   auto cond_val = eval(ifst->cond.get(), s_.bool_t);
   if (cond_val.type != s_.bool_t) error("if condition not boolean");
-  if (vm_.ref<bool>(cond_val.hnd)) CHECK(runStmtBlk(ifst->then.get(), typectx));
+  if (vm_.ref<bool>(cond_val.hnd))
+    CHECK(runStmtBlk(ifst->then.get(), typectx));
   else if (ifst->els)
     CHECK(runStmtBlk(ifst->els.get(), typectx));
   return std::nullopt;
@@ -248,7 +250,8 @@ std::optional<Val> Exec::runIf(ast::If* ifst, TypeId typectx) {
 Val Exec::eval(ast::Node* n, TypeId typectx) {
   setContext(n);
   Val ret_val;
-  if (typeid(*n) == typeid(ast::Op)) ret_val = runOp(g<ast::Op>(n));
+  if (typeid(*n) == typeid(ast::Op))
+    ret_val = runOp(g<ast::Op>(n));
   else if (typeid(*n) == typeid(ast::Ref))
     ret_val = s_.findValue(g<ast::Ref>(n));
   else if (typeid(*n) == typeid(ast::IntLit)) {

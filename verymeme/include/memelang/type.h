@@ -220,7 +220,7 @@ public:
       : info(std::move(info)), cnst(cnst), ref(ref), quals(std::move(quals)) {}
   int size() const;
   bool isPtr() const { return !quals.empty() && quals.back().ptr; }
-  bool isRefOrPtr() const { return ref || isPtr();}
+  bool isRefOrPtr() const { return ref || isPtr(); }
   bool isArray() const { return !quals.empty() && quals.back().array != 0; }
   bool canCoerceTo(const Type& o) const;  // Computes if this type can be coerced to |o|
   // Computes whether there is a type that is a subset of this type and |o|. Or, is there a type

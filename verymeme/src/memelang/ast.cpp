@@ -100,7 +100,8 @@ Typelist::Typelist(Parser::Ctx& c) : Node(c) {
   while (true) {
     if (!c.hasTok(Tok::IDENT)) c.error("typelist must contain type");
     names.push_back(c.consumeTok()->str_val);
-    if (c.hasTok(Tok::COMMA)) c.consumeTok();
+    if (c.hasTok(Tok::COMMA))
+      c.consumeTok();
     else
       break;
   }
@@ -156,7 +157,8 @@ Ref::Ref(Parser::Ctx& c) : Node(c) {
     c.consumeTok(Tok::LANGLE);
     while (c.curTok()->type != Tok::RANGLE) {
       auto type = Type::tryParseType(c);
-      if (type) params.emplace_back(std::move(type));
+      if (type)
+        params.emplace_back(std::move(type));
       else {
         c = c_cpy;
         return;
@@ -317,7 +319,8 @@ If::If(Parser::Ctx& c) : Node(c) {
   cond = ExprParser(c).parse();
   then = std::make_unique<StmtBlk>(c);
   if (c.maybeConsumeTok(Tok::ELSE)) {
-    if (c.hasTok(Tok::LBRACE)) els = std::make_unique<StmtBlk>(c);
+    if (c.hasTok(Tok::LBRACE))
+      els = std::make_unique<StmtBlk>(c);
     else
       els = std::make_unique<StmtBlk>(std::make_unique<If>(c), c);  // Special case for "else if"
   }
@@ -366,7 +369,8 @@ Enum::Enum(Parser::Ctx& c) : Node(c) {
 
   if (tname->tlist) tname->tlist->pushTypes(c);
   while (!c.hasTok(Tok::RBRACE)) {
-    if (c.hasTok(Tok::COMMA, 1)) numbered_variants.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
+    if (c.hasTok(Tok::COMMA, 1))
+      numbered_variants.emplace_back(c.consumeTok(Tok::IDENT)->str_val);
     else
       data_variants.emplace_back(std::make_unique<VarDecl>(c));
     c.consumeTok(Tok::COMMA);
