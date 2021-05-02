@@ -47,7 +47,8 @@ public:
     sheet.header2 = t_.lines(8);
     while (true) {
       std::string tok = t_.next();
-      if (tok == "$EndSCHEMATC") break;
+      if (tok == "$EndSCHEMATC")
+        break;
       else if (tok == "$Comp")
         sheet.components.emplace_back(parseComponent());
       else if (tok == "Text") {
@@ -184,7 +185,8 @@ private:
     t_.lines(1);  // Ignore rest.
     while (true) {
       std::string tok = t_.next();
-      if (tok == "ENDDEF") break;
+      if (tok == "ENDDEF")
+        break;
       else if (tok == "F0" || tok == "F1") {
         // Record reference and value fields.
         auto& field = component.fields.emplace_back();

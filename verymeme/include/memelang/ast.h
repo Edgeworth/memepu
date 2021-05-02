@@ -9,15 +9,15 @@
 
 namespace memelang::ast {
 
-#define DEFNLT(type, ...) \
-  COMPARISON(type, __VA_ARGS__) \
-  explicit type(Parser::Ctx& c); \
-  type(type&&) = default; \
-  type& operator=(type&&) = default; \
-  type(const type&) = delete; \
+#define DEFNLT(type, ...)                \
+  COMPARISON(type, __VA_ARGS__)          \
+  explicit type(Parser::Ctx& c);         \
+  type(type&&) = default;                \
+  type& operator=(type&&) = default;     \
+  type(const type&) = delete;            \
   type& operator=(const type&) = delete; \
-  ~type() = default; \
-  std::string str() const override; \
+  ~type() = default;                     \
+  std::string str() const override;      \
   std::vector<Node*> children() override
 
 struct Node {
@@ -252,7 +252,6 @@ struct Import : public Node {
 
   DEFNLT(Import, name);
 };
-
 
 // Top level constructs:
 struct Fn : public Node {
