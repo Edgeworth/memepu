@@ -7,10 +7,18 @@
 namespace memelang::exec {
 
 Scope::Scope(Exec* exec)
-    : e_(exec), bool_t(addBuiltinStorage(BOOL)), i8_t(addBuiltinStorage(I8)),
-      i16_t(addBuiltinStorage(I16)), i32_t(addBuiltinStorage(I32)), i64_t(addBuiltinStorage(I64)),
-      u8_t(addBuiltinStorage(U8)), u16_t(addBuiltinStorage(U16)), u32_t(addBuiltinStorage(U32)),
-      u64_t(addBuiltinStorage(U64)), f32_t(addBuiltinStorage(F32)), f64_t(addBuiltinStorage(F64)),
+    : e_(exec),
+      bool_t(addBuiltinStorage(BOOL)),
+      i8_t(addBuiltinStorage(I8)),
+      i16_t(addBuiltinStorage(I16)),
+      i32_t(addBuiltinStorage(I32)),
+      i64_t(addBuiltinStorage(I64)),
+      u8_t(addBuiltinStorage(U8)),
+      u16_t(addBuiltinStorage(U16)),
+      u32_t(addBuiltinStorage(U32)),
+      u64_t(addBuiltinStorage(U64)),
+      f32_t(addBuiltinStorage(F32)),
+      f64_t(addBuiltinStorage(F64)),
       u8_ptr_t(addType(Type(t(u8_t).info, false, false, {{.ptr = true}}))) {
   pushScopeUnsafe(nullptr, Mapping(e_));
 

@@ -44,7 +44,8 @@ Sheet::Label createParentLabel(const Yosys::SigBit& bit) {
 
 void handleChildMappingError(const std::string& child_name,
     const std::set<Sheet::Label>& child_label_set, const ChildMapping& mapping) {
-  std::string msg = "Number of hierarchical labels in child '" + child_name +
+  std::string msg =
+      "Number of hierarchical labels in child '" + child_name +
       "' does not match number of verilog connections.\nPossible causes:\n  1. Missing connection "
       "or unused\n  2. Same physical pin also connected to local label (e.g. GND)\n  3. Connecting "
       "a Kicad pin to multiple times to a multi-bit verilog signal (currently not supported)\nOnly "

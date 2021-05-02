@@ -92,8 +92,8 @@ const Tok* Parser::Ctx::curTok(const std::vector<Tok::Type>& ts) const {
   const auto* token = &toks_[idx_];
   if (!hasTok(ts))
     error("unexpected token, must be one of " +
-        std::accumulate(ts.begin(), ts.end(), std::string(),
-            [](const auto& a, const auto& b) { return tos(a) + tos(b) + ", "; }));
+          std::accumulate(ts.begin(), ts.end(), std::string(),
+              [](const auto& a, const auto& b) { return tos(a) + tos(b) + ", "; }));
   return token;
 }
 

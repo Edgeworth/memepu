@@ -71,7 +71,8 @@ std::string Qualifier::str() const {
 int Type::size() const {
   int size = std::visit([](const auto& v) { return v.size(); }, info);
   for (const auto& qual : quals) {
-    if (qual.ptr) size = sizeof(Hnd);
+    if (qual.ptr)
+      size = sizeof(Hnd);
     else if (qual.array)
       size *= qual.array;
   }
@@ -142,10 +143,11 @@ void Mapping::merge(const Mapping& m) {
     // Allow overwriting unmapped wildcards. Allow skipping unmapped wildcards in |m|.
     // Allow overwriting with a more coercible type (e.g. i32 to const i32).
     if (iter != map.end() && iter->second != INVL_TID) {
-      if (type == INVL_TID || s.t(iter->second).canCoerceTo(s.t(type))) continue;
+      if (type == INVL_TID || s.t(iter->second).canCoerceTo(s.t(type)))
+        continue;
       else if (!s.t(type).canCoerceTo(s.t(iter->second)))
         e->error("duplicate template parameter " + wildcard +
-            ". Current type: " + s.t(iter->second).str() + ", given type: " + s.t(type).str());
+                 ". Current type: " + s.t(iter->second).str() + ", given type: " + s.t(type).str());
     }
     map[wildcard] = type;
   }
@@ -278,7 +280,7 @@ std::string DistMap::str() const {
   std::string s = "DistMap(";
   auto f = [](const auto& i) {
     return std::to_string(i.first.first) + "x" + std::to_string(i.first.second) + "=>" +
-        std::to_string(i.second);
+           std::to_string(i.second);
   };
   s += join(m.begin(), m.end(), f, ",");
   s += ")";

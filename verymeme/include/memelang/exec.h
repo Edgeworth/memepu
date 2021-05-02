@@ -70,7 +70,8 @@ private:
     if (!v.hasStorage()) error("attempt operate on value without storage");
 
     const Type& t = s_.t(v.type);
-    if (s_.t(s_.bool_t).canCoerceTo(t)) return std::invoke(op, vm_.ref<bool>(v.hnd));
+    if (s_.t(s_.bool_t).canCoerceTo(t))
+      return std::invoke(op, vm_.ref<bool>(v.hnd));
     else if (s_.t(s_.i8_t).canCoerceTo(t))
       return std::invoke(op, vm_.ref<int8_t>(v.hnd));
     else if (s_.t(s_.i16_t).canCoerceTo(t))
@@ -105,7 +106,7 @@ private:
 
     if (!s_.t(l.type).hasIntersection(s_.t(r.type)))
       error("no binop intf defined for " + op_name +
-          " and types don't match: " + s_.t(l.type).str() + " " + s_.t(r.type).str());
+            " and types don't match: " + s_.t(l.type).str() + " " + s_.t(r.type).str());
 
     return invokeBuiltin(l, [this, &default_op, &r, &type_if_builtin](auto lt) {
       auto res = default_op(lt, vm_.ref<decltype(lt)>(r.hnd));

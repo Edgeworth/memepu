@@ -44,9 +44,9 @@ private:
 
   template <typename T>
   sf::Vector2f windowToScreen(const T& mouse) {
-    return 2.f *
-        sf::Vector2f(mouse.x / float(win_->getSize().x), mouse.y / float(win_->getSize().y)) -
-        sf::Vector2f(1.0f, 1.0f);
+    return 2.f * sf::Vector2f(
+                     mouse.x / float(win_->getSize().x), mouse.y / float(win_->getSize().y)) -
+           sf::Vector2f(1.0f, 1.0f);
   }
 
   template <typename T>

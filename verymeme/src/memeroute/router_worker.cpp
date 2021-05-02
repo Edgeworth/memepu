@@ -37,7 +37,7 @@ RouterWorker::RouterWorker(Pcb pcb) : pcb_(std::move(pcb)) {}
 
 bool RouterWorker::oob(const RouterWorker::State& s) const {
   return s.p.x < 0 || s.p.y < 0 || s.p.x >= GRID_COLS || s.p.y >= GRID_ROWS || s.layer < 0 ||
-      s.layer >= NUM_LAYERS;
+         s.layer >= NUM_LAYERS;
 }
 
 Point RouterWorker::convertWorldToGrid(const Point& p) const {
