@@ -31,3 +31,4 @@ obj_dir/
 verymeme/verilog/result*
 compile_commands.json
 .clangd/
+.cache/

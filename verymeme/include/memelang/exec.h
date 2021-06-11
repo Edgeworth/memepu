@@ -2,6 +2,7 @@
 #define MEMELANG_EXEC_H
 
 #include <map>
+#include <optional>
 #include <variant>
 
 #include "memelang/ast.h"

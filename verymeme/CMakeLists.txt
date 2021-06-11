@@ -161,7 +161,8 @@ set(TEST_SOURCES
 
 # verymeme:
 add_library(verymeme_library ${VERYMEME_SOURCES})
-target_include_directories(verymeme_library PUBLIC ${Boost_INCLUDE_DIRS} include)
+target_include_directories(verymeme_library PUBLIC ${Boost_INCLUDE_DIRS}
+    ${VERILATOR_INCLUDE_DIRS} include)
 target_link_directories(verymeme_library PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(verymeme_library PUBLIC ${CMAKE_DL_LIBS} ${Boost_LIBRARIES})
 

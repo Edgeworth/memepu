@@ -60,7 +60,7 @@ void handleChildMappingError(const std::string& child_name,
     if (child_label_strs.contains(kv.first)) continue;
     msg += "  " + kv.first + "\n";
   }
-  verify_expr(false, msg.c_str());
+  verify_expr(false, "%s", msg.c_str());
 }
 
 std::string sanitiseKicadSheetName(std::string name) {

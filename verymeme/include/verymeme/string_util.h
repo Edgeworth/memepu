@@ -1,7 +1,10 @@
 #ifndef VERYMEME_STRING_UTIL_H
 #define VERYMEME_STRING_UTIL_H
 
+#include <verilated_heavy.h>
+
 #include <bitset>
+#include <cstddef>
 #include <iomanip>
 #include <vector>
 
@@ -67,10 +70,11 @@ std::string hexdump(const T (&input)[N], int width = 80) {
 }
 
 template <std::size_t N>
-std::string convertToString(const uint32_t (&data)[N]) {
+std::string convertToString(const VlWide<N>& data) {
   std::string str;
   str.reserve(N * sizeof(uint32_t));
-  for (uint32_t c : data) {
+  for (size_t i = 0; i < N; i++) {
+    auto c = data[i];
     str += char(c & 0xFFu);
     str += char((c >> 8u) & 0xFFu);
     str += char((c >> 16u) & 0xFFu);
