@@ -1,3 +1,20 @@
+
+# Building
+## Dependencies
+Also need:
+Verilator, Yosys, Yices2, SymbiYosys
+
+### Ubuntu
+sudo apt install libsfml-dev extra-cmake-modules libboost-dev libboost-stacktrace-dev \
+  build-essential clang bison flex libreadline-dev gawk tcl-dev libffi-dev git \
+  graphviz xdot pkg-config python3 libboost-system-dev libboost-python-dev \
+  libboost-filesystem-dev autoconf libboost-stacktrace-dev libboost-program-options-dev \
+  gperf libgmp-dev cmake
+
+
+### Arch
+sudo pacman -S sfml extra-cmake-modules
+
 # Memepu
 
 TODO fill out.
