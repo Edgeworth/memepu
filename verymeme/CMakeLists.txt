@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-format-security -Wno-sign-compare")
@@ -141,13 +141,6 @@ set(MEMELANG_SOURCES
     src/memelang/vm.cpp include/memelang/vm.h
     src/memelang/scopes.cpp include/memelang/scopes.h
     src/memelang/type.cpp include/memelang/type.h)
-set(MEMEROUTE_SOURCES
-    src/memeroute/parser.cpp include/memeroute/parser.h
-    src/memeroute/types.cpp include/memeroute/types.h
-    src/memeroute/render_shapes.cpp include/memeroute/render_shapes.h
-    src/memeroute/renderer.cpp include/memeroute/renderer.h
-    src/memeroute/router.cpp include/memeroute/router.h
-    src/memeroute/router_worker.cpp include/memeroute/router_worker.h)
 set(MEMESIM_SOURCES
     src/memesim/simulator.cpp include/memesim/simulator.h
     src/memesim/cli.cpp include/memesim/cli.h
@@ -157,7 +150,7 @@ set(MEMEWARE_SOURCES
     src/memeware/microcode.cpp include/memeware/microcode.h)
 set(TEST_SOURCES
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
-    src/tests/common_tests.cpp src/tests/memeroute_tests.cpp src/tests/memelang_tests.cpp)
+    src/tests/common_tests.cpp src/tests/memelang_tests.cpp)
 
 # verymeme:
 add_library(verymeme_library ${VERYMEME_SOURCES})
@@ -187,15 +180,6 @@ target_link_libraries(memelang_library PUBLIC verymeme_library)
 add_executable(memelang src/programs/memelang.cpp)
 target_link_libraries(memelang PUBLIC memelang_library)
 
-# memeroute:
-add_library(memeroute_library ${MEMEROUTE_SOURCES})
-target_link_libraries(memeroute_library PUBLIC verymeme_library)
-target_include_directories(memeroute_library PUBLIC ${SFML_INCLUDE_DIR})
-target_link_libraries(memeroute_library PUBLIC
-    Threads::Threads ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-add_executable(memeroute src/programs/memeroute.cpp)
-target_link_libraries(memeroute PUBLIC memeroute_library)
-
 # memesim:
 add_library(memesim_library ${MEMESIM_SOURCES})
 target_link_libraries(memesim_library PUBLIC verymeme_library memeasm_library)
@@ -215,6 +199,6 @@ target_link_libraries(memeware PUBLIC memeware_library)
 
 # tests:
 add_executable(tests ${TEST_SOURCES} src/programs/test_harness.cpp)
-target_link_libraries(tests PUBLIC gtest gmock memeasm_library memecad_library memelang_library
-    memeroute_library memesim_library memeware_library)
+target_link_libraries(tests PUBLIC gtest gmock memeasm_library memecad_library
+    memelang_library memesim_library memeware_library)
 gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
