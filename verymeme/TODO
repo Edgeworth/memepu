@@ -33,9 +33,6 @@ to memelang
 - Mouse/keyboard input somehow
 - System calls (software interrupts)
 
-#### memeroute
-- Finish DSN parsing. Better displaying.
-
 #### memelang
 
 ### TODO later
