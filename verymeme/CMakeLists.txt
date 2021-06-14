@@ -114,40 +114,40 @@ add_subdirectory(verilog)
 
 # Add libraries.
 set(VERYMEME_SOURCES
-    include/verymeme/util.h
-    src/verymeme/file.cpp include/verymeme/file.h
-    src/verymeme/geom.cpp include/verymeme/geom.h
-    src/verymeme/tokeniser.cpp include/verymeme/tokeniser.h
-    src/verymeme/term.cpp include/verymeme/term.h
-    include/verymeme/concurrent_queue.h include/verymeme/bimap.h
-    src/verymeme/string_util.cpp include/verymeme/string_util.h
-    src/verymeme/macros.cpp include/verymeme/macros.h)
-set(MEMEASM_SOURCES src/memeasm/assembler.cpp include/memeasm/assembler.h)
+    src/verymeme/util.h
+    src/verymeme/file.cpp src/verymeme/file.h
+    src/verymeme/geom.cpp src/verymeme/geom.h
+    src/verymeme/tokeniser.cpp src/verymeme/tokeniser.h
+    src/verymeme/term.cpp src/verymeme/term.h
+    src/verymeme/concurrent_queue.h src/verymeme/bimap.h
+    src/verymeme/string_util.cpp src/verymeme/string_util.h
+    src/verymeme/macros.cpp src/verymeme/macros.h)
+set(MEMEASM_SOURCES src/memeasm/assembler.cpp src/memeasm/assembler.h)
 set(MEMECAD_SOURCES
-    src/memecad/parser.cpp include/memecad/parser.h
-    src/memecad/types.cpp include/memecad/types.h
-    src/memecad/mapper.cpp include/memecad/mapper.h
-    src/memecad/yosys_module.cpp include/memecad/yosys_module.h
-    src/memecad/util.cpp include/memecad/util.h
-    src/memecad/schematic.cpp include/memecad/schematic.h)
+    src/memecad/parser.cpp src/memecad/parser.h
+    src/memecad/types.cpp src/memecad/types.h
+    src/memecad/mapper.cpp src/memecad/mapper.h
+    src/memecad/yosys_module.cpp src/memecad/yosys_module.h
+    src/memecad/util.cpp src/memecad/util.h
+    src/memecad/schematic.cpp src/memecad/schematic.h)
 set(MEMELANG_SOURCES
-    include/memelang/constants.h
-    src/memelang/tokeniser.cpp include/memelang/tokeniser.h
-    src/memelang/parser.cpp include/memelang/parser.h
-    src/memelang/file_contents.cpp include/memelang/file_contents.h
-    src/memelang/ast.cpp include/memelang/ast.h
-    src/memelang/expression.cpp include/memelang/expression.h
-    src/memelang/exec.cpp include/memelang/exec.h
-    src/memelang/vm.cpp include/memelang/vm.h
-    src/memelang/scopes.cpp include/memelang/scopes.h
-    src/memelang/type.cpp include/memelang/type.h)
+    src/memelang/constants.h
+    src/memelang/tokeniser.cpp src/memelang/tokeniser.h
+    src/memelang/parser.cpp src/memelang/parser.h
+    src/memelang/file_contents.cpp src/memelang/file_contents.h
+    src/memelang/ast.cpp src/memelang/ast.h
+    src/memelang/expression.cpp src/memelang/expression.h
+    src/memelang/exec.cpp src/memelang/exec.h
+    src/memelang/vm.cpp src/memelang/vm.h
+    src/memelang/scopes.cpp src/memelang/scopes.h
+    src/memelang/type.cpp src/memelang/type.h)
 set(MEMESIM_SOURCES
-    src/memesim/simulator.cpp include/memesim/simulator.h
-    src/memesim/cli.cpp include/memesim/cli.h
-    src/memesim/display.cpp include/memesim/display.h)
+    src/memesim/simulator.cpp src/memesim/simulator.h
+    src/memesim/cli.cpp src/memesim/cli.h
+    src/memesim/display.cpp src/memesim/display.h)
 set(MEMEWARE_SOURCES
-    include/memeware/constants.h
-    src/memeware/microcode.cpp include/memeware/microcode.h)
+    src/memeware/constants.h
+    src/memeware/microcode.cpp src/memeware/microcode.h)
 set(TEST_SOURCES
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memelang_tests.cpp)
@@ -155,7 +155,7 @@ set(TEST_SOURCES
 # verymeme:
 add_library(verymeme_library ${VERYMEME_SOURCES})
 target_include_directories(verymeme_library PUBLIC ${Boost_INCLUDE_DIRS}
-    ${VERILATOR_INCLUDE_DIRS} include)
+    ${VERILATOR_INCLUDE_DIRS} src)
 target_link_directories(verymeme_library PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(verymeme_library PUBLIC ${CMAKE_DL_LIBS} ${Boost_LIBRARIES})
 
