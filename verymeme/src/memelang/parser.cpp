@@ -42,7 +42,7 @@ void Parser::collectTypeIdents() {
   // TODO: handle public/private stuff + imports?
   for (const auto& ctx : c_) {
     while (ctx->hasTok()) {
-      const bool wasEnum = ctx->hasTok(Tok::ENUM);
+      const bool was_enum = ctx->hasTok(Tok::ENUM);
       // Functions are not treated as types by the parser - e.g. *somefn(x) means dereference
       // the return value of the function, not a pointer type.
       if (ctx->hasTok({Tok::STRUCT, Tok::INTF, Tok::ENUM})) {
@@ -53,7 +53,7 @@ void Parser::collectTypeIdents() {
         types.insert(type_ident);
 
         // Collect enum idents.
-        if (wasEnum) {
+        if (was_enum) {
           // Can't parse using regular Enum code because it may reference another enum type.
           while (!ctx->hasTok(Tok::LBRACE)) ctx->consumeTok();
           ctx->consumeTok(Tok::LBRACE);
