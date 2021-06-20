@@ -8,12 +8,12 @@
 namespace memesim {
 
 class CommandLine {
-public:
+ public:
   explicit CommandLine(Simulator* simulator);
 
   void run(const std::string& initial_cmd);
 
-private:
+ private:
   Simulator* simulator_;
   std::shared_ptr<ConcurrentQueue<Simulator::Response>> receiver_;
 

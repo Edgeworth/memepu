@@ -12,7 +12,7 @@ namespace memelang::exec {
 class Exec;
 
 class VM {
-public:
+ public:
   explicit VM(Exec* exec);
 
   Hnd allocStack(int size);
@@ -34,7 +34,7 @@ public:
   void memcpy(Val dst, Val src, int size) { ::memcpy(&mem_[dst.hnd], &mem_[src.hnd], size); }
   void memset(Val dst, uint8_t val, int size) { ::memset(&mem_[dst.hnd], val, size); }
 
-private:
+ private:
   constexpr static int STACK_SIZE = 1024 * 512;  // 512 KiB
   constexpr static int HEAP_SIZE = 1024 * 512;  // 512 KiB
   constexpr static int TMP_SIZE = 1024 * 512;  // 512 KiB

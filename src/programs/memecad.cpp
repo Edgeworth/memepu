@@ -17,9 +17,9 @@ int main(int argc, char* argv[]) {
   try {
     po::options_description desc{"Options"};
     desc.add_options()("help,h", "Help screen")(
-        "files,f", po::value<std::vector<std::string>>()->required()->multitoken())(
-        "memecad-map,k", po::value<std::string>()->required())(
-        "chip-libraries,c", po::value<std::vector<std::string>>()->required()->multitoken());
+        "files,f", po::value<std::vector<std::string>>()->required()->multitoken())("memecad-map,k",
+        po::value<std::string>()->required())("chip-libraries,c",
+        po::value<std::vector<std::string>>()->required()->multitoken());
 
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);

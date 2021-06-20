@@ -23,7 +23,7 @@
 namespace {
 
 class VerilatorTest : public ::testing::Test {
-public:
+ public:
   VerilatorTest() { checkedChdir("verilog"); }
 
   ~VerilatorTest() override { checkedChdir(".."); }
@@ -31,7 +31,7 @@ public:
 
 template <int... Ns>
 class ExhaustiveVerilatorTest : public VerilatorTest {
-public:
+ public:
   void run() {
     // Do this because gtest will construct a list of every test, which is slow for large
     // exhaustive tests.
@@ -51,7 +51,7 @@ public:
 
   virtual void doTest() = 0;
 
-protected:
+ protected:
   std::array<uint32_t, sizeof...(Ns)> param = {};
 };
 
@@ -210,7 +210,7 @@ void testMluOps(Vmlu& mlu, uint64_t a, uint64_t b, uint64_t c_in) {
 #undef TEST_MLU_OP
 
 class SemiExhaustiveMluTest : public ExhaustiveVerilatorTest<10, 10, 1> {
-public:
+ public:
   SemiExhaustiveMluTest() {
     mlu_.N_BOOTED = 0;
     mlu_.N_RST = 1;
@@ -223,7 +223,7 @@ public:
     testMluOps(mlu_, A, B, C_IN);
   }
 
-private:
+ private:
   Vmlu mlu_;
 };
 
@@ -231,7 +231,7 @@ TEST_F(SemiExhaustiveMluTest, SemiExhaustiveMluTest) { run(); }
 
 class MluTest : public VerilatorTest,
                 public ::testing::WithParamInterface<std::tuple<uint32_t, uint32_t, uint32_t>> {
-public:
+ public:
   MluTest() {
     mlu_.N_BOOTED = 0;
     mlu_.N_RST = 1;
@@ -239,7 +239,7 @@ public:
     mlu_.BOOTSTRAP_MLU_SLICE_N_WE = 1;
   }
 
-protected:
+ protected:
   Vmlu mlu_;
 };
 
@@ -253,7 +253,7 @@ INSTANTIATE_TEST_SUITE_P(Basic, MluTest,
         std::make_tuple(3364619464, 3637411669, 0)));
 
 class SemiExhaustiveShifterTest : public ExhaustiveVerilatorTest<15, 5, 2, 1> {
-public:
+ public:
   void doTest() override {
     const auto [IN, SHFT, SEL, ARITH] = param;
     if (SEL != memeware::Shifter::SHIFTER_RIGHT_SHIFT && ARITH) return;
@@ -279,14 +279,14 @@ public:
     }
   }
 
-private:
+ private:
   Vshifter shifter_;
 };
 
 TEST_F(SemiExhaustiveShifterTest, SemiExhaustiveShifterTest) { run(); }
 
 class SemiExhaustiveRegisterFileTest : public ExhaustiveVerilatorTest<5> {
-public:
+ public:
   void doTest() override {
     const auto [REG_SRC] = param;
     const int TEST_VAL = int(REG_SRC) + 55;  // Use non-static value.
@@ -330,14 +330,14 @@ public:
     EXPECT_EQ(TEST_VAL, file_.OUT_DATA);
   }
 
-private:
+ private:
   Vregister_file file_;
 };
 
 TEST_F(SemiExhaustiveRegisterFileTest, SemiExhaustiveRegisterFileTest) { run(); }
 
 class KpuTest : public VerilatorTest {
-protected:
+ protected:
   Vkpu kpu_;
 };
 
@@ -431,7 +431,7 @@ TEST_F(KpuTest, InterruptsDisabledAtReset) {
 }
 
 class TimerTest : public VerilatorTest {
-protected:
+ protected:
   Vtimer timer_;
 };
 

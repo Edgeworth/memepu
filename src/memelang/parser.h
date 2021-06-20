@@ -14,9 +14,9 @@ namespace memelang::ast {
 struct Module;
 
 class Parser {
-public:
+ public:
   class Ctx {
-  public:
+   public:
     const FileContents* cts;
     std::unordered_set<std::string> types;  // Regular types - may be qualified.
 
@@ -41,7 +41,7 @@ public:
     void reset() { idx_ = 0; }
     const std::vector<Tok>& tokens() const { return toks_; }
 
-  private:
+   private:
     std::vector<Tok> toks_;
     int idx_ = 0;
   };
@@ -54,7 +54,7 @@ public:
   const std::vector<std::unique_ptr<Ctx>>& ctxs() const { return c_; }
   std::string astToString();
 
-private:
+ private:
   void collectTypeIdents();
 
   std::vector<std::unique_ptr<Ctx>> c_;

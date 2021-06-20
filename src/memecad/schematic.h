@@ -9,7 +9,7 @@
 namespace memecad {
 
 class Schematic {
-public:
+ public:
   struct SchematicFile {
     std::string filename;
     std::string contents;
@@ -26,7 +26,7 @@ public:
       const std::string& sheet_name, const std::vector<Yosys::SigSig>& sigs);
   std::vector<SchematicFile> writeHierarchy();
 
-private:
+ private:
   struct SheetData {
     SheetData();
 

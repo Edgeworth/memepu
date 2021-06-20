@@ -8,7 +8,7 @@
 namespace memelang {
 
 class FileContents {
-public:
+ public:
   FileContents(std::string filename, std::string data);
 
   const std::string& data() const { return data_; }
@@ -19,7 +19,7 @@ public:
   std::string fpos(int loc) const;
   std::string span(int loc, int size) const;
 
-private:
+ private:
   std::string filename_;
   std::string data_;
   std::vector<int> newlines_;

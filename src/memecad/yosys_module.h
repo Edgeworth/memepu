@@ -14,7 +14,7 @@ std::vector<Schematic::SchematicFile> convertVerilogToKicadSchematics(
     std::vector<std::string> kicad_library_filenames);
 
 class TestPass : public Yosys::Pass {
-public:
+ public:
   TestPass();
 
   void setup(const std::string& memecad_map_filename,
@@ -22,7 +22,7 @@ public:
   void execute(std::vector<std::string> args, Yosys::RTLIL::Design* design) override;
   Mapper& mapper() { return mapper_; }
 
-private:
+ private:
   Mapper mapper_;
 
   static void printModuleInfo(Yosys::RTLIL::Module* module);

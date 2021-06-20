@@ -11,7 +11,7 @@
 
 template <typename T>
 class ConcurrentQueue {
-public:
+ public:
   T yield() {
     std::unique_lock<std::mutex> lock(q_lock_);
     while (q_.empty()) has_items_cv_.wait(lock);
@@ -35,7 +35,7 @@ public:
     has_items_cv_.notify_all();
   }
 
-private:
+ private:
   std::condition_variable has_items_cv_;
   std::mutex q_lock_;
   std::queue<T> q_;

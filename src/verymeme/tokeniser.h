@@ -8,7 +8,7 @@
 #include "verymeme/macros.h"
 
 class Tokeniser {
-public:
+ public:
   Tokeniser(const std::string& data, const std::regex& token);
 
   template <typename T = std::string>
@@ -30,7 +30,7 @@ public:
   std::string substr(int st, int en);
   void expect(const std::vector<std::string>& toks);
 
-private:
+ private:
   std::vector<std::string> toks_;
   int idx_ = 0;
 };

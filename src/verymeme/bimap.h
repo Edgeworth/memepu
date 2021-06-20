@@ -7,7 +7,7 @@
 
 template <typename Key, typename Value>
 class Bimap {
-public:
+ public:
   bool containsKey(const Key& key) { return mapping.contains(key); }
   bool insert(const Key& key, const Value& val) {
     Record r{key, val};
@@ -25,7 +25,7 @@ public:
     return *mapping[key];
   }
 
-private:
+ private:
   struct Record {
     Key k;
     Value v;

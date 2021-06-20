@@ -39,7 +39,7 @@ struct AutoReset {
   AutoReset<T>& operator=(AutoReset<T>&&) = delete;
   AutoReset<T>& operator=(const AutoReset<T>&) = delete;
 
-private:
+ private:
   T callable_;
 };
 

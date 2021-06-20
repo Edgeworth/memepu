@@ -17,7 +17,7 @@ namespace memelang::exec {
 class Exec;
 
 class Scope {
-public:
+ public:
   explicit Scope(Exec* exec);
 
   [[nodiscard]] auto autoScope(ast::Node* ctx, const Mapping& m) {
@@ -50,7 +50,7 @@ public:
 
   std::string stacktrace() const;
 
-private:
+ private:
   struct ScopeData {
     std::vector<std::map<std::string, Val>> vars;
     Mapping m;
@@ -83,7 +83,7 @@ private:
   std::map<std::string, BuiltinFnInfo> builtin_fns_;
   std::vector<ast::Impl*> impls_;
 
-public:
+ public:
   // Built-in types (initialize after).
   TypeId bool_t, i8_t, i16_t, i32_t, i64_t, u8_t, u16_t, u32_t, u64_t, f32_t, f64_t, u8_ptr_t;
 };

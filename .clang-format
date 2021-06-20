@@ -1,6 +1,5 @@
-﻿---
+---
 BasedOnStyle: Google
-AccessModifierOffset: -2
 AlignAfterOpenBracket: DontAlign
 AlignOperands: false
 AlignTrailingComments: false
