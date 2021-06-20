@@ -8,16 +8,16 @@
 namespace memelang::ast {
 
 class ExprParser {
-public:
+ public:
   explicit ExprParser(Parser::Ctx& ctx) : c_(ctx) {}
 
   std::unique_ptr<Node> parse();
 
-private:
+ private:
   Parser::Ctx& c_;
 
   class ExprCtx {
-  public:
+   public:
     explicit ExprCtx(Parser::Ctx& c) : c_(c) {}
 
     std::unique_ptr<Node> finish();
@@ -26,7 +26,7 @@ private:
     void addOp(Tok::Type type);
     bool canFinish() const { return s_.size() - binop_count == 1; }
 
-  private:
+   private:
     Parser::Ctx& c_;
     std::vector<std::unique_ptr<Node>> s_ = {};
     std::vector<std::unique_ptr<Op>> ops_ = {};

@@ -41,7 +41,7 @@ struct Val {
 constexpr inline Val INVL_VAL = Val(INVL_HND, INVL_TID);
 
 class Mapping {
-public:
+ public:
   std::map<std::string, TypeId> map;
   Exec* e;
 
@@ -68,7 +68,7 @@ struct DistResult {
 };
 
 class WildcardInfo {
-public:
+ public:
   std::string name;
 
   explicit WildcardInfo(std::string name) : name(std::move(name)) {}
@@ -80,7 +80,7 @@ public:
 };
 
 class IntfInfo {
-public:
+ public:
   ast::Intf* intf;
   Mapping m;
 
@@ -93,7 +93,7 @@ public:
 };
 
 class StructInfo {
-public:
+ public:
   struct MemberInfo {
     int offset;
     TypeId type;
@@ -116,13 +116,13 @@ public:
   std::string str() const { return "Struct(" + st->tname->name + +" m: " + m.str() + ")"; }
   COMPARISON(StructInfo, st, m, mems);  // Also include mems, as resolved status affects this.
 
-private:
+ private:
   int size_ = 0;
   bool resolved_ = false;
 };
 
 class EnumInfo {
-public:
+ public:
   ast::Enum* en;
   Mapping m;
 
@@ -139,7 +139,7 @@ public:
 };
 
 class BuiltinStorageInfo {
-public:
+ public:
   std::string name;
 
   explicit BuiltinStorageInfo(std::string name) : name(std::move(name)) {}
@@ -154,7 +154,7 @@ public:
 };
 
 class BuiltinFnInfo {
-public:
+ public:
   std::string name;
 
   explicit BuiltinFnInfo(std::string name) : name(std::move(name)) {}
@@ -166,7 +166,7 @@ public:
 };
 
 class FnInfo {
-public:
+ public:
   ast::Fn* fn;
   Mapping m;
   FnInfo(ast::Fn* fn, Mapping m) : fn(fn), m(std::move(m)) {}
@@ -178,7 +178,7 @@ public:
 };
 
 class FnSetInfo {
-public:
+ public:
   std::vector<FnInfo> fns;  // N.B. These are ordered by preference.
   Val self;  // May be INVL_VAL.
 
@@ -209,7 +209,7 @@ struct Qualifier {
 };
 
 class Type {
-public:
+ public:
   TypeInfo info;
   bool cnst;
   bool ref;

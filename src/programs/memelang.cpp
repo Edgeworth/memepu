@@ -17,9 +17,9 @@ int main(int argc, char* argv[]) {
   try {
     po::options_description desc{"Options"};
     desc.add_options()("help,h", "Help screen")(
-        "input,i", po::value<std::vector<std::string>>()->multitoken())(
-        "tokens,t", po::bool_switch(&print_tokens))("ast,a", po::bool_switch(&print_ast))(
-        "no-exec,n", po::bool_switch(&no_exec));
+        "input,i", po::value<std::vector<std::string>>()->multitoken())("tokens,t",
+        po::bool_switch(&print_tokens))("ast,a", po::bool_switch(&print_ast))("no-exec,n",
+        po::bool_switch(&no_exec));
 
     po::positional_options_description p;
     p.add("input", -1);

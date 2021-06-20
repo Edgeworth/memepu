@@ -15,7 +15,7 @@
 namespace memelang::exec {
 
 class Exec {
-public:
+ public:
   explicit Exec(ast::Module* m);
 
   void run();
@@ -27,7 +27,7 @@ public:
   void setContext(ast::Node* node) { node_ctx_ = node; }
   ast::Node* context() { return node_ctx_; }
 
-private:
+ private:
   ast::Module* m_;
   ast::Node* node_ctx_{};
   Scope s_;

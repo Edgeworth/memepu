@@ -86,12 +86,12 @@ struct Tok {
 };
 
 class Tokeniser {
-public:
+ public:
   explicit Tokeniser(const FileContents* contents);
 
   std::vector<Tok> tokenise();
 
-private:
+ private:
   const FileContents* cts_;
   std::string curtok_;
   std::vector<Tok> toks_;

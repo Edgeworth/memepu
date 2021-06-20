@@ -16,7 +16,7 @@ void clockKpu(Vkpu& kpu);
 void resetKpu(Vkpu& kpu);
 
 class Simulator {
-public:
+ public:
   struct CpuStateMessage {
     uint32_t bus;
     uint32_t tmp0;
@@ -76,7 +76,7 @@ public:
   // This method is thread safe.
   void scheduleCommand(const Cmd& cmd);
 
-private:
+ private:
   Vkpu kpu_;
   ConcurrentQueue<Cmd> command_queue_;
   std::unordered_set<uint32_t> breakpoints_;

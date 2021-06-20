@@ -160,7 +160,7 @@ struct Sheet {
   std::vector<Ref> refs;
   std::vector<Wire> wires;
 
-private:
+ private:
   constexpr static const char* DEFAULT_HEADER1 =
       "EESchema Schematic File Version 4\nLIBS:\n"
       "EELAYER 29 0\nEELAYER END\n$Descr A3 16535 11693\nencoding utf-8\n";

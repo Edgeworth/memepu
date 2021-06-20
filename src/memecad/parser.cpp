@@ -34,7 +34,7 @@ Direction labelOrientationToDirection(int orientation, Sheet::Label::Type label_
 }
 
 class KicadParser {
-public:
+ public:
   explicit KicadParser(const std::string& data) : t_(data, TOKEN) {}
 
   Sheet parseSheet() {
@@ -100,7 +100,7 @@ public:
     return lib;
   }
 
-private:
+ private:
   Tokeniser t_;
 
   Sheet::Component parseComponent() {
@@ -228,7 +228,7 @@ private:
 };
 
 class KicadWriter {
-public:
+ public:
   static std::string writeSheet(Sheet sheet) {
     std::string data;
     data += sheet.header1;

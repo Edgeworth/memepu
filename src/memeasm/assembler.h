@@ -10,14 +10,14 @@
 namespace memeasm {
 
 class Assembler {
-public:
+ public:
   explicit Assembler(const std::string& model_json);
 
   std::vector<uint32_t> assemble(const std::string& data);
 
   static std::string generateMnemonicString(const std::string& mnemonic_str, uint32_t opword_bits);
 
-private:
+ private:
   enum class Parameter { REGISTER, IMMEDIATE, DATA };
 
   struct Mnemonic {

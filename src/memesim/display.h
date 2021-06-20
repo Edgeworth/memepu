@@ -10,12 +10,12 @@
 namespace memesim {
 
 class Display {
-public:
+ public:
   explicit Display(Simulator* simulator);
 
   void run();
 
-private:
+ private:
   Simulator* simulator_;
   std::shared_ptr<ConcurrentQueue<Simulator::Response>> receiver_;
 
