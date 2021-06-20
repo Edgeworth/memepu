@@ -23,12 +23,12 @@ bool Parser::parse() {
   try {
     collectTypeIdents();
     root_ = std::make_unique<Module>(c_);
-  } catch (const std::exception& e) { verify_expr(false, "%s", e.what()); }
+  } catch (const std::exception& e) { verify(false, "%s", e.what()); }
   return true;
 }
 
 std::string Parser::astToString() {
-  verify_expr(root_ != nullptr, "null root");
+  verify(root_ != nullptr, "null root");
   std::string s;
   root_->visit(
       [&s](Node& n, int depth) { s += std::string(uint64_t(depth), ' ') + n.str() + "\n"; });

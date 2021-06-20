@@ -48,7 +48,7 @@ Assembler::Assembler(const std::string& model_json) {
     std::string mnemonic_rx = PREAMBLE_RX;
     for (int i = 0; i < mnemonic_str.size(); ++i) {
       if (mnemonic_str[i] == '%') {
-        verify_expr(i < int(mnemonic_str.size()) - 2, "ill-formed ksm model (BUG)");
+        verify(i < int(mnemonic_str.size()) - 2, "ill-formed ksm model (BUG)");
         i += 2;  // Skip % and number.
         char type = mnemonic_str[i];
         Parameter param;
@@ -60,7 +60,7 @@ Assembler::Assembler(const std::string& model_json) {
           mnemonic_rx += "([^r][^,]*)";
           i++;
         } else
-          verify_expr(false, "unknown parameter type '%c'", type);
+          verify(false, "unknown parameter type '%c'", type);
         mnemonic.params.push_back(param);
       } else {
         std::string escape;
@@ -128,12 +128,12 @@ uint32_t Assembler::convertMnemonicStringToOpword(
     auto opword = uint32_t(mnemonic.opcode);
     int reg_count = 0;
     for (int i = 0; i < mnemonic.params.size(); ++i) {
-      verify_expr(i + 1 < sm.size(), "%d: missing parameter %s", lnum, line.c_str());
+      verify(i + 1 < sm.size(), "%d: missing parameter %s", lnum, line.c_str());
       const auto& pstr = sm[i + 1].str();
       switch (mnemonic.params[i]) {
       case Parameter::REGISTER: {
         const auto reg = convertFromDec(pstr);
-        verify_expr(reg >= 0 && reg <= 31, "%d: register %" PRId64 " does not exist", lnum, reg);
+        verify(reg >= 0 && reg <= 31, "%d: register %" PRId64 " does not exist", lnum, reg);
         opword |= (uint32_t(reg) << (reg_count * 5u + 6u));
         reg_count++;
         break;
@@ -147,7 +147,7 @@ uint32_t Assembler::convertMnemonicStringToOpword(
             imm = resolveLabel(pstr, lnum, first_pass, mnemonic.imm_relative);
           }
         }
-        verify_expr(imm < 0 ? int16_t(imm) == imm : uint16_t(imm) == imm,
+        verify(imm < 0 ? int16_t(imm) == imm : uint16_t(imm) == imm,
             "%d: immediate value %" PRId64 " out of range", lnum, imm);
         opword |= uint32_t(imm) << 16u;
         break;
@@ -156,8 +156,8 @@ uint32_t Assembler::convertMnemonicStringToOpword(
         if (!first_pass) {
           int64_t data = convertFromHex(pstr);
           if (data == INT64_MIN) data = resolveLabel(pstr, lnum, first_pass, false /* relative */);
-          verify_expr(data != INT64_MIN && data == uint32_t(data),
-              "%d: invalid data parameter '%s'", lnum, pstr.c_str());
+          verify(data != INT64_MIN && data == uint32_t(data), "%d: invalid data parameter '%s'",
+              lnum, pstr.c_str());
           opword |= uint32_t(data);
         }
         break;
@@ -165,24 +165,24 @@ uint32_t Assembler::convertMnemonicStringToOpword(
     }
     return opword;
   }
-  verify_expr(false, "%d: unable to parse %s", lnum, line.c_str());
+  verify(false, "%d: unable to parse %s", lnum, line.c_str());
 }
 
 int64_t Assembler::resolveLabel(const std::string& lstr, int lnum, bool first_pass, bool relative) {
   std::regex rx(LABEL_REF_RX);
   std::smatch sm;
-  verify_expr(std::regex_match(lstr, sm, rx), "%d: invalid label %s", lnum, lstr.c_str());
+  verify(std::regex_match(lstr, sm, rx), "%d: invalid label %s", lnum, lstr.c_str());
 
   const auto& label = sm[1].str();
   if (first_pass) {  // Defining labels in first pass.
-    verify_expr(
+    verify(
         labels_.count(label) == 0, "%d: duplicate label definition of %s", lnum + 1, label.c_str());
     labels_[label] = bin_.size() * memeware::OPWORD_SIZE;
     return 0;
   }
 
   // Referencing labels in second pass.
-  verify_expr(labels_.count(label), "%d: missing label definition of %s", lnum, label.c_str());
+  verify(labels_.count(label), "%d: missing label definition of %s", lnum, label.c_str());
   int64_t addr = labels_[label];
   if (sm[2].matched) {
     // If we have computation for offset, do it.

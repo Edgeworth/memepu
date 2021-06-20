@@ -42,6 +42,6 @@ std::string Tokeniser::substr(int st, int en) {
 void Tokeniser::expect(const std::vector<std::string>& toks) {
   for (const std::string& tok : toks) {
     const std::string next_tok = next();
-    verify_expr(tok == next_tok, "expected '%s', got '%s'", tok.c_str(), next_tok.c_str());
+    verify(tok == next_tok, "expected '%s', got '%s'", tok.c_str(), next_tok.c_str());
   }
 }

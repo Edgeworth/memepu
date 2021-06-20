@@ -26,7 +26,7 @@ std::map<std::string, OpcodeData> OPCODE_DATA = {
     {"IN0", {Opcode::IN_DEV_0, 0, 0}},
     {"OUT0", {Opcode::OUT_IMM_DEV_0, 1, 0}},
     {"CMP", {Opcode::COMPARE, 0, 0}},
-//    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}},  TODO: Currently broken.
+    //    {"JZ", {Opcode::JUMP_IF_ZERO, 0, 1}},  TODO: Currently broken.
     {"JZH", {Opcode::JUMP_IF_ZERO_HACKED, 0, 1}},
     {"STA", {Opcode::STA_ADDR, 0, 1}},
     {"LDAADDR", {Opcode::LDA_ADDR, 0, 1}},
@@ -39,12 +39,11 @@ int parseHexInt(const std::string& s) {
   std::istringstream stream(s);
   int val;
   bool valid_int = bool(stream >> std::hex >> val);
-  if (!valid_int || !stream.eof())
-    return -1;
+  if (!valid_int || !stream.eof()) return -1;
   return val;
 }
 
-constexpr uint32_t START_OFFSET = 0x100000; // EEPROM mapped into memory from 0x100000
+constexpr uint32_t START_OFFSET = 0x100000;  // EEPROM mapped into memory from 0x100000
 
 }  // namespace
 
@@ -65,28 +64,29 @@ void Asm::parseLabelOrOffset(std::string token, bool first_pass) {
   if (offset >= 0) {
     cur_extent_ = offset;
   } else {
-    verify_expr(!first_pass || labels_.find(label) == labels_.end(), "redefinition of label %s", label.c_str());
+    verify(!first_pass || labels_.find(label) == labels_.end(), "redefinition of label %s",
+        label.c_str());
     labels_[label] = uint32_t(extents_[cur_extent_].size()) + cur_extent_ + START_OFFSET;
   }
 }
 
 void Asm::parseInstruction(std::string token, std::istringstream& stream, bool first_pass) {
   auto iter = OPCODE_DATA.find(token);
-  verify_expr(iter != OPCODE_DATA.end(), "unknown instruction %s", token.c_str());
+  verify(iter != OPCODE_DATA.end(), "unknown instruction %s", token.c_str());
 
   auto opcode = iter->second;
   extents_[cur_extent_] += uint8_t(opcode.opcode);
 
   int param;
   for (int i = 0; i < opcode.int_params; ++i) {
-    verify_expr(stream >> param, "expected %d ints after %s", opcode.int_params, token.c_str());
-    verify_expr(uint8_t(param) == param, "param must be 8 bit");
+    verify(stream >> param, "expected %d ints after %s", opcode.int_params, token.c_str());
+    verify(uint8_t(param) == param, "param must be 8 bit");
     extents_[cur_extent_] += uint8_t(param);
   }
 
   std::string label;
   for (int i = 0; i < opcode.label_params; ++i) {
-    verify_expr(stream >> label, "expected %d labels after %s", opcode.label_params, token.c_str());
+    verify(stream >> label, "expected %d labels after %s", opcode.label_params, token.c_str());
     int loc = parseHexInt(label);
     auto label_iter = labels_.find(label);
     if (first_pass) {
@@ -98,7 +98,7 @@ void Asm::parseInstruction(std::string token, std::istringstream& stream, bool f
       extents_[cur_extent_] += uint8_t(loc >> 8);
       extents_[cur_extent_] += uint8_t(loc >> 16);
     } else {
-      verify_expr(label_iter != labels_.end(), "unknown label %s", label.c_str());
+      verify(label_iter != labels_.end(), "unknown label %s", label.c_str());
       extents_[cur_extent_] += uint8_t(label_iter->second);
       extents_[cur_extent_] += uint8_t(label_iter->second >> 8);
       extents_[cur_extent_] += uint8_t(label_iter->second >> 16);
@@ -112,10 +112,8 @@ std::string Asm::mergeExtents() {
     int addr = iter.first;
     const std::string& data = iter.second;
     int gap = addr - int(output.size());
-    verify_expr(gap >= 0, "overlapping %d bytes into extent starting at %x", -gap, addr);
-    for (int i = 0; i < gap; ++i) {
-      output += uint8_t(0xFF);
-    }
+    verify(gap >= 0, "overlapping %d bytes into extent starting at %x", -gap, addr);
+    for (int i = 0; i < gap; ++i) { output += uint8_t(0xFF); }
     output += data;
   }
   return output;
@@ -127,8 +125,7 @@ void Asm::doPass(bool first_pass) {
   std::istringstream lines(data_);
   while (std::getline(lines, line)) {
     std::istringstream stream(line);
-    if (!(stream >> token))
-      continue;
+    if (!(stream >> token)) continue;
 
     if (token.front() == ';') {
       continue;  // Skip comments.

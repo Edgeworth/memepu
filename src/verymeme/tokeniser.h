@@ -13,7 +13,7 @@ class Tokeniser {
 
   template <typename T = std::string>
   T peek(int ahead = 0) {
-    verify_expr(idx_ + ahead < toks_.size(), "expecting token");
+    verify(idx_ + ahead < toks_.size(), "expecting token");
     return boost::lexical_cast<T>(toks_[idx_ + ahead]);
   }
 
