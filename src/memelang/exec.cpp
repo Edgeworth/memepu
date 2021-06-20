@@ -53,7 +53,7 @@ std::optional<Val> Exec::runFn(const FnSetInfo& fnset, const std::vector<Val>& p
     s_.mergeMapping(fn_mapping);
 
     if (fnset.self.hasStorage()) s_.declareVar("self", ref(fnset.self));
-    for (int i = 0; i < fn->sig->params.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(fn->sig->params.size()); ++i) {
       auto& decl = fn->sig->params[i];
       runStmt(decl.get(), s_.typeFromAst(decl->type.get(), true));
       copy(s_.findValue(decl->name), params[i]);  // Use copy not assign so we can set const vals.
@@ -73,7 +73,7 @@ Val Exec::runBuiltinFn(ast::Op* n) {
     if (args.empty()) error("printf requires at least 1 argument");
     if (typeid(*args[0]) != typeid(ast::StrLit)) error("printf must take string literal for now");
     boost::format fmt = boost::format(g<ast::StrLit>(args[0])->val);
-    for (int i = 1; i < args.size(); ++i)
+    for (int i = 1; i < static_cast<int>(args.size()); ++i)
       invokeBuiltin(eval(args[i].get(), INVL_TID), [&fmt](auto& a) { fmt = fmt % a; });
     printf("%s", fmt.str().c_str());
     return INVL_VAL;
@@ -267,7 +267,7 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
     ret_val = Val(vm_.allocTmp(s_.t(s_.u8_ptr_t).size()), s_.u8_ptr_t);
     auto storage_hnd = vm_.allocTmp(s.size());
     vm_.write(ret_val.hnd, storage_hnd);
-    for (int i = 0; i < s.size(); ++i) vm_.write(storage_hnd + i, s[i]);
+    for (int i = 0; i < static_cast<int>(s.size()); ++i) vm_.write(storage_hnd + i, s[i]);
   } else if (typeid(*n) == typeid(ast::CharLit)) {
     ret_val = Val(vm_.allocTmp(s_.t(s_.u8_t).size()), s_.u8_t);
     vm_.write(ret_val.hnd, uint8_t(g<ast::CharLit>(n)->val));

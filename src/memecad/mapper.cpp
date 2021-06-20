@@ -186,7 +186,7 @@ void Mapper::addMappedModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& ma
           "bit-width of kicad signal '%s|%d' does not match bit-width of verilog signal '%s|%d'",
           kicad_signal_name.c_str(), static_cast<int>(kicad_pins.size()), verilog_signal.c_str(),
           static_cast<int>(conns.size()));
-      for (int i = 0; i < kicad_pins.size(); ++i) {
+      for (int i = 0; i < static_cast<int>(kicad_pins.size()); ++i) {
         pin_mapping[kicad_pins[i]] = conns[i];
         printf("  Mapping %s (pin %s) => %s => %s\n", kicad_pins[i]->name.c_str(),
             kicad_pins[i]->id.c_str(), conns[i].child_label.c_str(),

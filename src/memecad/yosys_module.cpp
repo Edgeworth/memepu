@@ -122,7 +122,7 @@ void TestPass::execute(std::vector<std::string> args, Design* design) {
       if (incoming[child] == 0) next.push_back(child);
     }
   }
-  bug_unless(num_processed == adj.size());
+  bug_unless(num_processed == static_cast<int>(adj.size()));
 }
 
 void TestPass::printModuleInfo(Yosys::RTLIL::Module* module) {

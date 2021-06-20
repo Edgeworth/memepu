@@ -36,7 +36,7 @@ std::istream& inputEnum(
     std::istream& str, T& enumeration, const std::string (&mapping)[int(T::COUNT)]) {
   std::string v;
   str >> v;
-  for (int i = 0; i < int(T::COUNT); ++i) {
+  for (int i = 0; i < static_cast<int>(T::COUNT); ++i) {
     if (mapping[i] == v) {
       enumeration = T(i);
       return str;
@@ -76,10 +76,10 @@ std::string convertToString(const VlWide<N>& data) {
   str.reserve(N * sizeof(uint32_t));
   for (size_t i = 0; i < N; i++) {
     auto c = data[i];
-    str += char(c & 0xFFu);
-    str += char((c >> 8u) & 0xFFu);
-    str += char((c >> 16u) & 0xFFu);
-    str += char((c >> 24u) & 0xFFu);
+    str += static_cast<char>(c & 0xFFu);
+    str += static_cast<char>((c >> 8u) & 0xFFu);
+    str += static_cast<char>((c >> 16u) & 0xFFu);
+    str += static_cast<char>((c >> 24u) & 0xFFu);
   }
   std::string trimmed(str.c_str());  // Cut off at first 0 byte.
   return std::string(trimmed.rbegin(), trimmed.rend());  // Reverse

@@ -26,7 +26,8 @@ template <typename T>
 std::vector<T> reverse(std::vector<T>&& vec) {
   std::vector<T> reversed;
   reversed.reserve(vec.size());
-  for (int i = int(vec.size()) - 1; i >= 0; --i) reversed.emplace_back(std::move(vec[i]));
+  for (int i = static_cast<int>(vec.size()) - 1; i >= 0; --i)
+    reversed.emplace_back(std::move(vec[i]));
   return reversed;
 }
 

@@ -26,9 +26,9 @@ DistResult distTo(const Type& a, const Type& b, Exec* e) {
   }
   int qual_idx = 0;
   Type wildcard_type = a;
-  for (; qual_idx < b.quals.size(); ++qual_idx) {
+  for (; qual_idx < static_cast<int>(b.quals.size()); ++qual_idx) {
     // Too many qualifiers on wildcard - can't match.
-    if (qual_idx >= a.quals.size()) return {false, {}, Mapping(e)};
+    if (qual_idx >= static_cast<int>(a.quals.size())) return {false, {}, Mapping(e)};
     // Qualifiers don't match.
     if (a.quals[qual_idx] != b.quals[qual_idx]) return {false, {}, Mapping(e)};
     wildcard_type.quals.erase(wildcard_type.quals.begin());  // Pop front.
@@ -84,7 +84,7 @@ bool Type::canCoerceTo(const Type& o) const {
   if (info != o.info) return false;
   if (cnst && !o.cnst) return false;  // Can't assign const to non-const.
   if (quals.size() != o.quals.size()) return false;
-  for (int i = 0; i < quals.size(); ++i)
+  for (int i = 0; i < static_cast<int>(quals.size()); ++i)
     if (!quals[i].canCoerceTo(o.quals[i])) return false;
   return true;
 }
@@ -92,7 +92,7 @@ bool Type::canCoerceTo(const Type& o) const {
 bool Type::hasIntersection(const Type& o) const {
   if (info != o.info) return false;
   if (quals.size() != o.quals.size()) return false;
-  for (int i = 0; i < quals.size(); ++i)
+  for (int i = 0; i < static_cast<int>(quals.size()); ++i)
     if (!quals[i].hasIntersection(o.quals[i])) return false;
   return true;
 }
@@ -220,7 +220,7 @@ Val StructInfo::access(Hnd hnd, int offset) const {
 }
 
 Val EnumInfo::access(const std::string& member) const {
-  for (int i = 0; i < en->numbered_variants.size(); ++i)
+  for (int i = 0; i < static_cast<int>(en->numbered_variants.size()); ++i)
     if (member == en->numbered_variants[i]) {
       Hnd hnd = m.e->vm().allocTmp(size());
       m.e->vm().write(hnd, int32_t(i));
