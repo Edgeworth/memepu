@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 // Dual 2->4 line decoder, inverting outputs.
 module chip74139(

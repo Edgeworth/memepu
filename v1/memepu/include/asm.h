@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMEPU_ASM_H_
 #define MEMEPU_ASM_H_
 

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>

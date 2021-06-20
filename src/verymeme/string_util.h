@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef VERYMEME_STRING_UTIL_H
 #define VERYMEME_STRING_UTIL_H
 

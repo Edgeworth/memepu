@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memeware/microcode.h"
 
 #include <boost/property_tree/json_parser.hpp>

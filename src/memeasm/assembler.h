@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMEASM_ASSEMBLER_H
 #define MEMEASM_ASSEMBLER_H
 

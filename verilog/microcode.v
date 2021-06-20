@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 module microcode(
   input wire [11:0] ADDR,

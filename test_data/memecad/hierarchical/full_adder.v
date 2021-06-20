@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 module full_adder(
   input wire [7:0] A,
   input wire [7:0] B,

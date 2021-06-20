@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "common.h"
 #include "control.h"
 #include "mlu.h"

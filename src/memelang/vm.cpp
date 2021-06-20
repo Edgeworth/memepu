@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memelang/vm.h"
 
 #include "memelang/exec.h"

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "verymeme/term.h"
 
 std::string convertToColor(

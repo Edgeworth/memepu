@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 module eeprom(
   input wire [DEPTH-1:0] ADDR,

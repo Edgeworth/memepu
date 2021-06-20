@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMESIM_CLI_H
 #define MEMESIM_CLI_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 
 module lut12x32(

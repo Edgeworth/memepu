@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memesim/simulator.h"
 
 #include "Vkpu_control_logic.h"

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memelang/tokeniser.h"
 
 #include <unordered_map>

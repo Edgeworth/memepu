@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memesim/display.h"
 
 #include "verymeme/concurrent_queue.h"

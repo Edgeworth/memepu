@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMELANG_FILE_CONTENTS_H
 #define MEMELANG_FILE_CONTENTS_H
 

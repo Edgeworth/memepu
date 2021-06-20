@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMEPU_LED_H_
 #define MEMEPU_LED_H_
 

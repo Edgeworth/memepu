@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 module buffer_mux3x32(
   input wire [31:0] A,

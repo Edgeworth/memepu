@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memecad/mapper.h"
 
 #include <kernel/sigtools.h>

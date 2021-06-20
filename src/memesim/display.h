@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMESIM_DISPLAY_H
 #define MEMESIM_DISPLAY_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include <kernel/yosys.h>
 
 #include <boost/program_options.hpp>

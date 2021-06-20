@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "control.h"
 #include "control_constants.h"
 

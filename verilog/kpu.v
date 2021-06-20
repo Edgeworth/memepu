@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 // TODO(improvement): Also define models for CLK, RST.
 module kpu(

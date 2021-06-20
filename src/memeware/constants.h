@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMEWARE_CONSTANTS_H
 #define MEMEWARE_CONSTANTS_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 module mmu(
   input wire [31:0] ADDR,

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memelang/scopes.h"
 
 #include "memelang/constants.h"

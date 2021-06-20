@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memelang/ast.h"
 
 #include <boost/format.hpp>

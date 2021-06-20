@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef DEVICE_H_
 #define DEVICE_H_
 

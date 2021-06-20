@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memecad/util.h"
 
 #include "verymeme/macros.h"

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `ifndef COMMON_INCLUDED
 `define COMMON_INCLUDED
 package common;

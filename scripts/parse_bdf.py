@@ -1,3 +1,4 @@
+# Copyright 2019 Eliot Courtney.
 import re
 import sys
 

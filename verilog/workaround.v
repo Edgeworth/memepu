@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 // Define FORMAL macro for syntax highlighting
 `define FORMAL
 // Normally will be defined for SymbiYosys, but define it here for syntax highlighting purposes.

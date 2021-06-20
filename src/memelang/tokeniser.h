@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMELANG_TOKENISER_H
 #define MEMELANG_TOKENISER_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef VERYMEME_BIMAP_H
 #define VERYMEME_BIMAP_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 module sram17x8(
   input wire [16:0] ADDR,
   input wire N_WE,

@@ -1,3 +1,4 @@
+# Copyright 2019 Eliot Courtney.
 from pcbnew import *
 
 board = GetBoard()

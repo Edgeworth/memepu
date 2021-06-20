@@ -1,3 +1,4 @@
+# Copyright 2019 Eliot Courtney.
 import time
 
 from common import run_xdotool_key, nav, tr, listify

@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 `include "common.v"
 module register_file(
   input wire [1:0] REG_SEL,

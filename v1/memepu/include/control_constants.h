@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #ifndef MEMEPU_CONTROL_CONSTANTS_H
 #define MEMEPU_CONTROL_CONSTANTS_H
 

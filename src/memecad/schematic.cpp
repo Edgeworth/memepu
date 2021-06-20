@@ -1,3 +1,4 @@
+// Copyright 2019 Eliot Courtney.
 #include "memecad/schematic.h"
 
 #include "memecad/parser.h"
