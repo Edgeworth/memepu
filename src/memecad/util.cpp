@@ -49,7 +49,7 @@ std::string getIdForSigBit(const Yosys::SigBit& bit) {
   } else if (bit.data == Yosys::State::Sz) {
     return "";  // Treat Z (high impedance) as no-connect.
   } else {
-    verify_expr(bit.data == Yosys::State::S0 || bit.data == Yosys::State::S1,
+    verify(bit.data == Yosys::State::S0 || bit.data == Yosys::State::S1,
         "unsupported state for signal: %d", int(bit.data));
     parent_label = bit.data == Yosys::State::S1 ? "VCC" : "GND";
   }

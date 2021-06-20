@@ -22,7 +22,7 @@ int directionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   case Direction::DOWN: return 3;
   case Direction::RIGHT: return is_hierarchical_or_global ? 2 : 0;
   case Direction::UP: return 1;
-  default: verify_expr(false, "unknown direction '%d'", int(d));
+  default: verify(false, "unknown direction '%d'", int(d));
   }
 }
 
@@ -30,7 +30,7 @@ Direction labelOrientationToDirection(int orientation, Sheet::Label::Type label_
   for (int d = 0; d < int(Direction::COUNT); ++d) {
     if (directionToLabelOrientation(Direction(d), label_type) == orientation) return Direction(d);
   }
-  verify_expr(false, "unknown label orientation %d", orientation);
+  verify(false, "unknown label orientation %d", orientation);
 }
 
 class KicadParser {
@@ -80,7 +80,7 @@ class KicadParser {
       } else if (tok == "$Sheet") {
         sheet.refs.emplace_back(parseSheetRef());
       } else {
-        verify_expr(false, "unexpected token '%s'", tok.c_str());
+        verify(false, "unexpected token '%s'", tok.c_str());
       }
     }
     return sheet;
@@ -134,7 +134,7 @@ class KicadParser {
         t_.expect({"$EndComp", "\n"});
         break;
       } else {
-        verify_expr(false, "unexpected token '%s'", tok.c_str());
+        verify(false, "unexpected token '%s'", tok.c_str());
       }
     }
     return comp;
@@ -293,19 +293,19 @@ class KicadWriter {
 Sheet parseSheet(const std::string& data) {
   try {
     return KicadParser(data).parseSheet();
-  } catch (const std::exception& e) { verify_expr(false, "failed exception: %s", e.what()); }
+  } catch (const std::exception& e) { verify(false, "failed exception: %s", e.what()); }
 }
 
 Lib parseLibrary(const std::string& data, const std::string& name) {
   try {
     return KicadParser(data).parseLibrary(name);
-  } catch (const std::exception& e) { verify_expr(false, "failed exception: %s", e.what()); }
+  } catch (const std::exception& e) { verify(false, "failed exception: %s", e.what()); }
 }
 
 std::string writeSheet(const Sheet& sheet) {
   try {
     return KicadWriter::writeSheet(sheet);
-  } catch (const std::exception& e) { verify_expr(false, "failed exception: %s", e.what()); }
+  } catch (const std::exception& e) { verify(false, "failed exception: %s", e.what()); }
 }
 
 }  // namespace memecad

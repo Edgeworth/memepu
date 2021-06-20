@@ -42,7 +42,7 @@ std::istream& inputEnum(
       return str;
     }
   }
-  verify_expr(false, "unknown enum with string value '%s'", v.c_str());
+  verify(false, "unknown enum with string value '%s'", v.c_str());
 }
 
 template <typename T>

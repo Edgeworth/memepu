@@ -57,7 +57,7 @@ std::vector<Tok> Tokeniser::tokenise() {
   toks_.clear();
   const auto& data = cts_->data();
   for (int i = 0; i < data.size(); ++i)
-    verify_expr(isprint(data[i]) || data[i] == '\n', "unprintable character '%c' at %s", data[i],
+    verify(isprint(data[i]) || data[i] == '\n', "unprintable character '%c' at %s", data[i],
         cts_->fpos(i).c_str());
 
   while (idx_ < data.size()) {
@@ -105,7 +105,7 @@ void Tokeniser::pushCurrentToken() {
   case Tok::QUOTE:
     type = Tok::CHAR_LIT;
     str_val = int_val = grabEscapedChar();
-    verify_expr(isChar('\'', "unexpected EOF"), "unterminated char literal");
+    verify(isChar('\'', "unexpected EOF"), "unterminated char literal");
     idx_++;  // Skip '.
     break;
   case Tok::DQUOTE:
@@ -159,14 +159,14 @@ bool Tokeniser::atCompleteToken() {
 
 bool Tokeniser::isChar(char c, const char* msg) {
   const auto& data = cts_->data();
-  verify_expr(idx_ < data.size(), msg);
+  verify(idx_ < data.size(), msg);
   return data[idx_] == c;
 }
 
 char Tokeniser::grabEscapedChar() {
   const auto& data = cts_->data();
   if (data[idx_] != '\\') return data[idx_++];
-  verify_expr(++idx_ < data.size(), "unexpected EOF in escape sequence");
+  verify(++idx_ < data.size(), "unexpected EOF in escape sequence");
   idx_++;
   switch (data[idx_ - 1]) {
   case 'n': return '\n';
@@ -177,7 +177,7 @@ char Tokeniser::grabEscapedChar() {
   case '\'': return '\'';
   case '\\': return '\\';
   case '"': return '"';
-  default: verify_expr(false, "unknown escape sequence \\%c", data[idx_ - 1]);
+  default: verify(false, "unknown escape sequence \\%c", data[idx_ - 1]);
   }
   return -1;
 }

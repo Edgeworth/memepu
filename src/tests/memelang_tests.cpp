@@ -22,7 +22,7 @@ std::vector<std::pair<fs::path, fs::path>> getFileGoldenPairs(const std::string&
   for (const auto& p : paths) {
     const auto orig = fs::path(TEST_DIR) / fs::path(p).replace_extension(".meme").filename();
     const auto golden = fs::path(p).replace_extension(".golden");
-    verify_expr(
+    verify(
         fs::exists(orig) && fs::exists(golden), "missing golden pair for %s", p.string().c_str());
     pairs.emplace_back(orig, golden);
   }

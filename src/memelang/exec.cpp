@@ -318,10 +318,10 @@ Val Exec::valFromAstType(ast::Type* ast_type) {
 
 [[noreturn]] void Exec::error(const std::string& msg) const {
   if (node_ctx_)
-    verify_expr(false, "error at '%s' (%s): %s\n%s\n", node_ctx_->tok.span().c_str(),
+    verify(false, "error at '%s' (%s): %s\n%s\n", node_ctx_->tok.span().c_str(),
         node_ctx_->tok.fpos().c_str(), msg.c_str(), s_.stacktrace().c_str());
   else
-    verify_expr(false, "error: %s\n%s\n", msg.c_str(), s_.stacktrace().c_str());
+    verify(false, "error: %s\n%s\n", msg.c_str(), s_.stacktrace().c_str());
 }
 
 Val Exec::assign(Val l, Val r) { return copy(l, s_.coerceTo(r, l.type)); }

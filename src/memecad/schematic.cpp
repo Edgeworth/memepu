@@ -61,7 +61,7 @@ void handleChildMappingError(const std::string& child_name,
     if (child_label_strs.contains(kv.first)) continue;
     msg += "  " + kv.first + "\n";
   }
-  verify_expr(false, "%s", msg.c_str());
+  verify(false, "%s", msg.c_str());
 }
 
 std::string sanitiseKicadSheetName(std::string name) {
@@ -95,7 +95,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
   ref.filename = sanitiseKicadSheetName(child_name) + ".sch";
 
   // Plumb up hierarchical labels for this module to the parent:
-  verify_expr(sheets_.count(child_name), "could not find child '%s' - maybe missing file",
+  verify(sheets_.count(child_name), "could not find child '%s' - maybe missing file",
       child_name.c_str());
   auto& child = sheets_[child_name];
   std::set<Sheet::Label> child_label_set;
@@ -150,7 +150,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
 
 void Schematic::addComponentToSheet(const std::string& lib_name,
     const Lib::Component& lib_component, const PinMapping& mapping, const std::string& sheet_name) {
-  verify_expr(2u == lib_component.fields.size(), "library component missing fields");
+  verify(2u == lib_component.fields.size(), "library component missing fields");
 
   // Add components.
   std::vector<Sheet::Component> subcomponents;
@@ -188,7 +188,7 @@ void Schematic::addComponentToSheet(const std::string& lib_name,
     label.connectToPin(*kicad_pin);
 
     // Move to location we placed this subcomponent.
-    verify_expr(kicad_pin->subcomponent >= 0 && kicad_pin->subcomponent < subcomponents.size(),
+    verify(kicad_pin->subcomponent >= 0 && kicad_pin->subcomponent < subcomponents.size(),
         "subcomponent %d is out of range, only have %d subcomponents", kicad_pin->subcomponent,
         int(subcomponents.size()));
     label.p += subcomponents[kicad_pin->subcomponent].p;
@@ -213,7 +213,7 @@ void Schematic::addModuleConnectionsToSheet(
     const std::string& sheet_name, const std::vector<Yosys::SigSig>& sigs) {
   auto& data = sheets_[sheet_name];
   for (const auto& sig : sigs) {
-    verify_expr(sig.first.size() == sig.second.size(),
+    verify(sig.first.size() == sig.second.size(),
         "signal signal connection does not have equal sizes: %s : %s", Yosys::log_signal(sig.first),
         Yosys::log_signal(sig.second));
     const auto& sig0_bits = sig.first.bits();

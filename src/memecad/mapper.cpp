@@ -35,7 +35,7 @@ std::vector<const Lib::Pin*> parseKicadPinSpec(
   // Check for pin id.
   const auto* pin_by_id = lib_component.findPinById(pin_spec);
   const auto* pin_by_name = lib_component.findPinByName(pin_spec);
-  verify_expr(!(pin_by_id && pin_by_name), "ambiguous pin for pin spec '%s'", pin_spec.c_str());
+  verify(!(pin_by_id && pin_by_name), "ambiguous pin for pin spec '%s'", pin_spec.c_str());
   if (pin_by_id) return {pin_by_id};
 
   // Check for explicit pin.
@@ -46,11 +46,11 @@ std::vector<const Lib::Pin*> parseKicadPinSpec(
     const int en = boost::lexical_cast<int>(sm[2]);
     const int st = boost::lexical_cast<int>(sm[3]);
     std::vector<const Lib::Pin*> pins;
-    verify_expr(st <= en, "pin specs (currently) must be specified from MSB to LSB");
+    verify(st <= en, "pin specs (currently) must be specified from MSB to LSB");
     for (int i = en; i >= st; --i) {
       const std::string pin_name = pin_basename + std::to_string(i);
       const auto* pin = lib_component.findPinByName(pin_name);
-      verify_expr(pin, "couldn't find pin with name '%s' in pin spec", pin_name.c_str());
+      verify(pin, "couldn't find pin with name '%s' in pin spec", pin_name.c_str());
       pins.push_back(pin);
     }
     return pins;
@@ -67,11 +67,11 @@ std::vector<const Lib::Pin*> parseKicadPinSpec(
       pins.push_back(ranged_pin);
       index++;
     }
-    verify_expr(!pins.empty(), "implicit pin spec '%s' does not exist", pin_spec.c_str());
+    verify(!pins.empty(), "implicit pin spec '%s' does not exist", pin_spec.c_str());
     return reverse(std::move(pins));
   }
 
-  verify_expr(pin_by_name, "pin spec '%s' is neither pin number, valid pin name, valid pin range",
+  verify(pin_by_name, "pin spec '%s' is neither pin number, valid pin name, valid pin range",
       pin_spec.c_str());
   return {pin_by_name};
 }
@@ -113,7 +113,7 @@ std::vector<ConnectionData> getConnectionsForSignal(
   } else {
     // Collect module connections.
     auto conn_iter = cell.connections().find("\\" + pin_spec);
-    verify_expr(conn_iter != cell.connections().end(), "invalid verilog signal '%s' in module %s'",
+    verify(conn_iter != cell.connections().end(), "invalid verilog signal '%s' in module %s'",
         pin_spec.c_str(), cell.name.c_str());
     Yosys::SigMap sigmap(cell.module);
     const auto& signal = sigmap(conn_iter->second);
@@ -147,8 +147,8 @@ void Mapper::addUnmappedModule(const Yosys::Cell& cell) {
   for (const auto& conn : cell.connections()) {
     for (const auto& conn_data :
         getConnectionsForSignal(conn.first.c_str() + 1, cell, -1 /* suggest_width */)) {
-      verify_expr(!child_mapping.count(conn_data.child_label),
-          "duplicate mapping from child label '%s'", conn_data.child_label.c_str());
+      verify(!child_mapping.count(conn_data.child_label), "duplicate mapping from child label '%s'",
+          conn_data.child_label.c_str());
       child_mapping[conn_data.child_label] = conn_data;
       printf("  Mapping %s => %s\n", conn_data.child_label.c_str(),
           getIdForSigBit(conn_data.bit).c_str());
@@ -168,8 +168,7 @@ void Mapper::addMappedModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& ma
     lib_component = l.findComponent(kicad_name);
     if (lib_component) break;
   }
-  verify_expr(
-      lib_component != nullptr, "could not find library component '%s'", kicad_name.c_str());
+  verify(lib_component != nullptr, "could not find library component '%s'", kicad_name.c_str());
 
   // Add labels for connecting each component.
   PinMapping pin_mapping;
@@ -183,7 +182,7 @@ void Mapper::addMappedModule(const Yosys::RTLIL::Cell& cell, const pt::ptree& ma
       const auto& kicad_pins = parseKicadSignal(kicad_signal_name, *lib_component);
       const auto& conns =
           getConnectionsForSignal(verilog_signal, cell, kicad_pins.size() /* suggest_width */);
-      verify_expr(kicad_pins.size() == conns.size(),
+      verify(kicad_pins.size() == conns.size(),
           "bit-width of kicad signal '%s|%d' does not match bit-width of verilog signal '%s|%d'",
           kicad_signal_name.c_str(), int(kicad_pins.size()), verilog_signal.c_str(),
           int(conns.size()));

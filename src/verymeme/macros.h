@@ -24,7 +24,7 @@
     }                                                             \
   } while (0)
 
-#define verify_expr(expr, ...)                                  \
+#define verify(expr, ...)                                       \
   do {                                                          \
     if (!(expr)) {                                              \
       fprintf(stderr, "%s:%d: ", __func__, __LINE__);           \
@@ -35,7 +35,7 @@
     }                                                           \
   } while (0)
 
-#define unimplemented() verify_expr(false, "UNIMPLEMENTED")
+#define unimplemented() verify(false, "UNIMPLEMENTED")
 
 #define COMPARISON(type, ...)                                                   \
   auto getTie() const { return std::tie(__VA_ARGS__); }                         \
