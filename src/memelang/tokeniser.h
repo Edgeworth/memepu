@@ -2,11 +2,11 @@
 #ifndef MEMELANG_TOKENISER_H
 #define MEMELANG_TOKENISER_H
 
-#include <boost/format.hpp>
 #include <memory>
 #include <utility>
 #include <vector>
 
+#include "boost/format.hpp"
 #include "memelang/file_contents.h"
 
 namespace memelang::ast {

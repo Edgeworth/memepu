@@ -1,8 +1,7 @@
 // Copyright 2019 E.
 #include "memecad/types.h"
 
-#include <boost/lexical_cast.hpp>
-
+#include "boost/lexical_cast.hpp"
 #include "verymeme/geom.h"
 #include "verymeme/macros.h"
 #include "verymeme/string_util.h"

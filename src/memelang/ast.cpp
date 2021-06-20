@@ -1,8 +1,7 @@
 // Copyright 2019 E.
 #include "memelang/ast.h"
 
-#include <boost/format.hpp>
-
+#include "boost/format.hpp"
 #include "memelang/expression.h"
 #include "memelang/parser.h"
 #include "memelang/tokeniser.h"
