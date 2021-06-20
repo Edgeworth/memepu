@@ -197,12 +197,12 @@ Mapping Scope::typelistToMapping(ast::Typelist* tlist, ast::Ref* ref) {
     // TODO: Handle wildcards in all parts of type path.
     // Allow ast type to specify fewer parameters than required - can deduce rest.
     // e.g. want to do memcpy(a, b, cnt) rather than memcpy<u8>(a, b, cnt).
-    if (ref->params.size() > wildcard_count)
+    if (static_cast<int>(ref->params.size()) > wildcard_count)
       e_->error("bad number of type parameters for " + ref->str());
 
     for (int i = 0; i < wildcard_count; ++i) {
       TypeId tid = INVL_TID;
-      if (i < ref->params.size()) tid = typeFromAst(ref->params[i].get(), true);
+      if (i < static_cast<int>(ref->params.size())) tid = typeFromAst(ref->params[i].get(), true);
       m.map[tlist->names[i]] = tid;
     }
   }
@@ -273,7 +273,7 @@ TypeId Scope::addBuiltinStorage(const std::string& name) {
 std::pair<bool, Mapping> Scope::maybeMappingForFnCall(ast::Fn* fn, const std::vector<Val>& args) {
   Mapping fn_mapping(e_);
   if (fn->sig->params.size() != args.size()) return {false, fn_mapping};  // wrong number of params
-  for (int i = 0; i < fn->sig->params.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(fn->sig->params.size()); ++i) {
     // Don't resolve types in fn signature - not needed for distance calc, and can't resolve
     // structs unless they are concrete.
     const auto& fn_arg = t(typeFromAst(fn->sig->params[i]->type.get(), false));

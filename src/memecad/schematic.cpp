@@ -108,10 +108,10 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
 
   // Add hierarchical label for child sheet.
   int pack_y = ref.p.y + 100;
-  for (int i = 0; i < child_labels.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(child_labels.size()); ++i) {
     if (i == child_labels.size() / 2)  // Place on other side.
       pack_y = ref.p.y + 100;
-    const bool left = i < child_labels.size() / 2;
+    const bool left = i < static_cast<int>(child_labels.size()) / 2;
 
     Sheet::RefField& ref_field = ref.fields.emplace_back();
     ref_field.num = i + Sheet::RefField::HIERARCHICAL_REF_OFFSET;
@@ -129,7 +129,7 @@ void Schematic::addChildSheetToParent(const std::string& title, const ChildMappi
 
   // Add label connecting to hierarchical label for parent sheet.
   std::vector<Sheet::Label> labels;
-  for (int i = 0; i < child_labels.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(child_labels.size()); ++i) {
     auto conn_iter = mapping.find(child_labels[i].text);
     // Should have association from child label to parent label
     bug_unless(conn_iter != mapping.end());
@@ -188,7 +188,8 @@ void Schematic::addComponentToSheet(const std::string& lib_name,
     label.connectToPin(*kicad_pin);
 
     // Move to location we placed this subcomponent.
-    verify(kicad_pin->subcomponent >= 0 && kicad_pin->subcomponent < subcomponents.size(),
+    verify(kicad_pin->subcomponent >= 0 &&
+            kicad_pin->subcomponent < static_cast<int>(subcomponents.size()),
         "subcomponent %d is out of range, only have %d subcomponents", kicad_pin->subcomponent,
         static_cast<int>(subcomponents.size()));
     label.p += subcomponents[kicad_pin->subcomponent].p;
