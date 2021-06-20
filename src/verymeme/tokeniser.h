@@ -2,9 +2,9 @@
 #ifndef VERYMEME_TOKENIZER_H
 #define VERYMEME_TOKENIZER_H
 
-#include <boost/lexical_cast.hpp>
 #include <regex>
 
+#include "boost/lexical_cast.hpp"
 #include "verymeme/macros.h"
 
 class Tokeniser {

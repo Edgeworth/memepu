@@ -1,9 +1,9 @@
 // Copyright 2019 Eliot Courtney.
 #include "memecad/parser.h"
 
-#include <boost/lexical_cast.hpp>
 #include <regex>
 
+#include "boost/lexical_cast.hpp"
 #include "verymeme/string_util.h"
 #include "verymeme/tokeniser.h"
 

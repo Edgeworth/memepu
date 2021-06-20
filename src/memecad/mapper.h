@@ -4,8 +4,7 @@
 
 #include <kernel/rtlil.h>
 
-#include <boost/property_tree/ptree.hpp>
-
+#include "boost/property_tree/ptree.hpp"
 #include "memecad/schematic.h"
 #include "memecad/types.h"
 

@@ -1,8 +1,9 @@
 // Copyright 2019 Eliot Courtney.
 #include "verymeme/macros.h"
 
-#include <boost/stacktrace.hpp>
 #include <sstream>
+
+#include "boost/stacktrace.hpp"
 
 std::string getStacktrace() {
   std::stringstream s;
