@@ -12,7 +12,8 @@ FileContents::FileContents(std::string filename, std::string data)
 }
 
 int FileContents::lnum(int loc) const {
-  return int(std::upper_bound(newlines_.begin(), newlines_.end(), loc) - newlines_.begin());
+  return static_cast<int>(
+      std::upper_bound(newlines_.begin(), newlines_.end(), loc) - newlines_.begin());
 }
 
 int FileContents::cnum(int loc) const { return loc - newlines_[lnum(loc) - 1]; }

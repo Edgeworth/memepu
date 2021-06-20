@@ -289,7 +289,7 @@ class SemiExhaustiveRegisterFileTest : public ExhaustiveVerilatorTest<5> {
  public:
   void doTest() override {
     const auto [REG_SRC] = param;
-    const int TEST_VAL = int(REG_SRC) + 55;  // Use non-static value.
+    const int TEST_VAL = static_cast<int>(REG_SRC) + 55;  // Use non-static value.
     file_.REG_SEL = 0;
     file_.REG_SRC0 = REG_SRC;
     file_.REG_SRC1 = 4;

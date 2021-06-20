@@ -35,7 +35,7 @@ int64_t convertFromInteger(const std::string& s) {
 
 std::string join(const std::vector<std::string>& l, const std::string& j, bool terminate) {
   std::string ret;
-  for (int i = 0; i < int(l.size()) - 1; ++i) ret += l[i] + j;
+  for (int i = 0; i < static_cast<int>(l.size()) - 1; ++i) ret += l[i] + j;
   if (!l.empty()) ret += l.back();
   if (terminate) ret += j;
   return ret;

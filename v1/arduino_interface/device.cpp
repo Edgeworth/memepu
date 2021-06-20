@@ -13,7 +13,7 @@ uint8_t readBus() {
   uint8_t value = 0;
   for (int pin : BUS_PINS) {
     value >>= 1;
-    value |= int(digitalRead(pin) == HIGH) << 7;
+    value |= static_cast<int>(digitalRead(pin) == HIGH) << 7;
   }
   return value;
 }
@@ -26,8 +26,7 @@ void writeBus(uint8_t value) {
 }
 
 int ringBufferSize() {
-  if (ring_start > ring_end) 
-    return RING_SIZE - ring_end + ring_start;
+  if (ring_start > ring_end) return RING_SIZE - ring_end + ring_start;
   return ring_end - ring_start;
 }
 
@@ -42,19 +41,17 @@ void peripheralIsr() {
 void DeviceConnection::checkData() {
   while (ringBufferSize() > 0) {
     if (cur_cmd_ == -1) {
-      printf("Error: Unprompted data from device, size: %d, first byte: %d\n", 
-          ringBufferSize(), int(ring_buf[ring_start]));
+      printf("Error: Unprompted data from device, size: %d, first byte: %d\n", ringBufferSize(),
+          static_cast<int>(ring_buf[ring_start]));
     }
 
     if (cur_cmd_ == 0) {
-      if (cmd_seq_ == 0)
-        printf("Dump (ring buffer size: %d)\n", ringBufferSize());
+      if (cmd_seq_ == 0) printf("Dump (ring buffer size: %d)\n", ringBufferSize());
       printf("%s: 0x%02x\n", DUMP_STRS[cmd_seq_], ring_buf[ring_start]);
 
       cmd_seq_ = (cmd_seq_ + 1) % NUM_DUMP_REGS;
       // Dump finished.
-      if (cmd_seq_ == 0)
-        cur_cmd_ = -1;
+      if (cmd_seq_ == 0) cur_cmd_ = -1;
     } else if (cur_cmd_ == 1) {
       if (ring_buf[ring_start] == 0) {  // End of data.
         printf("End of reading data\n");
@@ -68,8 +65,7 @@ void DeviceConnection::checkData() {
   }
 }
 
-void DeviceConnection::onRisingClock() {
-}
+void DeviceConnection::onRisingClock() {}
 
 void DeviceConnection::onFallingClock() {
   // Output data to the device if we are asked to and we have something to write.
@@ -86,7 +82,6 @@ void DeviceConnection::onFallingClock() {
   bus_mode_output_ = true;
   writeBus(cur_cmd_);
 }
-
 
 void DeviceConnection::sendDumpDataCommand() {
   // Send interrupt.

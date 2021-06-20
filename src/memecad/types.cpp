@@ -31,7 +31,7 @@ Direction getOppositeDirection(Direction d) {
   case Direction::DOWN: return Direction::UP;
   case Direction::RIGHT: return Direction::LEFT;
   case Direction::UP: return Direction::DOWN;
-  default: verify(false, "unknown direction '%d'", int(d));
+  default: verify(false, "unknown direction '%d'", static_cast<int>(d));
   }
 }
 
@@ -44,7 +44,7 @@ PinType netTypeToPinType(Sheet::Label::NetType net_type) {
   case Sheet::Label::NetType::BIDIRECTIONAL: return PinType::BIDIRECTIONAL;
   case Sheet::Label::NetType::TRISTATE: return PinType::TRISTATE;
   case Sheet::Label::NetType::PASSIVE: return PinType::PASSIVE;
-  default: verify(false, "Unknown net type '%d'", int(net_type));
+  default: verify(false, "Unknown net type '%d'", static_cast<int>(net_type));
   }
 }
 
@@ -113,7 +113,7 @@ Rect Sheet::Label::bbox() const {
   case Direction::DOWN: return {p.x - dimension, p.y, p.x, p.y + text_length};
   case Direction::RIGHT: return {p.x, p.y - dimension, p.x + text_length, p.y};
   case Direction::UP: return {p.x - dimension, p.y - text_length, p.x, p.y};
-  default: verify(false, "unknown direction '%d'", int(direction));
+  default: verify(false, "unknown direction '%d'", static_cast<int>(direction));
   }
 }
 
