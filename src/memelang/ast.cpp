@@ -37,7 +37,7 @@ std::vector<Node*> flattenChildren(const Args&... args) {
 }  // namespace
 
 std::ostream& operator<<(std::ostream& str, const Expr& o) {
-  const static std::string EXPR_TYPES[] = {"ARRAY_ACCESS", "MEMBER_ACCESS", "FN_CALL",
+  static const std::string EXPR_TYPES[] = {"ARRAY_ACCESS", "MEMBER_ACCESS", "FN_CALL",
       "POSTFIX_INC", "POSTFIX_DEC", "PREFIX_INC", "PREFIX_DEC", "UNARY_NEGATE", "UNARY_LINVERT",
       "UNARY_BINVERT", "UNARY_DEREF", "UNARY_ADDR", "MUL", "DIV", "MOD", "ADD", "SUB", "LSHIFT",
       "ARITH_RSHIFT", "RSHIFT", "LEQ", "GEQ", "LT", "GT", "EQ", "NEQ", "BAND", "BXOR", "BOR",
@@ -45,7 +45,9 @@ std::ostream& operator<<(std::ostream& str, const Expr& o) {
   return outputEnum(str, o, EXPR_TYPES);
 }
 
-BoolLit::BoolLit(Parser::Ctx& c) : Node(c) { val = bool(c.consumeTok(Tok::BOOL_LIT)->int_val); }
+BoolLit::BoolLit(Parser::Ctx& c) : Node(c) {
+  val = static_cast<bool>((c.consumeTok(Tok::BOOL_LIT)->int_val));
+}
 std::string BoolLit::str() const { return (fmt("BoolLit(%s)") % (val ? "true" : "false")).str(); }
 std::vector<Node*> BoolLit::children() { return {}; }
 

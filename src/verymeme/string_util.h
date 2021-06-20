@@ -26,14 +26,14 @@ std::string tos(const T& val) {
 }
 
 template <typename T>
-std::ostream& outputEnum(
-    std::ostream& str, const T& enumeration, const std::string (&mapping)[int(T::COUNT)]) {
-  return str << mapping[int(enumeration)];
+std::ostream& outputEnum(std::ostream& str, const T& enumeration,
+    const std::string (&mapping)[static_cast<int>(T::COUNT)]) {
+  return str << mapping[static_cast<int>(enumeration)];
 }
 
 template <typename T>
 std::istream& inputEnum(
-    std::istream& str, T& enumeration, const std::string (&mapping)[int(T::COUNT)]) {
+    std::istream& str, T& enumeration, const std::string (&mapping)[static_cast<int>(T::COUNT)]) {
   std::string v;
   str >> v;
   for (int i = 0; i < static_cast<int>(T::COUNT); ++i) {
