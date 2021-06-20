@@ -2,6 +2,9 @@
 #ifndef MEMESIM_CLI_H_
 #define MEMESIM_CLI_H_
 
+#include <memory>
+#include <string>
+
 #include "memesim/simulator.h"
 #include "verymeme/concurrent_queue.h"
 

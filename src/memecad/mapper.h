@@ -2,9 +2,11 @@
 #ifndef MEMECAD_MAPPER_H_
 #define MEMECAD_MAPPER_H_
 
-#include <kernel/rtlil.h>
+#include <string>
+#include <vector>
 
 #include "boost/property_tree/ptree.hpp"
+#include "kernel/rtlil.h"
 #include "memecad/schematic.h"
 #include "memecad/types.h"
 

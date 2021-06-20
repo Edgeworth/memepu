@@ -1,6 +1,9 @@
 // Copyright 2019 Eliot Courtney.
 #include "memelang/scopes.h"
 
+#include <algorithm>
+#include <string>
+
 #include "memelang/constants.h"
 #include "memelang/exec.h"
 #include "verymeme/macros.h"

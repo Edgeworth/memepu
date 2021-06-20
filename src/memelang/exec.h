@@ -2,9 +2,12 @@
 #ifndef MEMELANG_EXEC_H_
 #define MEMELANG_EXEC_H_
 
+#include <algorithm>
 #include <map>
 #include <optional>
+#include <string>
 #include <variant>
+#include <vector>
 
 #include "memelang/ast.h"
 #include "memelang/scopes.h"

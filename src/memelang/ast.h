@@ -2,6 +2,9 @@
 #ifndef MEMELANG_AST_H_
 #define MEMELANG_AST_H_
 
+#include <memory>
+#include <string>
+#include <utility>
 #include <vector>
 
 #include "memelang/parser.h"

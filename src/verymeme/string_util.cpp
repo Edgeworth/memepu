@@ -2,6 +2,7 @@
 #include "verymeme/string_util.h"
 
 #include <regex>
+#include <string>
 
 std::string trim(const std::string& data, const std::string& c) {
   const std::regex trim("^[" + c + "]*((\n|.)*?)[" + c + "]*$");

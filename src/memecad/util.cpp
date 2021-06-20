@@ -1,6 +1,8 @@
 // Copyright 2019 Eliot Courtney.
 #include "memecad/util.h"
 
+#include <string>
+
 #include "verymeme/macros.h"
 
 namespace memecad {

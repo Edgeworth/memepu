@@ -1,6 +1,12 @@
 // Copyright 2019 Eliot Courtney.
 #include "memelang/expression.h"
 
+#include <unordered_map>
+#include <unordered_set>
+#include <memory>
+#include <utility>
+#include <vector>
+
 #include "verymeme/util.h"
 
 namespace memelang::ast {

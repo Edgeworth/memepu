@@ -2,6 +2,10 @@
 #ifndef MEMECAD_SCHEMATIC_H_
 #define MEMECAD_SCHEMATIC_H_
 
+#include <map>
+#include <string>
+#include <vector>
+
 #include "memecad/types.h"
 #include "memecad/util.h"
 #include "verymeme/geom.h"

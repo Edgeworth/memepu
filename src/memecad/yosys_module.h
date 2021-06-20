@@ -2,9 +2,11 @@
 #ifndef MEMECAD_YOSYS_MODULE_H_
 #define MEMECAD_YOSYS_MODULE_H_
 
-#include <kernel/rtlil.h>
-#include <kernel/yosys.h>
+#include <vector>
+#include <string>
 
+#include "kernel/rtlil.h"
+#include "kernel/yosys.h"
 #include "memecad/mapper.h"
 
 namespace memecad {

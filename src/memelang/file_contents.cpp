@@ -1,6 +1,8 @@
 // Copyright 2019 Eliot Courtney.
 #include "memelang/file_contents.h"
 
+#include <utility>
+
 namespace memelang {
 
 FileContents::FileContents(std::string filename, std::string data)

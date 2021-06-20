@@ -2,6 +2,8 @@
 #ifndef MEMESIM_SIMULATOR_H_
 #define MEMESIM_SIMULATOR_H_
 
+#include <memory>
+#include <string>
 #include <unordered_set>
 #include <variant>
 
