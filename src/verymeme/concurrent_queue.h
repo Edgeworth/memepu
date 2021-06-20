@@ -6,6 +6,7 @@
 #include <mutex>
 #include <optional>
 #include <queue>
+#include <utility>
 
 #include "verymeme/macros.h"
 

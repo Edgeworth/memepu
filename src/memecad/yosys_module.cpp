@@ -1,8 +1,12 @@
 // Copyright 2019 E.
 #include "memecad/yosys_module.h"
 
-#include <kernel/sigtools.h>
+#include <algorithm>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
+#include "kernel/sigtools.h"
 #include "memecad/parser.h"
 #include "verymeme/file.h"
 #include "verymeme/macros.h"

@@ -1,12 +1,13 @@
 // Copyright 2019 E.
 #include "memecad/mapper.h"
 
-#include <kernel/sigtools.h>
-
+#include <string>
 #include <utility>
+#include <vector>
 
 #include "boost/lexical_cast.hpp"
 #include "boost/property_tree/json_parser.hpp"
+#include "kernel/sigtools.h"
 #include "verymeme/macros.h"
 #include "verymeme/util.h"
 

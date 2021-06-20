@@ -2,8 +2,9 @@
 #ifndef MEMESIM_DISPLAY_H_
 #define MEMESIM_DISPLAY_H_
 
-#include <SFML/Graphics.hpp>
+#include <memory>
 
+#include "SFML/Graphics.hpp"
 #include "memesim/simulator.h"
 #include "verymeme/concurrent_queue.h"
 

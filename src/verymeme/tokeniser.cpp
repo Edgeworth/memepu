@@ -1,6 +1,9 @@
 // Copyright 2019 E.
 #include "verymeme/tokeniser.h"
 
+#include <string>
+#include <vector>
+
 namespace {
 
 std::vector<std::string> tokenize(const std::string& data, const std::regex& token) {

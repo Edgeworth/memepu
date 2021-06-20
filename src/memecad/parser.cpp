@@ -1,6 +1,7 @@
 // Copyright 2019 E.
 #include "memecad/parser.h"
 
+#include <algorithm>
 #include <regex>
 
 #include "boost/lexical_cast.hpp"
@@ -48,11 +49,11 @@ class KicadParser {
     sheet.header2 = t_.lines(8);
     while (true) {
       std::string tok = t_.next();
-      if (tok == "$EndSCHEMATC")
+      if (tok == "$EndSCHEMATC") {
         break;
-      else if (tok == "$Comp")
+      } else if (tok == "$Comp") {
         sheet.components.emplace_back(parseComponent());
-      else if (tok == "Text") {
+      } else if (tok == "Text") {
         auto& label = sheet.labels.emplace_back();
         label.type = t_.next<Sheet::Label::Type>();
         label.p = {t_.next<int>(), t_.next<int>()};
@@ -186,9 +187,9 @@ class KicadParser {
     t_.lines(1);  // Ignore rest.
     while (true) {
       std::string tok = t_.next();
-      if (tok == "ENDDEF")
+      if (tok == "ENDDEF") {
         break;
-      else if (tok == "F0" || tok == "F1") {
+      } else if (tok == "F0" || tok == "F1") {
         // Record reference and value fields.
         auto& field = component.fields.emplace_back();
         field.num = boost::lexical_cast<int>(tok.substr(1));

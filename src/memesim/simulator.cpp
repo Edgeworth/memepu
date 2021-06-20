@@ -1,6 +1,8 @@
 // Copyright 2019 E.
 #include "memesim/simulator.h"
 
+#include <chrono>
+
 #include "Vkpu_control_logic.h"
 #include "Vkpu_kpu.h"
 #include "Vkpu_microcode.h"
@@ -15,11 +17,12 @@
 
 namespace memesim {
 
+using std::chrono::milliseconds;
+using std::chrono::steady_clock;
+
 namespace {
 const int PRINT_SPEED_MS = 5000;
 }  // namespace
-
-using namespace std::chrono;
 
 void initializeKpu(Vkpu& kpu) {
   kpu.N_RST_ASYNC = 1;
@@ -110,8 +113,8 @@ void Simulator::run() {
     }
     int64_t dur = duration_cast<milliseconds>(steady_clock::now() - time).count();
     if (running && dur > PRINT_SPEED_MS) {
-      printf("%f MHz - %" PRId64 " cycles in %" PRId64 " ms\n", double(cycle_count) / dur / 1000.f,
-          cycle_count, dur);
+      printf("%f MHz - %" PRId64 " cycles in %" PRId64 " ms\n",
+          static_cast<double>(cycle_count) / dur / 1000.f, cycle_count, dur);
       cycle_count = 0;
       time = steady_clock::now();
     }

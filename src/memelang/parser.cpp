@@ -3,6 +3,7 @@
 
 #include <numeric>
 #include <unordered_map>
+#include <string>
 
 #include "memelang/ast.h"
 #include "memelang/constants.h"

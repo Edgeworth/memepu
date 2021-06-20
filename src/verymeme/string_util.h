@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <iomanip>
 #include <vector>
+#include <string>
+#include <algorithm>
 
 #include "verymeme/macros.h"
 

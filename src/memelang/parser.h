@@ -3,6 +3,7 @@
 #define MEMELANG_PARSER_H_
 
 #include <memory>
+#include <string>
 #include <unordered_set>
 #include <vector>
 

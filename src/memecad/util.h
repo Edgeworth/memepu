@@ -2,8 +2,10 @@
 #ifndef MEMECAD_UTIL_H_
 #define MEMECAD_UTIL_H_
 
-#include <kernel/rtlil.h>
+#include <map>
+#include <string>
 
+#include "kernel/rtlil.h"
 #include "memecad/types.h"
 
 namespace memecad {

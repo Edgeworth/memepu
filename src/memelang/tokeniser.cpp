@@ -1,6 +1,7 @@
 // Copyright 2019 E.
 #include "memelang/tokeniser.h"
 
+#include <string>
 #include <unordered_map>
 
 #include "verymeme/string_util.h"
@@ -41,7 +42,7 @@ std::string Tok::desc() const {
 }
 
 std::ostream& operator<<(std::ostream& str, const Tok::Type& o) {
-  const static std::string TOKEN_TYPES[] = {"PLUS", "DPLUS", "MINUS", "DMINUS", "ASTERISK",
+  static const std::string TOKEN_TYPES[] = {"PLUS", "DPLUS", "MINUS", "DMINUS", "ASTERISK",
       "PERCENT", "FSLASH", "QUOTE", "DQUOTE", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LANGLE",
       "RANGLE", "LSQUARE", "RSQUARE", "SEMICOLON", "COLON", "QUESTION", "COMMA", "DOT", "TILDE",
       "EXCLAMATION", "AMPERSAND", "DAMPERSAND", "CARET", "BAR", "DBAR", "EQUAL", "DEQUAL", "NEQUAL",
@@ -159,7 +160,7 @@ bool Tokeniser::atCompleteToken() {
 
 bool Tokeniser::isChar(char c, const char* msg) {
   const auto& data = cts_->data();
-  verify(idx_ < static_cast<int>(data.size()), msg);
+  verify(idx_ < static_cast<int>(data.size()), "%s", msg);
   return data[idx_] == c;
 }
 

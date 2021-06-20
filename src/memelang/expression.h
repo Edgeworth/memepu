@@ -2,6 +2,10 @@
 #ifndef MEMELANG_EXPRESSION_H_
 #define MEMELANG_EXPRESSION_H_
 
+#include <memory>
+#include <utility>
+#include <vector>
+
 #include "memelang/ast.h"
 #include "memelang/parser.h"
 

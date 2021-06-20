@@ -3,6 +3,7 @@
 #define MEMEASM_ASSEMBLER_H_
 
 #include <cstdint>
+#include <map>
 #include <regex>
 #include <string>
 #include <vector>

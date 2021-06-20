@@ -61,8 +61,9 @@ Assembler::Assembler(const std::string& model_json) {
           param = Parameter::IMMEDIATE;
           mnemonic_rx += "([^r][^,]*)";
           i++;
-        } else
+        } else {
           verify(false, "unknown parameter type '%c'", type);
+        }
         mnemonic.params.push_back(param);
       } else {
         std::string escape;

@@ -1,7 +1,12 @@
 // Copyright 2019 E.
 #include "memelang/exec.h"
 
+#include <algorithm>
 #include <iostream>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include "memelang/constants.h"
 
@@ -251,11 +256,11 @@ std::optional<Val> Exec::runIf(ast::If* ifst, TypeId typectx) {
 Val Exec::eval(ast::Node* n, TypeId typectx) {
   setContext(n);
   Val ret_val;
-  if (typeid(*n) == typeid(ast::Op))
+  if (typeid(*n) == typeid(ast::Op)) {
     ret_val = runOp(g<ast::Op>(n));
-  else if (typeid(*n) == typeid(ast::Ref))
+  } else if (typeid(*n) == typeid(ast::Ref)) {
     ret_val = s_.findValue(g<ast::Ref>(n));
-  else if (typeid(*n) == typeid(ast::IntLit)) {
+  } else if (typeid(*n) == typeid(ast::IntLit)) {
     TypeId type = g<ast::IntLit>(n)->unsign ? s_.u32_t : s_.i32_t;
     ret_val = Val(vm_.allocTmp(s_.t(type).size()), type);
     vm_.write(ret_val.hnd, uint32_t(g<ast::IntLit>(n)->val));
@@ -302,10 +307,11 @@ Val Exec::eval(ast::Node* n, TypeId typectx) {
         }
       }
     }
-  } else if (typeid(*n) == typeid(ast::Type))
+  } else if (typeid(*n) == typeid(ast::Type)) {
     ret_val = Val(INVL_HND, s_.typeFromAst(g<ast::Type>(n), true));
-  else
+  } else {
     error("unimplemented eval node " + n->str());
+  }
   return s_.tryCoerceTo(ret_val, typectx);
 }
 

@@ -1,6 +1,8 @@
 // Copyright 2019 E.
 #include "memelang/type.h"
 
+#include <algorithm>
+
 #include "memelang/constants.h"
 #include "memelang/exec.h"
 #include "verymeme/macros.h"

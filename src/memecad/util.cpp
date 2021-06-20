@@ -1,6 +1,8 @@
 // Copyright 2019 E.
 #include "memecad/util.h"
 
+#include <string>
+
 #include "verymeme/macros.h"
 
 namespace memecad {

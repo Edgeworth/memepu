@@ -1,6 +1,11 @@
 // Copyright 2019 E.
 #include "memecad/schematic.h"
 
+#include <algorithm>
+#include <set>
+#include <string>
+#include <vector>
+
 #include "memecad/parser.h"
 #include "verymeme/geom.h"
 #include "verymeme/string_util.h"

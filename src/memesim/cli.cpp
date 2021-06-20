@@ -3,6 +3,10 @@
 
 #include <iostream>
 #include <map>
+#include <string>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 #include "verymeme/concurrent_queue.h"
 #include "verymeme/string_util.h"

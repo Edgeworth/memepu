@@ -1,6 +1,10 @@
 // Copyright 2019 E.
 #include "memelang/ast.h"
 
+#include <memory>
+#include <string>
+#include <utility>
+
 #include "boost/format.hpp"
 #include "memelang/expression.h"
 #include "memelang/parser.h"
@@ -159,9 +163,9 @@ Ref::Ref(Parser::Ctx& c) : Node(c) {
     c.consumeTok(Tok::LANGLE);
     while (c.curTok()->type != Tok::RANGLE) {
       auto type = Type::tryParseType(c);
-      if (type)
+      if (type) {
         params.emplace_back(std::move(type));
-      else {
+      } else {
         c = c_cpy;
         return;
       }

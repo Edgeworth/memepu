@@ -3,6 +3,8 @@
 #define VERYMEME_TOKENISER_H_
 
 #include <regex>
+#include <vector>
+#include <string>
 
 #include "boost/lexical_cast.hpp"
 #include "verymeme/macros.h"

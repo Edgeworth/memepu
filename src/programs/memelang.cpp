@@ -60,11 +60,12 @@ int main(int argc, char* argv[]) {
     memelang::ast::Parser parser(file_cts);
     parser.parse();
 
-    if (print_tokens)
+    if (print_tokens) {
       for (const auto& ctx : parser.ctxs()) {
         printf("Tokens for %s\n", ctx->cts->filename().c_str());
         for (const auto& tok : ctx->tokens()) printf("%s\n", tok.desc().c_str());
       }
+    }
 
     if (print_ast) printf("AST:\n%s\n", parser.astToString().c_str());
 
