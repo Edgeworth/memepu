@@ -212,7 +212,7 @@ Val Exec::runOp(ast::Op* op) {
   case ast::Expr::UNARY_LINVERT: return linvert(left);
   case ast::Expr::UNARY_ADDR: return addr(left);
   case ast::Expr::UNARY_DEREF: return deptr(left);
-  default: error("unhandled op: " + std::to_string(int(op->type)));
+  default: error("unhandled op: " + std::to_string(static_cast<int>((op->type))));
   }
 }
 
