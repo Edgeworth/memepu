@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMEWARE_CONSTANTS_H
 #define MEMEWARE_CONSTANTS_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 // Yosys doesn't support tri-state logic, so concentrate the build-specific logic here.
 module buffer_mux3x8(

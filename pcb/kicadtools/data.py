@@ -1,3 +1,4 @@
+# Copyright 2019 E.
 # Symbol data format:
 #   group_name: <array>|<dict>
 #     |group_name| is case insensitive (converted to upper-case)

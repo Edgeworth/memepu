@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef VERYMEME_MACROS_H
 #define VERYMEME_MACROS_H
 

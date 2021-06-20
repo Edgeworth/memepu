@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright 2019 E.
 
 from data import data_74LVC162244_symbol
 from symbol import validate_data, insert_side

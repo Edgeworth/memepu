@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "led.h"
 
 namespace {

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMECAD_MAPPER_H
 #define MEMECAD_MAPPER_H
 

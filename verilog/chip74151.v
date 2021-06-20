@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 // 8->1 line selector/multiplexor.
 module chip74151(

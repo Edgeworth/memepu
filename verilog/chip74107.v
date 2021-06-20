@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 
 // JK-flipflop, negative edge trigger.

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 
 // D-flipflop, positive edge trigger (async preset not implemented).

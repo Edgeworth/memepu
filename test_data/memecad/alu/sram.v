@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 module sram(
   input wire [11:0] ADDR,
   input wire N_WE,

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 
 // 74LVC162244 buffer.

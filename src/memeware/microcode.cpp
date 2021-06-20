@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memeware/microcode.h"
 
 #include <boost/property_tree/json_parser.hpp>

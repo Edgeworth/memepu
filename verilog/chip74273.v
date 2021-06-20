@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 // 8-bit register with asynchronous clear.
 module chip74273(

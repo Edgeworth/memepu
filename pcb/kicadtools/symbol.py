@@ -1,3 +1,4 @@
+# Copyright 2019 E.
 import time
 
 from common import run_xdotool_key, nav, tr, listify

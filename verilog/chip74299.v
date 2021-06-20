@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 // Shift register.
 module chip74299(

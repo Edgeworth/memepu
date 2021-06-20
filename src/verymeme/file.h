@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef VERYMEME_FILE_H
 #define VERYMEME_FILE_H
 

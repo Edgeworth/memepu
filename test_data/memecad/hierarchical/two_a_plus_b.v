@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 module two_a_plus_b(
   input wire [7:0] A,
   input wire [7:0] B,

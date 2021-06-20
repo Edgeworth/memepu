@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 module register_file(
   input wire [1:0] REG_SEL,

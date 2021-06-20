@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMECAD_TYPES_H
 #define MEMECAD_TYPES_H
 

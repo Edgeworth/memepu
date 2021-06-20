@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memelang/tokeniser.h"
 
 #include <unordered_map>

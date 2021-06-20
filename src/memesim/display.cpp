@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memesim/display.h"
 
 #include "verymeme/concurrent_queue.h"

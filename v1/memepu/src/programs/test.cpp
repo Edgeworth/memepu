@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "common.h"
 
 bool state[256][256];

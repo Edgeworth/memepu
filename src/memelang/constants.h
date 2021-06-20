@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 
 #ifndef MEMELANG_CONSTANTS_H
 #define MEMELANG_CONSTANTS_H

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memesim/simulator.h"
 
 #include "Vkpu_control_logic.h"

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memelang/scopes.h"
 
 #include "memelang/constants.h"

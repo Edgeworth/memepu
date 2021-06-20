@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 module chip74590(
   input wire N_MRC,  // Async reset

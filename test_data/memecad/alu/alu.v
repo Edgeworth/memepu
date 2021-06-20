@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 module alu();
   wire [31:0] A = 0;
   wire [31:0] B = 0;

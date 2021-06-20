@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMEWARE_MICROCODE_H
 #define MEMEWARE_MICROCODE_H
 

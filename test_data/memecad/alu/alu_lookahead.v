@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 module alu_lookahead(
   input wire C_IN,
   input wire [7:0] P,

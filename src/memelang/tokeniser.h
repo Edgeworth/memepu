@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMELANG_TOKENISER_H
 #define MEMELANG_TOKENISER_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 // 74590 is ripple carry so it's slow.
 // 74163 is synchronous reset, so don't use it.

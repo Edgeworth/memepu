@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "verymeme/macros.h"
 
 #include <boost/stacktrace.hpp>

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMECAD_SCHEMATIC_H
 #define MEMECAD_SCHEMATIC_H
 

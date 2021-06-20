@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memeasm/assembler.h"
 
 #include <boost/property_tree/json_parser.hpp>

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMESIM_SIMULATOR_H
 #define MEMESIM_SIMULATOR_H
 

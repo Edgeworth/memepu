@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMEASM_ASSEMBLER_H
 #define MEMEASM_ASSEMBLER_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memecad/util.h"
 
 #include "verymeme/macros.h"

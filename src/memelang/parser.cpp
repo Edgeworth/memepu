@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memelang/parser.h"
 
 #include <numeric>

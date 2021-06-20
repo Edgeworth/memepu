@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMELANG_TYPE_H
 #define MEMELANG_TYPE_H
 

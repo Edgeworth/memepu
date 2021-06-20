@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMECAD_YOSYS_MODULE_H
 #define MEMECAD_YOSYS_MODULE_H
 

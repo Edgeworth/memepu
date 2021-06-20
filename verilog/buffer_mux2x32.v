@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 module buffer_mux2x32(
   input wire [31:0] A,

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMELANG_SCOPES_H
 #define MEMELANG_SCOPES_H
 

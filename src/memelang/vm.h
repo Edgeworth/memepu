@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMELANG_VM_H
 #define MEMELANG_VM_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memelang/vm.h"
 
 #include "memelang/exec.h"

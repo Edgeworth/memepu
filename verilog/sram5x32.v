@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 
 module sram5x32(

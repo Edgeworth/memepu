@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMEPU_COMMON_H_
 #define MEMEPU_COMMON_H_
 

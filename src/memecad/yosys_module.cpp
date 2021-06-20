@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memecad/yosys_module.h"
 
 #include <kernel/sigtools.h>

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "asm.h"
 
 namespace {

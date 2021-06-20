@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memelang/file_contents.h"
 
 namespace memelang {

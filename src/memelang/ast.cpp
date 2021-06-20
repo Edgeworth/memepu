@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memelang/ast.h"
 
 #include <boost/format.hpp>

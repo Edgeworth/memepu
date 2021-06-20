@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memecad/types.h"
 
 #include <boost/lexical_cast.hpp>

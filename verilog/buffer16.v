@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 module buffer16(
   input wire [15:0] IN,

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 module buffer_mux4x32_decoded(
   input wire [31:0] A,

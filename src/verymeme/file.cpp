@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "verymeme/file.h"
 
 #include <unistd.h>

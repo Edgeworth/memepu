@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef VERYMEME_UTIL_H
 #define VERYMEME_UTIL_H
 

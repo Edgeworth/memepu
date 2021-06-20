@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 /* verilator lint_off UNOPTFLAT */
 // AND

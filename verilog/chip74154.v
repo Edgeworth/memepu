@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 // 4->16 Decoder, inverting outputs.
 module chip74154(

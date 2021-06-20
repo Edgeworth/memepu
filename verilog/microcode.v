@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 module microcode(
   input wire [11:0] ADDR,

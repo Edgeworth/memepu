@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memelang/expression.h"
 
 #include "verymeme/util.h"

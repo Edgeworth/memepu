@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "memesim/cli.h"
 
 #include <iostream>

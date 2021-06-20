@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 module alu_slice(
   input wire [3:0] A,
   input wire [3:0] B,

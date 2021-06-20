@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 /* verilator lint_off UNUSED */  // TODO REMOVE
 /* verilator lint_off UNDRIVEN */  // TODO REMOVE

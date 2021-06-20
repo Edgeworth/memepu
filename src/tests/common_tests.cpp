@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "gtest/gtest.h"
 #include "verymeme/file.h"
 

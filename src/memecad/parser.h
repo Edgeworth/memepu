@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMECAD_PARSER_H
 #define MEMECAD_PARSER_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMECAD_UTIL_H
 #define MEMECAD_UTIL_H
 

@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef VERYMEME_TOKENIZER_H
 #define VERYMEME_TOKENIZER_H
 

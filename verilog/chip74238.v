@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 // 3->8 Decoder, non-inverting outputs.
 module chip74238(

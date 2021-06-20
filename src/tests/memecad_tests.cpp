@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include <regex>
 
 #include "gtest/gtest.h"

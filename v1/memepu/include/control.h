@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMEPU_CONTROL_H_
 #define MEMEPU_CONTROL_H_
 

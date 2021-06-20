@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright 2019 E.
 import argparse
 import glob
 import multiprocessing

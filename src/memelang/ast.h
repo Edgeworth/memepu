@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMELANG_AST_H
 #define MEMELANG_AST_H
 

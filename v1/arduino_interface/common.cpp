@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "common.h"
 
 char printf_buf[128];

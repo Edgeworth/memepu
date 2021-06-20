@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "verymeme/string_util.h"
 
 #include <regex>

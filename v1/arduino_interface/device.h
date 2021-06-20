@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef DEVICE_H_
 #define DEVICE_H_
 

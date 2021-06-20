@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include <kernel/yosys.h>
 
 #include <boost/program_options.hpp>

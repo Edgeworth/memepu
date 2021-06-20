@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "device.h"
 
 namespace {

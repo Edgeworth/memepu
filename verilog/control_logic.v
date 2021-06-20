@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 `include "common.v"
 module control_logic(
   input wire CLK,

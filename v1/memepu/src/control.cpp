@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #include "control.h"
 #include "control_constants.h"
 

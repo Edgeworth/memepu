@@ -1,3 +1,4 @@
+// Copyright 2019 E.
 #ifndef MEMELANG_FILE_CONTENTS_H
 #define MEMELANG_FILE_CONTENTS_H
 
