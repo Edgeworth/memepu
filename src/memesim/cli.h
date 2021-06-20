@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMESIM_CLI_H
-#define MEMESIM_CLI_H
+#ifndef MEMESIM_CLI_H_
+#define MEMESIM_CLI_H_
 
 #include "memesim/simulator.h"
 #include "verymeme/concurrent_queue.h"
@@ -24,4 +24,4 @@ class CommandLine {
 
 }  // namespace memesim
 
-#endif  // MEMESIM_CLI_H
+#endif  // MEMESIM_CLI_H_

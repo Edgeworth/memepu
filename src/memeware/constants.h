@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMEWARE_CONSTANTS_H
-#define MEMEWARE_CONSTANTS_H
+#ifndef MEMEWARE_CONSTANTS_H_
+#define MEMEWARE_CONSTANTS_H_
 
 namespace memeware {
 
@@ -29,4 +29,4 @@ constexpr uint32_t INTERRUPT_VECTOR = 0;
 
 }  // namespace memeware
 
-#endif  // MEMEWARE_CONSTANTS_H
+#endif  // MEMEWARE_CONSTANTS_H_

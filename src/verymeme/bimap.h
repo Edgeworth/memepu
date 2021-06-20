@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_BIMAP_H
-#define VERYMEME_BIMAP_H
+#ifndef VERYMEME_BIMAP_H_
+#define VERYMEME_BIMAP_H_
 
 #include <map>
 #include <set>
@@ -35,4 +35,4 @@ class Bimap {
   std::set<Record> records;
 };
 
-#endif  // VERYMEME_BIMAP_H
+#endif  // VERYMEME_BIMAP_H_

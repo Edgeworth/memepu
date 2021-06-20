@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMECAD_TYPES_H
-#define MEMECAD_TYPES_H
+#ifndef MEMECAD_TYPES_H_
+#define MEMECAD_TYPES_H_
 
 #include <string>
 #include <vector>
@@ -192,4 +192,4 @@ std::istream& operator>>(std::istream& str, Sheet::Label::NetType& o);
 
 }  // namespace memecad
 
-#endif  // MEMECAD_TYPES_H
+#endif  // MEMECAD_TYPES_H_

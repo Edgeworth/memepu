@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMESIM_DISPLAY_H
-#define MEMESIM_DISPLAY_H
+#ifndef MEMESIM_DISPLAY_H_
+#define MEMESIM_DISPLAY_H_
 
 #include <SFML/Graphics.hpp>
 
@@ -24,4 +24,4 @@ class Display {
 
 }  // namespace memesim
 
-#endif  // MEMESIM_DISPLAY_H
+#endif  // MEMESIM_DISPLAY_H_

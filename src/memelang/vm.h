@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_VM_H
-#define MEMELANG_VM_H
+#ifndef MEMELANG_VM_H_
+#define MEMELANG_VM_H_
 
 #include <cstdint>
 #include <cstring>
@@ -50,4 +50,4 @@ class VM {
 
 }  // namespace memelang::exec
 
-#endif  // MEMELANG_VM_H
+#endif  // MEMELANG_VM_H_

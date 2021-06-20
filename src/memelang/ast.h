@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_AST_H
-#define MEMELANG_AST_H
+#ifndef MEMELANG_AST_H_
+#define MEMELANG_AST_H_
 
 #include <vector>
 
@@ -316,4 +316,4 @@ struct Module : public Node {
 
 }  // namespace memelang::ast
 
-#endif  // MEMELANG_AST_H
+#endif  // MEMELANG_AST_H_

@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_CONCURRENT_QUEUE_H
-#define VERYMEME_CONCURRENT_QUEUE_H
+#ifndef VERYMEME_CONCURRENT_QUEUE_H_
+#define VERYMEME_CONCURRENT_QUEUE_H_
 
 #include <condition_variable>
 #include <mutex>
@@ -41,4 +41,4 @@ class ConcurrentQueue {
   std::queue<T> q_;
 };
 
-#endif  // VERYMEME_CONCURRENT_QUEUE_H
+#endif  // VERYMEME_CONCURRENT_QUEUE_H_

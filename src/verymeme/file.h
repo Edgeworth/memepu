@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_FILE_H
-#define VERYMEME_FILE_H
+#ifndef VERYMEME_FILE_H_
+#define VERYMEME_FILE_H_
 
 #include <string>
 
@@ -14,4 +14,4 @@ std::string stem(const std::string& filename);
 
 void checkedChdir(const std::string& path);
 
-#endif  // VERYMEME_FILE_H
+#endif  // VERYMEME_FILE_H_

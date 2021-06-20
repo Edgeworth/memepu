@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMECAD_MAPPER_H
-#define MEMECAD_MAPPER_H
+#ifndef MEMECAD_MAPPER_H_
+#define MEMECAD_MAPPER_H_
 
 #include <kernel/rtlil.h>
 
@@ -33,4 +33,4 @@ class Mapper {
 
 }  // namespace memecad
 
-#endif  // MEMECAD_MAPPER_H
+#endif  // MEMECAD_MAPPER_H_

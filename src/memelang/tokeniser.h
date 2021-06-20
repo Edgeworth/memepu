@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_TOKENISER_H
-#define MEMELANG_TOKENISER_H
+#ifndef MEMELANG_TOKENISER_H_
+#define MEMELANG_TOKENISER_H_
 
 #include <memory>
 #include <utility>
@@ -111,4 +111,4 @@ std::ostream& operator<<(std::ostream& str, const Tok::Type& o);
 
 }  // namespace memelang::ast
 
-#endif  // MEMELANG_TOKENISER_H
+#endif  // MEMELANG_TOKENISER_H_

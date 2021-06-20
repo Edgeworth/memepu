@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_STRING_UTIL_H
-#define VERYMEME_STRING_UTIL_H
+#ifndef VERYMEME_STRING_UTIL_H_
+#define VERYMEME_STRING_UTIL_H_
 
 #include <verilated_heavy.h>
 
@@ -108,4 +108,4 @@ std::string join(Iter st, Iter en, F conv, const std::string& j, bool terminate 
   return join(converted, j, terminate);
 }
 
-#endif  // VERYMEME_STRING_UTIL_H
+#endif  // VERYMEME_STRING_UTIL_H_

@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMESIM_SIMULATOR_H
-#define MEMESIM_SIMULATOR_H
+#ifndef MEMESIM_SIMULATOR_H_
+#define MEMESIM_SIMULATOR_H_
 
 #include <unordered_set>
 #include <variant>
@@ -89,4 +89,4 @@ class Simulator {
 
 }  // namespace memesim
 
-#endif  // MEMESIM_SIMULATOR_H
+#endif  // MEMESIM_SIMULATOR_H_

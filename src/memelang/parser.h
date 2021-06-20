@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_PARSER_H
-#define MEMELANG_PARSER_H
+#ifndef MEMELANG_PARSER_H_
+#define MEMELANG_PARSER_H_
 
 #include <memory>
 #include <unordered_set>
@@ -63,4 +63,4 @@ class Parser {
 
 }  // namespace memelang::ast
 
-#endif  // MEMELANG_PARSER_H
+#endif  // MEMELANG_PARSER_H_

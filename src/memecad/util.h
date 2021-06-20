@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMECAD_UTIL_H
-#define MEMECAD_UTIL_H
+#ifndef MEMECAD_UTIL_H_
+#define MEMECAD_UTIL_H_
 
 #include <kernel/rtlil.h>
 
@@ -29,4 +29,4 @@ using ChildMapping = std::map<std::string, ConnectionData>;
 
 }  // namespace memecad
 
-#endif  // MEMECAD_UTIL_H
+#endif  // MEMECAD_UTIL_H_

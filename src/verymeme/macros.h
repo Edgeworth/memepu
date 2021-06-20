@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_MACROS_H
-#define VERYMEME_MACROS_H
+#ifndef VERYMEME_MACROS_H_
+#define VERYMEME_MACROS_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -45,4 +45,4 @@
 
 std::string getStacktrace();
 
-#endif  // VERYMEME_MACROS_H
+#endif  // VERYMEME_MACROS_H_

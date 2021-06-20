@@ -1,7 +1,7 @@
 // Copyright 2019 E.
 
-#ifndef MEMELANG_CONSTANTS_H
-#define MEMELANG_CONSTANTS_H
+#ifndef MEMELANG_CONSTANTS_H_
+#define MEMELANG_CONSTANTS_H_
 
 #include <map>
 #include <string>
@@ -27,4 +27,4 @@ const std::map<std::string, int> BUILTIN_SIZE = {{BOOL, 1}, {I8, 1}, {I16, 2}, {
 
 }  // namespace memelang
 
-#endif  // MEMELANG_CONSTANTS_H
+#endif  // MEMELANG_CONSTANTS_H_

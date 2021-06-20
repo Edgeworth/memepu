@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMECAD_YOSYS_MODULE_H
-#define MEMECAD_YOSYS_MODULE_H
+#ifndef MEMECAD_YOSYS_MODULE_H_
+#define MEMECAD_YOSYS_MODULE_H_
 
 #include <kernel/rtlil.h>
 #include <kernel/yosys.h>
@@ -30,4 +30,4 @@ class TestPass : public Yosys::Pass {
 
 }  // namespace memecad
 
-#endif  // MEMECAD_YOSYS_MODULE_H
+#endif  // MEMECAD_YOSYS_MODULE_H_

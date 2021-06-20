@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_SCOPES_H
-#define MEMELANG_SCOPES_H
+#ifndef MEMELANG_SCOPES_H_
+#define MEMELANG_SCOPES_H_
 
 #include <map>
 #include <set>
@@ -90,4 +90,4 @@ class Scope {
 
 }  // namespace memelang::exec
 
-#endif  // MEMELANG_SCOPES_H
+#endif  // MEMELANG_SCOPES_H_

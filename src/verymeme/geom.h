@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_GEOM_H
-#define VERYMEME_GEOM_H
+#ifndef VERYMEME_GEOM_H_
+#define VERYMEME_GEOM_H_
 
 #include <algorithm>
 #include <cstdint>
@@ -83,4 +83,4 @@ struct Rect {
 
 std::ostream& operator<<(std::ostream& str, const Point& p);
 
-#endif  // VERYMEME_GEOM_H
+#endif  // VERYMEME_GEOM_H_

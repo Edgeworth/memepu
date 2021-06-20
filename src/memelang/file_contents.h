@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_FILE_CONTENTS_H
-#define MEMELANG_FILE_CONTENTS_H
+#ifndef MEMELANG_FILE_CONTENTS_H_
+#define MEMELANG_FILE_CONTENTS_H_
 
 #include <string>
 #include <vector>
@@ -27,4 +27,4 @@ class FileContents {
 
 }  // namespace memelang
 
-#endif  // MEMELANG_FILE_CONTENTS_H
+#endif  // MEMELANG_FILE_CONTENTS_H_

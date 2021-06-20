@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMECAD_SCHEMATIC_H
-#define MEMECAD_SCHEMATIC_H
+#ifndef MEMECAD_SCHEMATIC_H_
+#define MEMECAD_SCHEMATIC_H_
 
 #include "memecad/types.h"
 #include "memecad/util.h"
@@ -43,4 +43,4 @@ class Schematic {
 
 }  // namespace memecad
 
-#endif  // MEMECAD_SCHEMATIC_H
+#endif  // MEMECAD_SCHEMATIC_H_

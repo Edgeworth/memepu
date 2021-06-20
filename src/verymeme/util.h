@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_UTIL_H
-#define VERYMEME_UTIL_H
+#ifndef VERYMEME_UTIL_H_
+#define VERYMEME_UTIL_H_
 
 #include <cstdio>
 #include <string>
@@ -43,4 +43,4 @@ struct AutoReset {
   T callable_;
 };
 
-#endif  // VERYMEME_UTIL_H
+#endif  // VERYMEME_UTIL_H_

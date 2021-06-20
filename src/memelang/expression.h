@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_EXPRESSION_H
-#define MEMELANG_EXPRESSION_H
+#ifndef MEMELANG_EXPRESSION_H_
+#define MEMELANG_EXPRESSION_H_
 
 #include "memelang/ast.h"
 #include "memelang/parser.h"
@@ -41,4 +41,4 @@ class ExprParser {
 
 }  // namespace memelang::ast
 
-#endif  // MEMELANG_EXPRESSION_H
+#endif  // MEMELANG_EXPRESSION_H_

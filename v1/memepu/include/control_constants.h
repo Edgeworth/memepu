@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMEPU_CONTROL_CONSTANTS_H
-#define MEMEPU_CONTROL_CONSTANTS_H
+#ifndef MEMEPU_CONTROL_CONSTANTS_H_
+#define MEMEPU_CONTROL_CONSTANTS_H_
 
 #include "common.h"
 
@@ -132,7 +132,7 @@ enum {
   ADDR_OP5 = 5,
   ADDR_OP6 = 6,
   ADDR_OP7 = 7,
-  ADDR_AUX0 = 8, // Corresponds to OP8 to OP11
+  ADDR_AUX0 = 8,  // Corresponds to OP8 to OP11
   ADDR_AUX1 = 9,
   ADDR_AUX2 = 10,
   ADDR_AUX3 = 11,
@@ -145,20 +145,9 @@ enum {
   ADDR_UNUSED = 18,
 };
 
-enum {
-  MLU_AND,
-  MLU_OR,
-  MLU_XOR,
-  MLU_MUL,
-  MLU_DIV,
-  MLU_MOD,
-  MLU_SINGLE
-};
+enum { MLU_AND, MLU_OR, MLU_XOR, MLU_MUL, MLU_DIV, MLU_MOD, MLU_SINGLE };
 
-enum {
-  MLU_SINGLE_NOT,
-  MLU_SINGLE_POPCOUNT
-};
+enum { MLU_SINGLE_NOT, MLU_SINGLE_POPCOUNT };
 
 // TODO: Rewrite this section using magic.
 inline uint32_t in(int in_plane) {
@@ -254,12 +243,10 @@ inline uint32_t addr_microop(int microop) {
   return output;
 }
 
-inline uint32_t addr_int_flag(bool int_flag) {
-  return int_flag ? (1uL << ADDR_INT_FLAG) : 0;
-}
+inline uint32_t addr_int_flag(bool int_flag) { return int_flag ? (1uL << ADDR_INT_FLAG) : 0; }
 
 inline uint32_t addr_mmu_fault_flag(bool mmu_fault_flag) {
   return mmu_fault_flag ? (1uL << ADDR_MMU_FAULT_FLAG) : 0;
 }
 
-#endif // MEMEPU_CONTROL_CONSTANTS_H
+#endif  // MEMEPU_CONTROL_CONSTANTS_H_

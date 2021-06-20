@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_TOKENIZER_H
-#define VERYMEME_TOKENIZER_H
+#ifndef VERYMEME_TOKENIZER_H_
+#define VERYMEME_TOKENIZER_H_
 
 #include <regex>
 
@@ -35,4 +35,4 @@ class Tokeniser {
   int idx_ = 0;
 };
 
-#endif  // VERYMEME_TOKENIZER_H
+#endif  // VERYMEME_TOKENIZER_H_

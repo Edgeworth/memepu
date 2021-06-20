@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMEASM_ASSEMBLER_H
-#define MEMEASM_ASSEMBLER_H
+#ifndef MEMEASM_ASSEMBLER_H_
+#define MEMEASM_ASSEMBLER_H_
 
 #include <cstdint>
 #include <regex>
@@ -39,4 +39,4 @@ class Assembler {
 
 }  // namespace memeasm
 
-#endif  // MEMEASM_ASSEMBLER_H
+#endif  // MEMEASM_ASSEMBLER_H_

@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef VERYMEME_TERM_H
-#define VERYMEME_TERM_H
+#ifndef VERYMEME_TERM_H_
+#define VERYMEME_TERM_H_
 
 #include <string>
 
@@ -46,4 +46,4 @@ enum class TermStyle { RESET = 0, BOLD = 1, FAINT = 2, UNDERLINE = 4 };
 std::string convertToColor(const std::string& s, TermColor foreground,
     TermColor background = TermColor::BG_DEFAULT, TermStyle style = TermStyle::RESET);
 
-#endif  // VERYMEME_TERM_H
+#endif  // VERYMEME_TERM_H_

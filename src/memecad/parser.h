@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMECAD_PARSER_H
-#define MEMECAD_PARSER_H
+#ifndef MEMECAD_PARSER_H_
+#define MEMECAD_PARSER_H_
 
 #include <string>
 
@@ -14,4 +14,4 @@ std::string writeSheet(const Sheet& sheet);
 
 }  // namespace memecad
 
-#endif  // MEMECAD_PARSER_H
+#endif  // MEMECAD_PARSER_H_

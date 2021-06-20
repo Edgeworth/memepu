@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_EXEC_H
-#define MEMELANG_EXEC_H
+#ifndef MEMELANG_EXEC_H_
+#define MEMELANG_EXEC_H_
 
 #include <map>
 #include <optional>
@@ -127,4 +127,4 @@ class Exec {
 
 }  // namespace memelang::exec
 
-#endif  // MEMELANG_EXEC_H
+#endif  // MEMELANG_EXEC_H_

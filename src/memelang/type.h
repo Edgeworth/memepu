@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMELANG_TYPE_H
-#define MEMELANG_TYPE_H
+#ifndef MEMELANG_TYPE_H_
+#define MEMELANG_TYPE_H_
 
 #include <climits>
 #include <map>
@@ -244,4 +244,4 @@ Type resolveType(const Type& t, const Mapping& m);
 
 }  // namespace memelang::exec
 
-#endif  // MEMELANG_TYPE_H
+#endif  // MEMELANG_TYPE_H_

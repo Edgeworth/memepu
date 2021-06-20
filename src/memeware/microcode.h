@@ -1,6 +1,6 @@
 // Copyright 2019 E.
-#ifndef MEMEWARE_MICROCODE_H
-#define MEMEWARE_MICROCODE_H
+#ifndef MEMEWARE_MICROCODE_H_
+#define MEMEWARE_MICROCODE_H_
 
 #include <cstdint>
 #include <string>
@@ -18,4 +18,4 @@ std::string generateMemeasmModel();
 
 }  // namespace memeware
 
-#endif  // MEMEWARE_MICROCODE_H
+#endif  // MEMEWARE_MICROCODE_H_
