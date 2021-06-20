@@ -43,5 +43,5 @@ int main(int argc, char* argv[]) {
       memecad_map_filename, verilog_filenames, kicad_library_filenames);
   std::filesystem::create_directories("test");
   for (const auto& file : files) writeFile("test/" + file.filename, file.contents);
-  printf("Finished writing %d files\n", int(files.size()));
+  printf("Finished writing %d files\n", static_cast<int>(files.size()));
 }

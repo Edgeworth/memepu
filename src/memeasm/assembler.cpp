@@ -48,7 +48,7 @@ Assembler::Assembler(const std::string& model_json) {
     std::string mnemonic_rx = PREAMBLE_RX;
     for (int i = 0; i < mnemonic_str.size(); ++i) {
       if (mnemonic_str[i] == '%') {
-        verify(i < int(mnemonic_str.size()) - 2, "ill-formed ksm model (BUG)");
+        verify(i < static_cast<int>(mnemonic_str.size()) - 2, "ill-formed ksm model (BUG)");
         i += 2;  // Skip % and number.
         char type = mnemonic_str[i];
         Parameter param;

@@ -22,12 +22,12 @@ int directionToLabelOrientation(Direction d, Sheet::Label::Type label_type) {
   case Direction::DOWN: return 3;
   case Direction::RIGHT: return is_hierarchical_or_global ? 2 : 0;
   case Direction::UP: return 1;
-  default: verify(false, "unknown direction '%d'", int(d));
+  default: verify(false, "unknown direction '%d'", static_cast<int>(d));
   }
 }
 
 Direction labelOrientationToDirection(int orientation, Sheet::Label::Type label_type) {
-  for (int d = 0; d < int(Direction::COUNT); ++d) {
+  for (int d = 0; d < static_cast<int>(Direction::COUNT); ++d) {
     if (directionToLabelOrientation(Direction(d), label_type) == orientation) return Direction(d);
   }
   verify(false, "unknown label orientation %d", orientation);

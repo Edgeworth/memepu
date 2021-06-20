@@ -190,7 +190,7 @@ void Schematic::addComponentToSheet(const std::string& lib_name,
     // Move to location we placed this subcomponent.
     verify(kicad_pin->subcomponent >= 0 && kicad_pin->subcomponent < subcomponents.size(),
         "subcomponent %d is out of range, only have %d subcomponents", kicad_pin->subcomponent,
-        int(subcomponents.size()));
+        static_cast<int>(subcomponents.size()));
     label.p += subcomponents[kicad_pin->subcomponent].p;
     aabbs.push_back(label.bbox());
   }

@@ -15,48 +15,29 @@ enum {
 };
 
 uint8_t digitToLed(int digit) {
-  constexpr uint8_t map[16] = {
-      T | TL | TR | BL | BR | B,
-      TR | BR,
-      T | TR | M | BL | B,
-      T | TR | M | BR | B,
-      TL | TR | M | BR,
-      T | TL | M | BR | B,
-      T | TL | BL | M | B | BR,
-      T | TR | BR,
-      T | TL | TR | BL | BR | B | M,
-      T | TL | TR | M | BR,
-      T | TL | TR | M | BR | BL,
-      TL | M | BL | B | BR,
-      T | TL | BL | B,
-      TL | M | BL | B | BR,
-      T | M | B | TL | BL,
-      T | M | TL | BL
-  };
+  constexpr uint8_t map[16] = {T | TL | TR | BL | BR | B, TR | BR, T | TR | M | BL | B,
+      T | TR | M | BR | B, TL | TR | M | BR, T | TL | M | BR | B, T | TL | BL | M | B | BR,
+      T | TR | BR, T | TL | TR | BL | BR | B | M, T | TL | TR | M | BR, T | TL | TR | M | BR | BL,
+      TL | M | BL | B | BR, T | TL | BL | B, TL | M | BL | B | BR, T | M | B | TL | BL,
+      T | M | TL | BL};
   return map[digit];
 }
 
-template<int Size>
-uint8_t buildByte(uint16_t addr, const int(& bits)[Size]) {
+template <int Size>
+uint8_t buildByte(uint16_t addr, const static_cast<int> (&bits)[Size]) {
   uint8_t byte = 0;
   for (int bit : bits) {
     byte <<= 1;
-    byte |= (bool) (addr & (1uL << bit));
+    byte |= (bool)(addr & (1uL << bit));
   }
   return byte;
 }
 
-uint8_t buildDataByte(uint16_t addr) {
-  return buildByte(addr, {7, 6, 5, 4, 3, 2, 1, 0});
-}
+uint8_t buildDataByte(uint16_t addr) { return buildByte(addr, {7, 6, 5, 4, 3, 2, 1, 0}); }
 
-uint8_t buildSegByte(uint16_t addr) {
-  return buildByte(addr, {9, 8});
-}
+uint8_t buildSegByte(uint16_t addr) { return buildByte(addr, {9, 8}); }
 
-uint8_t buildModeByte(uint16_t addr) {
-  return buildByte(addr, {12, 11, 10});
-}
+uint8_t buildModeByte(uint16_t addr) { return buildByte(addr, {12, 11, 10}); }
 
 int getDigit(uint8_t val, int dig, int base) {
   for (int i = 0; i < dig; ++i) {
@@ -66,7 +47,7 @@ int getDigit(uint8_t val, int dig, int base) {
   return val % base;
 }
 
-}  // anonymous
+}  // namespace
 
 std::string Led::getBinaryData() {
   std::string bindata;

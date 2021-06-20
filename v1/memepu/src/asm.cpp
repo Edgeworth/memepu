@@ -111,7 +111,7 @@ std::string Asm::mergeExtents() {
   for (const auto& iter : extents_) {
     int addr = iter.first;
     const std::string& data = iter.second;
-    int gap = addr - int(output.size());
+    int gap = addr - static_cast<int>(output.size());
     verify(gap >= 0, "overlapping %d bytes into extent starting at %x", -gap, addr);
     for (int i = 0; i < gap; ++i) { output += uint8_t(0xFF); }
     output += data;

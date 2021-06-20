@@ -94,7 +94,7 @@ void Simulator::run() {
         // TODO(progress) set interrupt? - need some way to distinguish.
         break;
       case Cmd::Type::SET_KBD:
-        printf("Got kbd: %d\n", int(cmd->args.i32_0));
+        printf("Got kbd: %d\n", static_cast<int>(cmd->args.i32_0));
         kpu_.kpu->mmu->ram->mem[memeware::MMIO_KEYBOARD] = cmd->args.i32_0;
         kpu_.kpu->mmu->ram->mem[memeware::MMIO_INTERRUPT_CLEAR] = 1;
         break;
