@@ -2,6 +2,8 @@
 #include "gtest/gtest.h"
 #include "Vkpu.h"
 #include "memesim/simulator.h"
+#include "memesim/cli.h"
+#include "memesim/display.h"
 #include "memeware/constants.h"
 
 namespace {
@@ -189,6 +191,24 @@ TEST_F(MemesimTest, InterruptVector) {
 
 TEST_F(MemesimTest, OpwordSize) {
   EXPECT_EQ(1, memeware::OPWORD_SIZE);
+}
+
+using MemesimCliTest = testing::Test;
+
+TEST_F(MemesimCliTest, CommandLineConstruction) {
+  memesim::Simulator sim;
+  EXPECT_NO_THROW({
+    memesim::CommandLine cli(&sim);
+  });
+}
+
+using MemesimDisplayTest = testing::Test;
+
+TEST_F(MemesimDisplayTest, DisplayConstruction) {
+  memesim::Simulator sim;
+  EXPECT_NO_THROW({
+    memesim::Display display(&sim);
+  });
 }
 
 }  // namespace

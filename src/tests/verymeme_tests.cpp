@@ -516,4 +516,134 @@ TEST_F(VerymemeUtilTest, ReverseSingleElement) {
   EXPECT_EQ(42, rev[0]);
 }
 
+using VerymemeConcurrentQueueTest = testing::Test;
+
+TEST_F(VerymemeConcurrentQueueTest, PushAndTryYield) {
+  ConcurrentQueue<int> q;
+  q.push(42);
+  auto result = q.tryYield();
+  ASSERT_TRUE(result.has_value());
+  EXPECT_EQ(42, result.value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, TryYieldEmptyQueue) {
+  ConcurrentQueue<int> q;
+  auto result = q.tryYield();
+  EXPECT_FALSE(result.has_value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, MultiplePushAndYield) {
+  ConcurrentQueue<int> q;
+  q.push(1);
+  q.push(2);
+  q.push(3);
+
+  auto r1 = q.tryYield();
+  auto r2 = q.tryYield();
+  auto r3 = q.tryYield();
+
+  ASSERT_TRUE(r1.has_value());
+  ASSERT_TRUE(r2.has_value());
+  ASSERT_TRUE(r3.has_value());
+  EXPECT_EQ(1, r1.value());
+  EXPECT_EQ(2, r2.value());
+  EXPECT_EQ(3, r3.value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, FifoOrder) {
+  ConcurrentQueue<std::string> q;
+  q.push("first");
+  q.push("second");
+  q.push("third");
+
+  EXPECT_EQ("first", q.tryYield().value());
+  EXPECT_EQ("second", q.tryYield().value());
+  EXPECT_EQ("third", q.tryYield().value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, EmptyAfterYieldAll) {
+  ConcurrentQueue<int> q;
+  q.push(1);
+  q.push(2);
+
+  q.tryYield();
+  q.tryYield();
+
+  EXPECT_FALSE(q.tryYield().has_value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, PushAfterYield) {
+  ConcurrentQueue<int> q;
+  q.push(1);
+  EXPECT_EQ(1, q.tryYield().value());
+
+  q.push(2);
+  EXPECT_EQ(2, q.tryYield().value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, DifferentTypes) {
+  ConcurrentQueue<std::pair<int, std::string>> q;
+  q.push({1, "one"});
+  q.push({2, "two"});
+
+  auto r1 = q.tryYield();
+  ASSERT_TRUE(r1.has_value());
+  EXPECT_EQ(1, r1.value().first);
+  EXPECT_EQ("one", r1.value().second);
+
+  auto r2 = q.tryYield();
+  ASSERT_TRUE(r2.has_value());
+  EXPECT_EQ(2, r2.value().first);
+  EXPECT_EQ("two", r2.value().second);
+}
+
+TEST_F(VerymemeConcurrentQueueTest, LargeNumberOfElements) {
+  ConcurrentQueue<int> q;
+  const int count = 1000;
+
+  for (int i = 0; i < count; i++) {
+    q.push(i);
+  }
+
+  for (int i = 0; i < count; i++) {
+    auto result = q.tryYield();
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(i, result.value());
+  }
+
+  EXPECT_FALSE(q.tryYield().has_value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, AlternatingPushYield) {
+  ConcurrentQueue<int> q;
+
+  q.push(1);
+  EXPECT_EQ(1, q.tryYield().value());
+
+  q.push(2);
+  EXPECT_EQ(2, q.tryYield().value());
+
+  q.push(3);
+  EXPECT_EQ(3, q.tryYield().value());
+
+  EXPECT_FALSE(q.tryYield().has_value());
+}
+
+TEST_F(VerymemeConcurrentQueueTest, StructuredData) {
+  struct TestData {
+    int id;
+    std::string name;
+    double value;
+  };
+
+  ConcurrentQueue<TestData> q;
+  q.push({1, "test", 3.14});
+
+  auto result = q.tryYield();
+  ASSERT_TRUE(result.has_value());
+  EXPECT_EQ(1, result.value().id);
+  EXPECT_EQ("test", result.value().name);
+  EXPECT_DOUBLE_EQ(3.14, result.value().value);
+}
+
 }  // namespace
