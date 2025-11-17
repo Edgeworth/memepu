@@ -153,7 +153,8 @@ set(TEST_SOURCES
     src/tests/verilator_tests.cpp src/tests/memecad_tests.cpp
     src/tests/common_tests.cpp src/tests/memelang_tests.cpp
     src/tests/verymeme_tests.cpp src/tests/memeasm_tests.cpp
-    src/tests/memesim_tests.cpp src/tests/memeware_tests.cpp)
+    src/tests/memesim_tests.cpp src/tests/memeware_tests.cpp
+    src/tests/integration_tests.cpp)
 
 # verymeme:
 add_library(verymeme_library ${VERYMEME_SOURCES})

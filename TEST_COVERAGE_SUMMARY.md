@@ -10,6 +10,7 @@ This document summarizes the comprehensive test coverage added to the memepu pro
 2. **src/tests/memeasm_tests.cpp** - Comprehensive tests for the memeasm assembler
 3. **src/tests/memesim_tests.cpp** - Tests for the memesim simulator
 4. **src/tests/memeware_tests.cpp** - Tests for the memeware microcode generator
+5. **src/tests/integration_tests.cpp** - Integration tests for cross-module functionality
 
 ### Test Coverage Details
 
@@ -165,6 +166,29 @@ This document summarizes the comprehensive test coverage added to the memepu pro
 - Shifter enum values distinctness
 - Depth constants validity
 
+#### integration_tests.cpp (320+ lines, 14 test cases)
+
+**Cross-Module Integration Tests**
+- Microcode to assembler pipeline (generated model usage)
+- Assemble and disassemble roundtrip
+- Real program assembly from files
+- Complete microcode firmware generation pipeline
+- Simulator initialization and command scheduling
+- Complex label resolution across multiple instructions
+- Data sections with label references
+- Assembly consistency across multiple passes
+- Hexdump formatting and properties
+- Simulator command/response interaction
+- Assembly error handling
+- File I/O integration with assembler
+- Label forward and backward references
+- Multi-instruction program verification
+
+**Pipeline Tests**
+- Microcode → Model → Assembler → Binary
+- Assembly → Hexdump → File I/O roundtrip
+- Simulator → Commands → State queries
+
 ## Bugs Found and Tests Added
 
 ### Bug 1: bimap.h - keyForValue() Missing Bounds Check
@@ -225,12 +249,14 @@ Run specific test suites:
 
 ## Coverage Statistics
 
-- **Total new test files**: 4
-- **Total new test cases**: ~190+
-- **Lines of test code added**: ~1400+
-- **Modules tested**: verymeme, memeasm, memesim, memeware
+- **Total new test files**: 5
+- **Total new test cases**: ~245+
+- **Lines of test code added**: ~2050+
+- **Modules tested**: verymeme, memeasm, memesim, memeware, memecad (enhanced)
+- **Integration tests**: 14 cross-module tests
 - **Edge cases covered**: 50+
 - **Bug-related tests**: 15+
+- **Pipeline tests**: 3 end-to-end workflows
 
 ## Notes
 
