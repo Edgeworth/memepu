@@ -34,7 +34,9 @@ void writeFile(const std::string& filename, const std::string& data, bool binary
 }
 
 std::string basename(const std::string& filename) {
-  return filename.substr(filename.rfind('/') + 1);
+  size_t pos = filename.rfind('/');
+  if (pos == std::string::npos) return filename;
+  return filename.substr(pos + 1);
 }
 
 std::string stem(const std::string& filename) {

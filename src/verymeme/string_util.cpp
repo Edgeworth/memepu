@@ -30,7 +30,7 @@ int64_t convertFromDec(const std::string& s) {
 int64_t convertFromInteger(const std::string& s) {
   char* end = nullptr;
   int64_t val = strtoll(s.c_str(), &end, 0);
-  if (end != s.c_str() + s.size() || int32_t(val) != val) return INT64_MIN;
+  if (end != s.c_str() + s.size()) return INT64_MIN;
   return val;
 }
 

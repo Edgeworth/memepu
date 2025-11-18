@@ -19,7 +19,9 @@ class Bimap {
   }
   const Key& keyForValue(const Value& val) {
     Record r{{}, val};
-    return records.find(r)->k;
+    auto it = records.find(r);
+    bug_unless(it != records.end());
+    return it->k;
   }
   const Value& operator[](const Key& key) {
     bug_unless(mapping.contains(key));

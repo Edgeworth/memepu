@@ -26,7 +26,7 @@ enum class TermColor {
   BG_BLACK = 40,
   BG_RED = 41,
   BG_GREEN = 42,
-  BG_YELLOW = 33,
+  BG_YELLOW = 43,
   BG_BLUE = 44,
   BG_MAGENTA = 45,
   BG_CYAN = 46,
