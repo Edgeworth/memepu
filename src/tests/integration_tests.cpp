@@ -158,7 +158,7 @@ TEST_F(IntegrationTest, DataSectionWithLabels) {
 
   // Verify data section
   EXPECT_EQ(0x12345678u, assembled[3]);
-  EXPECT_EQ(0xdeadbeef u, assembled[4]);
+  EXPECT_EQ(0xdeadbeefu, assembled[4]);
   EXPECT_EQ(0u, assembled[5]);   // Address of start (0)
   EXPECT_EQ(3u, assembled[6]);   // Address of data_start (3)
   EXPECT_EQ(0xffffffffu, assembled[7]);
