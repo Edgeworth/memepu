@@ -1,15 +1,16 @@
 // Copyright 2019 Eliot Courtney.
-#include "gtest/gtest.h"
-#include "verymeme/file.h"
-#include "verymeme/string_util.h"
-#include "verymeme/geom.h"
-#include "verymeme/tokeniser.h"
-#include "verymeme/term.h"
-#include "verymeme/bimap.h"
-#include "verymeme/util.h"
-#include <regex>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
+#include <regex>
+
+#include "gtest/gtest.h"
+#include "verymeme/bimap.h"
+#include "verymeme/file.h"
+#include "verymeme/geom.h"
+#include "verymeme/string_util.h"
+#include "verymeme/term.h"
+#include "verymeme/tokeniser.h"
+#include "verymeme/util.h"
 
 namespace {
 
