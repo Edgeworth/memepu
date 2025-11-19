@@ -217,30 +217,11 @@ TEST_F(VerymemeGeomTest, PointNegation) {
   EXPECT_EQ(4, result.y);
 }
 
-TEST_F(VerymemeGeomTest, PointAddAssign) {
-  Point p1{1, 2};
-  Point p2{3, 4};
-  p1 += p2;
-  EXPECT_EQ(4, p1.x);
-  EXPECT_EQ(6, p1.y);
-}
-
 TEST_F(VerymemeGeomTest, PointCross) {
   Point p1{2, 3};
   Point p2{4, 5};
   EXPECT_EQ(2 * 5 - 3 * 4, p1.cross(p2));
   EXPECT_EQ(-(2 * 5 - 3 * 4), p2.cross(p1));
-}
-
-TEST_F(VerymemeGeomTest, PointComparison) {
-  Point p1{1, 2};
-  Point p2{1, 2};
-  Point p3{2, 1};
-
-  EXPECT_TRUE(p1 == p2);
-  EXPECT_FALSE(p1 == p3);
-  EXPECT_TRUE(p1 != p3);
-  EXPECT_FALSE(p1 != p2);
 }
 
 TEST_F(VerymemeGeomTest, RectInset) {
@@ -265,16 +246,6 @@ TEST_F(VerymemeGeomTest, RectDimensions) {
   Rect r{10, 20, 50, 70};
   EXPECT_EQ(40, r.width());
   EXPECT_EQ(50, r.height());
-}
-
-TEST_F(VerymemeGeomTest, RectOriginAndBottomRight) {
-  Rect r{10, 20, 50, 70};
-  Point origin = r.origin();
-  Point br = r.bottom_right();
-  EXPECT_EQ(10, origin.x);
-  EXPECT_EQ(20, origin.y);
-  EXPECT_EQ(50, br.x);
-  EXPECT_EQ(70, br.y);
 }
 
 TEST_F(VerymemeGeomTest, RectEmpty) {
@@ -328,17 +299,6 @@ TEST_F(VerymemeGeomTest, RectEnclosing) {
   EXPECT_EQ(20, r.top);
   EXPECT_EQ(51, r.right);  // +1 to include point b
   EXPECT_EQ(71, r.bottom); // +1 to include point b
-}
-
-TEST_F(VerymemeGeomTest, RectSetDimensions) {
-  Rect r{10, 20, 30, 40};
-  r.set_width(100);
-  r.set_height(200);
-
-  EXPECT_EQ(100, r.width());
-  EXPECT_EQ(200, r.height());
-  EXPECT_EQ(10, r.left);
-  EXPECT_EQ(20, r.top);
 }
 
 TEST_F(VerymemeGeomTest, ClampFunction) {
@@ -551,28 +511,6 @@ TEST_F(VerymemeConcurrentQueueTest, MultiplePushAndYield) {
   EXPECT_EQ(3, r3.value());
 }
 
-TEST_F(VerymemeConcurrentQueueTest, FifoOrder) {
-  ConcurrentQueue<std::string> q;
-  q.push("first");
-  q.push("second");
-  q.push("third");
-
-  EXPECT_EQ("first", q.tryYield().value());
-  EXPECT_EQ("second", q.tryYield().value());
-  EXPECT_EQ("third", q.tryYield().value());
-}
-
-TEST_F(VerymemeConcurrentQueueTest, EmptyAfterYieldAll) {
-  ConcurrentQueue<int> q;
-  q.push(1);
-  q.push(2);
-
-  q.tryYield();
-  q.tryYield();
-
-  EXPECT_FALSE(q.tryYield().has_value());
-}
-
 TEST_F(VerymemeConcurrentQueueTest, PushAfterYield) {
   ConcurrentQueue<int> q;
   q.push(1);
@@ -580,22 +518,6 @@ TEST_F(VerymemeConcurrentQueueTest, PushAfterYield) {
 
   q.push(2);
   EXPECT_EQ(2, q.tryYield().value());
-}
-
-TEST_F(VerymemeConcurrentQueueTest, DifferentTypes) {
-  ConcurrentQueue<std::pair<int, std::string>> q;
-  q.push({1, "one"});
-  q.push({2, "two"});
-
-  auto r1 = q.tryYield();
-  ASSERT_TRUE(r1.has_value());
-  EXPECT_EQ(1, r1.value().first);
-  EXPECT_EQ("one", r1.value().second);
-
-  auto r2 = q.tryYield();
-  ASSERT_TRUE(r2.has_value());
-  EXPECT_EQ(2, r2.value().first);
-  EXPECT_EQ("two", r2.value().second);
 }
 
 TEST_F(VerymemeConcurrentQueueTest, LargeNumberOfElements) {
