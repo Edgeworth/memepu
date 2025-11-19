@@ -60,25 +60,24 @@ TEST_F(MemeAsmTest, AddWithImmediate) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("addu r5,r10,0x20");
   ASSERT_EQ(1u, result.size());
-  // opcode 3, r5, r10, immediate 0x20
   uint32_t expected = (3 << 6) | (5 << 11) | (10 << 16) | (0x20 << 16);
-  // Note: immediate overlaps with second register position
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, StoreWord) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("sw [r1,0x10],r2");
   ASSERT_EQ(1u, result.size());
-  // opcode 5, r1, r2, immediate 0x10
   uint32_t expected = (5 << 6) | (1 << 11) | (2 << 16) | (0x10 << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, LoadWord) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("lw r3,[r4,0x8]");
   ASSERT_EQ(1u, result.size());
-  // opcode 9, r3, r4, immediate 0x8
   uint32_t expected = (9 << 6) | (3 << 11) | (4 << 16) | (0x8 << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, SimpleLabel) {
@@ -113,32 +112,32 @@ TEST_F(MemeAsmTest, RelativeBranch) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("loop:\nbeq r1,r2,loop");
   ASSERT_EQ(1u, result.size());
-  // beq with relative immediate -1 (back to same instruction)
   uint32_t expected = (8 << 6) | (1 << 11) | (2 << 16) | (uint16_t(-1) << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, BranchNotEqual) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("end:\nbne r5,r6,end");
   ASSERT_EQ(1u, result.size());
-  // bne with relative immediate -1
   uint32_t expected = (11 << 6) | (5 << 11) | (6 << 16) | (uint16_t(-1) << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, ShiftLeft) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("sll r1,r2,0x3");
   ASSERT_EQ(1u, result.size());
-  // opcode 10, r1, r2, immediate 3
   uint32_t expected = (10 << 6) | (1 << 11) | (2 << 16) | (3 << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, ShiftRight) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("srl r7,r8,0x5");
   ASSERT_EQ(1u, result.size());
-  // opcode 14, r7, r8, immediate 5
   uint32_t expected = (14 << 6) | (7 << 11) | (8 << 16) | (5 << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, OrOperation) {
@@ -163,8 +162,8 @@ TEST_F(MemeAsmTest, AndWithImmediate) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("and r20,r21,0xf");
   ASSERT_EQ(1u, result.size());
-  // opcode 12, r20, r21, immediate 0xf
   uint32_t expected = (12 << 6) | (20 << 11) | (21 << 16) | (0xf << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, DataWord) {
@@ -196,8 +195,8 @@ TEST_F(MemeAsmTest, NegativeImmediate) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("addu r1,r2,-5");
   ASSERT_EQ(1u, result.size());
-  // Check that negative immediate is properly encoded
   uint32_t expected = (3 << 6) | (1 << 11) | (2 << 16) | (uint16_t(-5) << 16);
+  EXPECT_EQ(expected, result[0]);
 }
 
 TEST_F(MemeAsmTest, MaxRegisterNumber) {
@@ -212,7 +211,6 @@ TEST_F(MemeAsmTest, LabelWithOffset) {
   memeasm::Assembler assembler(MODEL_JSON);
   std::vector<uint32_t> result = assembler.assemble("start:\nnop\nnop\nlhu r0,start+2");
   ASSERT_EQ(3u, result.size());
-  // lhu with address 2 (start + 2)
   uint32_t expected = (2 << 6) | (0 << 11) | (2 << 16);
   EXPECT_EQ(expected, result[2]);
 }

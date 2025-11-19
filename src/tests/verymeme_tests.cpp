@@ -146,10 +146,11 @@ TEST_F(VerymemeStringUtilTest, ConvertFromIntegerOctal) {
   EXPECT_EQ(64, convertFromInteger("0100"));
 }
 
-TEST_F(VerymemeStringUtilTest, ConvertFromIntegerOverflow) {
-  // Test values that exceed int32_t range
-  EXPECT_EQ(INT64_MIN, convertFromInteger("2147483648"));  // INT32_MAX + 1
-  EXPECT_EQ(INT64_MIN, convertFromInteger("-2147483649")); // INT32_MIN - 1
+TEST_F(VerymemeStringUtilTest, ConvertFromIntegerLargeValues) {
+  // Test values beyond int32_t range now work after removing artificial limitation
+  EXPECT_EQ(2147483648LL, convertFromInteger("2147483648"));  // INT32_MAX + 1
+  EXPECT_EQ(-2147483649LL, convertFromInteger("-2147483649")); // INT32_MIN - 1
+  EXPECT_EQ(9223372036854775807LL, convertFromInteger("9223372036854775807")); // INT64_MAX
 }
 
 TEST_F(VerymemeStringUtilTest, ConvertFromIntegerInvalid) {
